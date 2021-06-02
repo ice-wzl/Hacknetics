@@ -5,8 +5,8 @@
 `nmap -A -T5 172.16.6.1 -p 1-100000`
 ##### Other Scan Flags
 ##### TCP Syn Scan 
-- Default and most popular.  Fast, never completes the TCP connections. Clear and reliable, half open scanning.
 `nmap -sS -T3 172.16.6.1`
+- Default and most popular.  Fast, never completes the TCP connections. Clear and reliable, half open scanning.
 ##### TCP Connect Scan
 `nmap -sT -T2 172.16.6.1`
 - Default TCP scan when Syn Scan is not an option. When a user does not have raw packet privlages. Completes the connection, target machine is more likely to log the connection.
