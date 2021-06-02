@@ -90,4 +90,6 @@
 `--script-args <n1>=<v1>,<n2>={<n3>=<v3>},<n4>={<v4>,<v5>}`
 - Lets you provide arguments to NSE scripts. Arguments are a comma-separated list of `name=value` pairs. To include one of these characters in a string, enclose the string in single or double quotes. Within a quoted string '\' escapes a quote. All other cases a \ is interpreted literally.
 - Example
-`
+`--script-args 'user=foo,pass=",{}=bar".whois={whodb=nofollow+ripe},xmpp-info.server_name=localhost'`
+`--script-args-file <filename>`
+- Lets you load arguments to NSE scripts from a file.
