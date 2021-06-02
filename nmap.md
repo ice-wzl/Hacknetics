@@ -34,6 +34,6 @@
 ##### FTP Bounce Scan
 `-b <FTP relay host>`
 `<username>:<password>@<server>:<port>`
-`<Server>` is the name or IP address of a vulberable FTP server. You may omit `<username>:<password>` in which anonymous login creds are used.  Use `<anonymous>:-wwwuser>` The port number and preceeding colon may be omitted as well when the default FTP port (21) are used on `<server>`.
+- `<Server>` is the name or IP address of a vulberable FTP server. You may omit `<username>:<password>` in which anonymous login creds are used.  Use `<anonymous>:-wwwuser>` The port number and preceeding colon may be omitted as well when the default FTP port (21) are used on `<server>`.
 - Using the `--script ftp-bounce` will tell you whether the host is vulnerable or not.
 - Causes the FTP server to scan other hosts. "Sends a file to each interesting port of the target host."  Good way to bypass firewalls because FTP servers in organizations typically have more access than a standard host.
