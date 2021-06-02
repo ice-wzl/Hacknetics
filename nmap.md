@@ -21,3 +21,19 @@
 ##### TCP ACK Scan
 `nmap -sA 172.16.6.1` 
 - Never determines `open` or even `open | filtered` Used to map out firewall rulesets, determining wether they are stateful or not and which ports are filtered. The ACK scan probe only has the ACK flag set unless you use `--scanflags` Unfiltered systems, `open` and `closed` ports will both return a RST packet. Nmap then labels them as `unfiltered` meaning they are reachable by the ACK, whether they are `open` or `closed` is undetermined.
+##### Custom TCP Scan
+`--scanflags`
+- Allows you to design your own scan specifying TCP flags. Add the options URG, ACK, PSH, RST, SYN, FIN together.  
+`nmap --scanflags URGACKPSHRSTSYNFIN`
+- This would set all the options together, not useful for scanning.
+##### Idle or Zombie Scan
+`nmap -sI <zombie host>[:<probeport>] (idle scan)`
+- Truly blind TCP port scan of the target. No packets are sent to the target from your real IP address. Unique side channel attack exploits predictable IP fragmentation ID sequence generation on the zombie host to glean infomation about the open ports on the target. IDS will display the scan coming from the zombie host. Zombie must be up.
+- Extremely stealthy, maps out IP-based trust relationships between machines. Port listing shows open ports *from the perspective of the zombie host*. 
+- Can add a colon followed by a port number `[:<probeport>]` to the zombie host if you want to probe a particular port on the zombie for IP ID changes. Otherwise nmap will default to 80 TCP pings.
+##### FTP Bounce Scan
+`-b <FTP relay host>`
+`<username>:<password>@<server>:<port>`
+`<Server>` is the name or IP address of a vulberable FTP server. You may omit `<username>:<password>` in which anonymous login creds are used.  Use `<anonymous>:-wwwuser>` The port number and preceeding colon may be omitted as well when the default FTP port (21) are used on `<server>`.
+- Using the `--script ftp-bounce` will tell you whether the host is vulnerable or not.
+- Causes the FTP server to scan other hosts. "Sends a file to each interesting port of the target host."  Good way to bypass firewalls because FTP servers in organizations typically have more access than a standard host.
