@@ -5,7 +5,7 @@ nc -nlvp 1234
 ```
 - Always set up a netcat listener before executing a bash reverse shell
 
--You can also use multi handler from metasploit to catch incoming reverse shells
+- You can also use multi handler from metasploit to catch incoming reverse shells
 ```
 msfconsole
 use exploit /multi/handler
