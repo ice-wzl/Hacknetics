@@ -1,4 +1,4 @@
-#Linux Privlage Escalation
+# Linux Privlage Escalation
 ### Service Exploits
 - https://www.exploit-db.com/exploits/1518
 - The mysql service is running as root and the 'root' user for the service does not have a password assigned or the password is known. This exploit takes advantage of the User Defined Functions (UFDs) to run system commands as root via the mysql service.
