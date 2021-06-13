@@ -136,7 +136,7 @@ lxc exec privesc /bin/sh
 cd /mnt/root
 ```
 - `/mnt/root` is where the file system is mounted.
-- Errors (on the vulnerable server)
+##### Errors (on the vulnerable server)
 - If you recieve an `Failed container creation: No storage pool found. Please create a new storage pool.`
 - You need to initialize lxd before using it
 ```
