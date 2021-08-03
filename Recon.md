@@ -1,22 +1,19 @@
 ### Recon
-##### NetDiscover
+##### AutoRecon
 ```
-netdiscover -r x.x.x.x
-```
+autorecon -ct 2 -cs 2 -vv -o outputdir 192.168.1.100 192.168.1.1/30 localhost
+autorecon x.x.x.x
+````
+- ct (concurrent targets)
+- -o custom output directory location.
+- -cs limits the number of concurent scans per target
+- Auto recon will create and store the results in the /results directory.
 ##### Nmap
 ```
 nmap -A -T5 x.x.x.x -p- -vv
 nmap -sS x.x.x.x -p- --min-rate 10000
 nmap --script=scriptname.nse x.x.x.x -vv
 ```
-- HTTP Enum with nmap
-```
-nmap -sV -n -Pn x.x.x.x -vv -p 80 --script=http-vhosts,http-userdir-enum,http-apache-negotiation,http-backup-finder,http-config-backup,http-default-accounts,http-methods,http-method-tamper,http-passwd,http-robots.txt 
-```
-##### AutoRecon
-```
-python3 autorecon.py -ct 4 -cs x.x.x.x
-````
 ##### Nikto
 ```
 nikto -h x.x.x.x
@@ -43,6 +40,11 @@ wpscan --url http://x.x.x.x --enumerate u,p,t
 ```
 snmpwalk -c public -v1 x.x.x.x
 ````
+##### NetDiscover
+- Netdiscover is a network address discovering tool, developed mainly for those wireless networks without dhcp server, it also works on hub/switched networks. Its based on arp packets, it will send arp requests and sniff for replys.
+```
+netdiscover -r x.x.x.x
+```
 ##### Webdav
 - Incorrect permissions test 
 ```
