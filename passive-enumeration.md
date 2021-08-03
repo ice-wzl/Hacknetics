@@ -25,8 +25,10 @@ nslookup -type=any cisco.com
 host [domain]
 ````
 ##### Zone Transfers 
-- DNS servers need to be highly available, when one goes down another steps in.  In order to have this setup function properly we have to make sure that both DNS servers have the same data, they need to synchronize data with each other on a regular basis. A mechanism to replicate DNS databases is called a zone transfer, and the replicated database is called a DNS zone. Zone transfer is when one DNS server -> transfers information to another DNS server
--Contains potentially a complete list of all hosts for a given zone
+- DNS servers need to be highly available, when one goes down another steps in.  In order to have this setup function properly we have to make sure that both DNS servers have the same data, they need to synchronize data with each other on a regular basis. 
+- A mechanism to replicate DNS databases is called a zone transfer, and the replicated database is called a DNS zone. 
+- Zone transfer is when one DNS server -> transfers information to another DNS server
+- Contains potentially a complete list of all hosts for a given zone
 - Testing for Zone Transfers
 - First you need to retrieve name servers for this domain with the Host tool. Then we will use Host again to test for zone transfers on the name server
 - To retrieve the name servers for cisco.com domain name we use:
