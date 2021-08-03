@@ -90,8 +90,118 @@ nmap --script=[script name] [target host]
 ````
 - The following command executes a script names http-robots.txt on port 80:
 ````
-nmap --script=http-robots.txt [target host]
+nmap --script=http-robots.txt.nse [target host]
 ````
+#### SNMP 
+- Commands 
+- Read, write, trap, traversal command
+- SNMP community strings
+- Community strings are like a username or password that allows access to the managed device. 
+- There are three different community strings that allow a user to set 1 ready only commands, 2 read write commands and 3 traps.  
+- SNMPv3 community string is replaced with a user and password authentication.  
+- SNMPv1/v2 is factory default read only strings set to public and read write string set to private.
+#### Onesixtyone
+- Onesixtyone is a fast tool to brute force SNMP community strings and take advantage of the connectionless protocol.
+- Onesixtyone requires two arguments: a file that contains the list of community strings to try and the target host ip address.  
+- You can also provide a list of host IP addresses to be scanned by onesixtyone using the -i option.
+````
+onesixtyone #access help menu
+onesixtyone -c snmp_community_strings_wordlist_onesixtyone.txt -p 161 192.168.43.161
+````
+- Location of wordlists
+````
+/usr/share/wordlists/seclists/Discovery/SNMP
+````
+#### SNMPwalk
+- Snmpwalk queries MIB values to retrieve information about the managed devices, but as a minimum requires a valid SNMP read only community string.
+- Run snmpwalk with the default community string ‘public’ on and SNMPv1 device use the following command:
+````
+snmpwalk -c public -v1 [target host]
+````
+- You can also request a single object ID value using the following command:
+````
+snmpwalk -c public -v1 [target host] [OID]
+````
+- Nmap SNMP scripts
+````
+ls -l /usr/share/nmap/scripts/snmp*
+````
+#### SMB Enumeration
+- The SMB is a network file sharing protocol that provides access to shared files and printers on a local network.
+- When clients and servers use different operating systems and SMB versions, the highest supported version will be used for communication.
+- SMB uses the following TCP and UDP ports:
+````
+Netbios-ns 137/tcp #NETBIOS Name Service
+Netbios-ns 137/udp
+netbios-dgm 138/tcp #NETBIOS Datagram Service
+Netbios-dgm 138/udp
+Netbios-ssn 139/tcp #NETBIOS session service
+Netbios-ssn 139/udp
+Microsoft-ds 445/tcp #if you are using active directory
+````
+#### rpcclient
+- A tool used for executing client-side MS-RPC functions. A null session in a connection with a samba or SMB server that does not require authentication with a password.
+````
+rpcclient -U “” [target ip address]
+````
+- The -U option defines a null username, you will be asked for a password but leave it blank (hit enter!!!!)
+- The command line will change to the rpcclient context
+````
+rpcclient $>
+````
+- To retrieve some general information about the server like the domain and number of users:
+````
+querydominfo
+````
+- This command returns the domain, server, total users on the system and some other useful information.  
+- Also shows the total number of user accounts and groups available on the target system.
+- To retrieve a list of users present on the system 
+````
+enumdomusers
+````
+- The result is a list of user accounts available on the system with the RID in hex.  We can now use rpcclient to query the user info for more information:
+````
+queryuser [username]
+username=pbx
+queryuser pbx, queryuser 1000, queryuser 0x3e8
+````
+-This command will return information about the profile path on the server, the home drive, password related settings and a lot more.
+- To see an overview of all enumeration objects just type enum+tabx2.
+- If you get an error that says:
+````
+Cannot connect to server.  Error was NT_STATUS_CONNECTION_DISCONNECTED
+````
+- Occurs because the minimum protocol version for smbclient has been set to SMB2_02
+- Fix with:
+````
+sudo vim /etc/samba/smb.conf
+````
+- Add the following line to the config under the `[global]` section
+````
+client min protocol = CORE
+````
+- Alternative method to enumdomusers is through RID cycling.
+- To determine the full SID we can run the: ‘lookupnames’ command and search for the domain with the following command:
+````
+lookupnames pbx
+````
+- There are two sets of RIDS 500-1000 for system and 1000-10000 for Domain created users and groups. 
+- If we append -500 to the SID and look it up using the lookupsids command we get the following output with the username:
+````
+rpcclient $> lookupsids S-1-5-21-532510730-1394270290-3802288464-500
+S-1-5-21-532510730-1394270290-3802288464-500 *unknown*\*unknown* (8)
+````
+- Shows SID is unknown, increase by one
+````
+rpcclient $> lookupsids S-1-5-21-532510730-1394270290-3802288464-501
+S-1-5-21-532510730-1394270290-3802288464-501 PBX\nobody (1)
+````
+- Find a valid user, increase the RID to 1000.
+````
+rpcclient $> lookupsids S-1-5-21-532510730-1394270290-3802288464-1000
+S-1-5-21-532510730-1394270290-3802288464-1000 PBX\pbx (1)
+````
+- Have the full SID now
 
 
 #### Nikto
