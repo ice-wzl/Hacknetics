@@ -12,13 +12,13 @@ autorecon 10.200.97.200
 ### NetDiscover
 - Netdiscover is an active/passive reconnaissance tool that uses ARP to find live hosts on a local network.
 - Netdiscover actively searches for live hosts on the network by broadcasting ARP requests like a router.
-- By default netdiscover operates in active mode, however you can use it in passive mode with -p.  With passive move it will not broadcast anything.
+- By default netdiscover operates in active mode, however you can use it in passive mode with `-p`.  With passive move it will not broadcast anything.
 - Note: ARP is unable to cross network boundaries or over any VPN connection
 ``` 
 netdiscover -r 10.11.1.0/24
 ````
 ### Nmap
-- I have no time to read, just give me the meta.
+- I have no time to read, just give me the nmap scanning meta.
 ````
 nmap -sS x.x.x.x -p- --min-rate 10000
 nmap -A -T5 x.x.x.x -p- -vv
