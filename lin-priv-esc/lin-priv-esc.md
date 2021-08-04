@@ -1,37 +1,5 @@
 # Linux Privlage Escalation
 ## Table of Contents
-- [Linux Privlage Escalation](#linux-privlage-escalation)
-  * [Table of Contents](#table-of-contents)
-    + [Basic Enumeration](#basic-enumeration)
-    + [Weak File Permissions](#weak-file-permissions)
-      - [Readable shadow](#readable-shadow)
-      - [Writeable shadow](#writeable-shadow)
-      - [Writable passwd](#writable-passwd)
-    + [Passwords and Keys](#passwords-and-keys)
-      - [History Files](#history-files)
-      - [Config Files](#config-files)
-      - [SSH Keys](#ssh-keys)
-    + [Sudo-Shell escape Sequences](#sudo-shell-escape-sequences)
-    + [Sudo Environment Variables](#sudo-environment-variables)
-    + [Cron Jobs -File permissions](#cron-jobs--file-permissions)
-    + [Cron Jobs Path Environment Variable](#cron-jobs-path-environment-variable)
-    + [CronJobs - Wildcards](#cronjobs---wildcards)
-    + [SUID and SGID Executables --Known Exploits](#suid-and-sgid-executables---known-exploits)
-    + [SUID/SGID Executables-Shared Object Injection](#suid-sgid-executables-shared-object-injection)
-    + [SUID and SGID Executables-Environment Variables](#suid-and-sgid-executables-environment-variables)
-    + [SUID and SGID Executables-Abusing Shell Features 1](#suid-and-sgid-executables-abusing-shell-features-1)
-    + [SUID and SGID Executables-Abusing Shell Features 2](#suid-and-sgid-executables-abusing-shell-features-2)
-    + [NFS](#nfs)
-    + [Service Exploits](#service-exploits)
-    + [Docker Linux Local PE](#docker-linux-local-pe)
-    + [lxd Group Priv Esc](#lxd-group-priv-esc)
-        * [Errors-on the vulnerable server](#errors-on-the-vulnerable-server)
-    + [Capabilities](#capabilities)
-      - [Python](#python)
-      - [Perl](#perl)
-      - [Tar](#tar)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 ### Basic Enumeration
 ````
@@ -309,7 +277,7 @@ find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
 - Note that /usr/sbin/exim-4.84-3 appears in the results. Exploit is in this repo. 
 - Exploit-DB, Google, and GitHub are good places to search!
 - Check GTFO Bins and Google for SUID/SGID!!!
-### SUID/SGID Executables-Shared Object Injection
+### SUID and SGID Executables-Shared Object Injection
 - The /usr/local/bin/suid-so SUID executable is vulnerable to shared object injection.
 - First, execute the file and note that currently it displays a progress bar before exiting:
 ````
