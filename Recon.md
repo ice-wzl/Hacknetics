@@ -8,7 +8,7 @@ autorecon 10.200.97.200
 - `-ct` (concurrent targets)
 - `-o` custom output directory location.
 - `-cs` limits the number of concurent scans per target
-- Auto recon will create and store the results in the /results directory.
+- Auto recon will create and store the results in the `/results` directory.
 ### NetDiscover
 - Netdiscover is an active/passive reconnaissance tool that uses ARP to find live hosts on a local network.
 - Netdiscover actively searches for live hosts on the network by broadcasting ARP requests like a router.
