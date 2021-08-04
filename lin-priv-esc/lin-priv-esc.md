@@ -1,28 +1,5 @@
 # Linux Privlage Escalation
 ## Table of Contents
-- [Linux Privlage Escalation](#linux-privlage-escalation)
-    + [Basic Enumeration](#basic-enumeration)
-    + [Weak File Permissions - Readable /etc/shadow](#weak-file-permissions---readable--etc-shadow)
-    + [Weak File Permissions - Writeable /etc/shadow](#weak-file-permissions---writeable--etc-shadow)
-    + [Weak File Permissions - Writable /etc/passwd](#weak-file-permissions---writable--etc-passwd)
-    + [Passwords & Keys-History Files](#passwords---keys-history-files)
-    + [Passwords & Keys - Config Files](#passwords---keys---config-files)
-    + [Passwords & Keys-SSH Keys](#passwords---keys-ssh-keys)
-    + [Sudo-Shell escape Sequences](#sudo-shell-escape-sequences)
-    + [Sudo Environment Variables](#sudo-environment-variables)
-    + [Cron Jobs -File permissions](#cron-jobs--file-permissions)
-    + [Cron Jobs Path Environment Variable](#cron-jobs-path-environment-variable)
-    + [CronJobs - Wildcards](#cronjobs---wildcards)
-    + [SUID/SGID Executables --Known Exploits](#suid-sgid-executables---known-exploits)
-    + [SUID/SGID Executables-Shared Object Injection](#suid-sgid-executables-shared-object-injection)
-    + [SUID/SGID Executables-Environment Variables](#suid-sgid-executables-environment-variables)
-    + [SUID/SGID Executables-Abusing Shell Features #1](#suid-sgid-executables-abusing-shell-features--1)
-    + [SUID/SGID Executables-Abusing Shell Features #2](#suid-sgid-executables-abusing-shell-features--2)
-    + [NFS](#nfs)
-    + [Service Exploits](#service-exploits)
-    + [Docker Linux Local PE](#docker-linux-local-pe)
-    + [lxd Group Priv Esc](#lxd-group-priv-esc)
-    + [Capabilities](#capabilities)
 ### Basic Enumeration
 ````
 whoami
@@ -38,7 +15,8 @@ uname -a
 searchsploit linux kernel 3.9
 ````
 - To remove DoS exploits by adding -exclude=”/dos/”
-### Weak File Permissions - Readable /etc/shadow
+### Weak File Permissions
+#### Readable /etc/shadow
 ```
 ls -l /etc/shadow
 cat /etc/shadow
@@ -52,7 +30,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 su root
 ```
-### Weak File Permissions - Writeable /etc/shadow
+#### Writeable /etc/shadow
 ```
 ls -l /etc/shadow
 ```
@@ -65,7 +43,7 @@ mkpasswd -m sha-512 jackiscool
 ```
 su root
 ```
-### Weak File Permissions - Writable /etc/passwd
+#### Writable /etc/passwd
 - The /etc/passwd file contained user password hashes, and some versions of Linux still allow password hashes to be stored there
 - The /etc/passwd file contains information about user accounts. It is world-readable, but usually only writable by the root user. 
 ````
@@ -85,7 +63,8 @@ su root
 ````
 su newroot
 ````
-### Passwords & Keys-History Files
+### Passwords & Keys
+#### History Files
 - If a user accidentally types their password on the command line instead of into a password prompt, it may get recorded in a history file.
 - View the contents of all the hidden history files in the user's home directory:
 ````
@@ -93,7 +72,7 @@ cat ~/.*history | less
 ````
 - Note that the user has tried to connect to a MySQL server at some point, using the "root" username and a password submitted via the command line. 
 - Note that there is no space between the -p option and the password!
-### Passwords & Keys - Config Files
+#### Config Files
 - Config files often contain passwords in plaintext or other reversible formats.
 - List the contents of the user's home directory:
 ````
@@ -107,7 +86,7 @@ cat /home/user/myvpn.ovpn
 ````
 su root
 ````
-### Passwords & Keys-SSH Keys
+#### Keys-SSH Keys
 - Sometimes users make backups of important files but fail to secure them with the correct permissions.
 - Look for hidden files & directories in the system root:
 ````
