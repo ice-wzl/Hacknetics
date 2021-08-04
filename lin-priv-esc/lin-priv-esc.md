@@ -242,8 +242,8 @@ nc -nvlp 4444
 ````
 find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
 ````
-- Note that /usr/sbin/exim-4.84-3 appears in the results. Try to find a known exploit for this version of exim. Exploit-DB, Google, and GitHub are good places to search!
-- Exploit code for this is in this repo.
+- Note that /usr/sbin/exim-4.84-3 appears in the results. Exploit is in this repo. 
+- Exploit-DB, Google, and GitHub are good places to search!
 - Check GTFO Bins and Google for SUID/SGID!!!
 
 
