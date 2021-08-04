@@ -1,4 +1,5 @@
 # Linux Privlage Escalation
+## Table of Contents
 - [Linux Privlage Escalation](#linux-privlage-escalation)
     + [Basic Enumeration](#basic-enumeration)
     + [Weak File Permissions - Readable /etc/shadow](#weak-file-permissions---readable--etc-shadow)
