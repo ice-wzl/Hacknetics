@@ -1,5 +1,5 @@
-### Recon
-#### AutoRecon
+## Recon
+### AutoRecon
 - Always start here, trust me.
 ```
 autorecon -ct 2 -cs 2 -vv -o outputdir 192.168.1.100 192.168.1.1/30 localhost
@@ -9,7 +9,7 @@ autorecon x.x.x.x
 - -o custom output directory location.
 - -cs limits the number of concurent scans per target
 - Auto recon will create and store the results in the /results directory.
-#### NetDiscover
+### NetDiscover
 - Netdiscover is an active/passive reconnaissance tool that uses ARP to find live hosts on a local network.
 - Netdiscover actively searches for live hosts on the network by broadcasting ARP requests like a router.
 - By default netdiscover operates in active mode, however you can use it in passive mode with -p.  With passive move it will not broadcast anything.
@@ -17,7 +17,7 @@ autorecon x.x.x.x
 ``` 
 netdiscover -r 10.11.1.0/24
 ````
-#### Nmap
+### Nmap
 - I have no time to read, just give me the meta.
 ````
 nmap -sS x.x.x.x -p- --min-rate 10000
@@ -71,7 +71,7 @@ nmap -A [target ip address]
 nmap -p 1-100 [target host]
 nmap -p 137-139,445 [target host]
 ````
-- NSE
+### NSE
 - Location of scripts 
 ````
 /usr/share/nmap/scripts
@@ -92,7 +92,7 @@ nmap --script=[script name] [target host]
 ````
 nmap --script=http-robots.txt.nse [target host]
 ````
-#### SNMP 
+### SNMP 
 - Commands 
 - Read, write, trap, traversal command
 - SNMP community strings
@@ -100,7 +100,7 @@ nmap --script=http-robots.txt.nse [target host]
 - There are three different community strings that allow a user to set 1 ready only commands, 2 read write commands and 3 traps.  
 - SNMPv3 community string is replaced with a user and password authentication.  
 - SNMPv1/v2 is factory default read only strings set to public and read write string set to private.
-#### Onesixtyone
+### Onesixtyone
 - Onesixtyone is a fast tool to brute force SNMP community strings and take advantage of the connectionless protocol.
 - Onesixtyone requires two arguments: a file that contains the list of community strings to try and the target host ip address.  
 - You can also provide a list of host IP addresses to be scanned by onesixtyone using the -i option.
@@ -112,7 +112,7 @@ onesixtyone -c snmp_community_strings_wordlist_onesixtyone.txt -p 161 192.168.43
 ````
 /usr/share/wordlists/seclists/Discovery/SNMP
 ````
-#### SNMPwalk
+### SNMPwalk
 - Snmpwalk queries MIB values to retrieve information about the managed devices, but as a minimum requires a valid SNMP read only community string.
 - Run snmpwalk with the default community string ‘public’ on and SNMPv1 device use the following command:
 ````
@@ -126,7 +126,7 @@ snmpwalk -c public -v1 [target host] [OID]
 ````
 ls -l /usr/share/nmap/scripts/snmp*
 ````
-#### SMB Enumeration
+### SMB Enumeration
 - The SMB is a network file sharing protocol that provides access to shared files and printers on a local network.
 - When clients and servers use different operating systems and SMB versions, the highest supported version will be used for communication.
 - SMB uses the following TCP and UDP ports:
@@ -139,7 +139,7 @@ Netbios-ssn 139/tcp #NETBIOS session service
 Netbios-ssn 139/udp
 Microsoft-ds 445/tcp #if you are using active directory
 ````
-#### rpcclient
+### rpcclient
 - A tool used for executing client-side MS-RPC functions. A null session in a connection with a samba or SMB server that does not require authentication with a password.
 ````
 rpcclient -U “” [target ip address]
@@ -202,80 +202,131 @@ rpcclient $> lookupsids S-1-5-21-532510730-1394270290-3802288464-1000
 S-1-5-21-532510730-1394270290-3802288464-1000 PBX\pbx (1)
 ````
 - Have the full SID now
-
-
-#### Nikto
+### Enum4linux
+- Enum4linux is a linux alternative to enum.exe and it is used to enumerate data from windows or samba hosts.
 ```
-nikto -h x.x.x.x
-```
-#### GoBuster
-```
-gobuster -u x.x.x.x
-gobuster dir -u http://x.x.x.x -w /usr/share/wordlists/dirb/common.txt
-gobuster -u http://x.x.x.x -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-small.txt -x php
-gobuster -s 200,204,301,302,307,403 -u x.x.x.x
-```
-##### Wfuzz
-```
-wfuzz -c -w /usr/share/seclists/Discovery/Web_Content/common.txt --hc 404 x.x.x.x/FUZZ
-wfuzz -c -w /usr/share/seclists/Discovery/Web_Content/common.txt -R 3 --sc 200 x.x.x.x/FUZZ
-wfuzz -c -z file,/root/.ZAP/fuzzers/dirbuster/directory-list-2.3-big.txt --sc 200 http://x.x.x.x/FUZZ.php
-wfuzz --hw=1 --hh=3076 -w seclist_common_wordlist.txt http://x.x.x.x/FUZZ
-```
-##### WpScan
-```
-wpscan --url http://x.x.x.x --enumerate u,p,t
-```
-##### SNMPWalk
-```
-snmpwalk -c public -v1 x.x.x.x
+enum4linux [target ip]
 ````
-##### Webdav
-- Incorrect permissions test 
+-Will auto RID cycle 
+- Part of autorecon!
+- Recommend to > output to a text file for reference (its alot)
+### Nmap SMB scripts
+````
+ls -l /usr/share/nmap/scripts/smb*
+nmap --script=[scriptname] [target ip]
+````
+- For smb-os-discovery:
+````
+nmap -p 139,445 --script=smb-os-discovery [target ip]
+````
+- First scans the target for all known SMB vulnerabilities 
+- Second to see if target is vulnerable to EternalBlue
+
+````
+nmap -p 139,445 --script=smb-vuln* [target ip]
+nmap -p 445 [target] --script=smb-vuln-ms17-010
+````
+- If nse is missing a script that is available:
+````
+wget https://svn.nmap.org/nmap/scripts/NAME_OF_SCRIPT.nse -O /usr/share/nmap/scripts/NAME_OF_SCRIPT.nse
+````
+- Then update the database:
+````
+nmap --script-updatedb
+````
+### Web Servers
+- Two most common Apache, Microsoft IIS
+### Nikto
 ```
-cadaver http://x.x.x.x
-davtest http://x.x.x.x
+nikto -h [target ip/hostname]
+nikto -h [target ip/hostname] -p 80,88,443
+nikto -h [target ip/hostname -p 80-88
 ```
-##### Command Injection
-- File Traverse:
-```
-x.x.x.x/file.php?cmd=ls
-```
-- Test file upload with curl
-```
-curl -vX options http://x.x.x.x 
-```
-- Upload file using curl to website with PUT option available
-```
-curl --upload-file shell.php --url http://x.x.x.x
-```
-##### Login Bypass
-```
-john ' or '1'='1
-```
-- Enter into username and password
-##### Determine vulnerable columns or column that is visible
-```
-param=' or 1=0 union select null,null,null
-param=' or 1=0 union select 1,2,3
-```
-- Else try
-```
-param=' or 1=1 union select table_name,null,null from information_schema.tables
-```
-- If it produces an error try table_name at other positions
-- Say Column 1 and 2 are visible from the above queries
-- Further Enumerate
-```
-param=' or 1=0 union select table_schema,null,null from information_schema.columns
-```
--Display all databse names
-```
-param=' or 1=0 union select table_name,null,null from information_schema.columns
-```
-- Display all table names
-```
-param=' or 1=1 select table_name,null,null from information_schema.columns where table_schema='public'
-```
-- Display tables inside public databse
+- Run early, its slow but good
+### Sanity Check
+- Look at robots.txt
+- Look in the webpage for comments
+- Is the site not rendering right? (check dns /etc/hosts)
+### DIRB
+- Comes with a default word list 
+````
+Dirb [url target host]
+````
+- Custom wordlist:
+````
+Dirb [url target host] [wordlist]
+````
+- `-n` will stop the scan on current dir and move to the next 
+- `-q` stops the running scan and saves the current state
+- `-r` will return the remaining scan statistics 
+### Dirbuster
+````
+dirbuster 
+````
+- Wordlist location: 
+````
+/usr/share/dirbuster/wordlists/
+````
+- To run, set the target to the target url, set the number of threads, select a word list and hit the start button.
+- Much faster because its multi threaded
+### Netcat
+- We can grab the banner of the web service running on the target host:
+````
+nc [target ip] 80
+````
+- Enter this HTTP request on the next line
+````
+HEAD / HTTP/1.0
+````
+- To retrieve the top level page on the webserver we can use the following command:
+````
+nc [target ip] 80
+````
+- Run this HTTP request
+````
+GET / HTTP/1.0
+````
+### GoBuster
+- Another good web application scanner.
+````
+gobuster dir -u http://magic.uploadvulns.thm -w /usr/share/wordlists/dirb/big.txt
+````
+- `dir` to run it in directory enumeration mode
+- `-u` followed by the url 
+- `-w` to specify a wordlist
+#### WpScan
+- Ideal for wordpress sites to find their vulnerable plugins, users, and themes.
+- Default scan runs non intrusive checks which means no accounts will be brute forced and themes and plugins will be enumerated passively.
+````
+wpscan --update
+wpscan --url [target url]
+wpscan --url http://x.x.x.x --enumerate u,p,t
+````
+- Active enumeration 
+- `p` ->scans popular plugins only
+- `vt` ->scans vulnerable these only
+- `at` ->scans all themes
+- Full command:
+````
+wpscan --url [url] --enumerate [p/vp/ap/t/vt/at]
+````
+- The following command will test a target for all popular plugins:
+````
+wpscan --url [url] --enumerate p --plugins-detection aggressive
+````
+- To scan a wordpress installation only for vulnerable plugins we can run the following command:
+````
+wpscan --url [url] --enumerate vp --plugins-detection aggressive
+````
+- Scan for all plugins in the WPScan database run the enumerate option with ap:
+````
+wpscan --url [url] --enumerate ap --plugins-detection aggressive
+````
+- Enumerating WP users
+````
+wpscan --url [target url] --enumerate u 
+````
+
+
+
 
