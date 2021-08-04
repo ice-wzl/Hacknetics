@@ -1,5 +1,38 @@
 # Linux Privlage Escalation
 ## Table of Contents
+- [Linux Privlage Escalation](#linux-privlage-escalation)
+  * [Table of Contents](#table-of-contents)
+    + [Basic Enumeration](#basic-enumeration)
+    + [Weak File Permissions](#weak-file-permissions)
+      - [Readable /etc/shadow](#readable--etc-shadow)
+      - [Writeable /etc/shadow](#writeable--etc-shadow)
+      - [Writable /etc/passwd](#writable--etc-passwd)
+    + [Passwords & Keys](#passwords---keys)
+      - [History Files](#history-files)
+      - [Config Files](#config-files)
+      - [Keys-SSH Keys](#keys-ssh-keys)
+    + [Sudo-Shell escape Sequences](#sudo-shell-escape-sequences)
+    + [Sudo Environment Variables](#sudo-environment-variables)
+    + [Cron Jobs -File permissions](#cron-jobs--file-permissions)
+    + [Cron Jobs Path Environment Variable](#cron-jobs-path-environment-variable)
+    + [CronJobs - Wildcards](#cronjobs---wildcards)
+    + [SUID/SGID Executables --Known Exploits](#suid-sgid-executables---known-exploits)
+    + [SUID/SGID Executables-Shared Object Injection](#suid-sgid-executables-shared-object-injection)
+    + [SUID/SGID Executables-Environment Variables](#suid-sgid-executables-environment-variables)
+    + [SUID/SGID Executables-Abusing Shell Features #1](#suid-sgid-executables-abusing-shell-features--1)
+    + [SUID/SGID Executables-Abusing Shell Features #2](#suid-sgid-executables-abusing-shell-features--2)
+    + [NFS](#nfs)
+    + [Service Exploits](#service-exploits)
+    + [Docker Linux Local PE](#docker-linux-local-pe)
+    + [lxd Group Priv Esc](#lxd-group-priv-esc)
+        * [Errors - on the vulnerable server](#errors---on-the-vulnerable-server)
+    + [Capabilities](#capabilities)
+      - [Python](#python)
+      - [Perl](#perl)
+      - [Tar](#tar)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 ### Basic Enumeration
 ````
 whoami
@@ -484,7 +517,7 @@ lxc exec privesc /bin/sh
 cd /mnt/root
 ```
 - `/mnt/root` is where the file system is mounted.
-##### Errors (on the vulnerable server)
+##### Errors - on the vulnerable server
 - If you recieve an `Failed container creation: No storage pool found. Please create a new storage pool.`
 - You need to initialize lxd before using it
 ```
