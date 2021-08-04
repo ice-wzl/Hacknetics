@@ -294,7 +294,7 @@ gobuster dir -u http://magic.uploadvulns.thm -w /usr/share/wordlists/dirb/big.tx
 - `dir` to run it in directory enumeration mode
 - `-u` followed by the url 
 - `-w` to specify a wordlist
-#### WpScan
+### WpScan
 - Ideal for wordpress sites to find their vulnerable plugins, users, and themes.
 - Default scan runs non intrusive checks which means no accounts will be brute forced and themes and plugins will be enumerated passively.
 ````
