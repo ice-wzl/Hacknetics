@@ -24,13 +24,13 @@ nmap -sS x.x.x.x -p- --min-rate 10000
 nmap -A -T5 x.x.x.x -p- -vv
 nmap --script=scriptname.nse x.x.x.x -vv
 ````
-- Ping Scan -sn Option
+#### Ping Scan -sn Option
 - -sn tells nmap to perform host discovery only without any additional port scanning and prints out details of any hosts that responded.
 ````
 nmap -sn 10.11.1.0/24
 ````
 - nmap also has the -Pn option which will disable the host discovery stage altogether on a scan.  The -Pn option is best used in combination with other scans.
--TCP Connect Scan
+#### TCP Connect Scan
 - The TCP connect scan in Nmap is the alternative TCP scan to use when a SYN scan is not an option.  
 - TCP connect scan should be used when nmap does not have raw packet privileges which is required for a SYN scan.
 - TCP complete performs the entire 3 way handshake.
@@ -38,13 +38,13 @@ nmap -sn 10.11.1.0/24
 ````
 nmap -sT [target host]
 ````
--TCP SYN Scan
+#### TCP SYN Scan
 - The TCP SYN scan is usually the best scan option in most cases and is known as the ‘stealthy port scan.’
 - Does not complete the 3 way handshake
 ````
 nmap -sS [target host]
 ````
-- UDP Port Scanning
+#### UDP Port Scanning
 - Always check for UDP ports will pick up DNS, NTP, SNMP 
 - Check top 100 ports with the `-F` option.
 - Generally much slower than TCP scanning 
@@ -52,7 +52,7 @@ nmap -sS [target host]
 nmap -sU [target host]
 nmap -sU -F [target host]
 ````
-- Fingerprint Services
+#### Fingerprint Services
 - To figure out what services are running on target ports we use:
 ````
 nmap -sV [target ip address]
@@ -65,7 +65,7 @@ nmap -sV -O [target ip address]
 ````
 nmap -A [target ip address]
 ````
-- Scanning port ranges with Nmap
+#### Scanning port ranges with Nmap
 - By default nmap will only scan the most 1000 common ports. To override the default use the -p
 ````
 nmap -p 1-100 [target host]
