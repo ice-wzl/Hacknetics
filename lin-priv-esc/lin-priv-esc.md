@@ -21,12 +21,7 @@
     + [Service Exploits](#service-exploits)
     + [Docker Linux Local PE](#docker-linux-local-pe)
     + [lxd Group Priv Esc](#lxd-group-priv-esc)
-        * [Errors (on the vulnerable server)](#errors--on-the-vulnerable-server-)
     + [Capabilities](#capabilities)
-      - [Python](#python)
-      - [Perl](#perl)
-      - [Tar](#tar)
-
 ### Basic Enumeration
 ````
 whoami
