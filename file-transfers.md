@@ -47,7 +47,7 @@ chmod +x linpeas.sh
 scp /home/kali/Documents/linpeas.sh user@10.10.10.100:/tmp
 ```
 - This command copies the file linpeas.sh to user on the target box and places it in the /tmp directory.
-- SCP a file from your attack box while on the command line of a target box
+- SCP a file from your attack box while on the command line of a target box and place it in your present working directory.
 ```
-scp jack@172.16.6.1:/home/kali/Documents/linpeas.sh
+scp jack@172.16.6.1:/home/kali/Documents/linpeas.sh .
 ```
