@@ -1,4 +1,32 @@
 # Linux Privlage Escalation
+- [Linux Privlage Escalation](#linux-privlage-escalation)
+    + [Basic Enumeration](#basic-enumeration)
+    + [Weak File Permissions - Readable /etc/shadow](#weak-file-permissions---readable--etc-shadow)
+    + [Weak File Permissions - Writeable /etc/shadow](#weak-file-permissions---writeable--etc-shadow)
+    + [Weak File Permissions - Writable /etc/passwd](#weak-file-permissions---writable--etc-passwd)
+    + [Passwords & Keys-History Files](#passwords---keys-history-files)
+    + [Passwords & Keys - Config Files](#passwords---keys---config-files)
+    + [Passwords & Keys-SSH Keys](#passwords---keys-ssh-keys)
+    + [Sudo-Shell escape Sequences](#sudo-shell-escape-sequences)
+    + [Sudo Environment Variables](#sudo-environment-variables)
+    + [Cron Jobs -File permissions](#cron-jobs--file-permissions)
+    + [Cron Jobs Path Environment Variable](#cron-jobs-path-environment-variable)
+    + [CronJobs - Wildcards](#cronjobs---wildcards)
+    + [SUID/SGID Executables --Known Exploits](#suid-sgid-executables---known-exploits)
+    + [SUID/SGID Executables-Shared Object Injection](#suid-sgid-executables-shared-object-injection)
+    + [SUID/SGID Executables-Environment Variables](#suid-sgid-executables-environment-variables)
+    + [SUID/SGID Executables-Abusing Shell Features #1](#suid-sgid-executables-abusing-shell-features--1)
+    + [SUID/SGID Executables-Abusing Shell Features #2](#suid-sgid-executables-abusing-shell-features--2)
+    + [NFS](#nfs)
+    + [Service Exploits](#service-exploits)
+    + [Docker Linux Local PE](#docker-linux-local-pe)
+    + [lxd Group Priv Esc](#lxd-group-priv-esc)
+        * [Errors (on the vulnerable server)](#errors--on-the-vulnerable-server-)
+    + [Capabilities](#capabilities)
+      - [Python](#python)
+      - [Perl](#perl)
+      - [Tar](#tar)
+
 ### Basic Enumeration
 ````
 whoami
