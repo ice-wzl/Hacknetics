@@ -3,7 +3,7 @@
 - Always start here, trust me.
 ```
 autorecon -ct 2 -cs 2 -vv -o outputdir 192.168.1.100 192.168.1.1/30 localhost
-autorecon x.x.x.x
+autorecon 10.200.97.200
 ````
 - ct (concurrent targets)
 - -o custom output directory location.
