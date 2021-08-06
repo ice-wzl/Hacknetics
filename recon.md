@@ -139,7 +139,7 @@ Netbios-ssn 139/tcp #NETBIOS session service
 Netbios-ssn 139/udp
 Microsoft-ds 445/tcp #if you are using active directory
 ````
-#### smbmap
+### smbmap
 - smbmap is one of the best ways to enumerate samba. smbmap allows pen-testers to run commands(given proper permissions), download and upload files, and overall is just incredibly useful for smb enumeration.
 ````
 smbmap -u "admin" -p "password" -H 10.10.10.10 -x "ipconfig"
@@ -148,7 +148,7 @@ smbmap -u "admin" -p "password" -H 10.10.10.10 -x "ipconfig"
 - `-d` -> specify the domain to enumerate
 - `--download` -> downloads a file
 - `--upload` -> uploads a file
-#### smbclient
+### smbclient
 - smbclient allows you to do most of the things you can do with smbmap, and it also offers you and interactive prompt.
 - `-w` -> specify the domain(workgroup) to use when connecting to the host
 - `-I` -> specify the ip address of the host
@@ -161,7 +161,7 @@ smbmap -u "admin" -p "password" -H 10.10.10.10 -x "ipconfig"
 - Syntax: 
 - To see which shares are available on a given host, run:
 ````
- /usr/bin/smbclient -L 10.10.10.10.
+ /usr/bin/smbclient -L 10.10.10.10
 ````
 - For example, if you are trying to reach a directory that has been shared as 'public' on a machine called 10.10.10.10, the service would be called \\10.10.10.10\public. - 
 - However, due to shell restrictions, you will need to escape the backslashes, so you end up with something like this:
