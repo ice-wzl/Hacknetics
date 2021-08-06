@@ -1,4 +1,34 @@
 ## Recon
+###Table of Contents
+- [Recon](#recon)
+  * [AutoRecon](#autorecon)
+  * [NetDiscover](#netdiscover)
+  * [Nmap](#nmap)
+    + [Ping Scan -sn Option](#ping-scan--sn-option)
+    + [TCP Connect Scan](#tcp-connect-scan)
+    + [TCP SYN Scan](#tcp-syn-scan)
+    + [UDP Port Scanning](#udp-port-scanning)
+    + [Fingerprint Services](#fingerprint-services)
+    + [Scanning port ranges with Nmap](#scanning-port-ranges-with-nmap)
+  * [NSE](#nse)
+  * [SNMP](#snmp)
+  * [Onesixtyone](#onesixtyone)
+  * [SNMPwalk](#snmpwalk)
+  * [SMB Enumeration](#smb-enumeration)
+  * [smbmap](#smbmap)
+  * [smbclient](#smbclient)
+  * [rpcclient](#rpcclient)
+  * [Enum4linux](#enum4linux)
+  * [Nmap SMB scripts](#nmap-smb-scripts)
+  * [Web Servers](#web-servers)
+  * [Nikto](#nikto)
+  * [Sanity Check](#sanity-check)
+  * [DIRB](#dirb)
+  * [Dirbuster](#dirbuster)
+  * [Netcat](#netcat)
+  * [GoBuster](#gobuster)
+  * [WpScan](#wpscan)
+
 ### AutoRecon
 - Always start here, trust me.
 ```
