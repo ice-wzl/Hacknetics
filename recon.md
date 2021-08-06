@@ -353,6 +353,26 @@ gobuster dir -u http://magic.uploadvulns.thm -w /usr/share/wordlists/dirb/big.tx
 - `dir` to run it in directory enumeration mode
 - `-u` followed by the url 
 - `-w` to specify a wordlist
+- Syntax
+- `dir` -> Directory/File Brute force mode
+- `dns` -> DNS brute forcing mode
+- `-X` -> Flag for extentions to be tested against
+- `-w` -> Sets a wordlist to be used
+- `-U` -> Set username for basic authentication (if required by the directory)
+- `-P` -> Set password for basic authentication 
+- `-s` -> Set the status codes gobuster will recognize as valid
+- `-k` -> Skip ssl certificate validation
+- `-a` -> Set a user agent string
+- `-H` -> Specify and HTTP header
+- `-u` -> Set the url to brute force 
+- `/usr/share/wordlists` -> Location of the wordlists
+### Example full syntax
+````
+dirb http://10.10.10.10:80/secret/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -X .txt 
+````
+- This command tests the /secret/ directory 
+- It specifies to use the wordlist `directory-list-2.3-medium.txt`
+- With the `-X` flag it sets gobuster to test for `.txt` file extensions i.e. admin.txt, secret.txt
 ### WpScan
 - Ideal for wordpress sites to find their vulnerable plugins, users, and themes.
 - Default scan runs non intrusive checks which means no accounts will be brute forced and themes and plugins will be enumerated passively.
