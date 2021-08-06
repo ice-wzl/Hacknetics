@@ -353,7 +353,7 @@ gobuster dir -u http://magic.uploadvulns.thm -w /usr/share/wordlists/dirb/big.tx
 - `dir` to run it in directory enumeration mode
 - `-u` followed by the url 
 - `-w` to specify a wordlist
-- Syntax
+#### Syntax
 - `dir` -> Directory/File Brute force mode
 - `dns` -> DNS brute forcing mode
 - `-X` -> Flag for extentions to be tested against
