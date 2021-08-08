@@ -373,6 +373,12 @@ dirb http://10.10.10.10:80/secret/ -w /usr/share/wordlists/dirbuster/directory-l
 - This command tests the /secret/ directory 
 - It specifies to use the wordlist `directory-list-2.3-medium.txt`
 - With the `-x` flag it sets gobuster to test for `.txt` file extensions i.e. admin.txt, secret.txt
+### Dirsearch
+
+- Full Syntax
+````
+dirsearch -u http://10.10.54.223:80/island/2100 -t 16 -r -e ticket -f -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+````
 ### WpScan
 - Ideal for wordpress sites to find their vulnerable plugins, users, and themes.
 - Default scan runs non intrusive checks which means no accounts will be brute forced and themes and plugins will be enumerated passively.
