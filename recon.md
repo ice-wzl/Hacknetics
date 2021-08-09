@@ -453,7 +453,18 @@ wpscan --url [url] --enumerate ap --plugins-detection aggressive
 ````
 wpscan --url [target url] --enumerate u 
 ````
-
-
+## BFAC
+- Advanced backup-file artifacts for testing web applications
+- https://github.com/mazen160/bfac
+- Install 
+````
+git clone https://github.com/mazen160/bfac
+sudo python3 setup.py install
+````
+- Find backup files on the website/application
+````
+bfac --url http://$ip/ --level 4
+````
+- If you manage to download a backupfile, grep for users - might be a password as well
 
 
