@@ -1,6 +1,7 @@
 ## Recon
 ### Table of Contents
 - [Recon](#recon)
+  * [Table of Contents](#table-of-contents)
   * [AutoRecon](#autorecon)
   * [NetDiscover](#netdiscover)
   * [Nmap](#nmap)
@@ -11,9 +12,11 @@
     + [Fingerprint Services](#fingerprint-services)
     + [Scanning port ranges with Nmap](#scanning-port-ranges-with-nmap)
   * [NSE](#nse)
-  * [SNMP](#snmp)
+  * [SMTP Port 25 default](#smtp-port-25-default)
+  * [SNMP Ports 161, 162 default](#snmp-ports-161--162-default)
   * [Onesixtyone](#onesixtyone)
   * [SNMPwalk](#snmpwalk)
+  * [NFS](#nfs)
   * [SMB Enumeration](#smb-enumeration)
   * [smbmap](#smbmap)
   * [smbclient](#smbclient)
@@ -27,6 +30,9 @@
   * [Dirbuster](#dirbuster)
   * [Netcat](#netcat)
   * [GoBuster](#gobuster)
+    + [Syntax](#syntax)
+  * [Example full syntax](#example-full-syntax)
+  * [Dirsearch](#dirsearch)
   * [WpScan](#wpscan)
 
 ### AutoRecon
