@@ -1,8 +1,7 @@
 # Linux Privlage Escalation
 ## Table of Contents
-- [Linux Privlage Escalation](#linux-privlage-escalation)
-  * [Table of Contents](#table-of-contents)
-    + [Basic Enumeration](#basic-enumeration)
+ + [Basic Enumeration](#basic-enumeration)
+      - [Binaries Owned by the root user](#binaries-owned-by-the-root-user)
     + [Weak File Permissions](#weak-file-permissions)
       - [Readable shadow](#readable-shadow)
       - [Writeable shadow](#writeable-shadow)
@@ -30,9 +29,6 @@
       - [Python](#python)
       - [Perl](#perl)
       - [Tar](#tar)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
 ### Basic Enumeration
 ````
 whoami
@@ -46,6 +42,11 @@ cat /proc/version
 hostname 
 uname -a
 searchsploit linux kernel 3.9
+````
+#### Binaries Owned by the root user
+- Always run with `-p` so it preserves permissions for the root user!!!!
+````
+./suid_bash -p
 ````
 - To remove DoS exploits by adding -exclude=”/dos/”
 ### Weak File Permissions
