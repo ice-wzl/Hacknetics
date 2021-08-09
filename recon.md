@@ -156,6 +156,23 @@ snmpwalk -c public -v1 [target host] [OID]
 ````
 ls -l /usr/share/nmap/scripts/snmp*
 ````
+### NFS
+- If there is a nfs port open on the attack machine try to find the name of the share
+````
+showmount -e [target ip]
+````
+- This should return a path like seen below
+````
+/srv/hermes*
+````
+- Make a directory on your box to mount to the target share
+````
+mkdir hack
+````
+- Mount to the target
+````
+sudo mount -t nfs [target ip]:/srv/hermes ~/hack
+````
 ### SMB Enumeration
 - The SMB is a network file sharing protocol that provides access to shared files and printers on a local network.
 - When clients and servers use different operating systems and SMB versions, the highest supported version will be used for communication.
