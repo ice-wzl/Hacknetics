@@ -108,6 +108,10 @@ nmap -p 1-100 [target host]
 nmap -p 137-139,445 [target host]
 ````
 ### NSE
+- Web Application Vulnerability scan:
+````
+nmap --script=http-vuln* 10.10.10.10
+````
 - Location of scripts 
 ````
 /usr/share/nmap/scripts
