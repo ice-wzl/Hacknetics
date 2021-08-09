@@ -122,7 +122,15 @@ nmap --script=[script name] [target host]
 ````
 nmap --script=http-robots.txt.nse [target host]
 ````
-### SNMP 
+### SMTP Port 25 default
+````
+smtp-user-enum -M VRFY -U /usr/share/wordlists/dirb/common.txt -t [target ip]
+````
+- `-M` -> Sets the mode, the options are: EXPN, VRFY, RCPT (default VRFY)
+- `-u` -> Check if a remote exists on a system
+- `-U` -> File of usernames to check via smtp service
+- `-t` -> Server host running the smtp service
+### SNMP Ports 161, 162 default
 - Commands 
 - Read, write, trap, traversal command
 - SNMP community strings
