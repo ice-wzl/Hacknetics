@@ -1,6 +1,6 @@
-# Recon
+# Recon and Enumeration
 ### Table of Contents
-- [Recon](#recon)
+- [Recon and Enumeration](#recon-and-enumeration)
     + [Table of Contents](#table-of-contents)
   * [AutoRecon](#autorecon)
   * [General Enumeration Figure out the Hosts and Services Running](#general-enumeration-figure-out-the-hosts-and-services-running)
@@ -37,7 +37,6 @@
     + [Dirsearch](#dirsearch)
     + [WpScan](#wpscan)
     + [BFAC](#bfac)
-
 ## AutoRecon
 - Always start here, trust me.
 ```
