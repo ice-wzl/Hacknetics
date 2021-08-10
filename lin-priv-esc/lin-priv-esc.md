@@ -29,7 +29,7 @@
       - [Python](#python)
       - [Perl](#perl)
       - [Tar](#tar)
-### Basic Enumeration
+### Basic Manual Enumeration
 ````
 whoami
 pwd
@@ -43,6 +43,7 @@ hostname
 uname -a
 searchsploit linux kernel 3.9
 ````
+- To remove DoS exploits by adding -exclude=”/dos/”
 #### Binaries Owned by the root user
 - Always run with `-p` so it preserves permissions for the root user!!!!
 ````
@@ -53,7 +54,25 @@ searchsploit linux kernel 3.9
 ````
 find /* -user root -perm -4000 -print 2>/dev/null
 ````
-- To remove DoS exploits by adding -exclude=”/dos/”
+
+#### File Systems
+- Use the following command to check for unmounted file systems 
+````
+cat /etc/fstab
+````
+#### World Writeable 
+- Files on the system with permissions that can be modifiled by any user on the system
+````
+find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -exec ls -ld '{}' ';' 2>/dev/null | grep -v root
+````
+- World writable directories for root
+````
+find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -exec ls -ld '{}' ';' 2>/dev/null | grep root
+````
+- World writable files
+````
+find / \( -wholename '/home/homedir/*' -prune -o -wholename '/proc/*' -prune \) -o \( -type f -perm -0002 \) -exec ls -l '{}' ';' 2>/dev/null
+````
 ### Weak File Permissions
 #### Readable shadow
 ```
