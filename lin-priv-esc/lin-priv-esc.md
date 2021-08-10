@@ -48,6 +48,11 @@ searchsploit linux kernel 3.9
 ````
 ./suid_bash -p
 ````
+#### Quick SUID Find
+- The following command can be used to find all SUID programs on a given system:
+````
+find /* -user root -perm -4000 -print 2>/dev/null
+````
 - To remove DoS exploits by adding -exclude=”/dos/”
 ### Weak File Permissions
 #### Readable shadow
