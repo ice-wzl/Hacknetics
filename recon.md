@@ -1,41 +1,44 @@
-## Recon
+# Recon
 ### Table of Contents
 - [Recon](#recon)
-  * [Table of Contents](#table-of-contents)
+    + [Table of Contents](#table-of-contents)
   * [AutoRecon](#autorecon)
-  * [NetDiscover](#netdiscover)
-  * [Nmap](#nmap)
-    + [Ping Scan -sn Option](#ping-scan--sn-option)
-    + [TCP Connect Scan](#tcp-connect-scan)
-    + [TCP SYN Scan](#tcp-syn-scan)
-    + [UDP Port Scanning](#udp-port-scanning)
-    + [Fingerprint Services](#fingerprint-services)
-    + [Scanning port ranges with Nmap](#scanning-port-ranges-with-nmap)
-  * [NSE](#nse)
+  * [General Enumeration Figure out the Hosts and Services Running](#general-enumeration-figure-out-the-hosts-and-services-running)
+    + [NetDiscover](#netdiscover)
+    + [Nmap](#nmap)
+      - [Ping Scan -sn Option](#ping-scan--sn-option)
+      - [TCP Connect Scan](#tcp-connect-scan)
+      - [TCP SYN Scan](#tcp-syn-scan)
+      - [UDP Port Scanning](#udp-port-scanning)
+      - [Fingerprint Services](#fingerprint-services)
+      - [Scanning port ranges with Nmap](#scanning-port-ranges-with-nmap)
+    + [NSE](#nse)
   * [SMTP Port 25 default](#smtp-port-25-default)
+    + [SMTP User Enum](#smtp-user-enum)
   * [SNMP Ports 161, 162 default](#snmp-ports-161--162-default)
-  * [Onesixtyone](#onesixtyone)
-  * [SNMPwalk](#snmpwalk)
+    + [Onesixtyone](#onesixtyone)
+    + [SNMPwalk](#snmpwalk)
   * [NFS](#nfs)
   * [SMB Enumeration](#smb-enumeration)
-  * [smbmap](#smbmap)
-  * [smbclient](#smbclient)
-  * [rpcclient](#rpcclient)
-  * [Enum4linux](#enum4linux)
-  * [Nmap SMB scripts](#nmap-smb-scripts)
+    + [smbmap](#smbmap)
+    + [smbclient](#smbclient)
+    + [rpcclient](#rpcclient)
+    + [Enum4linux](#enum4linux)
+    + [Nmap SMB scripts](#nmap-smb-scripts)
   * [Web Servers](#web-servers)
-  * [Nikto](#nikto)
-  * [Sanity Check](#sanity-check)
-  * [DIRB](#dirb)
-  * [Dirbuster](#dirbuster)
-  * [Netcat](#netcat)
-  * [GoBuster](#gobuster)
-    + [Syntax](#syntax)
-  * [Example full syntax](#example-full-syntax)
-  * [Dirsearch](#dirsearch)
-  * [WpScan](#wpscan)
+    + [Nikto](#nikto)
+    + [Sanity Check](#sanity-check)
+    + [DIRB](#dirb)
+    + [Dirbuster](#dirbuster)
+    + [Netcat](#netcat)
+    + [GoBuster](#gobuster)
+      - [Syntax](#syntax)
+      - [Example full syntax](#example-full-syntax)
+    + [Dirsearch](#dirsearch)
+    + [WpScan](#wpscan)
+    + [BFAC](#bfac)
 
-### AutoRecon
+## AutoRecon
 - Always start here, trust me.
 ```
 autorecon -ct 2 -cs 2 -vv -o outputdir 192.168.1.100 192.168.1.1/30 localhost
@@ -45,6 +48,7 @@ autorecon 10.200.97.200
 - `-o` custom output directory location.
 - `-cs` limits the number of concurent scans per target
 - Auto recon will create and store the results in the `/results` directory.
+## General Enumeration Figure out the Hosts and Services Running
 ### NetDiscover
 - Netdiscover is an active/passive reconnaissance tool that uses ARP to find live hosts on a local network.
 - Netdiscover actively searches for live hosts on the network by broadcasting ARP requests like a router.
@@ -132,7 +136,8 @@ nmap --script=[script name] [target host]
 ````
 nmap --script=http-robots.txt.nse [target host]
 ````
-### SMTP Port 25 default
+## SMTP Port 25 default
+### SMTP User Enum
 ````
 smtp-user-enum -M VRFY -U /usr/share/wordlists/dirb/common.txt -t [target ip]
 ````
@@ -147,7 +152,7 @@ smtp-user-enum -M EXPN -u admin1 -t 10.0.0.1
 smtp-user-enum -M RCPT -U users.txt -T mail-server-ips.txt
 smtp-user-enum -M EXPN -D example.com -U users.txt -t 10.0.0.1
 ````
-### SNMP Ports 161, 162 default
+## SNMP Ports 161, 162 default
 - Commands 
 - Read, write, trap, traversal command
 - SNMP community strings
@@ -181,7 +186,7 @@ snmpwalk -c public -v1 [target host] [OID]
 ````
 ls -l /usr/share/nmap/scripts/snmp*
 ````
-### NFS
+## NFS
 - If there is a nfs port open on the attack machine try to find the name of the share
 ````
 showmount -e [target ip]
@@ -198,7 +203,7 @@ mkdir hack
 ````
 sudo mount -t nfs [target ip]:/srv/hermes ~/hack
 ````
-### SMB Enumeration
+## SMB Enumeration
 - The SMB is a network file sharing protocol that provides access to shared files and printers on a local network.
 - When clients and servers use different operating systems and SMB versions, the highest supported version will be used for communication.
 - SMB uses the following TCP and UDP ports:
@@ -335,7 +340,7 @@ wget https://svn.nmap.org/nmap/scripts/NAME_OF_SCRIPT.nse -O /usr/share/nmap/scr
 ````
 nmap --script-updatedb
 ````
-### Web Servers
+## Web Servers
 - Two most common Apache, Microsoft IIS
 ### Nikto
 ```
@@ -408,7 +413,7 @@ gobuster dir -u http://magic.uploadvulns.thm -w /usr/share/wordlists/dirb/big.tx
 - `-H` -> Specify and HTTP header
 - `-u` -> Set the url to brute force 
 - `/usr/share/wordlists` -> Location of the wordlists
-### Example full syntax
+#### Example full syntax
 ````
 dirb http://10.10.10.10:80/secret/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -X .txt 
 ````
@@ -453,7 +458,7 @@ wpscan --url [url] --enumerate ap --plugins-detection aggressive
 ````
 wpscan --url [target url] --enumerate u 
 ````
-## BFAC
+### BFAC
 - Advanced backup-file artifacts for testing web applications
 - https://github.com/mazen160/bfac
 - Install 
