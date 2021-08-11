@@ -1,4 +1,25 @@
 # Transfering Files 
+## Table of Contents
+- [Transfering Files](#transfering-files)
+  * [Netcat File Transfer](#netcat-file-transfer)
+      - [Method Two](#method-two)
+  * [Web Servers:](#web-servers-)
+    + [Python HTTP Server File Transfer](#python-http-server-file-transfer)
+    + [PHP Web Server](#php-web-server)
+    + [Metasploit Web Server](#metasploit-web-server)
+  * [SMB File Transfer](#smb-file-transfer)
+  * [Wget](#wget)
+  * [Curl](#curl)
+  * [PHP Download](#php-download)
+  * [Secure Copy Protocol](#secure-copy-protocol)
+      - [SCP More Example Usage](#scp-more-example-usage)
+  * [Windows Specific Downloads](#windows-specific-downloads)
+    + [CertUtil.exe](#certutilexe)
+    + [Powershell downloads:System.Net.WebClient](#powershell-downloads-systemnetwebclient)
+    + [Powershell Downloads: Start-BitsTransfer](#powershell-downloads--start-bitstransfer)
+    + [Powershell Downloads: Invoke-WebRequest](#powershell-downloads--invoke-webrequest)
+  * [I am Stuck](#i-am-stuck)
+
 ## Netcat File Transfer
 - Step 1
 - Create a file on the target box in the /tmp directory
