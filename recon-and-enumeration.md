@@ -13,6 +13,7 @@
       - [Fingerprint Services](#fingerprint-services)
       - [Scanning port ranges with Nmap](#scanning-port-ranges-with-nmap)
     + [NSE](#nse)
+  * [Vulnerability Scanning](#vulnerability-scanning)
   * [SMTP Port 25 default](#smtp-port-25-default)
     + [SMTP User Enum](#smtp-user-enum)
   * [SNMP Ports 161, 162 default](#snmp-ports-161--162-default)
@@ -20,6 +21,7 @@
     + [SNMPwalk](#snmpwalk)
   * [NFS](#nfs)
   * [SMB Enumeration](#smb-enumeration)
+    + [SMB Checklist](#smb-checklist)
     + [smbmap](#smbmap)
     + [smbclient](#smbclient)
     + [rpcclient](#rpcclient)
@@ -37,6 +39,9 @@
     + [Dirsearch](#dirsearch)
     + [WpScan](#wpscan)
     + [BFAC](#bfac)
+  * [Search services vulnerabilities](#search-services-vulnerabilities)
+  * [Stuck](#stuck)
+
 ## AutoRecon
 - Always start here, trust me.
 ```
