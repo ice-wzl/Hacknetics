@@ -5,5 +5,5 @@
 - Is your VPN still connected?
 ![alt text](https://github.com/DigitalAftermath/EnumerationVisualized/raw/master/enumeration-mind-map.png?raw=true)
 ## Path
-### Start with recon-enumeration.md
+### Start with recon-enumeration folder
 - Start the scans: What is open?
