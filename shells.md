@@ -1,9 +1,9 @@
 ### Reverse Shells
 #### Listensers
 ### Top Resource
-````
-https://www.revshells.com/
-````
+
+- https://www.revshells.com/
+
 ```
 nc -nlvp 1234
 ```
