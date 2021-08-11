@@ -22,15 +22,15 @@ SELECT ID, user_login, user_pass FROM wp_users WHERE user_login = 'admin';
 #set the password for user admin to rowbot
 UPDATE wp_users SET user_pass='c424ada17bf6e27794273b7db21cf950' WHERE user_login = 'admin';
 ````
-![alt text](https://gblobscdn.gitbook.com/assets%2F-LSy0aAo8OKT4I-Ahftv%2F-MDU1o3kyLftcE0eKmbl%2F-MDWiiOz6DDS8VHphrHu%2Fimage.png)
-![alt text](https://gblobscdn.gitbook.com/assets%2F-LSy0aAo8OKT4I-Ahftv%2F-MDU1o3kyLftcE0eKmbl%2F-MDWiTwNHNhx_yOKsvmU%2Fimage.png)
+- ![alt text](https://gblobscdn.gitbook.com/assets%2F-LSy0aAo8OKT4I-Ahftv%2F-MDU1o3kyLftcE0eKmbl%2F-MDWiiOz6DDS8VHphrHu%2Fimage.png)
+- ![alt text](https://gblobscdn.gitbook.com/assets%2F-LSy0aAo8OKT4I-Ahftv%2F-MDU1o3kyLftcE0eKmbl%2F-MDWiTwNHNhx_yOKsvmU%2Fimage.png)
 ## Identifying SQL Injection
 - Let's say that you have some site like this
 ````
 http://$ip/news.php?id=5
 ````
 - Or a form like this
-![alt text](https://gblobscdn.gitbook.com/assets%2F-LSy0aAo8OKT4I-Ahftv%2F-M0-osTGaSUSFX4K_LQX%2F-M0-q3W0Zwp4cMYRo-cQ%2Fimage.png)
+- ![alt text](https://gblobscdn.gitbook.com/assets%2F-LSy0aAo8OKT4I-Ahftv%2F-M0-osTGaSUSFX4K_LQX%2F-M0-q3W0Zwp4cMYRo-cQ%2Fimage.png)
 - Now to test if it is vulnerable you add to the end of url ' (quote).
 ````
 http://$ip/news.php?id=5'
