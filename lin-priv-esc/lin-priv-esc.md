@@ -1,7 +1,14 @@
 # Linux Privlage Escalation
 ## Table of Contents
- + [Basic Enumeration](#basic-enumeration)
+- [Linux Privlage Escalation](#linux-privlage-escalation)
+  * [Table of Contents](#table-of-contents)
+    + [Basic Manual Enumeration](#basic-manual-enumeration)
       - [Binaries Owned by the root user](#binaries-owned-by-the-root-user)
+      - [Quick SUID Find](#quick-suid-find)
+        * [Taking advantage of SUID files](#taking-advantage-of-suid-files)
+    + [Custom Binarys](#custom-binarys)
+      - [File Systems](#file-systems)
+      - [World Writeable](#world-writeable)
     + [Weak File Permissions](#weak-file-permissions)
       - [Readable shadow](#readable-shadow)
       - [Writeable shadow](#writeable-shadow)
@@ -29,6 +36,7 @@
       - [Python](#python)
       - [Perl](#perl)
       - [Tar](#tar)
+
 ### Basic Manual Enumeration
 ````
 whoami
