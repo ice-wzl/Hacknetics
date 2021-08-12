@@ -57,6 +57,12 @@ searchsploit linux kernel 3.9
 ````
 ./suid_bash -p
 ````
+- Something Weird
+- Check to see if youre in a docker container with 
+````
+ps aux
+````
+- No hashes in `/etc/shadow` is another pretty good indicator
 #### Quick SUID Find
 - The following command can be used to find all SUID programs on a given system:
 ````
