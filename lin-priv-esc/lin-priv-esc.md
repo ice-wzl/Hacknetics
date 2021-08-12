@@ -38,6 +38,7 @@
       - [Tar](#tar)
 
 ### Basic Manual Enumeration
+![alt text](https://miro.medium.com/max/2400/0*rOZTLGBULgHhS2p_.png)
 ````
 whoami
 pwd
