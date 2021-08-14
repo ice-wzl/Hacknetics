@@ -1,5 +1,5 @@
 # Pivoting 
-[!alt text]"https://assets.tryhackme.com/additional/wreath-network/6904b85a9b93.png"
+![alt text](https://assets.tryhackme.com/additional/wreath-network/6904b85a9b93.png)
 
 
 
