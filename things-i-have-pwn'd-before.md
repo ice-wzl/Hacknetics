@@ -158,7 +158,14 @@ SELECT * FROM ost_form_entry;
 ### IP Fire 2.15
 - Brute the admin default [admin:admin]
 - https://github.com/0xskunk/IPFire-2.15-Shellshock-Exploit/blob/master/SIPS.py
-
+### Webmin
+- MiniServ 1.890 (Webmin httpd)
+- https://github.com/foxsin34/WebMin-1.890-Exploit-unauthorized-RCE/blob/master/webmin-1.890_exploit.py
+- Read /etc/shadow
+- Add user
+- Reverse Shells
+- Read the config files
+- Will run as root
 
 
 
