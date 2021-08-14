@@ -5,6 +5,7 @@
     + [Basic Manual Enumeration](#basic-manual-enumeration)
       - [Binaries Owned by the root user](#binaries-owned-by-the-root-user)
       - [Quick SUID Find](#quick-suid-find)
+      - [Sudo -l](#sudo--l)
         * [Taking advantage of SUID files](#taking-advantage-of-suid-files)
     + [Custom Binarys](#custom-binarys)
       - [File Systems](#file-systems)
@@ -68,8 +69,23 @@ ps aux
 - The following command can be used to find all SUID programs on a given system:
 ````
 find /* -user root -perm -4000 -print 2>/dev/null
-find / -user root -perm -4000 -exec ls -ldb {} \;
+find / -user root -perm -4000 -exec ls -ldb {} \ 2>/dev/null;
 ````
+#### Sudo -l
+- If you have the password, on of the first checks should be
+````
+sudo -l
+````
+- If there is an entry like:
+````
+Matching Defaults entries for www-data on THM-Chal:                                                            
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+User www-data may run the following commands on THM-Chal:
+    (ALL) NOPASSWD: /usr/bin/perl /home/itguy/backup.pl
+````
+- Means you can `sudo /usr/bin/perl /home/itguy/backup.pl` with no password
+- However you cannot `sudo perl /home/itguy/backup.pl` with no password
+- Need to use the absolute paths if they are specified that way!!!
 ##### Taking advantage of SUID files
 - Some administrators will set the SUID bit manually to allow certain programs to be run as them. 
 - Lets say you're a system administrator and a non-privileged user wants to program that requires it to be run with higher privileges. 
