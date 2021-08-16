@@ -15,7 +15,7 @@ VMware-Auth, VNC and XMPP.
 - The correct hydra syntax is depended upon the service you are going after.  For example if we want to hit ftp we should use:
 #### FTP
 ````
-hydra -l user -P passlist.txt ftp://10.10.10.10.
+hydra -l user -P passlist.txt ftp://10.10.10.10
 ````
 #### SSH
 ````
