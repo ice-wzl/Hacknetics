@@ -4,6 +4,7 @@
   * [Table of Contents](#table-of-contents)
     + [Basic Manual Enumeration](#basic-manual-enumeration)
       - [Binaries Owned by the root user](#binaries-owned-by-the-root-user)
+      - [Database files](#database-files)
       - [Quick SUID Find](#quick-suid-find)
       - [Sudo -l](#sudo--l)
         * [Taking advantage of SUID files](#taking-advantage-of-suid-files)
@@ -19,6 +20,7 @@
       - [Config Files](#config-files)
       - [SSH Keys](#ssh-keys)
     + [Sudo-Shell escape Sequences](#sudo-shell-escape-sequences)
+      - [Zip](#zip)
     + [Sudo Environment Variables](#sudo-environment-variables)
     + [Cron Jobs -File permissions](#cron-jobs--file-permissions)
     + [Cron Jobs Path Environment Variable](#cron-jobs-path-environment-variable)
@@ -65,6 +67,8 @@ searchsploit linux kernel 3.9
 ps aux
 ````
 - No hashes in `/etc/shadow` is another pretty good indicator
+#### Database files
+- Make sure to look for any passwords for the root user in .php files in web root!
 #### Quick SUID Find
 - The following command can be used to find all SUID programs on a given system:
 ````
