@@ -158,7 +158,11 @@ smtp-user-enum -M EXPN -D example.com -U users.txt -t 10.0.0.1
 telnet 10.10.10.10 110
 ````
 - ![alt text](https://i2.wp.com/2.bp.blogspot.com/-4rztPGl7PRs/W_L6dz7yPTI/AAAAAAAAbQ8/oQGQ3S6S3CMLVcKt3clCF7QMSFRC16tIgCEwYBhgL/s1600/8.png?w=640&ssl=1)
-- 
+- Command to retrieve emails:
+````
+RETR 1
+RETR2
+````
 ## SNMP Ports 161, 162 default
 - Commands 
 - Read, write, trap, traversal command
