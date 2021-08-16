@@ -1,4 +1,4 @@
-- Resources - aka Things I should read more on but never will
+## Resources - aka Things I should read more on but never will
 
 - https://blog.harmj0y.net/
 - https://adsecurity.org/?page_id=1821
