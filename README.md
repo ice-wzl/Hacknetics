@@ -1,4 +1,5 @@
 # OSCP-Prep
+## This repo is not complete yet, I am working on it daily.
 ## Methodology 
 ### Step 1 Recon
 - Can you ping the target?
