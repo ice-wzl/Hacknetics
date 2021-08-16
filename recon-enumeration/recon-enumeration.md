@@ -161,7 +161,7 @@ telnet 10.10.10.10 110
 - Command to retrieve emails:
 ````
 RETR 1
-RETR2
+RETR 2
 ````
 ## SNMP Ports 161, 162 default
 - Commands 
