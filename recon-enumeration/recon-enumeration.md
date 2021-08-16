@@ -152,6 +152,13 @@ smtp-user-enum -M EXPN -u admin1 -t 10.0.0.1
 smtp-user-enum -M RCPT -U users.txt -T mail-server-ips.txt
 smtp-user-enum -M EXPN -D example.com -U users.txt -t 10.0.0.1
 ````
+## POP3 Port 110 default
+- Connect to the targets pop3 port
+````
+telnet 10.10.10.10 110
+````
+- ![alt text](https://i2.wp.com/2.bp.blogspot.com/-4rztPGl7PRs/W_L6dz7yPTI/AAAAAAAAbQ8/oQGQ3S6S3CMLVcKt3clCF7QMSFRC16tIgCEwYBhgL/s1600/8.png?w=640&ssl=1)
+- 
 ## SNMP Ports 161, 162 default
 - Commands 
 - Read, write, trap, traversal command
