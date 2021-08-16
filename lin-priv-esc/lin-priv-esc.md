@@ -1,4 +1,4 @@
-# Linux Privlage Escalation
+# Linux Privilege Escalation
 ## Table of Contents
 - [Linux Privlage Escalation](#linux-privlage-escalation)
   * [Table of Contents](#table-of-contents)
