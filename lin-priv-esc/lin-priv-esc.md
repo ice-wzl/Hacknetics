@@ -69,8 +69,13 @@ ps aux
 - The following command can be used to find all SUID programs on a given system:
 ````
 find /* -user root -perm -4000 -print 2>/dev/null
-find / -user root -perm -4000 -exec ls -ldb {} \ 2>/dev/null;
+find / -user root -perm -4000 -exec ls -ldb {} \;
 ````
+- Find files that the users group can edit
+````
+find / -group users -type f 2>/dev/null
+````
+- In the above example users is the name of the group he is in.
 #### Sudo -l
 - If you have the password, on of the first checks should be
 ````
