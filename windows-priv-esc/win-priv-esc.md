@@ -1,6 +1,7 @@
 # Windows Privlage Escalation
 ![alt text](https://miro.medium.com/max/2400/0*I-5KzneqUHfF7bHR.png)
-- Taken from Tib3rius
+## Kernel Exploits
+- https://github.com/SecWiki/windows-kernel-exploits
 ## Admin Service that a Standard User can run
 - https://www.youtube.com/watch?v=3BQKpPNlTSo
 ## Run Executable in Background
@@ -28,7 +29,8 @@ netsh firewall set service type = REMOTEDESKTOP mode = ENABLE scope = CUSTOM add
 ````
 xfreerdp /v:10.10.25.227 /u:Wade /p:parzival /cert:ignore /drive:/usr/share/windows-resources,share
 ````
-
+#### Credit
+- Taken from Tib3rius
 
 
 
