@@ -518,7 +518,7 @@ clnt_create: RPC: Unable to recieve
 - Can forward the port on our machine to the target machine
 - Need to check the ports on the target with:
 ````
-rpccinfo -p
+rpcinfo -p
 100005    3   udp  20048  mountd
     100005    3   tcp  20048  mountd
     100003    3   tcp   2049  nfs
