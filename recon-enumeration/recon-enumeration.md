@@ -16,6 +16,7 @@
   * [Vulnerability Scanning](#vulnerability-scanning)
   * [SMTP Port 25 default](#smtp-port-25-default)
     + [SMTP User Enum](#smtp-user-enum)
+  * [POP3 Port 110 default](#pop3-port-110-default)
   * [SNMP Ports 161, 162 default](#snmp-ports-161--162-default)
     + [Onesixtyone](#onesixtyone)
     + [SNMPwalk](#snmpwalk)
@@ -28,6 +29,8 @@
     + [Enum4linux](#enum4linux)
     + [Nmap SMB scripts](#nmap-smb-scripts)
   * [Search services vulnerabilities](#search-services-vulnerabilities)
+  * [redis port 6379](#redis-port-6379)
+  * [Rsync port 873](#rsync-port-873)
   * [Stuck](#stuck)
 
 ## AutoRecon
