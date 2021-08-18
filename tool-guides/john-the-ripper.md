@@ -147,6 +147,16 @@ tryhackme:alexandru:::tryhackme <stuxnet@tryhackme.com>::tryhackme.asc
 gpg --import tryhackme.asc
 gpg --decrypt credential.pgp
 ````
+### GPG Errors
+````
+gpg: decryption failed: No secret key
+````
+- Errors populates despite it being the correct key -> Memory daemon needs restarting
+````
+ps aux | grep gpg-agent
+kill -14 pid#
+````
+
 ### Note
 - All credit goes to the creator(s) of the John the Ripper Tool on THM.
 - www.tryhackme.com/room/johntheripper0
