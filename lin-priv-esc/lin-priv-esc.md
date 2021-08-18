@@ -65,6 +65,11 @@ whoami
 pwd
 id
 ````
+- See what is listening internally
+````
+ss -tulpn | grep LISTEN
+netstat -antp | grep LISTEN
+````
 - OS, Kernel & Hostname
 ````
 cat /etc/issue 
