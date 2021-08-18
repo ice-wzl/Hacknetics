@@ -27,14 +27,24 @@ netsh firewall set service type = REMOTEDESKTOP mode = ENABLE scope = CUSTOM add
 ````
 ## xfreerdp
 ````
-xfreerdp /v:10.10.25.227 /u:Wade /p:parzival /cert:ignore /drive:/usr/share/windows-resources,share
+xfreerdp /v:10.10.25.227 /u:Wade /p:parzival /cert:ignore /drive:/usr/share/windows-resources,share /dynamic-resolution
 ````
 #### Credit
 - Taken from Tib3rius
 
-
-
-
+## Basic Enumeration
+- Find out the users on the box and enumerate their privlages
+````
+net users
+net users Administrator
+````
+## Registry Escalation - Autoruns
+- Detection
+- 1. Open command prompt and type: `C:\Users\User\Desktop\Tools\Autoruns\Autoruns64.exe`
+- 2. In Autoruns, click on the ‘Logon’ tab.
+- 3. From the listed results, notice that the “My Program” entry is pointing to `C:\Program Files\Autorun Program\program.exe`.
+- 4. In command prompt type: `C:\Users\User\Desktop\Tools\Accesschk\accesschk64.exe -wvu "C:\Program Files\Autorun Program"`
+- 5. From the output, notice that the `"Everyone"` user group has `"FILE_ALL_ACCESS"` permission on the `"program.exe"` file.
 
 
 
