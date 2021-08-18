@@ -676,7 +676,8 @@ rpcinfo -p
 - Confirms nfs is running on 2049 the default port
 - Now port forward:
 ````
-ssh targetusername@10.10.185.59 -i id_rsa 2049:localhost:2049
+ssh targetusername@10.10.185.59 -i id_rsa -L 2049:localhost:2049
+ssh sys-internal@10.10.232.5 -i id_rsa -L 44561:localhost:44561
 ````
 - When a shell on the remote machine authenticates we are successful
 - Now create the mount with elevated permissions
