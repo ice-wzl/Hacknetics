@@ -269,7 +269,7 @@ Reset; bash 1>&0 2>&0
 ````
 #### vim
 ````
-Sudo vim -c ‘:!/bin/bash’
+sudo vim -c ':!/bin/bash'
 ````
 - Method 2
 ````
