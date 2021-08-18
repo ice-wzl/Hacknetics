@@ -480,6 +480,11 @@ find / -type f -perm -04000 -ls 2>/dev/null
 ````
 strace /usr/local/bin/suid-so 2>&1 | grep -iE "open|access|no such file"
 ````
+- Output Looking for 
+````
+open("/lib/libc.so.6", O_RDONLY)        = 3
+open("/home/user/.config/libcalc.so", O_RDONLY) = -1 ENOENT (No such file or directory)
+````
 - Note that the executable tries to load the /home/user/.config/libcalc.so shared object within our home directory, but it cannot be found.
 - Create the .config directory for the `libcalc.so` file:
 ````
@@ -495,6 +500,7 @@ gcc -shared -o /home/user/.config/libcalc.so -fPIC /home/user/.config/libcalc.c
 ````
 /usr/local/bin/suid-so
 ````
+- It will be an euid=0 not a uid=0!!!
 ### SUID and SGID Executables-Environment Variables
 - The /usr/local/bin/suid-env executable can be exploited due to it inheriting the user's PATH environment variable and attempting to execute programs without specifying an absolute path.
 - First, execute the file and note that it seems to be trying to start the apache2 webserver:
