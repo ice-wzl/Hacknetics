@@ -201,11 +201,36 @@ SELECT * FROM ost_form_entry;
 -Web shell via the file editor 
 ### Pro FTPD 1.3.5
 - https://github.com/t0kx/exploit-CVE-2015-3306/blob/master/exploit.py
+### TeamCity Linux Priv Esc
+- Port was only listening locally so had to port forward in order to be able to browse to it
+````
+ssh sys-internal@10.10.250.201 -i id_rsa -L 8111:localhost:8111
+````
+- TeamCity operates on port `8111` by default
+- Then could go to `localhost:8111` in my browser
+- Was asked for a authentication token to login as super user
+- In the path 
+````
+/TeamCity/logs
+````
+- I was able to find a file called `catalina.out` which reading the contents provided me the authentication token
 
-
-
-
-
+````
+[TeamCity] Super user authentication token: 8119166573167676780
+````
+- Once you have gained access Create a new project
+- ![alt text](https://miro.medium.com/max/2400/1*2X-pj25DAE7RoL3ifAI5Hg.png)
+- Next fill in the build configurations 
+- ![alt text](https://miro.medium.com/max/2400/1*hKdxKO8ihqutmUqyDfHSNg.png)
+- Next click build steps and use the following command to let `/bin/bash` run with full root privlages 
+- ![alt text](https://miro.medium.com/max/2400/1*NKdC7RmnSvhK0vl3o3J9Og.png)
+- Click `save`, and then `run` 
+- Back to the command line and run:
+````
+/bin/bash -p
+whoami
+root
+````
 
 
 
