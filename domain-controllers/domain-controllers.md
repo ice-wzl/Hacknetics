@@ -90,7 +90,8 @@ python3 secretsdump.py spookysec.local/backup:backup2517860@10.10.248.93
 ````
 ![spooky](https://user-images.githubusercontent.com/75596877/130284812-511a8141-5917-4954-8c29-e623c1edce36.png)
 
-
+#### Another Cheatsheet
+- https://gist.github.com/TarlogicSecurity/2f221924fef8c14a1d8e29f3cb5c5c4a
 
 
 
