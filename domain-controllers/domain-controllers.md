@@ -1,4 +1,9 @@
 # Domain Controllers
+## Basics 
+- Find the NETBIOS Domain Name
+````
+nbtscan -v 10.10.8.1-254
+````
 ## Impacket
 - Location:
 ````
