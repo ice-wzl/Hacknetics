@@ -8,3 +8,5 @@
 ## Path
 ### Start with recon-enumeration folder
 - Start the scans: What is open?
+- Use `autorecon`
+- Once completed, rescan all ports with service detection `-A -T
