@@ -39,6 +39,15 @@
 - Download a precompiled binary for your OS - https://github.com/ropnop/kerbrute/releases
 - Rename kerbrute_linux_amd64 to kerbrute
 - `chmod +x kerbrute` - make kerbrute executable
+### Enumerating Users w/ Kerbrute -
+- Enumerating users allows you to know which user accounts are on the target domain and which accounts could potentially be used to access the network.
+- `cd` into the directory that you put `Kerbrute`
+- Download the wordlist to enumerate with (in this repo)
+````
+./kerbrute userenum --dc CONTROLLER.local -d CONTROLLER.local User.txt 
+````
+- This will brute force user accounts from a domain controller using a supplied wordlist
+- ![1](https://user-images.githubusercontent.com/75596877/130246484-1b4fdb60-eb89-441b-b0c7-c1b06277c074.png)
 
 
 
