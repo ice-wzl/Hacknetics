@@ -255,6 +255,10 @@ smbmap -H $ip
 rpcclient -U "" -N $ip
 smbclient \\\\$ip\\[share name]
 ````
+- With authentication 
+````
+smbmap -u svc-admin -p management2005 -H 10.10.248.93
+````
 - Check for Vulnerabilities  
 ````
 nmap --script smb-vuln* -p 139,445 $ip
