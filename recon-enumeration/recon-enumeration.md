@@ -250,6 +250,7 @@ nmap --script smb-enum-shares -p 139,445 $ip
 ````
 - Check Null Sessions
 ````
+smbmap -u anonymous -H 10.10.115.116
 smbmap -H $ip
 rpcclient -U "" -N $ip
 smbclient \\\\$ip\\[share name]
@@ -281,6 +282,10 @@ smbmap -u "admin" -p "password" -H 10.10.10.10 -x "ipconfig"
 - `--download` -> downloads a file
 - `--upload` -> uploads a file
 ### smbclient
+- List shares
+````
+smbclient -L 10.10.115.116
+````
 - smbclient allows you to do most of the things you can do with smbmap, and it also offers you and interactive prompt.
 - `-w` -> specify the domain(workgroup) to use when connecting to the host
 - `-I` -> specify the ip address of the host
