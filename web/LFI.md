@@ -1,6 +1,7 @@
 ## LFI Local File Inclusion
 ### Table of Contents
 - [LFI Local File Inclusion](#lfi-local-file-inclusion)
+  * [Table of Contents](#table-of-contents)
   * [Introduction](#introduction)
     + [Example:](#example-)
   * [Directory Traversal](#directory-traversal)
@@ -15,6 +16,9 @@
     + [Linux version](#linux-version)
   * [Automated LFI with Wfuzz](#automated-lfi-with-wfuzz)
   * [Resources](#resources)
+- [Requests to look out for](#requests-to-look-out-for)
+  * [Fuzzing for subdomains](#fuzzing-for-subdomains)
+  * [Files to grab if you get LFI](#files-to-grab-if-you-get-lfi)
 
 ### Introduction
 - An attacker can use Local File Inclusion (LFI) to trick the web application into exposing or running files on the web server.
