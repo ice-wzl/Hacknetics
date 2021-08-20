@@ -225,7 +225,15 @@ net use c:\\DOMAIN-CONTROLLER\admin$ /user:Administrator mimikatz
 dir \\Desktop-1\c$ /user:Machine1 mimikatz 
 ````
 - The skeleton key will not persist by itself because it runs in the memory, it can be scripted or persisted using other tools and techniques
-
+### Resources
+- https://medium.com/@t0pazg3m/pass-the-ticket-ptt-attack-in-mimikatz-and-a-gotcha-96a5805e257a
+- https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/as-rep-roasting-using-rubeus-and-hashcat
+- https://posts.specterops.io/kerberoasting-revisited-d434351bd4d1
+- https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/
+- https://www.varonis.com/blog/kerberos-authentication-explained/
+- https://www.blackhat.com/docs/us-14/materials/us-14-Duckwall-Abusing-Microsoft-Kerberos-Sorry-You-Guys-Don't-Get-It-wp.pdf
+- https://www.sans.org/cyber-security-summit/archives/file/summit-archive-1493862736.pdf
+- https://www.redsiege.com/wp-content/uploads/2020/04/20200430-kerb101.pdf
 
 
 
