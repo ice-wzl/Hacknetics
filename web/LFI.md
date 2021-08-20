@@ -118,7 +118,33 @@ wfuzz -u "http://10.10.218.222/article?name=FUZZ" -w traversal.txt | grep 200
   ### Resources
 - https://www.aptive.co.uk/blog/local-file-inclusion-lfi-testing/
 - https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#lfi-to-rce-via-phpinfo
-
+## Requests to look out for
+- ![alt text](https://miro.medium.com/max/2400/1*uMZmYUNcqjh4Rht11nGQDw.png)
+- We notice the request with a `?` indicating possible LFI but we are not sure the paramater it wants
+- Attempt to fuzz the parameter for command injection and file inclusion
+- Wordlist to use:
+````
+traversal.txt
+/usr/share/Seclists/Discovery/Web-Content/burp-parameter-names.txt
+````
+- Use FFuF, or wfuzz
+### Fuzzing for subdomains 
+````
+ffuf -u http://vulnnet.thm -H "Host: FUZZ.vulnnet.thm" -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -fs 5829
+````
+- ### Files to grab if you get LFI
+````
+/etc/passwd
+/etc/shadow
+/etc/hosts
+CMS Config Files
+/etc/apache2/.htpasswd
+/etc/apache2/apache2.conf
+/etc/httpd/httpd.conf
+/etc/httpd/conf/httpd.conf
+/usr/local/apache2/apache2.conf
+C:\Program Files\Apache Software Foundation\Apache2.4\
+````
 
 
 
