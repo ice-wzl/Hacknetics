@@ -4,6 +4,22 @@
 ````
 nbtscan -v 10.10.8.1-254
 ````
+- Should also be in nmap output
+````
+3389/tcp  open  ms-wbt-server syn-ack ttl 125 Microsoft Terminal Services
+| rdp-ntlm-info: 
+|   Target_Name: THM-AD
+|   NetBIOS_Domain_Name: THM-AD
+|   NetBIOS_Computer_Name: ATTACKTIVEDIREC
+|   DNS_Domain_Name: spookysec.local
+|   DNS_Computer_Name: AttacktiveDirectory.spookysec.local
+|   DNS_Tree_Name: spookysec.local
+|   Product_Version: 10.0.17763
+|_  System_Time: 2021-08-20T18:00:52+00:00
+| ssl-cert: Subject: commonName=AttacktiveDirectory.spookysec.local
+| Issuer: commonName=AttacktiveDirectory.spookysec.local
+````
+- Add to `/etc/hosts`
 ## Impacket
 - Location:
 ````
