@@ -38,7 +38,6 @@ ffuf -w valid_usernames.txt:W1,/usr/share/wordlists/seclists/Passwords/Common-Cr
 ### Finding password reset forms
 - If there is an option always make an account. There could be pages you have access to that you otherwise would not.
 - Also if there is a password reset option on the site you might be able to get their password reset link sent to you.
-- ![alt text](https://tryhackme-images.s3.amazonaws.com/user-uploads/5efe36fb68daf465530ca761/room-content/f457baf00c357990014739bd6bce5b75.png)
 - Use curl to figure out how the parameters are passed to the server, in this example the username is a `POST` field and the email address is a `GET` field
 ````
 curl 'http://10.10.115.78/customers/reset?email=robert%40acmeitsupport.thm' -H 'Content-Type: application/x-www-form-urlencoded' -d 'username=robert'
