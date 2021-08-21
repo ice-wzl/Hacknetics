@@ -1,5 +1,19 @@
 # Windows Privlage Escalation
 ![alt text](https://miro.medium.com/max/2400/0*I-5KzneqUHfF7bHR.png)
+## Run PowerUp
+````
+. .\PowerUp.ps1
+Invoke-AllChecks
+````
+## Unattended Setup
+- Unattended Setup is the method by which original equipment manufacturers (OEMs), corporations, and other users install Windows NT in unattended mode."
+- Unattended Setup is the method by which original equipment manufacturers (OEMs), corporations, and other users install Windows NT in unattended mode."
+It is also where users passwords are stored in base64. Navigate to:
+
+C:\Windows\Panther\Unattend\Unattended.xml.It is also where users passwords are stored in base64. Navigate to:
+````
+C:\Windows\Panther\Unattend\Unattended.xml.
+````
 ## Kernel Exploits
 - https://github.com/SecWiki/windows-kernel-exploits
 ## Admin Service that a Standard User can run
