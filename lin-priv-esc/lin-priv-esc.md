@@ -282,6 +282,11 @@ Sudo -l
 #### npm
 - ![alt text](https://miro.medium.com/max/2400/1*VucdYx033uiuiMXc7ZxIhQ.png)
 - ![alt text](https://miro.medium.com/max/2400/1*0yhB6pvhjXSAJq1BuFPyxA.png)
+#### journalctl
+````
+sudo journalctl
+!/bin/sh
+````
 #### iftop
 ````
 sudo /usr/bin/iftop
