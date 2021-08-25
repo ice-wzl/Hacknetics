@@ -98,7 +98,6 @@ ps aux
 - The following command can be used to find all SUID programs on a given system:
 ````
 find /* -user root -perm -4000 -print 2>/dev/null
-find / -user root -perm -4000 -exec ls -ldb {} \;
 ````
 - Find files that the users group can edit
 ````
