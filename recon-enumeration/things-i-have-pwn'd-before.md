@@ -14,7 +14,7 @@ exploit(multi/http/struts2_content_type_ognl)
 - Run the nmap eternal scripts
 - USE:
 ````
-nmap --scripts=smb-vuln* $ip
+nmap --script=smb-vuln* $ip
 exploit(windows/smb/ms08_067_netapi)
 exploit(windows/smb/ms17_010_eternalblue)
 ````
