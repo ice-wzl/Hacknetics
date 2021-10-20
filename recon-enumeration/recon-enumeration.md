@@ -155,6 +155,18 @@ smtp-user-enum -M EXPN -u admin1 -t 10.0.0.1
 smtp-user-enum -M RCPT -U users.txt -T mail-server-ips.txt
 smtp-user-enum -M EXPN -D example.com -U users.txt -t 10.0.0.1
 ````
+## Telnet Banner Grab
+````
+telnet 10.10.182.147 80
+GET / HTTP/1.0
+host: telnet
+````
+````
+GET / HTTP/1.1
+host: telnet
+````
+![telnet banner grab](https://user-images.githubusercontent.com/75596877/138183428-3c6b4c51-f1c4-4c48-9038-f252f6110a70.png)
+
 ## POP3 Port 110 default
 - Connect to the targets pop3 port
 ````
