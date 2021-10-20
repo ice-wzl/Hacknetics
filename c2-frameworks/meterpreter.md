@@ -3,6 +3,8 @@
 - Core commands will be helpful to navigate and interact with the target system. Below are some of the most commonly used. 
 - Remember to check all available commands running the help command once a Meterpreter session has started.
 
+## Post Exploitation Modules Reference
+- https://www.offensive-security.com/metasploit-unleashed/post-module-reference/
 ## Core commands
 
 -   `background`: Backgrounds the current session
