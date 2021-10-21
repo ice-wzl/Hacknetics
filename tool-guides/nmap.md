@@ -16,9 +16,9 @@
 - `-sn`	host discovery only
 
 ## Port Scan Type	Example Command
-TCP Connect Scan	`nmap -sT MACHINE_IP`
-TCP SYN Scan	`sudo nmap -sS MACHINE_IP`
-UDP Scan	`sudo nmap -sU MACHINE_IP`
+- TCP Connect Scan	`nmap -sT MACHINE_IP`
+- TCP SYN Scan	`sudo nmap -sS MACHINE_IP`
+- UDP Scan	`sudo nmap -sU MACHINE_IP`
 - These scan types should get you started discovering running TCP and UDP services on a target host.
 
 ### Option	Purpose
