@@ -30,3 +30,11 @@
 - `--max-rate 50`	rate <= 50 packets/sec
 - `--min-rate 15`	rate >= 15 packets/sec
 - `--min-parallelism 100`	at least 100 probes in parallel
+
+### Nmap Results
+- `Open`: indicates that a service is listening on the specified port.
+- `Closed`: indicates that no service is listening on the specified port, although the port is accessible. By accessible, we mean that it is reachable and is not blocked by a firewall or other security appliances/programs.
+- `Filtered`: means that Nmap cannot determine if the port is open or closed because the port is not accessible. This state is usually due to a firewall preventing Nmap from reaching that port. Nmap’s packets may be blocked from reaching the port; alternatively, the responses are blocked from reaching Nmap’s host.
+- `Unfiltered`: means that Nmap cannot determine if the port is open or closed, although the port is accessible. This state is encountered when using an ACK scan -sA.
+- `Open|Filtered`: This means that Nmap cannot determine whether the port is open or filtered.
+- `Closed|Filtered`: This means that Nmap cannot decide whether a port is closed or filtered.
