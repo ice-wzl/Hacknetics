@@ -38,3 +38,6 @@
 - `Unfiltered`: means that Nmap cannot determine if the port is open or closed, although the port is accessible. This state is encountered when using an ACK scan -sA.
 - `Open|Filtered`: This means that Nmap cannot determine whether the port is open or filtered.
 - `Closed|Filtered`: This means that Nmap cannot decide whether a port is closed or filtered.
+
+### TCP Header
+![tcp-header](https://user-images.githubusercontent.com/75596877/138295680-a20a687e-6898-4b7a-8c6b-d3e496ff6c07.png)
