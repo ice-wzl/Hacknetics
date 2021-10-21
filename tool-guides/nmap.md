@@ -39,5 +39,32 @@
 - `Open|Filtered`: This means that Nmap cannot determine whether the port is open or filtered.
 - `Closed|Filtered`: This means that Nmap cannot decide whether a port is closed or filtered.
 
+## Nmap Advanced Scanning
+### Port Scan Type	Example Command
+- TCP Null Scan	`sudo nmap -sN MACHINE_IP`
+- TCP FIN Scan	`sudo nmap -sF MACHINE_IP`
+- TCP Xmas Scan	`sudo nmap -sX MACHINE_IP`
+- TCP Maimon Scan	`sudo nmap -sM MACHINE_IP`
+- TCP ACK Scan	`sudo nmap -sA MACHINE_IP`
+- TCP Window Scan	`sudo nmap -sW MACHINE_IP`
+- Custom TCP Scan	`sudo nmap --scanflags URGACKPSHRSTSYNFIN MACHINE_IP`
+- Spoofed Source IP	`sudo nmap -S SPOOFED_IP MACHINE_IP`
+- Spoofed MAC Address	`--spoof-mac SPOOFED_MAC`
+- Decoy Scan	`nmap -D DECOY_IP,ME MACHINE_IP`
+- Idle (Zombie) Scan	`sudo nmap -sI ZOMBIE_IP MACHINE_IP`
+- Fragment IP data into 8 bytes	`-f`
+- Fragment IP data into 16 bytes	`-ff`
+### Option	Purpose
+- `--source-port PORT_NUM` specify source port number
+- `--data-length NUM` append random data to reach given length
+- These scan types rely on setting TCP flags in unexpected ways to prompt ports for a reply. Null, FIN, and Xmas scan provoke a response from closed ports, while Maimon, ACK, and Window scans provoke a response from open and closed ports.
+
+### Option Purpose
+- `--reason`	explains how Nmap made its conclusion
+- `-v`	verbose
+- `-vv`	very verbose
+- `-d`	debugging
+- `-dd`	more details for debugging
+
 ### TCP Header
 ![tcp-header](https://user-images.githubusercontent.com/75596877/138295680-a20a687e-6898-4b7a-8c6b-d3e496ff6c07.png)
