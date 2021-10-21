@@ -44,6 +44,7 @@
 - TCP Null Scan	`sudo nmap -sN MACHINE_IP`
 - TCP FIN Scan	`sudo nmap -sF MACHINE_IP`
 - TCP Xmas Scan	`sudo nmap -sX MACHINE_IP`
+- Three above scan types can be efficient when scanning a target behind a stateless (non-stateful) firewall. A stateless firewall will check if the incoming packet has the SYN flag set to detect a connection attempt. Using a flag combination that does not match the SYN packet makes it possible to deceive the firewall and reach the system behind it.
 - TCP Maimon Scan	`sudo nmap -sM MACHINE_IP`
 - TCP ACK Scan	`sudo nmap -sA MACHINE_IP`
 - TCP Window Scan	`sudo nmap -sW MACHINE_IP`
