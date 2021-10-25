@@ -23,6 +23,8 @@
 ### Introduction
 - An attacker can use Local File Inclusion (LFI) to trick the web application into exposing or running files on the web server.
 - LFI occurs when an application uses the path to a file as input. If the application treats this input as trusted, a local file may be used in the include statement.
+- ![lfi](https://user-images.githubusercontent.com/75596877/138767265-ed9d8d7f-38f2-43cf-9622-8d4890f0664e.png)
+
 #### Example:
 ````
 /**
