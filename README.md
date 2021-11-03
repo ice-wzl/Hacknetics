@@ -49,7 +49,17 @@ nmap --script "http*" 10.10.10.10 -p 8080 -vv | tee nmap_http_scripts.txt
 ### Rsync port 873
 - `/recon-enumeration/recon-enumeration.md`
 - Rsync Section
-
+## On a Windows Box
+- `/windows-priv-esc/win-priv-esc.md`
+- Set up secondary Shell with `msfvenom` and `multi/handler`
+- Check for hidden files as well
+- Can you enable RDP and use `xfreerdp` to mount your kali share to the target?
+### On a Linux Box
+- `/lin-priv-esc/lin-priv-esc.md`
+- Set up secondary Shell with `msfvenom` and `multi/handler`
+- Always stabilize your shells!
+- Get `lse.sh` and `linpeas.sh` on the box and in `/dev/shm`
+- `/lin-priv-esc/priv-esc-scripts/`
 
 
 
