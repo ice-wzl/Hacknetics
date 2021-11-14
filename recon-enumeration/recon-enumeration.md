@@ -269,7 +269,7 @@ nmblookup -A $ip
 - List Shares
 ````
 smbmap -H $ip
-echo exit | smbclient -L \\\\$ip
+smbclient -L 10.129.101.197 -U Administrator
 nmap --script smb-enum-shares -p 139,445 $ip
 ````
 - Check Null Sessions
