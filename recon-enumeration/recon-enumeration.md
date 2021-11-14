@@ -551,7 +551,11 @@ rsync -av id_rsa.pub rsync://rsync-connect@10.10.63.208/files/sys-internal/.ssh/
 find /etc \( -name rsyncd.conf -o -name rsyncd.secrets \)
 ````
 - Inside the config file sometimes you could find the parameter `secrets file = /path/to/file` and this file could contains usernames and passwords allowed to authenticate to rsyncd.
-
+## ms-sql-s port 1433
+- Use `impacket mssqlclient.py` to connect
+````
+python mssqlclient.py ARCHETYPE/sql_svc@10.129.62.77 -windows-auth
+````
 
 
 
