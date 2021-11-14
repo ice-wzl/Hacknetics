@@ -1,5 +1,15 @@
 # SQL
 - All credit goes to: https://guide.offsecnewbie.com/5-sql
+## Basic Attempts
+````
+username: admin'#
+password: abc123
+username: OR1=1#
+password: OR1=1#
+username: OR1=1-- -
+password: OR1=1-- -
+````
+
 ## 3306 Remotely
 ````
 https://sqlectron.github.io/ to connect remotely
