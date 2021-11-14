@@ -556,7 +556,7 @@ find /etc \( -name rsyncd.conf -o -name rsyncd.secrets \)
 ````
 python mssqlclient.py ARCHETYPE/sql_svc@10.129.62.77 -windows-auth
 ````
-
+- https://book.hacktricks.xyz/pentesting/pentesting-mssql-microsoft-sql-server
 
 
 
