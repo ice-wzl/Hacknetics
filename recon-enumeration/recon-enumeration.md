@@ -272,12 +272,16 @@ smbmap -H $ip
 smbclient -L 10.129.101.197 -U Administrator
 nmap --script smb-enum-shares -p 139,445 $ip
 ````
+- Connect to a listed share
+````
+smbclient \\\\10.129.101.197\\C$ -U Administrator
+smbclient \\\\$ip\\[share name]
+````
 - Check Null Sessions
 ````
 smbmap -u anonymous -H 10.10.115.116
 smbmap -H $ip
 rpcclient -U "" -N $ip
-smbclient \\\\$ip\\[share name]
 ````
 - With authentication 
 ````
