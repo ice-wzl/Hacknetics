@@ -23,6 +23,17 @@ nmap --script "http*" 10.10.10.10 -p 8080 -vv | tee nmap_http_scripts.txt
 - Run `nikto`, `gobuster` --> try and map out the website
 - `robots.txt` file?
 - Default Credentials
+````
+admin admin123
+admin root123
+admin password1
+admin administrator1
+admin changeme1
+admin password123
+admin qwerty123
+admin administrator123
+admin changeme123
+````
 #### Upload Vulnerability PHP web shells
 - The best one for Linux and Windows
 - `/shells/web-shells/php-reverse-shell/src/php_reverse_shell.php`
