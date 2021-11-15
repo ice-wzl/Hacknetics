@@ -131,7 +131,12 @@ sudo python3 setup.py install
 bfac --url http://$ip/ --level 4
 ````
 - If you manage to download a backupfile, grep for users - might be a password as well
-
+## Burp Spider Website
+- Set Foxy Proxy to 127.0.0.1 8080 and enable it 
+- Turn off intercept
+- Refresh the page you want to spider
+- Navigate to `Target/Site Map` in `Burp Suite`
+![Screenshot 2021-11-15 161926](https://user-images.githubusercontent.com/75596877/141855360-dcc55d3f-f455-4605-8a07-a9987d8dec2e.png)
 
 
 
