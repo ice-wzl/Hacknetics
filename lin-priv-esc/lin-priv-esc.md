@@ -311,6 +311,11 @@ sudo vim -c ':!/bin/bash'
 ````
 sudo vim -c '!sh'
 ````
+#### vi
+````
+:set shell=/bin/sh
+:shell
+````
 #### man
 ````
 sudo /usr/bin/man man
