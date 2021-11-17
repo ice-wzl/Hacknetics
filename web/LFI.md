@@ -150,6 +150,7 @@ CMS Config Files
 /etc/httpd/conf/httpd.conf
 /usr/local/apache2/apache2.conf
 C:\Program Files\Apache Software Foundation\Apache2.4\
+/var/www/html/.htpasswd
 ````
 
 
