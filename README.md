@@ -24,6 +24,11 @@ nmap --script "http*" 10.10.10.10 -p 8080 -vv | tee nmap_http_scripts.txt
 - `robots.txt` file?
 - Default Credentials
 ````
+admin:admin
+administrator:administrator
+admin:administrator
+admin:password
+administrator:password
 admin admin123
 admin root123
 admin password1
