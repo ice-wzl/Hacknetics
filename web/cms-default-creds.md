@@ -28,3 +28,7 @@
 |tomcat       |admin     |
 |tomcat       |changethis|
 
+## PRTG Network Monitor
+````
+prtgadmin:prtgadmin
+````
