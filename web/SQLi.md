@@ -2,12 +2,16 @@
 - All credit goes to: https://guide.offsecnewbie.com/5-sql
 ## Basic Attempts
 ````
-username: admin'#
-password: abc123
-username: OR1=1#
-password: OR1=1#
-username: OR1=1-- -
-password: OR1=1-- -
+admin'#
+abc123
+````
+````
+OR 1=1#
+OR 1=1#
+````
+````
+OR 1=1-- -
+OR 1=1-- -
 ````
 
 ## 3306 Remotely
