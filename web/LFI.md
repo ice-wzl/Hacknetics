@@ -143,13 +143,21 @@ ffuf -u http://vulnnet.thm -H "Host: FUZZ.vulnnet.thm" -w /usr/share/SecLists/Di
 /etc/passwd
 /etc/shadow
 /etc/hosts
+/etc/issue
+/etc/group
+/etc/hosts
+/etc/motd
+/etc/mysql/my.cnf
+/proc/[0-9]*/fd/[0-9]*   (first number is the PID, second is the filedescriptor)
+/proc/self/environ
+/proc/version
+/proc/cmdline
 CMS Config Files
 /etc/apache2/.htpasswd
 /etc/apache2/apache2.conf
 /etc/httpd/httpd.conf
 /etc/httpd/conf/httpd.conf
 /usr/local/apache2/apache2.conf
-C:\Program Files\Apache Software Foundation\Apache2.4\
 /var/www/html/.htpasswd
 ````
 
