@@ -289,6 +289,11 @@ This makes a connection between our listening port `8001` on the attacking machi
 ./socat tcp:10.50.73.2:8001 tcp:172.16.0.10:80,fork &
 ````
 This would create a link between port `8000` on our attacking machine, and port `80` on the intended target (`172.16.0.10`), meaning that we could go to `localhost:8000` in our attacking machine's web browser to load the webpage served by the target: `172.16.0.10:80`!
+### Socat Forward Port off Printer or non ssh enabled device
+- Have a compromised device that is running `cupsd` port 631, however its listening only on the loopback and the printer does not have ssh.
+````
+socat tcp-listen:9090,fork tcp:127.0.0.1:631 &
+````
 #### Killing Jobs
  - Run the `jobs` command in your terminal, then kill any `socat` processes using `kill %NUMBER`
  ## Chisel
