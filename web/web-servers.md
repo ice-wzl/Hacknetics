@@ -80,6 +80,12 @@ dirb http://10.10.10.10:80/secret/ -w /usr/share/wordlists/dirbuster/directory-l
 - This command tests the /secret/ directory 
 - It specifies to use the wordlist `directory-list-2.3-medium.txt`
 - With the `-x` flag it sets gobuster to test for `.txt` file extensions i.e. admin.txt, secret.txt
+### Gobuster Sub-Domain Enumeration
+````
+gobuster vhost -u http://horizontall.htb -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -t 150
+/\/\/\/\/\/\/\/\/\/\/
+Found: api-prod.horizontall.htb (Status: 200) [Size: 413]
+````
 ### Dirsearch
 
 - Full Syntax
