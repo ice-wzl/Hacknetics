@@ -1,4 +1,16 @@
 # Common Default Creds Per CMS
+## Basic 
+````
+admin:admin
+admin:12345
+admin:123456
+admin:password
+root:toor
+root:root
+root:password
+administrator:administrator
+admin:abc123
+````
 ## Tomcat
 |Username     |Password  |
 |-------------|----------|
