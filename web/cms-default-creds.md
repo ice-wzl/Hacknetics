@@ -49,6 +49,35 @@ prtgadmin:prtgadmin
 - https://cirt.net/passwords
 - https://default-password.info/
 - https://datarecovery.com/rd/default-passwords/
-# Password Lists
+## Password Lists
 - https://wiki.skullsecurity.org/index.php?title=Passwords
+### Combining + Sorting Lists
+````
+cat file1.txt file2.txt file3.txt > combined.txt
+sort combined.txt | uniq -u cleaned-combined.txt
+````
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
