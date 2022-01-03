@@ -49,3 +49,6 @@ prtgadmin:prtgadmin
 - https://cirt.net/passwords
 - https://default-password.info/
 - https://datarecovery.com/rd/default-passwords/
+# Password Lists
+- https://wiki.skullsecurity.org/index.php?title=Passwords
+  
