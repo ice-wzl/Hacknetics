@@ -44,3 +44,8 @@ admin:abc123
 ````
 prtgadmin:prtgadmin
 ````
+## Looking Up Other Default Passwords
+- Here are some website lists that provide default passwords for various products.
+- https://cirt.net/passwords
+- https://default-password.info/
+- https://datarecovery.com/rd/default-passwords/
