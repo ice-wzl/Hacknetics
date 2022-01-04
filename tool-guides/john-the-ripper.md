@@ -156,6 +156,81 @@ gpg: decryption failed: No secret key
 ps aux | grep gpg-agent
 kill -14 pid#
 ````
+## Rule Based Attacks
+- Also known as hybrid attacks.
+- Assumes attacker knows something about the password policy.
+- John config file:
+````
+/etc/john/john.conf
+OR
+/opt/john/john.conf
+````
+- Look for `List.Rules` to see the available rules.
+- Example:
+````
+cat /etc/john/john.conf|grep "List.Rules:" | cut -d"." -f3 | cut -d":" -f2 | cut -d"]" -f1 | awk NF
+JumboSingle
+o1
+o2
+i1
+i2
+o1
+i1
+o2
+i2
+best64
+d3ad0ne
+dive
+InsidePro
+T0XlC
+rockyou-30000
+specific
+````
+- `best64` rule contains the best 64 built in `John` Rules.
+- To use:
+````
+echo "tryhackme" > single-password-list.txt
+john --wordlist=/tmp/single-password-list.txt --rules=best64 --stdout | wc -l
+Using default input encoding: UTF-8
+Press 'q' or Ctrl-C to abort, almost any other key for status
+76p 0:00:00:00 100.00% (2021-10-11 13:42) 1266p/s pordpo
+76
+````
+- --wordlist= to specify the wordlist or dictionary file. 
+
+- --rules to specify which rule or rules to use.
+
+- --stdout to print the output to the terminal.
+
+- |wc -l  to count how many lines John produced.
+- By running the previous command we have expanded our password list from 1 (tryhackme) to 76.
+#### Another Good Rule to use:
+````
+john --wordlist=single-password-list.txt --rules=KoreLogic --stdout |grep "Tryh@ckm3"
+Using default input encoding: UTF-8
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Tryh@ckm3
+7089833p 0:00:00:02 100.00% (2021-10-11 13:56) 3016Kp/s tryhackme999999
+````
+### Creating Custom Rules
+- we want to add special characters to the beginning and a number to the end, the format would be:
+````
+[symbols]word[0-9]
+````
+- We can add our rule to the end of john.conf:
+````
+user@machine$ sudo vi /etc/john/john.conf 
+[List.Rules:THM-Password-Attacks] 
+Az"[0-9]" ^[!@#$]
+````
+[List.Rules:THM-Password-Attacks]  specify the rule name THM-Password-Attacks.
+
+- `Az` represents a single word from the original wordlist/dictionary using `-p`.
+
+- `"[0-9]"` append a single digit (from 0 to 9) to the end of the word. For two digits, we can add `"[0-9][0-9]"` and so on.  
+
+- `^[!@#$]` add a special character at the beginning of each word. `^` means the beginning of the line/word. Note, changing `^` to `$` will append the special characters to the end of the line/word.
+
 
 ### Note
 - All credit goes to the creator(s) of the John the Ripper Tool on THM.
