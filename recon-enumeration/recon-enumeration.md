@@ -369,6 +369,53 @@ lookupnames #convert names to SIDs
 lookupnames Bill
 ````
 ````
+enumprivs
+found 35 privileges
+
+SeCreateTokenPrivilege          0:2 (0x0:0x2)
+SeAssignPrimaryTokenPrivilege           0:3 (0x0:0x3)
+SeLockMemoryPrivilege           0:4 (0x0:0x4)
+SeIncreaseQuotaPrivilege                0:5 (0x0:0x5)
+SeMachineAccountPrivilege               0:6 (0x0:0x6)
+SeTcbPrivilege          0:7 (0x0:0x7)
+SeSecurityPrivilege             0:8 (0x0:0x8)
+SeTakeOwnershipPrivilege                0:9 (0x0:0x9)
+SeLoadDriverPrivilege           0:10 (0x0:0xa)
+SeSystemProfilePrivilege                0:11 (0x0:0xb)
+SeSystemtimePrivilege           0:12 (0x0:0xc)
+SeProfileSingleProcessPrivilege                 0:13 (0x0:0xd)
+SeIncreaseBasePriorityPrivilege                 0:14 (0x0:0xe)
+SeCreatePagefilePrivilege               0:15 (0x0:0xf)
+SeCreatePermanentPrivilege              0:16 (0x0:0x10)
+SeBackupPrivilege               0:17 (0x0:0x11)
+SeRestorePrivilege              0:18 (0x0:0x12)
+SeShutdownPrivilege             0:19 (0x0:0x13)
+SeDebugPrivilege                0:20 (0x0:0x14)
+SeAuditPrivilege                0:21 (0x0:0x15)
+SeSystemEnvironmentPrivilege            0:22 (0x0:0x16)
+SeChangeNotifyPrivilege                 0:23 (0x0:0x17)
+SeRemoteShutdownPrivilege               0:24 (0x0:0x18)
+SeUndockPrivilege               0:25 (0x0:0x19)
+SeSyncAgentPrivilege            0:26 (0x0:0x1a)
+SeEnableDelegationPrivilege             0:27 (0x0:0x1b)
+SeManageVolumePrivilege                 0:28 (0x0:0x1c)
+SeImpersonatePrivilege          0:29 (0x0:0x1d)
+SeCreateGlobalPrivilege                 0:30 (0x0:0x1e)
+SeTrustedCredManAccessPrivilege                 0:31 (0x0:0x1f)
+SeRelabelPrivilege              0:32 (0x0:0x20)
+SeIncreaseWorkingSetPrivilege           0:33 (0x0:0x21)
+SeTimeZonePrivilege             0:34 (0x0:0x22)
+SeCreateSymbolicLinkPrivilege           0:35 (0x0:0x23)
+SeDelegateSessionUserImpersonatePrivilege               0:36 (0x0:0x24)
+````
+- Enumerate Privleges on the target box
+````
+getusername
+Account Name: Guest, Authority Name: RELEVANT
+````
+- Get username you are running as 
+- 
+````
 queryuser [username]
 username=pbx
 queryuser pbx, queryuser 1000, queryuser 0x3e8
