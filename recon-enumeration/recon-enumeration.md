@@ -363,6 +363,12 @@ enumdomusers
 ````
 - The result is a list of user accounts available on the system with the RID in hex.  We can now use rpcclient to query the user info for more information:
 ````
+lookupsids #convert SIDs to names
+lookupsids S-1-5-21-3981879597-1135670737-2718083060-1002
+lookupnames #convert names to SIDs
+lookupnames Bill
+````
+````
 queryuser [username]
 username=pbx
 queryuser pbx, queryuser 1000, queryuser 0x3e8
