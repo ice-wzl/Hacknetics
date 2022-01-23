@@ -1,4 +1,15 @@
 # Powershell
+## Basic Enumeration
+````
+systeminfo
+````
+## Hotfixes
+````
+Get-HotFix | Format-List
+Get-Hotfix -Id KB4023834
+Get-Hotfix | measure
+````
+- 
 ### Creating Objects From Previous cmdlets
 ![Zdxicjj](https://user-images.githubusercontent.com/75596877/150692716-9d937291-9a6b-4e29-84b0-6a812eb31460.png)
 ````
@@ -35,6 +46,7 @@ Get-Command | Where-Object -Property CommandType -eq Cmdlet | measure
 ````
 ## Users
 - See users on the sytem
+- ![image](https://user-images.githubusercontent.com/75596877/150695096-edaaf297-0394-4213-a415-7d46cedecee2.png)
 ````
 net users
 Get-LocalUser
@@ -57,17 +69,64 @@ Get-LocalGroup
 ````
 Get-NetIPAddress
 Get-NetTCPConnections
+GEt-NetTCPConnection | Where-Object -Property State -Match Listen
 Get-Net-UDPEndpoints
 ````
-- ![image](https://user-images.githubusercontent.com/75596877/150695096-edaaf297-0394-4213-a415-7d46cedecee2.png)
-# Base64 Powershell Decode
+- View all TCP ports `Listen`
+````
+Get-NetTCPConnection | Select RemoteAddress, State | findstr /i "Listen"
+````
+
+## Base64 Powershell Decode
 ````
 certutil -decode "C:\Users\Administrator\Desktop\b64.txt" decode.txt
 Get-Content decode.txt
 ````
-
-
-
+## Find backup Files
+````
+Get-ChildItem -Path C:\ -Include *.bak* -File -Recurse -ErrorAction SilentlyContinue
+````
+- ![image](https://user-images.githubusercontent.com/75596877/150698655-206da003-197d-4899-8983-b59e2981f226.png)
+## Find specific string inside a file
+````
+Get-ChildItem C:\* -Recurse | Select-String -pattern API_KEY
+````
+## Services and Processes
+````
+Get-Service
+Get-Process
+````
+## Scheduled Tasks
+````
+Get-ScheduleTask -TaskName new-sched-task
+Get-ScheduleTask
+````
+## See Owner and Access
+````
+Get-ACL C:\
+````
+- ![image](https://user-images.githubusercontent.com/75596877/150699211-9e56bd19-9287-452f-a5ab-c1dc71dabb7b.png)
+## Scanners
+- Localhost port scanner
+````
+ 1..1024 | % {echo ((new-object Net.Sockets.TcpClient).Connect("127.0.0.1",$_)) "Port $_ is open!"} 2>$null
+````
+- PowerShell port scanner:
+````
+1..1024 | % {echo ((new-object Net.Sockets.TcpClient).Connect("10.0.0.100",$_)) "Port $_ is open!"} 2>$null
+````
+- Test-Netconnection scan a range of IPs for a single port:
+````
+foreach ($ip in 1..20) {Test-NetConnection -Port 80 -InformationLevel "Detailed" 192.168.1.$ip}
+````
+- PS IP range & port range scanner:
+````
+1..20 | % { $a = $_; 1..1024 | % {echo ((new-object Net.Sockets.TcpClient).Connect("10.0.0.$a",$_)) "Port $_ is open!"} 2>$null}
+````
+- PS test egress filtering:
+````
+1..1024 | % {echo ((new-object Net.Sockets.TcpClient).Connect("allports.exposed",$_)) "Port $_ is open!"
+````
 
 
 
