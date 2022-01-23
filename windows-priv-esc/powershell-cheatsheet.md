@@ -48,6 +48,17 @@ Get-LocalUser -SID "S-1-5-21-1394777289-3961777894-1791813945-501"
 get-localuser * | select * #find parameter you want and then pass into second command value
 get-localuser * | select * | findstr /i "Passwordrequired"
 ````
+## Groups
+- See Groups
+````
+Get-LocalGroup
+````
+## IP Address Information / TCP/UDP Connections
+````
+Get-NetIPAddress
+Get-NetTCPConnections
+Get-Net-UDPEndpoints
+````
 - ![image](https://user-images.githubusercontent.com/75596877/150695096-edaaf297-0394-4213-a415-7d46cedecee2.png)
 # Base64 Powershell Decode
 ````
