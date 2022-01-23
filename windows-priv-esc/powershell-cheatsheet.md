@@ -1,4 +1,6 @@
 # Powershell
+## Resources
+- https://learnxinyminutes.com/docs/powershell/
 ## Basic Enumeration
 ````
 systeminfo
