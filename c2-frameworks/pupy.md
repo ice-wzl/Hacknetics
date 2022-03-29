@@ -33,3 +33,14 @@ cd /path/to/pupy
 ````
 scp ~/location-of-pupy-file username@10.10.10.10:/tmp
 ````
+## Interactive
+- Help can be accessed with command -h `netstat -h`
+- List Modules 
+````
+list_modules
+````
+- To run a module use the `run` command 
+````
+run check_vm
+````
+
