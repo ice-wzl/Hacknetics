@@ -2,6 +2,7 @@
 ## Installing
 ````
 git clone https://github.com/n1nj4sec/pupy
+cd pupy
 git submodule init 
 git submodule update
 cd pupy 
