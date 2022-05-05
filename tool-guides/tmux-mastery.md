@@ -25,6 +25,10 @@ MINER: 1 windows (created Mon Novv 27 21:33:24 2022) [186x47]
 tmux attatch -t MINER
 ````
 - Use prefix key + d to detatch from the connected session 
+## Split Terminals Vertical 
+- `Ctrl+B %`
+## Split Terminals Horizontal 
+- `Ctrl+B "`
 
 ## Send Current Pane to another session 
 ## Custom tmux config 
