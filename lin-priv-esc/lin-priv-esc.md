@@ -912,9 +912,9 @@ which tar
 ./tar -xvf shadow.tar
 ````
 ## Python Library Hijacking 
-![setenv](https://user-images.githubusercontent.com/75596877/170289480-53b814c0-636e-43bd-a0aa-156887408305.PNG)
+- ![setenv](https://user-images.githubusercontent.com/75596877/170289480-53b814c0-636e-43bd-a0aa-156887408305.PNG)
 - From `sudo -l` output we see `SETENV` (means we can set the env variables when it is run as root) in addition to the python script that can be run as root
-![hashlib](https://user-images.githubusercontent.com/75596877/170289844-1d33fa11-e247-4004-8e04-e66668d03e80.PNG)
+- ![hashlib](https://user-images.githubusercontent.com/75596877/170289844-1d33fa11-e247-4004-8e04-e66668d03e80.PNG)
 - We see the `import hashlib` statement at the top, can hijack the library 
 - Python will look in the current directory or a specified path that we list due to the `SETENV` permission.
 - The paths that come configured out of the box on Ubuntu 16.04, in order of priority, are:
