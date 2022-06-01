@@ -37,6 +37,12 @@
 - `NTUSER.DAT` (mounted on `HKEY_CURRENT_USER` when a user logs in)
 - `USRCLASS.DAT` (mounted on `HKEY_CURRENT_USER\Software\CLASSES`)
 - The `USRCLASS.DAT` hive is located in the directory `C:\Users\<username>\AppData\Local\Microsoft\Windows`. 
+- The `NTUSER.DAT` hive is located in the directory `C:\Users\<username>\`.
+- Remember that NTUSER.DAT and USRCLASS.DAT are hidden files.
+
+## The Amcache Hive:
+- Apart from these files, there is another very important hive called the `AmCache` hive. 
+- This hive is located in `C:\Windows\AppCompat\Programs\Amcache.hve`. Windows creates this hive to save information on programs that were recently run on the system.
 
 
 
