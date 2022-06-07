@@ -210,5 +210,6 @@ Win32.FlushInstructionCache(
 - Once the function is patched in memory, it will always return when `EtwEventWrite` is called.
 
 - Although this is a beautifully crafted technique, it might not be the best approach depending on your environment since it may restrict more logs than you want for integrity.
+## Providers via Policy
 
 
