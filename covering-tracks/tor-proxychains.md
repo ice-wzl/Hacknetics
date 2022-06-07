@@ -22,7 +22,7 @@ sudo apt install proxychains
 vim /etc/proxychains.conf
 ````
 - Uncomment `dynamic_chain` and comment the other options
-- Uncomment `proxydns` in order to prevent DNS leakage 
+- Uncomment `proxy_dns` in order to prevent DNS leakage 
 #### Start Firefox with proxychains
 ````
 tor #start the tor service 
