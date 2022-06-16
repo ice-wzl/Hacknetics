@@ -1,7 +1,5 @@
 # OSCP-Prep
 ## This repo is not complete yet, I am working on it daily.
-## Repo Map
-![OSCP-Prep-Diagram-120 drawio](https://user-images.githubusercontent.com/75596877/163432849-1a535062-4d9c-4df7-9b4e-4942da1d4f68.png)
 
 ## Methodology 
 ![alt text](https://github.com/DigitalAftermath/EnumerationVisualized/raw/master/enumeration-mind-map.png?raw=true)
