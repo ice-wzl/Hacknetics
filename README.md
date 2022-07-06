@@ -1,8 +1,6 @@
 # OSCP-Prep
 ## This repo is not complete yet, I am working on it daily.
 
-## Methodology 
-![alt text](https://github.com/DigitalAftermath/EnumerationVisualized/raw/master/enumeration-mind-map.png?raw=true)
 ## Additional References
 
 ### Step 1 Recon
