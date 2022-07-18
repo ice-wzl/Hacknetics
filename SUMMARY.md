@@ -33,7 +33,7 @@
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
 * [shells](shells/README.md)
-  * [shells](shells/shells.md)
+  * [Shells](shells/shells.md)
   * [web-shells](shells/web-shells/README.md)
     * [PHP Reverse Shell](shells/web-shells/php-reverse-shell/README.md)
     * [wwwolf's PHP web shell](shells/web-shells/wwwolf-php-webshell/README.md)
