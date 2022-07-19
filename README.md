@@ -4,15 +4,6 @@ description: Collection of tips and tricks from myself and others!
 
 # OSCP-Prep
 
-## This repo is not complete yet, I am working on it daily.
-
-## Additional References
-
-### Step 1 Recon
-
-* Can you ping the target?
-* Is your VPN still connected?
-
 ## Path
 
 ### Start with recon-enumeration folder
