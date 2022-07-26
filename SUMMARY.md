@@ -24,7 +24,7 @@
 * [lin-priv-esc](lin-priv-esc/README.md)
   * [Linux Privilege Escalation](lin-priv-esc/lin-priv-esc.md)
 * [persistence](persistence/README.md)
-  * [Persistence](persistence/persistence.md)
+  * [Linux Persistence](persistence/persistence.md)
   * [Windows Persistence](persistence/windows-persistence.md)
 * [recon-enumeration](recon-enumeration/README.md)
   * [Exploit Research](recon-enumeration/exploit-research.md)
