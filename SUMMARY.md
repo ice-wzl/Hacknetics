@@ -71,4 +71,5 @@
   * [Windows Registry](windows-priv-esc/windows-registry.md)
   * [exploits](windows-priv-esc/exploits/README.md)
     * [printspoofer](windows-priv-esc/exploits/print-spoofer.md)
-* [Firewalls](firewalls.md)
+* [firewalls](firewalls/README.md)
+  * [iptables](firewalls/iptables.md)
