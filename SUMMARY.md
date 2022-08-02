@@ -55,6 +55,7 @@
   * [Resources](tool-guides/resources.md)
   * [T-Shark User Guide](tool-guides/t-shark.md)
   * [tmux](tool-guides/tmux-mastery.md)
+  * [Vim](tool-guides/vim.md)
 * [Web Path](web/README.md)
   * [LFI](web/LFI.md)
   * [RFI](web/RFI.md)
