@@ -35,3 +35,7 @@ i --> type inserted text --> insert before the cursor
 A --> type appended text --> append at the end of the line
 ```
 
+### Lesson 2
+
+To delete from the c
+
