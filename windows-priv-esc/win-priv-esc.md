@@ -1,5 +1,91 @@
 # Windows Privlage Escalation
 ![alt text](https://miro.medium.com/max/2400/0*I-5KzneqUHfF7bHR.png)
+## Command line
+    systeminfo 
+    whoami /priv      
+    ipconfig /all  
+    route print  
+    net users   
+    qwinsta                          #is anyone else logged in?   
+    net localgroup    
+    dir /r    
+    tree /a /f    
+    set                               #enviromental variables
+    net use                           #connected drives  
+    net share                         #shared folders
+    tasklist /v /fi "username eq system"      #tasks running as SYSTEM  
+    
+    netstat -ano    
+    netsh firewall show state 
+    netsh firewall show config   
+    
+## Powershell
+    powershell.exe -nop -ep bypass    
+    Get-ExecutionPolicy    
+    Set-ExecutionPolicy Unrestricted   
+    Set-MpPreference -DisableRealtimeMonitoring $true   
+ 
+### Windows Kernel Versions 
+systeminfo
+
+    Kernel 6.1 - Windows 7 / Windows Server 2008 R2  
+    Kernel 6.2 - Windows 8 / Windows Server 2012  
+    Kernel 6.3 - Windows 8.1 / Windows Server 2012 R2  
+    Kernel 10 - Windows 10 / Windows Server 2016 / Windows Server 2019 / Windows 11 / Windows Server 2022
+ 
+
+### Important Files  
+
+    %SYSTEMROOT%\System32\drivers\etc\hosts                   #local DNS entries 
+    %SYSTEMROOT%\System32\drivers\etc\networks                #network config
+    %SYSTEMROOT%\Prefetch                                     #prefetch dir, exe logs
+    %WINDIR%\system32\config\AppEvent.Evt                     #application logs
+    %WINDIR%\system32\config\SecEvent.Evt                     #security logs
+
+
+## Scripts 
+**You might want to check for AV first!**  
+[Scripts Reference](https://www.hackingarticles.in/window-privilege-escalation-automated-script/) 
+
+[winPEAS](https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS)   
+[Other compiled binaries](https://github.com/r3motecontrol/Ghostpack-CompiledBinaries)  
+[nishang](https://github.com/samratashok/nishang)  
+[JAWS](https://github.com/411Hall/JAWS)   
+[PowerSploit](https://github.com/PowerShellMafia/PowerSploit)   
+[PrivEscCheck](https://github.com/itm4n/PrivescCheck)   
+[Windows Exploit Suggester (Next-Generation)](https://github.com/bitsadmin/wesng) 
+[Sherlock](https://github.com/rasta-mouse/Sherlock)
+[Priv2Admin](https://github.com/gtworek/Priv2Admin)    OS priviliges to system
+
+[Compiled scripts here](https://github.com/Scr1ptK1ddie/WindowsBinaries) 
+
+
+## Checklists    
+[HackTricks](https://book.hacktricks.xyz/windows/checklist-windows-privilege-escalation)  
+[Fuzzy security](http://www.fuzzysecurity.com/tutorials/16.html) 
+
+____   
+
+# Manual Enum 
+https://lolbas-project.github.io/#   
+
+Windows 10 Exploits 
+https://github.com/nu11secur1ty/Windows10Exploits
+
+## Privilege Exploits 
+[Reference](https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html)   
+
+    whoami /priv running process, can enable for different process if user has priv
+    #State: disabled for running process, can enable for different process depending on access
+    SeImpersonatePrivilege -> PrintSpoofer, Juicy Potato, Rogue Potato, Hot Potato
+    SeAssignPrimaryTokenPrivilege -> Juicy Potato 
+    SeTakeOwnershipPrivilege ->  become the owner of any object and modify the DACL to grant access.  
+    SeBackup-> 
+    Se
+
+    If the machine is >= Windows 10 1809 & Windows Server 2019 - Try Rogue Potato
+    If the machine is < Windows 10 1809 < Windows Server 2019 - Try Juicy Potato
+
 ## Run PowerUp
 ````
 . .\PowerUp.ps1
