@@ -70,7 +70,7 @@
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)
   * [Testing for SQL](web/SQLi.md)
-  * [XSS](web/XSS.md)
+  * [Testing for XSS](web/XSS.md)
   * [Authentication Bypass](web/authentication-bypass.md)
   * [Cmd Injection](web/cmd-injection.md)
   * [Javascript Vulnerabilities](web/javascript-vulns.md)
