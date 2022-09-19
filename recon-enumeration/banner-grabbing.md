@@ -1,7 +1,5 @@
 # Banner Grabbing
 
-
-
 ## Telnet Banner Grab
 
 ```
