@@ -34,6 +34,7 @@
   * [Pwn'd](recon-enumeration/things-i-have-pwn'd-before.md)
   * [FTP Pentesting](recon-enumeration/ftp-pentesting.md)
   * [Pen Testing Email](recon-enumeration/pen-testing-email.md)
+  * [Pentesting SMB](recon-enumeration/pentesting-smb.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
 * [shells](shells/README.md)
