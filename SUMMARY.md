@@ -41,6 +41,7 @@
   * [Pentesting MsSql](recon-enumeration/pentesting-mssql.md)
   * [Scanning](recon-enumeration/scanning.md)
   * [Pentesting SNMP](recon-enumeration/pentesting-snmp.md)
+  * [Pentesting NFS](recon-enumeration/pentesting-nfs.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
 * [shells](shells/README.md)
