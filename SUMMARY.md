@@ -30,7 +30,7 @@
 * [recon-enumeration](recon-enumeration/README.md)
   * [Exploit Research](recon-enumeration/exploit-research.md)
   * [Pentesting DNS](recon-enumeration/passive-enumeration.md)
-  * [Pwn'd](recon-enumeration/things-i-have-pwn'd-before.md)
+  * [Things I have Pwn'd before](recon-enumeration/things-i-have-pwn'd-before.md)
   * [Pentesting FTP](recon-enumeration/ftp-pentesting.md)
   * [Pentesting Email](recon-enumeration/pentesting-email.md)
   * [Pentesting SMB](recon-enumeration/pentesting-smb.md)
