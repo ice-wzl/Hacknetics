@@ -38,6 +38,7 @@
   * [Pentesting Redis](recon-enumeration/pentesting-redis.md)
   * [Banner Grabbing](recon-enumeration/banner-grabbing.md)
   * [Pentesting Rsync](recon-enumeration/pentesting-rsync.md)
+  * [Pentesting MsSql](recon-enumeration/pentesting-mssql.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
 * [shells](shells/README.md)
