@@ -39,6 +39,7 @@
   * [Banner Grabbing](recon-enumeration/banner-grabbing.md)
   * [Pentesting Rsync](recon-enumeration/pentesting-rsync.md)
   * [Pentesting MsSql](recon-enumeration/pentesting-mssql.md)
+  * [Scanning](recon-enumeration/scanning.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
 * [shells](shells/README.md)
