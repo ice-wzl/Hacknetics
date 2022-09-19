@@ -29,7 +29,7 @@
   * [Windows Persistence](persistence/windows-persistence-1.md)
 * [recon-enumeration](recon-enumeration/README.md)
   * [Exploit Research](recon-enumeration/exploit-research.md)
-  * [passive-enumeration](recon-enumeration/passive-enumeration.md)
+  * [Pentesting DNS](recon-enumeration/passive-enumeration.md)
   * [Pwn'd](recon-enumeration/things-i-have-pwn'd-before.md)
   * [Pentesting FTP](recon-enumeration/ftp-pentesting.md)
   * [Pentesting Email](recon-enumeration/pentesting-email.md)
