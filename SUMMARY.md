@@ -35,6 +35,7 @@
   * [FTP Pentesting](recon-enumeration/ftp-pentesting.md)
   * [Pen Testing Email](recon-enumeration/pen-testing-email.md)
   * [Pentesting SMB](recon-enumeration/pentesting-smb.md)
+  * [Pen Testing Redis](recon-enumeration/pen-testing-redis.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
 * [shells](shells/README.md)
