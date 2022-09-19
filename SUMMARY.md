@@ -32,6 +32,7 @@
   * [passive-enumeration](recon-enumeration/passive-enumeration.md)
   * [Recon and Enumeration](recon-enumeration/recon-enumeration.md)
   * [Pwn'd](recon-enumeration/things-i-have-pwn'd-before.md)
+  * [FTP Pentesting](recon-enumeration/ftp-pentesting.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
 * [shells](shells/README.md)
