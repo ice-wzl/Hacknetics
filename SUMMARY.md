@@ -67,7 +67,7 @@
   * [tmux](tool-guides/tmux-mastery.md)
   * [Vim](tool-guides/vim.md)
 * [Web Path](web/README.md)
-  * [LFI](web/LFI.md)
+  * [Testing for LFI](web/LFI.md)
   * [RFI](web/RFI.md)
   * [SQL](web/SQLi.md)
   * [XSS](web/XSS.md)
