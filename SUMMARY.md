@@ -37,6 +37,7 @@
   * [Pentesting SMB](recon-enumeration/pentesting-smb.md)
   * [Pentesting Redis](recon-enumeration/pentesting-redis.md)
   * [Banner Grabbing](recon-enumeration/banner-grabbing.md)
+  * [Pentesting Rsync](recon-enumeration/pentesting-rsync.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
 * [shells](shells/README.md)
