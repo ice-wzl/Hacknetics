@@ -1,6 +1,12 @@
-# Pwn'd
+---
+description: 'tl;dr: This page tracks things I have pwn''d before with public exploits'
+---
 
-* https://ippsec.rocks/?#
+# Things I have Pwn'd before
+
+
+
+* `https://ippsec.rocks/?#`&#x20;
 
 ### Apache Struts2
 
