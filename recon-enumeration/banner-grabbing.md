@@ -31,3 +31,12 @@ host: netcat
 ### NetCat FTP Banner Grab
 
 ![nc ftp](https://user-images.githubusercontent.com/75596877/138183900-60957ad6-0460-44d9-b64a-14cbd2f6e4a1.png)
+
+### Openssl banner grab&#x20;
+
+* Used when https is open on the host&#x20;
+
+```
+openssl s_client -connect domain.com:443 
+GET / HTTP/1.0
+```
