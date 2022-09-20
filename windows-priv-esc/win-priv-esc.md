@@ -21,14 +21,14 @@ whoami /priv
 ipconfig /all  
 route print  
 net users   
-qwinsta                          #is anyone else logged in?   
+qwinsta  #is anyone else logged in?   
 net localgroup    
 dir /r    
 tree /a /f    
-set                               #enviromental variables
-net use                           #connected drives  
-net share                         #shared folders
-tasklist /v /fi "username eq system"      #tasks running as SYSTEM  
+set   #enviromental variables
+net use  #connected drives  
+net share #shared folders
+tasklist /v /fi "username eq system" #tasks running as SYSTEM  
 [System.Environment]::OSVersion.Version #see the os version/build
 dir env: #enviromental variables
 netstat -ano    
@@ -46,8 +46,8 @@ whoami /priv running process, can enable for different process if user has priv
 SeImpersonatePrivilege -> PrintSpoofer, Juicy Potato, Rogue Potato, Hot Potato
 SeAssignPrimaryTokenPrivilege -> Juicy Potato 
 SeTakeOwnershipPrivilege ->  become the owner of any object and modify the DACL to grant access.  
-SeBackup-> 
-Se
+SeBackup-> can create copy of sam system and run impacket script to dump hashes
+
 
 If the machine is >= Windows 10 1809 & Windows Server 2019 - Try Rogue Potato
 If the machine is < Windows 10 1809 < Windows Server 2019 - Try Juicy Potato
