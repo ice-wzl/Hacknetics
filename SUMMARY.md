@@ -41,6 +41,7 @@
   * [Scanning](recon-enumeration/scanning.md)
   * [Pentesting SNMP](recon-enumeration/pentesting-snmp.md)
   * [Pentesting NFS](recon-enumeration/pentesting-nfs.md)
+  * [Pentesting LDAP](recon-enumeration/pentesting-ldap.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
 * [shells](shells/README.md)
