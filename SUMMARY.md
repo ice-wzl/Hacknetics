@@ -69,6 +69,7 @@
   * [Vim](tool-guides/vim.md)
   * [Creating a Custom Wordlist](tool-guides/creating-a-custom-wordlist.md)
   * [evil-winrm](tool-guides/evil-winrm.md)
+  * [Bloodhound](tool-guides/bloodhound.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)

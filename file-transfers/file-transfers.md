@@ -110,7 +110,7 @@ copy output.txt \\10.10.14.22\kali\output.txt
 
 * If you recieve this error when attempting to transfer files:
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 * Restart your smbserver.py with this option at the end:
 
