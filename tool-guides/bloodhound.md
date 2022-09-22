@@ -12,9 +12,10 @@ apt-get install bloodhound
 
 ```
 neo4j console
+#ensure you are the root user, or it will fail
 ```
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 * Nav to `http://localhost:7474`&#x20;
 * Config a DB user account by changing default passwords from `neo4j:neo4j` to something else
@@ -25,9 +26,12 @@ neo4j console
 
 ```
 bloodhound
+#ensure you are the root user
 ```
 
 * Now log into the DB with the user and password you just set up&#x20;
+
+![](<../.gitbook/assets/image (3).png>)
 
 ### Data Injection and Enumeration
 
@@ -77,9 +81,19 @@ Invoke-BloodHound -CollectionMethod All -JSONFolder "c:\Users\svc-alfresko\Deskt
 
 * Both of these will produce a .zip, exfil that file back to bloodhound and simply drag and drop it into the GUI
 
-<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Execution
 
 * Once the data is ingested, as mentioned, we can play around with the built in queries to find things like All Domain Admins, Shortest Path to Domain Admins and similar, that may help us as an attacker to escalate privileges and compromise the entire domains/forest.
+* Mark the user account you have compromised as `"Owned"`  --> Find user you own --> right click --> Mark User as Owned
 
+![](<../.gitbook/assets/image (5).png>)
+
+* Now from the `Analysis` tab a great query is `Shortest Path from Owned Principles`
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+* If you over over the lines and --> right click --> help it will give you information along with commands to take advantage of vulns
+
+<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
