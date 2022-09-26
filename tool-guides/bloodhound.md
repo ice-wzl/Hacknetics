@@ -15,7 +15,7 @@ neo4j console
 #ensure you are the root user, or it will fail
 ```
 
-<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (2).png" alt=""><figcaption></figcaption></figure>
 
 * Nav to `http://localhost:7474`&#x20;
 * Config a DB user account by changing default passwords from `neo4j:neo4j` to something else
@@ -31,7 +31,7 @@ bloodhound
 
 * Now log into the DB with the user and password you just set up&#x20;
 
-![](<../.gitbook/assets/image (3).png>)
+![](<../.gitbook/assets/image (3) (1).png>)
 
 ### Data Injection and Enumeration
 
@@ -92,7 +92,7 @@ Invoke-BloodHound -CollectionMethod All -JSONFolder "c:\Users\svc-alfresko\Deskt
 
 * Now from the `Analysis` tab a great query is `Shortest Path from Owned Principles`
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
 * If you over over the lines and --> right click --> help it will give you information along with commands to take advantage of vulns
 

