@@ -7,6 +7,7 @@
   * [Welcome to the Empire](c2-frameworks/empire.md)
   * [Meterpreter commands](c2-frameworks/metasploit.md)
   * [Pwncat-cs](c2-frameworks/pwncat-cs.md)
+  * [Cobalt Strike](c2-frameworks/cobalt-strike.md)
 * [covering-tracks](covering-tracks/README.md)
   * [Evading Logging and Monitoring](<covering-tracks/Evading Logging and Monitoring.md>)
   * [Linux Logging](covering-tracks/linux-logging.md)
