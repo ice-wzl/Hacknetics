@@ -88,11 +88,11 @@ Invoke-BloodHound -CollectionMethod All -JSONFolder "c:\Users\svc-alfresko\Deskt
 * Once the data is ingested, as mentioned, we can play around with the built in queries to find things like All Domain Admins, Shortest Path to Domain Admins and similar, that may help us as an attacker to escalate privileges and compromise the entire domains/forest.
 * Mark the user account you have compromised as `"Owned"`  --> Find user you own --> right click --> Mark User as Owned
 
-![](<../.gitbook/assets/image (5).png>)
+![](<../.gitbook/assets/image (5) (1).png>)
 
 * Now from the `Analysis` tab a great query is `Shortest Path from Owned Principles`
 
-<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (2).png" alt=""><figcaption></figcaption></figure>
 
 * If you over over the lines and --> right click --> help it will give you information along with commands to take advantage of vulns
 

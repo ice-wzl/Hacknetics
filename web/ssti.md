@@ -17,7 +17,7 @@ ${{7*7}}
 *{7*7}
 ```
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 ### Exploit
 
@@ -29,7 +29,7 @@ ${{7*7}}
 {{ config }} 
 ```
 
-<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (2).png" alt=""><figcaption></figcaption></figure>
 
 ### Jinja Injection without \<class 'object'>&#x20;
 
