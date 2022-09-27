@@ -81,6 +81,7 @@
   * [Javascript Vulnerabilities](web/javascript-vulns.md)
   * [SSTI](web/ssti.md)
   * [Web Servers](web/web-servers.md)
+  * [JWT Tokens](web/jwt-tokens.md)
 * [windows-priv-esc](windows-priv-esc/README.md)
   * [powershell-cheatsheet](windows-priv-esc/powershell-cheatsheet.md)
   * [Windows Privlage Escalation](windows-priv-esc/win-priv-esc.md)
