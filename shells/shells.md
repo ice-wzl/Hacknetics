@@ -4,35 +4,6 @@
 
 {% embed url="https://revshells.com" %}
 
-### Stabilizing Shells
-
-* Two ways to stabilized shells on Linux
-
-```
-script /dev/null -c bash
-```
-
-* Or:
-
-```
-#get installed python version
-which python3 
-which python 
-#use whichever version of python is installed 
-python3 -c 'import pty;pty.spawn("/bin/bash");'
-python -c 'import pty;pty.spawn("/bin/bash");'
-#gives access to clear command
-export TERM=xterm
-#background remote shell
-CTRL+Z
-#on your local station
-stty raw -echo;fg
-ENTER Twice
-stty -a #on local shell
-#on remote session
-stty rows 61 cols 116 
-```
-
 ### Reverse Shells
 
 **Listensers**
