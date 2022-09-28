@@ -92,7 +92,7 @@ Invoke-BloodHound -CollectionMethod All -JSONFolder "c:\Users\svc-alfresko\Deskt
 
 * Now from the `Analysis` tab a great query is `Shortest Path from Owned Principles`
 
-<figure><img src="../.gitbook/assets/image (3) (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (2).png" alt=""><figcaption></figcaption></figure>
 
 * If you over over the lines and --> right click --> help it will give you information along with commands to take advantage of vulns
 

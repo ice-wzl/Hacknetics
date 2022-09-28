@@ -23,7 +23,7 @@
   * [Pivoting](lateral-movement/tunneling-pivoting.md)
 * [lin-priv-esc](lin-priv-esc/README.md)
   * [Linux Privilege Escalation](lin-priv-esc/lin-priv-esc.md)
-* [Things I have Pwn'd before](things-i-have-pwnd-before.md)
+* [Things I have Pwn'd before](recon-enumeration/things-i-have-pwn'd-before.md)
 * [persistence](persistence/README.md)
   * [Linux Persistence](persistence/persistence.md)
   * [Windows Persistence](persistence/windows-persistence.md)
