@@ -8,6 +8,11 @@ description: 'tl;dr: This page tracks things I have pwn''d before with public ex
 
 * `https://ippsec.rocks/?#`&#x20;
 
+### Unifi Log4Shell
+
+* Unifi Network 6.4.54
+* [https://www.sprocketsecurity.com/resources/another-log4j-on-the-fire-unifi](https://www.sprocketsecurity.com/resources/another-log4j-on-the-fire-unifi)
+
 ### Apache Struts2
 
 ```
