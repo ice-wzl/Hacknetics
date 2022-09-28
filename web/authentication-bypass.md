@@ -102,7 +102,7 @@ curl -H "Cookie: logged_in=true; admin=true" http://MACHINE_IP/cookie-test
 
 * If you are able to get access to some php course code that uses `strcmp()` for checking usernames and passwords, bypassing it can be trivial&#x20;
 
-<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption><p>Example of php source code using strcmp()</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (2).png" alt=""><figcaption><p>Example of php source code using strcmp()</p></figcaption></figure>
 
 * By capturing the authentication in burp you can turn the username and or password field into an array, bypassing the authentication, in this instance we must do it for both the username and password fields.
 
@@ -111,8 +111,8 @@ curl -H "Cookie: logged_in=true; admin=true" http://MACHINE_IP/cookie-test
 * When submitting a normal request, we are informed that `'Wrong Username or Password'`
 * However, once we change our parameters into an array value with the fields === 0, we login&#x20;
 
-<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (2).png" alt=""><figcaption></figcaption></figure>
 
 * `username[]=0&password[]=0`
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
