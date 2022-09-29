@@ -38,7 +38,7 @@ ls vs dir
 ; | || & && > >>
 ```
 
-<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 * Once you have exploited non-blind cmd injection, escalate to a reverse shell.
 
@@ -65,7 +65,7 @@ google.com; ping -c11 127.0.0.1 #server will hang for roughly 10 seconds
 
 * Launch Burp, and choose:
 
-![](<../.gitbook/assets/image (1) (1).png>)
+![](<../.gitbook/assets/image (1) (2).png>)
 
 ```
 Burp --> Burp Collaborator Client

