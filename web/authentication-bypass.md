@@ -111,8 +111,8 @@ curl -H "Cookie: logged_in=true; admin=true" http://MACHINE_IP/cookie-test
 * When submitting a normal request, we are informed that `'Wrong Username or Password'`
 * However, once we change our parameters into an array value with the fields === 0, we login&#x20;
 
-<figure><img src="../.gitbook/assets/image (1) (1) (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 * `username[]=0&password[]=0`
 
-<figure><img src="../.gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>

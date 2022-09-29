@@ -1,3 +1,7 @@
+---
+description: Page currently under construction, pardon our dust
+---
+
 # Testing for SQL
 
 * All credit goes to: https://guide.offsecnewbie.com/5-sql
@@ -559,7 +563,7 @@ sqlmap -r burp.request --batch
 * More often than not it is with a cookie
 * Capture ALL of the cookies in the request like this:
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 * Now with your cookies in your clipboard buffer add them into your command
 
@@ -580,7 +584,7 @@ sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --coo
 
 * Once you are able to dump the database names with sqlmap, now enumerate the tables in your database of interest&#x20;
 
-<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
 
 #### Dumping a Database
 
@@ -596,7 +600,7 @@ sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --coo
 
 * Output should look something like this:
 
-<figure><img src="../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
 
 #### Dumping a Table
 
@@ -618,7 +622,7 @@ sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --bat
 
 * If successful, simply cat out the file stored now on your local system
 
-<figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 #### User Password Dump
 
@@ -646,4 +650,4 @@ sqlmap -r burp.request --cookie="PHPSESSID=lj1gugoprduur56u8lml5q373c; security=
 
 * Now you can go through your zap history and see the exact requests sqlmap is making (will need to url decode in most cases
 
-<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>

@@ -23,7 +23,7 @@ sudo tcpdump -i tun0 port 389
 
 * The server will response with `invalid payload` however it is still connecting back to us, check `tcpdump` to ensure the connect back&#x20;
 
-![](<../.gitbook/assets/image (7) (1).png>)
+![](<../.gitbook/assets/image (7).png>)
 
 * Now install the required packages:
 
