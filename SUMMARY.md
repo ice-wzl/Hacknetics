@@ -1,7 +1,6 @@
 # Table of contents
 
 * [OSCP-Prep](README.md)
-  * [Malware Analysis](readme/malware-analysis.md)
 * [buffer-overflows](buffer-overflows/README.md)
   * [Buffer Overflows](buffer-overflows/buffer-overflows.md)
 * [c2-frameworks](c2-frameworks/README.md)
@@ -92,3 +91,4 @@
     * [printspoofer](windows-priv-esc/exploits/print-spoofer.md)
 * [firewalls](firewalls/README.md)
   * [iptables](firewalls/iptables.md)
+* [Malware Analysis](malware-analysis.md)
