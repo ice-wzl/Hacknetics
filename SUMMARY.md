@@ -91,4 +91,5 @@
     * [printspoofer](windows-priv-esc/exploits/print-spoofer.md)
 * [firewalls](firewalls/README.md)
   * [iptables](firewalls/iptables.md)
-* [Malware Analysis](malware-analysis.md)
+* [Malware Analysis](malware-analysis/README.md)
+  * [Malware Analysis Fundamentals](malware-analysis/malware-analysis-fundamentals.md)
