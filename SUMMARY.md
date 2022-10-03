@@ -96,3 +96,4 @@
   * [Packer Identification by File section names](malware-analysis/packer-identification-by-file-section-names.md)
   * [Analyzing Malicious Documents](malware-analysis/analyzing-malicious-documents.md)
   * [In Depth Malware Analysis](malware-analysis/in-depth-malware-analysis.md)
+  * [Reversing Malicious Code](malware-analysis/reversing-malicious-code.md)
