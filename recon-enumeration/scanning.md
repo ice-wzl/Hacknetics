@@ -139,6 +139,26 @@ nmap --script=[script name] [target host]
 nmap --script=http-robots.txt.nse [target host]
 ```
 
+### Detecting Linux Version from nmap SSH output
+
+* If ssh is running on the target, and it can fingerprint the service you have a good chance of detecting the operating system version:
+
+```
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 29:dd:8e:d7:17:1e:8e:30:90:87:3c:c6:51:00:7c:75 (RSA)
+|   256 80:a4:c5:2e:9a:b1:ec:da:27:64:39:a4:08:97:3b:ef (ECDSA)
+|_  256 f5:90:ba:7d:ed:55:cb:70:07:f2:bb:c8:91:93:1b:f6 (ED25519)
+
+```
+
+* Take a look at the part `4ubuntu0.5`
+* If you google that and select the `launchpad.net` link it will tell you the OS version&#x20;
+* [https://launchpad.net/ubuntu/+source/openssh/1:7.6p1-4ubuntu0.5](https://launchpad.net/ubuntu/+source/openssh/1:7.6p1-4ubuntu0.5)
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
 ## Vulnerability Scanning
 
 * Good nmap command

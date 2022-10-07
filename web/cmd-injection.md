@@ -38,7 +38,7 @@ ls vs dir
 ; | || & && > >>
 ```
 
-<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (4).png" alt=""><figcaption></figcaption></figure>
 
 * Once you have exploited non-blind cmd injection, escalate to a reverse shell.
 
@@ -75,7 +75,7 @@ Execute your cmd injection
 
 * Press `Poll Now` to see if the request came through&#x20;
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 * If the above worked, move down to Data Exfil section
 
