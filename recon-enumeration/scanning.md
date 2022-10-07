@@ -2,8 +2,6 @@
 
 ## AutoRecon
 
-* Always start here, trust me.
-
 ```
 autorecon -ct 2 -cs 2 -vv -o outputdir 192.168.1.100 192.168.1.1/30 localhost
 autorecon 10.200.97.200
