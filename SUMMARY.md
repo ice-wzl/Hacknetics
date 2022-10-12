@@ -98,4 +98,5 @@
   * [Analyzing Malicious Documents](malware-analysis/analyzing-malicious-documents.md)
   * [In Depth Malware Analysis](malware-analysis/in-depth-malware-analysis.md)
   * [Reversing Malicious Code](malware-analysis/reversing-malicious-code.md)
-* [Infrastructure Development](infrastructure-development.md)
+* [Infrastructure Development](infrastructure-development/README.md)
+  * [SSL Cert Generation](infrastructure-development/ssl-cert-generation.md)
