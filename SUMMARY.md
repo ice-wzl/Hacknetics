@@ -91,6 +91,7 @@
   * [Windows Registry](windows-priv-esc/windows-registry.md)
   * [exploits](windows-priv-esc/exploits/README.md)
     * [printspoofer](windows-priv-esc/exploits/print-spoofer.md)
+  * [Windows Kernel Vulnerabilities](windows-priv-esc/windows-kernel-vulnerabilities.md)
 * [firewalls](firewalls/README.md)
   * [iptables](firewalls/iptables.md)
 * [Malware Analysis](malware-analysis/README.md)
