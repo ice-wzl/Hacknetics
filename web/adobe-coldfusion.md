@@ -120,3 +120,9 @@ And it looks like this once it is uploaded (I had to use the Options fields to f
     ```
     echo [encrypted_and_base64_encoded_password] | openssl des-ede3 -a -d -K 30794A21403124723870304C4072312436794A214031726A -iv 30794A2140312472; echo
     ```
+
+### Metasploit
+
+* You might also consider using Metasploit to exploit some of the above vulnerabilities:
+
+<figure><img src="https://4.bp.blogspot.com/-3KK_pw5bbbo/UwMyVad_fJI/AAAAAAAAAqU/e5q5EFS16Y4/s1600/MSF_Coldfusion.png" alt=""><figcaption></figcaption></figure>
