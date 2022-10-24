@@ -34,6 +34,7 @@ unset HISTFILE
 ````
 ## Accounting Entries in Unix
 - Currently logged in users
+- Distro Dependent 
 ````
 /var/log/utmp
 ````
