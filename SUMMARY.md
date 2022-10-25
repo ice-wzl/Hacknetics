@@ -13,6 +13,7 @@
   * [Linux Logging](covering-tracks/linux-logging.md)
   * [Tor](covering-tracks/tor-proxychains.md)
   * [Windows Log Clearing](covering-tracks/windows-log-clearing.md)
+  * [Ghost Writing Binaries](covering-tracks/ghost-writing-binaries.md)
 * [domain-controllers](domain-controllers/README.md)
   * [Impacket-install](domain-controllers/Impacket-install.md)
   * [Kerberos cheatsheet](domain-controllers/Kerberos-cheatsheet.md)
