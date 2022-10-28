@@ -9,6 +9,7 @@ description: Collection of tips and tricks from myself and others!
 ## Git-Book of this Repo:
 
 * https://taubl-jack.gitbook.io/oscp-prep/
+![image](https://user-images.githubusercontent.com/75596877/198423819-38ebafb1-1dd1-459c-89e0-68abbaa014ed.png)
 
 ### Big Thanks to our Sponsors
 
