@@ -3,7 +3,12 @@
 ## Limit Logging from SSH Session
 
 * To avoid logging in `/var/log/wtmp`&#x20;
-*
+
+```
+ssh root@10.10.10.10 bash -c /bin/sh
+OR
+ssh root@10.10.10.10 bash -i
+```
 
 ## Finding Writable Directories for your Current User
 
