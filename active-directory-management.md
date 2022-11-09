@@ -59,7 +59,7 @@
 
 <figure><img src="https://static.wixstatic.com/media/115dee_c3610edbc3aa4c25bc736e1f21bb5fb4~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_c3610edbc3aa4c25bc736e1f21bb5fb4~mv2.png" alt=""><figcaption></figcaption></figure>
 
-* In the **Domain Controller Option** tab, select a **Forest functional level** and a **Domain functional level** as per your environment. Since this is the first domain controller in the forest, please select the **DNS Server **_**(as we are configuring AD integrated DNS)**_ and the **Global Catalog (GC)** checkboxes. Then, enter the **Active Directory Restore Mode** **(DSRM)** password, this is used to retrieve/restore Active Directory data. Then, click **Next** to continue
+* In the `Domain Controller Option` tab, select a `Forest functional level` and a `Domain functional level` as per your environment. Since this is the first domain controller in the forest, please select the `DNS Server (as we are configuring AD integrated DNS)` and the `Global Catalog (GC)` **** checkboxes. Then, enter the `Active Directory Restore Mode (DSRM)` password, this is used to retrieve/restore Active Directory data. Then, click `Next` to continue
 
 <figure><img src="https://static.wixstatic.com/media/115dee_c7048e1ea7884c5bb92fc6c9f6a3f4ff~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_c7048e1ea7884c5bb92fc6c9f6a3f4ff~mv2.png" alt=""><figcaption></figcaption></figure>
 
@@ -67,7 +67,7 @@
 
 <figure><img src="https://static.wixstatic.com/media/115dee_709de13858f746bf94b8a0507138b835~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_709de13858f746bf94b8a0507138b835~mv2.png" alt=""><figcaption></figcaption></figure>
 
-* In the **Additional Options** tab, enter a NetBIOS name for your domain. It is suggested to keep the NetBIOS name the same as the root domain name _(by default, it will fetch the domain name only)_. Then, click **Next** to continue.
+* In the `Additional Options` tab, enter a `NetBIOS` name for your domain. It is suggested to keep the NetBIOS name the same as the root domain name _(by default, it will fetch the domain name only)_. Then, click **Next** to continue.
 
 <figure><img src="https://static.wixstatic.com/media/115dee_849e5531b4d748b18393ce8d1e2b5f43~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_849e5531b4d748b18393ce8d1e2b5f43~mv2.png" alt=""><figcaption></figcaption></figure>
 
@@ -99,18 +99,20 @@ Install-ADDSForest `
 
 In the **Prerequisites Check** tab, it will do prerequisite check.
 
-![](https://static.wixstatic.com/media/115dee\_42a3227178fb4488be4fc4f214e6a0bf\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_42a3227178fb4488be4fc4f214e6a0bf\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_42a3227178fb4488be4fc4f214e6a0bf~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_42a3227178fb4488be4fc4f214e6a0bf~mv2.png" alt=""><figcaption></figcaption></figure>
 
 * Once prerequisite checks completed successfully, it will enable/highlight the Install option. Then, click on I**nstall** button to start the installation process.
 
 ![](https://static.wixstatic.com/media/115dee\_fe76f0ba8f1e4a538e5662bac7556ded\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_fe76f0ba8f1e4a538e5662bac7556ded\~mv2.png)
 
-Once installation completed successfully, you will get the below confirmation message. Close this window and restart the Server.
+* Once installation completed successfully, you will get the below confirmation message. Close this window and restart the Server.
 
-![](https://static.wixstatic.com/media/115dee\_b191d547c71d49e58e439ed9b36da2ad\~mv2.png/v1/fill/w\_722,h\_535,al\_c,lg\_1,q\_90,enc\_auto/115dee\_b191d547c71d49e58e439ed9b36da2ad\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_b191d547c71d49e58e439ed9b36da2ad~mv2.png/v1/fill/w_722,h_535,al_c,lg_1,q_90,enc_auto/115dee_b191d547c71d49e58e439ed9b36da2ad~mv2.png" alt=""><figcaption></figcaption></figure>
 
-Once server rebooted, you have to login with your domain Admin credentials. By default, the local admin account will promoted as a Domain Admin account. Login and verify the health of the Domain controller. You can run **DCDIAG** command to check the health.
+* Once server rebooted, you have to login with your domain Admin credentials. By default, the local admin account will promoted as a Domain Admin account. Login and verify the health of the Domain controller. You can run **DCDIAG** command to check the health.
+* You can also verify the settings/configurations from the Active Directory tools like _**Active Directory Users and Computers or Active Directory Domains and Trusts**_ etc. You will get all the Active Directory tools in the folder named _**Administrative Tools**_ on the Start menu. Go and explore the tools.
 
-You can also verify the settings/configurations from the Active Directory tools like _**Active Directory Users and Computers or Active Directory Domains and Trusts**_ etc. You will get all the Active Directory tools in the folder named _**Administrative Tools**_ on the Start menu. Go and explore the tools.
+\
 
-![](https://static.wixstatic.com/media/115dee\_d802a7f674d24fcb8fccc4832b66933f\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_d802a7f674d24fcb8fccc4832b66933f\~mv2.png)\
+
+<figure><img src="https://static.wixstatic.com/media/115dee_d802a7f674d24fcb8fccc4832b66933f~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_d802a7f674d24fcb8fccc4832b66933f~mv2.png" alt=""><figcaption></figcaption></figure>
