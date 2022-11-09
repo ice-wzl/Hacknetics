@@ -104,3 +104,4 @@
   * [Reversing Malicious Code](malware-analysis/reversing-malicious-code.md)
 * [Infrastructure Development](infrastructure-development/README.md)
   * [SSL Cert Generation](infrastructure-development/ssl-cert-generation.md)
+* [Active Directory Management](active-directory-management.md)
