@@ -25,108 +25,77 @@
 <figure><img src="https://static.wixstatic.com/media/115dee_a939b030e9314cacb4435bcac32ac394~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_a939b030e9314cacb4435bcac32ac394~mv2.png" alt=""><figcaption></figcaption></figure>
 
 * In the **Server Roles** tab, put a tickmark for **"Active Directory Domain Services"** _(you can select the **DNS Server** role as well, as we will configure AD integrated DNS server. If not selected, during installation it will automatically select and install the DNS Role)_.
-* Then, it will prompt to show you the associated features for the role. Click on **Add Features** to add those. Then click **Next** to continue.
-
-\
+* Then, it will prompt to show you the associated features for the role. Click on **Add Features** to add those. Then click **Next** to continue.\
 
 
 <figure><img src="https://static.wixstatic.com/media/115dee_b7046ff12a2547ee84be8bea533ffb2f~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_b7046ff12a2547ee84be8bea533ffb2f~mv2.png" alt=""><figcaption></figcaption></figure>
 
 <figure><img src="https://static.wixstatic.com/media/115dee_36f89be0dcc447ad9dca9cb5059ed8a5~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_36f89be0dcc447ad9dca9cb5059ed8a5~mv2.png" alt=""><figcaption></figcaption></figure>
 
-In the **Features** tab, the basic features for this required role are already selected by default. Click **Next** to install continue.
+* In the **Features** tab, the basic features for this required role are already selected by default. Click **Next** to install continue.
 
-![](https://static.wixstatic.com/media/115dee\_519735a2cadf4229a5a2e6334d35d960\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_519735a2cadf4229a5a2e6334d35d960\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_519735a2cadf4229a5a2e6334d35d960~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_519735a2cadf4229a5a2e6334d35d960~mv2.png" alt=""><figcaption></figcaption></figure>
 
-In the next window, it gives brief information about the "**Active Directory Domain Services"** service. Click **next** to proceed.
+* In the next window, it gives brief information about the "**Active Directory Domain Services"** service. Click **next** to proceed.
 
-![](https://static.wixstatic.com/media/115dee\_83d80e18cef54cb5a0896dab4c128370\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_83d80e18cef54cb5a0896dab4c128370\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_83d80e18cef54cb5a0896dab4c128370~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_83d80e18cef54cb5a0896dab4c128370~mv2.png" alt=""><figcaption></figcaption></figure>
 
-In the **Confirmation** tab, verify the selections and click on the **Install** button. You may or may not select the option **"Restart the destination server automatically if required"**. It is always a best practice to restart the server post-installation.
+* In the **Confirmation** tab, verify the selections and click on the **Install** button. You may or may not select the option **"Restart the destination server automatically if required"**. It is always a best practice to restart the server post-installation.
 
-![](https://static.wixstatic.com/media/115dee\_483fdb64004c42c0a1d2d746637dd999\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_483fdb64004c42c0a1d2d746637dd999\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_483fdb64004c42c0a1d2d746637dd999~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_483fdb64004c42c0a1d2d746637dd999~mv2.png" alt=""><figcaption></figcaption></figure>
 
-Once done, it will start the installation process and you can check the same in the **Results** tab.
+* Once done, it will start the installation process and you can check the same in the **Results** tab.
 
-![](https://static.wixstatic.com/media/115dee\_b7e2ed0bd84743c4a4b55ffad6324e47\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_b7e2ed0bd84743c4a4b55ffad6324e47\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_b7e2ed0bd84743c4a4b55ffad6324e47~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_b7e2ed0bd84743c4a4b55ffad6324e47~mv2.png" alt=""><figcaption></figcaption></figure>
 
-#### **Step 2: Promote the server into a Domain Controller** <a href="#viewer-3l9nd" id="viewer-3l9nd"></a>
+### **Step 2: Promote the server into a Domain Controller** <a href="#viewer-3l9nd" id="viewer-3l9nd"></a>
 
-#### &#x20; <a href="#viewer-capre" id="viewer-capre"></a>
+* Once the **ADDS** role installation completes, click on the option **"Promote this server to a Domain Controller"** _(highlighted in the below image)_**.** Alternately, you will see a notification flag next to the Manage menu. From there also you can select "Promote this server into a domain controller", this will start the configuration process.
 
-Once the **ADDS** role installation completes, click on the option **"Promote this server to a Domain Controller"** _(highlighted in the below image)_**.** Alternately, you will see a notification flag next to the Manage menu. From there also you can select "Promote this server into a domain controller", this will start the configuration process.
+<figure><img src="https://static.wixstatic.com/media/115dee_af0d26c5765b4132a58d7b06561279e6~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_af0d26c5765b4132a58d7b06561279e6~mv2.png" alt=""><figcaption></figcaption></figure>
 
-![](https://static.wixstatic.com/media/115dee\_af0d26c5765b4132a58d7b06561279e6\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_af0d26c5765b4132a58d7b06561279e6\~mv2.png)
+* It will open the **"Active Directory Configuration Wizard"**. Now, from the Deployment Configuration tab, select **"Add a new forest"** (as I am configuring a new Forest and it is my first domain controller). **** Provide a **Root Domain name**, mine is **"VirtualGyanis.Com"** (you have to put your domain name here). Then, click on **Next** to continue.
+* Note: If you are adding this domain controller into an existing domain/forest you can choose the relevant option accordingly.
 
-It will open the **"Active Directory Configuration Wizard"**. Now, from the Deployment Configuration tab, select **"Add a new forest"** (as I am configuring a new Forest and it is my first domain controller). **** Provide a **Root Domain name**, mine is **"VirtualGyanis.Com"** (you have to put your domain name here). Then, click on **Next** to continue.
+<figure><img src="https://static.wixstatic.com/media/115dee_c3610edbc3aa4c25bc736e1f21bb5fb4~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_c3610edbc3aa4c25bc736e1f21bb5fb4~mv2.png" alt=""><figcaption></figcaption></figure>
 
-\
+* In the **Domain Controller Option** tab, select a **Forest functional level** and a **Domain functional level** as per your environment. Since this is the first domain controller in the forest, please select the **DNS Server **_**(as we are configuring AD integrated DNS)**_ and the **Global Catalog (GC)** checkboxes. Then, enter the **Active Directory Restore Mode** **(DSRM)** password, this is used to retrieve/restore Active Directory data. Then, click **Next** to continue
 
+<figure><img src="https://static.wixstatic.com/media/115dee_c7048e1ea7884c5bb92fc6c9f6a3f4ff~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_c7048e1ea7884c5bb92fc6c9f6a3f4ff~mv2.png" alt=""><figcaption></figcaption></figure>
 
-Note: If you are adding this domain controller into an existing domain/forest you can choose the relevant option accordingly.
+* Since we have configured an AD-integrated DNS server, you can ignore the DNS Delegation warning as shown in the below screen. Then, click **Next** to continue.
 
-![](https://static.wixstatic.com/media/115dee\_c3610edbc3aa4c25bc736e1f21bb5fb4\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_c3610edbc3aa4c25bc736e1f21bb5fb4\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_709de13858f746bf94b8a0507138b835~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_709de13858f746bf94b8a0507138b835~mv2.png" alt=""><figcaption></figcaption></figure>
 
-In the **Domain Controller Option** tab, select a **Forest functional level** and a **Domain functional level** as per your environment. Since this is the first domain controller in the forest, please select the **DNS Server **_**(as we are configuring AD integrated DNS)**_ and the **Global Catalog (GC)** checkboxes. Then, enter the **Active Directory Restore Mode** **(DSRM)** password, this is used to retrieve/restore Active Directory data. Then, click **Next** to continue
+* In the **Additional Options** tab, enter a NetBIOS name for your domain. It is suggested to keep the NetBIOS name the same as the root domain name _(by default, it will fetch the domain name only)_. Then, click **Next** to continue.
 
-![](https://static.wixstatic.com/media/115dee\_c7048e1ea7884c5bb92fc6c9f6a3f4ff\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_c7048e1ea7884c5bb92fc6c9f6a3f4ff\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_849e5531b4d748b18393ce8d1e2b5f43~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_849e5531b4d748b18393ce8d1e2b5f43~mv2.png" alt=""><figcaption></figcaption></figure>
 
-Since we have configured an AD-integrated DNS server, you can ignore the DNS Delegation warning as shown in the below screen. Then, click **Next** to continue.
+* In the **Path** tab, you have to mention the **Database (NTDS Database), LOG** **files and SYSVOL** folders path. You can change the default path as per your organization security policies. I have kept them default. Now, click **Next** to continue.
 
-![](https://static.wixstatic.com/media/115dee\_709de13858f746bf94b8a0507138b835\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_709de13858f746bf94b8a0507138b835\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_0bc2901019ff45b1a98a3f2ebb2b9784~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_0bc2901019ff45b1a98a3f2ebb2b9784~mv2.png" alt=""><figcaption></figcaption></figure>
 
-In the **Additional Options** tab, enter a NetBIOS name for your domain. It is suggested to keep the NetBIOS name the same as the root domain name _(by default, it will fetch the domain name only)_. Then, click **Next** to continue.
+* In the **Review Options** tab, you will review the configuration. If everything is as per your need, you can click **Next** to proceed or otherwise you can go back and change the required setting as per your need and then proceed further.
+* You can also view the powershell script for future deployment. The below-mentioned script is from my environment.
+* Note: Always test your PowerShell scripts in a test environment, before running in a production environment.
 
-![](https://static.wixstatic.com/media/115dee\_849e5531b4d748b18393ce8d1e2b5f43\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_849e5531b4d748b18393ce8d1e2b5f43\~mv2.png)
+```
+Import-Module ADDSDeployment
+Install-ADDSForest `
+-CreateDnsDelegation:$false `
+-DatabasePath "C:\Windows\NTDS" `
+-DomainMode "WinThreshold" `
+-DomainName "VirtualGyanis.Com" `
+-DomainNetbiosName "VIRTUALGYANIS" `
+-ForestMode "WinThreshold" `
+-InstallDns:$true `
+-LogPath "C:\Windows\NTDS" `
+-NoRebootOnCompletion:$false `
+-SysvolPath "C:\Windows\SYSVOL" `
+-Force:$true
+```
 
-In the **Path** tab, you have to mention the **Database (NTDS Database), LOG** **files and SYSVOL** folders path. You can change the default path as per your organization security policies. I have kept them default. Now, click **Next** to continue.
-
-![](https://static.wixstatic.com/media/115dee\_0bc2901019ff45b1a98a3f2ebb2b9784\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_0bc2901019ff45b1a98a3f2ebb2b9784\~mv2.png)
-
-In the **Review Options** tab, you will review the configuration. If everything is as per your need, you can click **Next** to proceed or otherwise you can go back and change the required setting as per your need and then proceed further.
-
-You can also view the powershell script for future deployment. The below-mentioned script is from my environment.
-
-Note: Always test your PowerShell scripts in a test environment, before running in a production environment.
-
-\
-
-
-**##############################################**
-
-**# Windows PowerShell script for AD DS Deployment #**
-
-**##############################################**
-
-**Import-Module ADDSDeployment**
-
-**Install-ADDSForest \`**
-
-**-CreateDnsDelegation:$false \`**
-
-**-DatabasePath "C:\Windows\NTDS" \`**
-
-**-DomainMode "WinThreshold" \`**
-
-**-DomainName "VirtualGyanis.Com" \`**
-
-**-DomainNetbiosName "VIRTUALGYANIS" \`**
-
-**-ForestMode "WinThreshold" \`**
-
-**-InstallDns:$true \`**
-
-**-LogPath "C:\Windows\NTDS" \`**
-
-**-NoRebootOnCompletion:$false \`**
-
-**-SysvolPath "C:\Windows\SYSVOL" \`**
-
-**-Force:$true**
-
-**############### End of Script ####################**
-
-![](https://static.wixstatic.com/media/115dee\_019661c159f54f6fa27b8e1c274c00c0\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_019661c159f54f6fa27b8e1c274c00c0\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_019661c159f54f6fa27b8e1c274c00c0~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_019661c159f54f6fa27b8e1c274c00c0~mv2.png" alt=""><figcaption></figcaption></figure>
 
 In the **Prerequisites Check** tab, it will do prerequisite check.
 
