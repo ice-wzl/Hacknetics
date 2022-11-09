@@ -116,3 +116,5 @@ In the **Prerequisites Check** tab, it will do prerequisite check.
 
 
 <figure><img src="https://static.wixstatic.com/media/115dee_d802a7f674d24fcb8fccc4832b66933f~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_d802a7f674d24fcb8fccc4832b66933f~mv2.png" alt=""><figcaption></figcaption></figure>
+
+Credit: [https://www.virtualgyanis.com/post/step-by-step-how-to-install-and-configure-domain-controller-on-windows-server-2019](https://www.virtualgyanis.com/post/step-by-step-how-to-install-and-configure-domain-controller-on-windows-server-2019)
