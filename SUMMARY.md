@@ -104,4 +104,5 @@
   * [Reversing Malicious Code](malware-analysis/reversing-malicious-code.md)
 * [Infrastructure Development](infrastructure-development/README.md)
   * [SSL Cert Generation](infrastructure-development/ssl-cert-generation.md)
-* [Active Directory Management](active-directory-management.md)
+* [Active Directory Management](active-directory-management/README.md)
+  * [How to Join a Windows 11 PC to a Domain](active-directory-management/how-to-join-a-windows-11-pc-to-a-domain.md)
