@@ -1,37 +1,38 @@
 # Active Directory Management
 
-#### **Prerequisite Required** <a href="#viewer-b6rie" id="viewer-b6rie"></a>
+### **Prerequisite Required** <a href="#viewer-b6rie" id="viewer-b6rie"></a>
 
 * &#x20;VM or Physical Server with Windows Server 2019 installed (w_e are using Server with Desktop Experience installation option_)
 * Assign a static IP address to the server that we promote as Domain Controller.
 * As we'll configure Active Directory-integrated DNS, therefore change the DNS settings in the network interface and set the same server IP address as the primary DNS server.
 
-#### **Step 1: Install Active Directory Domain Services (ADDS)** <a href="#viewer-7f5cp" id="viewer-7f5cp"></a>
+### **Step 1: Install Active Directory Domain Services (ADDS)** <a href="#viewer-7f5cp" id="viewer-7f5cp"></a>
 
-#### &#x20; <a href="#viewer-bmamp" id="viewer-bmamp"></a>
+* Log into your Windows Server 2019 with administrative credentials. Open **Server Manager** → click on **Dashboard** → click on **Add roles and features**.
 
-Log into your Windows Server 2019 with administrative credentials. Open **Server Manager** → click on **Dashboard** → click on **Add roles and features**.
+<figure><img src="https://static.wixstatic.com/media/115dee_fabba8d7e01c443fb1981cffe99cb6b4~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_fabba8d7e01c443fb1981cffe99cb6b4~mv2.png" alt=""><figcaption></figcaption></figure>
 
-![](https://static.wixstatic.com/media/115dee\_fabba8d7e01c443fb1981cffe99cb6b4\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_fabba8d7e01c443fb1981cffe99cb6b4\~mv2.png)
+* The "**Before you begin**" tab contains some important information. Please go through it and click "**Next**".
 
-The "**Before you begin**" tab contains some important informations. Please go through it and click "**Next**".
+<figure><img src="https://static.wixstatic.com/media/115dee_eeecc83de06d43e093cf401d8aa31d40~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_eeecc83de06d43e093cf401d8aa31d40~mv2.png" alt=""><figcaption></figcaption></figure>
 
-![](https://static.wixstatic.com/media/115dee\_eeecc83de06d43e093cf401d8aa31d40\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_eeecc83de06d43e093cf401d8aa31d40\~mv2.png)
+* In the "**Installation Type**" tab choose **Role-based or Feature-based installation** and click on the **Next** button.
 
-In the "**Installation Type**" tab choose **Role-based or Feature-based installation** and click on the **Next** button.
+<figure><img src="https://static.wixstatic.com/media/115dee_f48e7119d845411eb10f67e247ff8c94~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_f48e7119d845411eb10f67e247ff8c94~mv2.png" alt=""><figcaption></figcaption></figure>
 
-![](https://static.wixstatic.com/media/115dee\_f48e7119d845411eb10f67e247ff8c94\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_f48e7119d845411eb10f67e247ff8c94\~mv2.png)
+* In the **Server Selection** tab, please select the destination server on which the role will be installed. Please verify the hostname and the IP address points of the selected server. Click **Next** to continue.
 
-In the **Server Selection** tab, please select the destination server on which the role will be installed. Please verify the hostname and the IP address points of the selected server. Click **Next** to continue.
+<figure><img src="https://static.wixstatic.com/media/115dee_a939b030e9314cacb4435bcac32ac394~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_a939b030e9314cacb4435bcac32ac394~mv2.png" alt=""><figcaption></figcaption></figure>
 
-![](https://static.wixstatic.com/media/115dee\_a939b030e9314cacb4435bcac32ac394\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_a939b030e9314cacb4435bcac32ac394\~mv2.png)
+* In the **Server Roles** tab, put a tickmark for **"Active Directory Domain Services"** _(you can select the **DNS Server** role as well, as we will configure AD integrated DNS server. If not selected, during installation it will automatically select and install the DNS Role)_.
+* Then, it will prompt to show you the associated features for the role. Click on **Add Features** to add those. Then click **Next** to continue.
 
-In the **Server Roles** tab, put a tickmark for **"Active Directory Domain Services"** _(you can select the **DNS Server** role as well, as we will configure AD integrated DNS server. If not selected, during installation it will automatically select and install the DNS Role)_.
+\
 
-Then, it will prompt to show you the associated features for the role. Click on **Add Features** to add those. Then click **Next** to continue.
 
-![](https://static.wixstatic.com/media/115dee\_36f89be0dcc447ad9dca9cb5059ed8a5\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_36f89be0dcc447ad9dca9cb5059ed8a5\~mv2.png)\
-![](https://static.wixstatic.com/media/115dee\_b7046ff12a2547ee84be8bea533ffb2f\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_b7046ff12a2547ee84be8bea533ffb2f\~mv2.png)
+<figure><img src="https://static.wixstatic.com/media/115dee_b7046ff12a2547ee84be8bea533ffb2f~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_b7046ff12a2547ee84be8bea533ffb2f~mv2.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="https://static.wixstatic.com/media/115dee_36f89be0dcc447ad9dca9cb5059ed8a5~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_36f89be0dcc447ad9dca9cb5059ed8a5~mv2.png" alt=""><figcaption></figcaption></figure>
 
 In the **Features** tab, the basic features for this required role are already selected by default. Click **Next** to install continue.
 
