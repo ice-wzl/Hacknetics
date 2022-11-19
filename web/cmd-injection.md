@@ -57,7 +57,7 @@ google.com; ping -c11 127.0.0.1 #server will hang for roughly 10 seconds
 
 <figure><img src="../.gitbook/assets/image (3) (4).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (9) (1).png" alt=""><figcaption></figcaption></figure>
 
 * This proves blind cmd injection, escalate to reverse shell
 

