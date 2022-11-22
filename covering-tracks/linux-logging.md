@@ -102,7 +102,9 @@ unset HISTFILE
 /var/log/httpd/error_log*
 ```
 
-### Syslog Files
+### Syslog&#x20;
+
+* Key files
 
 | Filename | Purpose                                                           |
 | -------- | ----------------------------------------------------------------- |
@@ -113,3 +115,18 @@ unset HISTFILE
 | kern.log | Linux kernel events                                               |
 | syslog   | A collection of all logs                                          |
 | wtmp     | Tracks user sessions (accessed through the who and last commands) |
+
+* Logging level&#x20;
+
+
+
+| Level  | Description                   |
+| ------ | ----------------------------- |
+| debug  | Helpful for debugging         |
+| info   | Informational                 |
+| notice | Normal conditions             |
+| warn   | Conditions requiring warnings |
+| err    | Error conditions              |
+| crit   | Critical conditions           |
+| alert  | Immediate action required     |
+| emerg  | System unusable               |
