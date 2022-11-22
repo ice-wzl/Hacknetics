@@ -101,3 +101,15 @@ unset HISTFILE
 /var/log/httpd/access_log*
 /var/log/httpd/error_log*
 ```
+
+### Syslog Files
+
+| Filename | Purpose                                                           |
+| -------- | ----------------------------------------------------------------- |
+| auth.log | System authentication and security events                         |
+| boot.log | A record of boot-related events                                   |
+| dmesg    | Kernel-ring buffer events related to device drivers               |
+| dpkg.log | Software package-management events                                |
+| kern.log | Linux kernel events                                               |
+| syslog   | A collection of all logs                                          |
+| wtmp     | Tracks user sessions (accessed through the who and last commands) |
