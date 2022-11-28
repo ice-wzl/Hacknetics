@@ -14,14 +14,9 @@ jobs -l
 #output
 [1]-  4581 Running                 ./bad.elf &
 #disown jobs
-disown -a
+disown -h jobID
+disown -h %2
 ## You should not see any jobs running on the screen ##
 #verify with
 jobs -l
 ```
-
-### Remove only running jobs?&#x20;
-
-Pass the -r option to disown command, type:\
-`$ disown -r`\
-`$ jobs -l`
