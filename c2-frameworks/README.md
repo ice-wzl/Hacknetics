@@ -20,3 +20,15 @@ disown -h %2
 #verify with
 jobs -l
 ```
+
+### Example
+
+[https://www.cyberciti.biz/faq/unix-linux-disown-command-examples-usage-syntax/#5](https://www.cyberciti.biz/faq/unix-linux-disown-command-examples-usage-syntax/#5)
+
+```
+## Step 1: update system ##
+apt-get upgrade &> /root/system.update.log &
+ 
+## Step 2: Mark apt-get so that SIGHUP is not sent when you exit and go for tea ##
+disown -h 
+```
