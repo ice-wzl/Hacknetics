@@ -19,6 +19,8 @@ disown -h %2
 ## You should not see any jobs running on the screen ##
 #verify with
 jobs -l
+##If disown is not on the target machine##
+./bad.elf &!
 ```
 
 ### Example
