@@ -5,7 +5,7 @@
   * [Buffer Overflows](buffer-overflows/buffer-overflows.md)
 * [c2-frameworks](c2-frameworks/README.md)
   * [Sliver](c2-frameworks/sliver.md)
-  * [Welcome to the Empire](c2-frameworks/empire.md)
+  * [Powershell Empire](c2-frameworks/empire.md)
   * [Meterpreter commands](c2-frameworks/metasploit.md)
   * [Pwncat-cs](c2-frameworks/pwncat-cs.md)
   * [Cobalt Strike](c2-frameworks/cobalt-strike.md)
