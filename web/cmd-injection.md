@@ -106,3 +106,39 @@ echo -n O53XOLLEMF2GCCQ= | base32 -d
 #output:
 www-data
 ```
+
+### Bypassing Character Blocklist with ffuf
+
+* If you see that some special characters are banned, create a burp request to the resource you want to test
+* It should be a post request
+* Identify the parameter that it is using to post the data to the server&#x20;
+
+```
+name=;ls
+```
+
+* Swap out the command injection attempt that is getting blocked in the burp request with:
+
+```
+name=FUZZ
+```
+
+* Save the burp request to your local machine in a file&#x20;
+
+```
+ffuf -request search.request --request-proto http -w /opt/Seclists/Fuzzing/special-chars.txt
+```
+
+* You usually will have to ignore the `&` character as many webservers will think you are going to pass in another parameter
+* Now that you have your results back you must filter out the most common side that you see being returned&#x20;
+* `-fs 724`
+* Can comma seperate filter size i.e. you see alot of 724 and 726 returned saying that character you posted is blocked&#x20;
+* `-fs 724,726`
+* Ensure you also `-mc all` or match code to see all the different http status codes returned, look for 5XX errors&#x20;
+* If you see errors on:
+
+```
+{ == SSTI
+; | & == cmd injection
+' " == SQLI
+```
