@@ -2,7 +2,7 @@
 
 ### Comments&#x20;
 
-```
+```python
 # Comment on a single line
 
 user = "JDoe" # Comment after code
@@ -17,7 +17,7 @@ user = "JDoe" # Comment after code
 * `%` for modulus (returns the remainder)
 * `**` for exponentiation
 
-```
+```python
 # Arithmetic operations
 
 result = 10 + 30
@@ -30,7 +30,7 @@ result = 5 ** 3
 
 ### Plus-Equals Operator `+=` <a href="#heading-plus-equals-operator" id="heading-plus-equals-operator"></a>
 
-```
+```python
 # Plus-Equal Operator
 
 counter = 0
@@ -49,7 +49,7 @@ message += "Part 2 of message"
 
 ### Variables <a href="#heading-variables" id="heading-variables"></a>
 
-```
+```python
 # These are all valid variable names and assignment
 
 user_name = "codey"
