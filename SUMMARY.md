@@ -109,3 +109,4 @@
   * [SSL Cert Generation](infrastructure-development/ssl-cert-generation.md)
 * [Active Directory Management](active-directory-management/README.md)
   * [How to Join a Windows 11 PC to a Domain](active-directory-management/how-to-join-a-windows-11-pc-to-a-domain.md)
+* [Python3 Reference](python3-reference.md)
