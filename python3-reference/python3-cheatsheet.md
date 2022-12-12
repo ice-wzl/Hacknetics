@@ -69,7 +69,7 @@ points = 120
 
 A modulo calculation returns the remainder of a division between the first and second number. For example:
 
-```
+```python
 # Modulo operations
 
 zero = 8 % 4
@@ -77,9 +77,9 @@ zero = 8 % 4
 nonzero = 12 % 5
 ```
 
-### Integers <a href="#heading-integers" id="heading-integers"></a>
+### Integers  <a href="#heading-integers" id="heading-integers"></a>
 
-```
+```python
 # Example integer numbers
 
 chairs = 4
@@ -95,7 +95,7 @@ left_overs = 0.0
 
 ### String Concatenation <a href="#heading-string-concatenation" id="heading-string-concatenation"></a>
 
-```
+```python
 # String concatenation
 
 first = "Hello "
@@ -108,7 +108,7 @@ long_result = first + second + "!" #Hello World!
 
 ### Strings
 
-```
+```python
 user = "User Full Name"
 game = 'Monopoly'
 
@@ -118,7 +118,7 @@ over multiple lines"
 
 ### Floating Point Numbers <a href="#heading-floating-point-numbers" id="heading-floating-point-numbers"></a>
 
-```
+```python
 # Floating point numbers
 
 pi = 3.14159
@@ -128,7 +128,7 @@ tip_percent = 0.20
 
 ### `print()` Function <a href="#heading-print-function" id="heading-print-function"></a>
 
-```
+```python
 print("Hello World!")
 
 print(100)
@@ -137,4 +137,82 @@ pi = 3.14159
 print(pi)
 ```
 
-###
+### elif Statements
+
+```python
+# elif Statement
+
+pet_type = "fish"
+
+if pet_type == "dog":
+  print("You have a dog.")
+elif pet_type == "cat":
+  print("You have a cat.")
+elif pet_type == "fish":
+  # this is performed
+  print("You have a fish")
+else:
+  print("Not sure!")
+```
+
+### or Operator
+
+* The Python `or` operator combines two Boolean expressions and evaluates to `True` if at least one of the expressions returns `True`. Otherwise, if both expressions are `False`, then the entire expression evaluates to `False`.
+
+```python
+True or True      # Evaluates to True
+True or False     # Evaluates to True
+False or False    # Evaluates to False
+1 < 2 or 3 < 1    # Evaluates to True
+3 < 1 or 1 > 6    # Evaluates to False
+1 == 1 or 1 < 2   # Evaluates to True
+```
+
+### Equal Operator `==` <a href="#heading-equal-operator" id="heading-equal-operator"></a>
+
+```python
+# Equal operator
+if 'Yes' == 'Yes':  # evaluates to True  
+    print('They are equal')
+
+if (2 > 1) == (5 < 10):  # evaluates to True  
+    print('Both expressions give the same result')
+
+c = '2'd = 2
+if c == d:  
+    print('They are equal')
+else:  
+    print('They are not equal')
+```
+
+### Not Equals Operator `!=` <a href="#heading-not-equals-operator" id="heading-not-equals-operator"></a>
+
+```python
+# Not Equals Operator
+
+if "Yes" != "No":
+  # evaluates to True
+  print("They are NOT equal")
+
+val1 = 10
+val2 = 20
+
+if val1 != val2:
+  print("They are NOT equal")
+
+if (10 > 1) != (10 > 1000):
+  # True != False
+  print("They are NOT equal")
+```
+
+### Comparison Operators <a href="#heading-comparison-operators" id="heading-comparison-operators"></a>
+
+```python
+a = 2
+b = 3py
+a < b  # evaluates to True
+a > b  # evaluates to False
+a >= b # evaluates to False
+a <= b # evaluates to True
+a <= a # evaluates to True
+```
