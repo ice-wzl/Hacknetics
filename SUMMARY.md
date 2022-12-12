@@ -76,6 +76,7 @@
   * [ssh](tool-guides/ssh.md)
   * [nuclei](tool-guides/nuclei.md)
   * [Git](tool-guides/git.md)
+  * [netcat](tool-guides/netcat.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)
