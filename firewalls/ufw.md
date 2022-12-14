@@ -118,4 +118,6 @@ sudo ufw allow "Nginx HTTPS"
 sudo ufw delete allow "Nginx Full"
 ```
 
-###
+### Credit and Further Reading
+
+[https://www.digitalocean.com/community/tutorials/ufw-essentials-common-firewall-rules-and-commands](https://www.digitalocean.com/community/tutorials/ufw-essentials-common-firewall-rules-and-commands)
