@@ -39,6 +39,16 @@ To                         Action      From
 Anywhere                   DENY        10.10.10.10  
 ```
 
+### View ufw App List
+
+```
+sudo ufw app list | grep Nginx
+#output
+Nginx Full
+Nginx HTTP
+Nginx HTTPS
+```
+
 ### Block an IP Address/Subnet <a href="#block-an-ip-address" id="block-an-ip-address"></a>
 
 ```
@@ -107,3 +117,5 @@ sudo ufw allow "Nginx HTTPS"
 --OR--
 sudo ufw delete allow "Nginx Full"
 ```
+
+###
