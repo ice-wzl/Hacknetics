@@ -79,3 +79,31 @@ Status: active
 #now delete the rule
 sudo ufw delete 1    
 ```
+
+### Allow by Application
+
+```
+sudo ufw allow “OpenSSH”
+#output
+Rule added
+Rule added (v6)
+```
+
+### Disable by Application
+
+```
+#get status 
+sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+OpenSSH                    ALLOW       Anywhere                               
+Nginx Full                 ALLOW       Anywhere                  
+OpenSSH (v6)               ALLOW       Anywhere (v6)                   
+Nginx Full (v6)            ALLOW       Anywhere (v6) 
+#remove the service you want to deny 
+sudo ufw allow "Nginx HTTPS"
+--OR--
+sudo ufw delete allow "Nginx Full"
+```
