@@ -39,6 +39,13 @@ To                         Action      From
 Anywhere                   DENY        10.10.10.10  
 ```
 
+### Change the Default Policy
+
+```
+sudo ufw default deny outgoing
+sudo ufw default deny incoming
+```
+
 ### View ufw App List
 
 ```
