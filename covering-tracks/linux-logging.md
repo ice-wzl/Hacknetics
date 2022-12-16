@@ -100,6 +100,7 @@ unset HISTFILE
 /var/log/cron
 /var/log/httpd/access_log*
 /var/log/httpd/error_log*
+##Dont forget the journel##
 ```
 
 ### Syslog&#x20;
