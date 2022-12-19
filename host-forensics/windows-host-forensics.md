@@ -11,7 +11,7 @@ wmic process list brief
 * Get a large amount of output from running processes
 
 ```
-amic process list full
+wmic process list full
 ```
 
 * Get specific information about running processes&#x20;
@@ -137,3 +137,11 @@ wevtutil qe security /f:text
 #Or
 Get-EventLog -LogName Security | Format-List -Property *
 ```
+
+### Key Sysinternals tools
+
+* `Process Explorer` Enumerate running processes
+* `Autoruns` Display a list of Autostart Extensibility Points (ASEP)
+* `Process Monitor` Show file system, network, registry, and process information in real time
+* `TCPView` Maps listening and active TCP UDP activity to applications
+* `Procdump` Capture memory for a running process for analysis&#x20;
