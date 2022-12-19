@@ -34,7 +34,7 @@ wmic process where processid=pid_number get commandline
 netstat -na
 ```
 
-* Show the owning process ID and associated exutables / DLLs
+* Show the owning process ID and associated exe's / DLLs
 
 ```
 netstat -naob
@@ -51,3 +51,5 @@ netstat -naob 5
 ```
 netsh advfirewall show currentprofile
 ```
+
+###
