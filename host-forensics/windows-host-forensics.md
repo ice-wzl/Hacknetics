@@ -52,4 +52,59 @@ netstat -naob 5
 netsh advfirewall show currentprofile
 ```
 
-###
+### Windows Services
+
+* Examine services via GUI built-in
+
+```
+services.msc
+```
+
+* Examine running services&#x20;
+
+```
+net start
+```
+
+* Get details about each service
+
+```
+sc query | more
+```
+
+* Map running process to windows services&#x20;
+
+```
+tasklist /svc
+```
+
+### Registry ASEPs
+
+* Check common problem areas in Windows Registry&#x20;
+
+```
+#HKLM
+reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
+reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx
+#HKCU
+reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
+reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx
+```
+
+### Checking for Malicious Accounts
+
+* Windows built-in&#x20;
+
+```
+lusrmgr.msc
+```
+
+* List users / view user group membership
+
+```
+net user 
+net user <username>
+net localgroup Administrators
+```
