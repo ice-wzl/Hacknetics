@@ -117,3 +117,5 @@
   * [Regex Python3](python3-reference/regex-python3.md)
 * [EDR](edr/README.md)
   * [Velociraptor EDR](edr/velociraptor-edr.md)
+* [Host Forensics](host-forensics/README.md)
+  * [Windows Host Forensics](host-forensics/windows-host-forensics.md)
