@@ -108,3 +108,32 @@ net user
 net user <username>
 net localgroup Administrators
 ```
+
+### Scheduled Tasks
+
+* View using the GUI
+
+```
+schtasks
+```
+
+* Remember if using the CLI the `at` command will only show tasked where `at` was used to set up the task, `schtasks` shows all tasks.
+
+### Unusual Log Entries&#x20;
+
+* Suspicious Log entiries to look for, low hanging fruit
+
+```
+Event log services was stopped
+Windows File Protection is not active on this system
+A member was added to a security-enabled local group
+##Several Failed logon attempts##
+```
+
+* For Win7 -- Win 10
+
+```
+wevtutil qe security /f:text
+#Or
+Get-EventLog -LogName Security | Format-List -Property *
+```

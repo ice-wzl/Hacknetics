@@ -251,7 +251,7 @@ ffuf -u http://localhost:8888 -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/sec
 
 * Browsing to burp, we can see all the requests and the 302 redirects.  Try and figure out what stands out, if most requests are 302's look for 404's or other status codes
 
-<figure><img src="../.gitbook/assets/Screenshot_2022-12-17_16_48_47.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/Screenshot_2022-12-17_16_48_47 (1).png" alt=""><figcaption></figcaption></figure>
 
 * Apply our filter removing all 302's
 
