@@ -1,5 +1,38 @@
 # Windows Host Forensics
 
+### Windows CLI Basics
+
+| Command                  | Action                           |
+| ------------------------ | -------------------------------- |
+| dir                      | list files and folders           |
+| cd \<dir>                | change to directory              |
+| mkdir \<dir>             | make directory                   |
+| rmdir \<dir>             | deliete directory                |
+| copy \<source> \<target> | copy source to target            |
+| move \<source> \<target> | move file from source to target  |
+| ren \<old> \<new>        | rename form old to new           |
+| del \<file>              | delete file                      |
+| echo \<text>             | display text to STDOUT           |
+| type \<text.txt>         | display contents of file         |
+| cls                      | clear screen                     |
+| ver                      | Windows Version + Build          |
+| \<drive>:                | Change Drive                     |
+| ipconfig /all            | get ip address                   |
+| sc query state=all       | show services                    |
+| tasklist /m              | show services and processes      |
+| taskkill /PID \<PID> /F  | force kill process by id         |
+| assoc                    | Show file type association       |
+| cipher /w:\<dir>         | secure delete file or directory  |
+| fc \<file> \<file>       | file compare                     |
+| netstat -an              | display currently opened ports   |
+| pathping                 | displays each hop in ping        |
+| tracert                  | displays each hop and time       |
+| powercfg                 | change power configuration       |
+| chkdsk /f \<drive>       | check and fix disk errors        |
+| drivequery /FO list /v   | list of drivers and status       |
+| osk                      | on screen keyboard               |
+| shutdown -s -t 3600      | schedule shutdown for 1 hour     |
+
 ### Windows Directories to examine
 
 ```powershell
