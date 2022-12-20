@@ -363,3 +363,9 @@ vol.py cmdline
 * Network Listener --> `netscan`, check processes&#x20;
 * Suspicious program --> `userassist` , `cmdline` , processes
 * Others --> `hivelist` `printkey` `svcscan` `dllist`
+
+### Detecting PSEXEC in logs
+
+```
+Get-WinEvent -FilterHashTable @{ Logname='System'; ID='7045'} | where {$_.Message.contains("PSEXEC")}
+```
