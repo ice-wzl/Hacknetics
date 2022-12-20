@@ -1,5 +1,40 @@
 # Windows Host Forensics
 
+### Windows Directories to examine
+
+```powershell
+#dns file
+"C:\Windows\System32\drivers\etc\hosts"
+#network config file
+"C:\Windows\System32\drivers\etc\networks"
+#usernames and passwords
+"C:\Windows\System32\config\SAM"
+#security log
+"C:\Windows\System32\config\SECURITY"
+#software log
+"C:\Windows\System32\config\SOFTWARE"
+#windows event logs
+"C:\Windows\System32\winevt\*"
+#backup of user and password
+"C:\Windows\repair\SAM"
+#Windows xp all users start up
+"C:\Documents and Settings\All Users\Start Menu\Programs\Startup\*"
+#windows xp user startup
+"C:\Documents and Settings\User\Start Menu\Programs\Startup"
+#windows all user startup
+"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"
+#windows user startup
+"C:\Users\*\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\StartUp"
+#prefetch files
+"C:\Windows\Prefetch"
+#amcache.hve
+"C:\Windows\AppCompat\Programs\Amcache.hve"
+#NTUSER.dat
+"C:\Windows\Users\*\NTUSER.dat"
+```
+
+###
+
 ### Windows Process with wmic
 
 * Get a brief output of running processes
