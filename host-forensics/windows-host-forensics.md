@@ -93,6 +93,45 @@ reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx
 ```
 
+### Common Windows Registry Locations to Check&#x20;
+
+```powershell
+#os information 
+reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion"
+#product name 
+reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion" /v ProductName
+#data of install 
+reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion" /v InstallDate
+#registered owner
+reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion" /v RegisteredOwner
+#system root
+reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion" /v SystemRoot
+#time zone
+reg query "HKLM\System\CurrentControllerSet\Control\TimeZoneInformation" /v ActiveTimeBias
+#mapped network drives
+reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Explorer\Map Network Drive MRU"
+#mounted devices
+reg query "HKLM\System\MountedDevices"
+#usb devices
+reg query "HKLM\System\CurrentControllerSet\Enum\USBStor"
+#audit policies
+reg query "HKLM\Security\Policy\PolAdTev"
+#installed software (machine)
+reg query "HKLM\Softwware"
+#installed software (user)
+reg query "HKCU\Software"
+#recent documents
+reg query "HKCU\Software\Microsoft\Windows\Currentversion\Explorer\RecentDocuments"
+#recent user locations
+reg query "HKCU\Software\Microsoft\Windows\Currentversion\Explorer\ComDlg32\LastVistitedMRU"
+#typed urls
+reg query "HKCU\Software\Microsoft\Internet Explorer\TypedURLs"
+#mru list
+reg query "HKCU\Software\Microsoft\Windows\Currentversion\Explorer\RunMRU"
+#last accessed registry keys
+reg query "HKCU\Software\Microsoft\Windows\Currentversion\Applets\RegEdit" /v LastKey
+```
+
 ### Checking for Malicious Accounts
 
 * Windows built-in&#x20;
