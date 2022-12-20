@@ -162,8 +162,3 @@ sublist3r -d google.com -b -t 100
 ```
 theharvester -d cisco.com -b yahoo -l 100
 ```
-
-### crt.sh to Find domains
-
-* Certificate Transparancy site can reveal hosts that are not public yet
-* https://crt.sh
