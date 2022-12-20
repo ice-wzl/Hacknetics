@@ -120,6 +120,7 @@
   * [Velociraptor EDR](edr/velociraptor-edr.md)
 * [Host Forensics](host-forensics/README.md)
   * [Windows Host Forensics](host-forensics/windows-host-forensics.md)
+  * [Windows NT Versions](host-forensics/windows-nt-versions.md)
 * [Cloud](cloud/README.md)
   * [AWS](cloud/aws.md)
 * [OSINT](osint/README.md)

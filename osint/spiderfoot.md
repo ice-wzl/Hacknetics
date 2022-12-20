@@ -47,8 +47,3 @@ python ./sfcli.py -s http://localhost:5009
 sf> 
 
 ```
-
-### Connecting
-
-* IMO it is much easier to use the WebUI version vice CLI
-* To connect as a client simply browse to `http://localhost:5009`
