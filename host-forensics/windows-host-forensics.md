@@ -33,6 +33,26 @@
 | osk                      | on screen keyboard               |
 | shutdown -s -t 3600      | schedule shutdown for 1 hour     |
 
+### Powershell common cmdlets
+
+| Command                          | Alias   | Action                                                                   |
+| -------------------------------- | ------- | ------------------------------------------------------------------------ |
+| Get-Content                      | cat     | get contents of file                                                     |
+| Get-Service                      | gsv     | get services                                                             |
+| Get-Process                      | gps     | show services and processes                                              |
+| Stop-Processes -Id \<PID> -Force | kill    | force kill by pid                                                        |
+| Clear-Content                    | clc     | clear contents of file                                                   |
+| Get-Command                      | gc      | gets all commands                                                        |
+| Compare-Object \<f1> \<f2>       | compare | compare f1 and f2                                                        |
+| Copy-Item                        | cp      | copy and item                                                            |
+| Get-Member                       | gm      | gets the properties and methods for objects                              |
+| Invoke-WMIMethod                 | iwmi    | calls windows management instrumentation methods                         |
+| cmd /c \<command                 |         | run command as windows command line                                      |
+| Set-Alias                        | sal     | creates or changes an alias                                              |
+| Select-Object                    | select  | selects objects or object properties                                     |
+| ForEach-Object                   | %       | performs an operation against each item in a collection of input objects |
+| Where-Object                     | ?       | selects objects from a collection based on their property values         |
+
 ### Windows Directories to examine
 
 ```powershell
