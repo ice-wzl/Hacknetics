@@ -103,6 +103,7 @@
 * [firewalls](firewalls/README.md)
   * [iptables](firewalls/iptables.md)
   * [ufw](firewalls/ufw.md)
+  * [netsh advfirewall](firewalls/netsh-advfirewall.md)
 * [Malware Analysis](malware-analysis/README.md)
   * [Malware Analysis Fundamentals](malware-analysis/malware-analysis-fundamentals.md)
   * [Packer Identification by File section names](malware-analysis/packer-identification-by-file-section-names.md)
