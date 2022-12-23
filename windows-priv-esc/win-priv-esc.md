@@ -55,6 +55,8 @@ If the machine is < Windows 10 1809 < Windows Server 2019 - Try Juicy Potato
 
 ### Search for files with passwords in them&#x20;
 
+* Perform a basic search
+
 ```
 #in one shot, may take a while
 findstr /SI /M "password" *.xml *.ini *.txt  
@@ -62,6 +64,32 @@ findstr /SI /M "password" *.xml *.ini *.txt
 findstr /si password *.txt
 findstr /si password *.xml
 findstr /si password *.ini
+```
+
+* Find strings in `.config` files
+
+```
+dir /s *pass* == *cred** == *vnc* == *.config*
+```
+
+* Find all passwords in all files
+
+```
+findstr /spin "password" *.*
+```
+
+* Password files that could have base64 encoded credentials&#x20;
+
+```
+C:\sysprep.inf
+C:\sysprep\sysprep.xml
+C:\unattend.xml
+%WINDIR%\Panther\Unattend\Unattended.xmml
+%WINDIR%\Panther\Unattended.xml
+
+dir C:\*.vnc.ini /s /b
+dir C:\*ultravnc.ini /s /b
+dir C:\ /s /b | findstr /si *vnc.ini
 ```
 
 ### Powershell
@@ -81,7 +109,7 @@ Set-MpPreference -DisableRealtimeMonitoring $true
 
 #### Windows Kernel Versions
 
-systeminfo
+* systeminfo
 
 ```
 Kernel 6.1 - Windows 7 / Windows Server 2008 R2  
