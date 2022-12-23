@@ -190,6 +190,12 @@ reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Fo
 reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"
 ```
 
+### Disable RunOnce
+
+```
+reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer /v DisableLocalMachineRunOnce /t REG_DWORD /d 1
+```
+
 ### Common Windows Registry Locations to Check&#x20;
 
 ```powershell
