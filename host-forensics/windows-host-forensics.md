@@ -385,3 +385,16 @@ Get-WinEvent -FilterHashTable @{ Logname='System'; ID='7045'} | where {$_.Messag
 New-Item -Path "HKLM\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\Powershell\ScriptBlockLogging" -Force
 Set-ItemProperty -Path "HKLM\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\Powershell\ScriptBlockLogging" -Name "EnableScriptBlockLogging" -Value 1 -Force
 ```
+
+### DLL Search Order Hijacking
+
+* Windows DLLs will be searched for in this order&#x20;
+
+```
+Folder where the application is stored
+C:\Windows\System32
+C:\Windows\System
+C:\Windows
+Current Directory
+Directories listed in system path #see with env/set
+```
