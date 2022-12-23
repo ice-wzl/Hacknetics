@@ -75,4 +75,6 @@ wevtutil el | Foreach-Object {wevtutil cl "$_"}
 
 ## Manual
 
-* ![image](https://user-images.githubusercontent.com/75596877/173405840-0356ddb3-ee78-4f61-8085-fc923adecedc.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/173405840-0356ddb3-ee78-4f61-8085-fc923adecedc.png" alt=""><figcaption></figcaption></figure>
