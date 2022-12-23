@@ -166,7 +166,7 @@ sc query | more
 tasklist /svc
 ```
 
-### Registry ASEPs
+### Registry ASEPs/Registry Persistance
 
 * Check common problem areas in Windows Registry&#x20;
 
@@ -179,6 +179,15 @@ reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx
+```
+
+* Additional Persistance Keys
+
+```
+reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"
+reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"
 ```
 
 ### Common Windows Registry Locations to Check&#x20;
