@@ -92,6 +92,13 @@ dir C:\*ultravnc.ini /s /b
 dir C:\ /s /b | findstr /si *vnc.ini
 ```
 
+### Search Registry for Passwords
+
+```
+reg query HKLM /f password /t REG_SZ /s
+reg query HKCU /f password /t REG_SZ /s
+```
+
 ### Powershell
 
 ```
