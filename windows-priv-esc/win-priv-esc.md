@@ -56,7 +56,12 @@ If the machine is < Windows 10 1809 < Windows Server 2019 - Try Juicy Potato
 ### Search for files with passwords in them&#x20;
 
 ```
+#in one shot, may take a while
 findstr /SI /M "password" *.xml *.ini *.txt  
+#seperate commands
+findstr /si password *.txt
+findstr /si password *.xml
+findstr /si password *.ini
 ```
 
 ### Powershell
