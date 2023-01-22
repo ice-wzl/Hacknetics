@@ -36,6 +36,13 @@ netsh firewall show state
 netsh firewall show config   
 ```
 
+### Console History&#x20;
+
+* Windows powershell saves all previous commands into a file called ConsoleHost\_history. This is located at
+
+```
+```
+
 ### Low Hanging Fruit&#x20;
 
 [Reference](https://jlajara.gitlab.io/others/2020/11/22/Potatoes\_Windows\_Privesc.html)
