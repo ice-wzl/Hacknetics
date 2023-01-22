@@ -94,7 +94,7 @@
 * [windows-priv-esc](windows-priv-esc/README.md)
   * [powershell-cheatsheet](windows-priv-esc/powershell-cheatsheet.md)
   * [Windows Privlage Escalation](windows-priv-esc/win-priv-esc.md)
-  * [AV Evasion](windows-priv-esc/windows-antivirus.md)
+  * [Anti-Virus Evasion](windows-priv-esc/windows-antivirus.md)
   * [Windows Registry](windows-priv-esc/windows-registry.md)
   * [exploits](windows-priv-esc/exploits/README.md)
     * [printspoofer](windows-priv-esc/exploits/print-spoofer.md)
