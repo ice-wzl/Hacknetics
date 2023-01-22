@@ -1,4 +1,4 @@
-# Welcome to the Empire
+# Powershell Empire
 
 ## Install
 
@@ -56,6 +56,15 @@ cd /opt
 * **Modules** - Modules that can be used as tools or exploits.
 * **Credentials** - Reports all credentials found when using modules.
 * **Reporting** - A report of every module and command run on each agent.
+
+### Server Obsfucation&#x20;
+
+* Change `Invoke-Empire` to `Invoke-RandomStringHere` in these files:
+
+```
+empire/server/data/agent/agent.ps1
+empire/server/data/agent/stagers/http/http.ps1
+```
 
 ## Listeners Overview
 

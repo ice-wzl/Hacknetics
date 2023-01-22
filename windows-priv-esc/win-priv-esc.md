@@ -41,6 +41,7 @@ netsh firewall show config
 * Windows powershell saves all previous commands into a file called ConsoleHost\_history. This is located at
 
 ```
+%userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 ```
 
 ### Low Hanging Fruit&#x20;
