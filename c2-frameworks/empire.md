@@ -204,7 +204,9 @@ trollsploit
 ### Using Plugins
 
 * Transfer or clone the plugin that you want to use into the plugins directory for Empire.
-* ![image](https://user-images.githubusercontent.com/75596877/175973929-361f0f3b-61dc-45ed-9787-80437ad6ca80.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/175973929-361f0f3b-61dc-45ed-9787-80437ad6ca80.png" alt=""><figcaption></figcaption></figure>
 * After Empire version 3.4.0, Empire automatically loads plugins into the server. If the plugin is not already running you - Can use the plugin command to load the plugin for use.
 
 ```
