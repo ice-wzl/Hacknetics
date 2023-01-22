@@ -79,6 +79,7 @@
   * [tmux](tool-guides/tmux-mastery.md)
   * [ssh](tool-guides/ssh.md)
   * [Vim](tool-guides/vim.md)
+  * [Wireshark](tool-guides/wireshark.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)
