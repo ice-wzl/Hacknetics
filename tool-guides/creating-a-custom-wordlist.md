@@ -99,9 +99,13 @@ exrex "((W|w)inter|(S|s)ummer|(F|f)all|(A|a)utumn|(S|s)pring)20(16|17|18|19|20|2
 exrex "((J|j)anuary|(F|f)ebruary|(M|m)arch|(A|a)pril|(M|m)ay|(J|j)une|(J|j)uly|(A|a)ugust|(S|s)eptember|(O|o)ctober|(N|n)ovember|(D|d)ecember)20(16|17|18|19|20|21|22)" >> seasons_months.txt
 ```
 
+* Will leave you with roughly 300 passwords&#x20;
+
 ### kwp Keyboard Walk Password List Generator
 
-```
-kwp -z basechars/full.base keymaps/en-us.keymap routes/2-to-16-max-3-direction-changes.route > keymap.txt
+* Release page: [https://github.com/hashcat/kwprocessor/releases/tag/v1.00](https://github.com/hashcat/kwprocessor/releases/tag/v1.00)
 
-```
+<pre><code><strong>kwp -z basechars/full.base keymaps/en-us.keymap routes/2-to-16-max-3-direction-changes.route > keymap.txt
+</strong><strong>#below command might explode your vm
+</strong>kwp -s1 basechars/full.base keymaps/en-us.keymap routes/2-to-32-max-5-direction-changes.route -o /opt/kwprocessor/lists/lists-keepass
+</code></pre>
