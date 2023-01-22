@@ -30,14 +30,15 @@ chmod +x starkiller-0.0.0.AppImage
 
 ```
 cd /opt/Empire
-./empire --rest
+./ps-empire server
+./ps-empire client
 ```
 
 * Starting Starkiller
 * Once Empire is started follow the instructions below to start Starkiller.
 
 ```
-cd /opt
+cd /opt/Empire
 ./starkiller-0.0.0.AppImage
 ```
 
@@ -48,14 +49,16 @@ cd /opt
 * **User**: `empireadmin`
 * **Pass**: `password123`
 
-### Overview
+### Delete Stale Listeners&#x20;
 
-* **Listeners** - Similar to Netcat or multi/handler for receiving back stagers.
-* **Stagers** - Similar to a payload with further functionality for deploying agents.
-* **Agents** - Used to interact with agents on the device to perform "tasks".
-* **Modules** - Modules that can be used as tools or exploits.
-* **Credentials** - Reports all credentials found when using modules.
-* **Reporting** - A report of every module and command run on each agent.
+* If you exit empire without disabling or killing all your listeners next time you start empire it will still show and not let you disable or kill it
+* open this file in a database browser
+
+```
+/opt/Empire/empire/server/data/empire.db
+#find the stale listener in the listeners table
+DELETE FROM listeners WHERE id=1;
+```
 
 ### Server Obsfucation&#x20;
 
