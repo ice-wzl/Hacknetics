@@ -82,6 +82,18 @@ hashcat --force --stdout pwlist2.txt -r /usr/share/hashcat/rules/best64.rule -r 
 
 ### exrex Password Generator&#x20;
 
+* [https://github.com/asciimoo/exrex](https://github.com/asciimoo/exrex)
+
+#### Install
+
+```
+git clone https://github.com/asciimoo/exrex.git
+cd exrex
+easy_install exrex
+--or--
+pip3 install exrex
+```
+
 ```
 exrex "((W|w)inter|(S|s)ummer|(F|f)all|(A|a)utumn|(S|s)pring)20(16|17|18|19|20|21|22)" > seasons_months.txt
 exrex "((J|j)anuary|(F|f)ebruary|(M|m)arch|(A|a)pril|(M|m)ay|(J|j)une|(J|j)uly|(A|a)ugust|(S|s)eptember|(O|o)ctober|(N|n)ovember|(D|d)ecember)20(16|17|18|19|20|21|22)" >> seasons_months.txt
