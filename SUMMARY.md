@@ -19,6 +19,7 @@
   * [Impacket-install](domain-controllers/Impacket-install.md)
   * [Kerberos cheatsheet](domain-controllers/Kerberos-cheatsheet.md)
   * [Domain Controllers](domain-controllers/domain-controllers.md)
+  * [Pass The Ticket](domain-controllers/pass-the-ticket.md)
 * [file-transfers](file-transfers/README.md)
   * [Transfering Files](file-transfers/file-transfers.md)
 * [lateral-movement](lateral-movement/README.md)
