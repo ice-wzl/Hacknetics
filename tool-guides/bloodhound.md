@@ -31,7 +31,7 @@ bloodhound
 
 * Now log into the DB with the user and password you just set up&#x20;
 
-![](<../.gitbook/assets/image (3) (1).png>)
+<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Data Injection and Enumeration
 
@@ -88,7 +88,7 @@ Invoke-BloodHound -CollectionMethod All -JSONFolder "c:\Users\svc-alfresko\Deskt
 * Once the data is ingested, as mentioned, we can play around with the built in queries to find things like All Domain Admins, Shortest Path to Domain Admins and similar, that may help us as an attacker to escalate privileges and compromise the entire domains/forest.
 * Mark the user account you have compromised as `"Owned"`  --> Find user you own --> right click --> Mark User as Owned
 
-![](<../.gitbook/assets/image (5) (1) (1).png>)
+<figure><img src="../.gitbook/assets/image (5) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 * Now from the `Analysis` tab a great query is `Shortest Path from Owned Principles`
 
@@ -97,3 +97,42 @@ Invoke-BloodHound -CollectionMethod All -JSONFolder "c:\Users\svc-alfresko\Deskt
 * If you over over the lines and --> right click --> help it will give you information along with commands to take advantage of vulns
 
 <figure><img src="../.gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
+
+### Bloodhound Cypher Queries&#x20;
+
+```
+#return all users
+MATCH (u:User) RETURN u
+#return all computers 
+MATCH (c:Computer) RETURN c
+# Return the users with the name containing "ADMIN"
+MATCH (u:User) WHERE u.name =~ ".*ADMIN.*" RETURN u.name
+# Return all the users and the computer they are admin to
+MATCH p = (u:User)-[:AdminTo]->(c:Computer) RETURN p
+# Return the  users with the name containing "ADMIN" and the computer they are admin to
+MATCH p = (u:User)-[:AdminTo]->(c:Computer) WHERE u.name =~ ".*ADMIN.*" RETURN p
+MATCH p=shortestPath((c {owned: true})-[*1..3]->(s)) WHERE NOT c = s RETURN p
+MATCH p=shortestPath((u {highvalue: false})-[*1..]->(g:Group {name: 'DOMAIN ADMINS@RASTALABS.LOCAL'})) WHERE NOT (u)-[:MemberOf*1..]->(:Group {highvalue: true}) RETURN p
+```
+
+### Bloodhound Automation&#x20;
+
+### BloodHoundLoader
+
+We often find ourselves wanting to set the values of attributes in BloodHound in bulk. The [BloodHoundLoader](https://github.com/CompassSecurity/BloodHoundQueries#bloodhoundloader) tool was written for this purpose. It allows marking a list of computers as owned or a list of users as high value for instance.
+
+We use this feature for example to mark a list of accounts with their password found on a share as owned, or following a discussion with a customer to set a list of especially interesting targets as high value.
+
+The following command sets all the hosts in “high\_value.txt” to high value targets:
+
+```
+python BloodHoundLoader.py --dburi bolt://localhost:7687 --dbuser neo4j --dbpassword BloodHound --mode h high_value.txt
+```
+
+The names of users and computers in the text file should match the name shown on the GUI for the node:
+
+```
+DC.ACME.COM
+COMPUTER.ACME.COM
+GUEST@ACME.COM
+```
