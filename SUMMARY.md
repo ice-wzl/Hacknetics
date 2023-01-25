@@ -103,6 +103,7 @@
   * [Windows Kernel Vulnerabilities](windows-priv-esc/windows-kernel-vulnerabilities.md)
   * [Windows Defender](windows-priv-esc/windows-defender.md)
   * [AMSI Bypasses](windows-priv-esc/amsi-bypasses.md)
+  * [pktmon Packet Capture Windows](windows-priv-esc/pktmon-packet-capture-windows.md)
 * [firewalls](firewalls/README.md)
   * [iptables](firewalls/iptables.md)
   * [ufw](firewalls/ufw.md)
