@@ -42,3 +42,14 @@
 | Event ID 611  | a trust relationship with another domain was removed                                                         |
 | Event ID 612  | an audit policy was changed                                                                                  |
 | Event ID 4864 | a collision was detected between a namespace element in one forest and a namespace element in another forest |
+
+### Query for Windows Event Logs&#x20;
+
+```
+wevtutil qe Security /c:100 /rd:true /q:"*[System[(EventID=612)]]"
+
+Security --> Log name you want to query
+/c: --> count returned
+/rd: --> reverse direction true|false
+/q: --> your query
+```
