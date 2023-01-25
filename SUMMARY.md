@@ -1,6 +1,8 @@
 # Table of contents
 
 * [OSCP-Prep](README.md)
+* [Active Directory Management](active-directory-management/README.md)
+  * [How to Join a Windows 11 PC to a Domain](active-directory-management/how-to-join-a-windows-11-pc-to-a-domain.md)
 * [buffer-overflows](buffer-overflows/README.md)
   * [Buffer Overflows](buffer-overflows/buffer-overflows.md)
 * [c2-frameworks](c2-frameworks/README.md)
@@ -16,6 +18,7 @@
   * [Windows Log Clearing](covering-tracks/windows-log-clearing.md)
   * [Ghost Writing Binaries](covering-tracks/ghost-writing-binaries.md)
 * [domain-controllers](domain-controllers/README.md)
+  * [Bloodhound](domain-controllers/bloodhound.md)
   * [Impacket-install](domain-controllers/Impacket-install.md)
   * [Kerberos cheatsheet](domain-controllers/Kerberos-cheatsheet.md)
   * [Domain Controllers](domain-controllers/domain-controllers.md)
@@ -57,7 +60,6 @@
 * [tool-guides](tool-guides/README.md)
   * [Asymmetric File Encrypt and Decrypt](tool-guides/open-ssl.md)
   * [Aws Buckets](tool-guides/aws-buckets.md)
-  * [Bloodhound](tool-guides/bloodhound.md)
   * [cewl-crunch](tool-guides/cewl-crunch.md)
   * [Creating a Custom Wordlist](tool-guides/creating-a-custom-wordlist.md)
   * [evil-winrm](tool-guides/evil-winrm.md)
@@ -116,8 +118,6 @@
   * [Reversing Malicious Code](malware-analysis/reversing-malicious-code.md)
 * [Infrastructure Development](infrastructure-development/README.md)
   * [SSL Cert Generation](infrastructure-development/ssl-cert-generation.md)
-* [Active Directory Management](active-directory-management/README.md)
-  * [How to Join a Windows 11 PC to a Domain](active-directory-management/how-to-join-a-windows-11-pc-to-a-domain.md)
 * [Python3 Reference](python3-reference/README.md)
   * [Python3 Cheatsheet](python3-reference/python3-cheatsheet.md)
   * [Regex Python3](python3-reference/regex-python3.md)
