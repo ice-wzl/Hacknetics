@@ -89,11 +89,19 @@ findstr /spin "password" *.*
 * Password files that could have base64 encoded credentials&#x20;
 
 ```
-C:\sysprep.inf
-C:\sysprep\sysprep.xml
-C:\unattend.xml
-%WINDIR%\Panther\Unattend\Unattended.xmml
-%WINDIR%\Panther\Unattended.xml
+Unattended files
+C:\Windows\sysprep\sysprep.xml
+C:\Windows\sysprep\sysprep.inf
+C:\Windows\sysprep.inf
+C:\Windows\Panther\Unattended.xml
+C:\Windows\Panther\Unattend.xml
+C:\Windows\Panther\Unattend\Unattend.xml
+C:\Windows\Panther\Unattend\Unattended.xml
+C:\Windows\System32\Sysprep\unattend.xml
+C:\Windows\System32\Sysprep\unattended.xml
+C:\unattend.txt
+C:\unattend.inf
+dir /s *sysprep.inf *sysprep.xml *unattended.xml *unattend.xml *unattend.txt 2>nul
 
 dir C:\*.vnc.ini /s /b
 dir C:\*ultravnc.ini /s /b

