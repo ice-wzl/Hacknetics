@@ -24,6 +24,7 @@
   * [Domain Controllers](domain-controllers/domain-controllers.md)
   * [Pass The Ticket](domain-controllers/pass-the-ticket.md)
   * [Bloodhound Python](domain-controllers/bloodhound-python.md)
+  * [Rubeus to Ccache](domain-controllers/rubeus-to-ccache.md)
 * [file-transfers](file-transfers/README.md)
   * [Transfering Files](file-transfers/file-transfers.md)
 * [lateral-movement](lateral-movement/README.md)
