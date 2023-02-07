@@ -47,6 +47,9 @@ john --wordlist=<passwords_file> <AS_REP_responses_file>
 
 ## Kerberoasting
 
+* Great reading:
+* [https://specterops.gitbook.io/ghostpack/rubeus/roasting](https://specterops.gitbook.io/ghostpack/rubeus/roasting)
+
 With [Impacket](https://github.com/SecureAuthCorp/impacket) example GetUserSPNs.py:
 
 ```shell
