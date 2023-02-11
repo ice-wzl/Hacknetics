@@ -105,7 +105,7 @@ wmic process list full
 * Get specific information about running processes&#x20;
 
 ```
-wmic process get name,parentprocesspid,processid
+wmic process get name,parentprocessid,processid,commandline
 ```
 
 * Focus in on a specific process&#x20;
