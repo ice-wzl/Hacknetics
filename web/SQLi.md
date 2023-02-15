@@ -563,7 +563,7 @@ sqlmap -r burp.request --batch
 * More often than not it is with a cookie
 * Capture ALL of the cookies in the request like this:
 
-<figure><img src="../.gitbook/assets/image (1) (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 * Now with your cookies in your clipboard buffer add them into your command
 
