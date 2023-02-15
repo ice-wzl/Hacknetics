@@ -10,6 +10,11 @@
 powershell.exe -Version 2.0 -NoLogo -NoProfile
 ```
 
+* Verify with&#x20;
+*
+
+    <figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
 ### Resources
 
 * https://learnxinyminutes.com/docs/powershell/
