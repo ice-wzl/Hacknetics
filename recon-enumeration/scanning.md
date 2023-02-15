@@ -157,7 +157,7 @@ PORT     STATE SERVICE VERSION
 * If you google that and select the `launchpad.net` link it will tell you the OS version&#x20;
 * [https://launchpad.net/ubuntu/+source/openssh/1:7.6p1-4ubuntu0.5](https://launchpad.net/ubuntu/+source/openssh/1:7.6p1-4ubuntu0.5)
 
-<figure><img src="../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
 ## Vulnerability Scanning
 
