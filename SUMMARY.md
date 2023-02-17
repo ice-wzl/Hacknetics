@@ -37,7 +37,6 @@
 * [Things I have Pwn'd before](recon-enumeration/things-i-have-pwn'd-before.md)
 * [persistence](persistence/README.md)
   * [Linux Persistence](persistence/persistence.md)
-  * [Windows Persistence](persistence/windows-persistence.md)
   * [Windows Persistence](persistence/windows-persistence-1.md)
     * [Assign Group Memberships](persistence/windows-persistence-1/assign-group-memberships.md)
     * [Guest Windows Account Persistence](persistence/windows-persistence-1/guest-windows-account-persistence.md)
