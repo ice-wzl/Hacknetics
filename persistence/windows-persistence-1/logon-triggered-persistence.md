@@ -54,3 +54,7 @@ move revshell.exe C:\Windows
 ```
 
 Let's then create a `REG_EXPAND_SZ` registry entry under `HKLM\Software\Microsoft\Windows\CurrentVersion\Run`. The entry's name can be anything you like, and the value will be the command we want to execute.
+
+![](https://user-images.githubusercontent.com/75596877/181061126-ae241ccd-7767-4401-9964-960d5ec878c3.png)
+
+* After doing this, sign out of your current session and log in again, and you should receive a shell (it will probably take around 10-20 seconds).
