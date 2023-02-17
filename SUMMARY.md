@@ -49,7 +49,7 @@
     * [Hijacking File Associations](persistence/windows-persistence-1/hijacking-file-associations.md)
     * [Abusing Services](persistence/windows-persistence-1/abusing-services.md)
     * [Logon Triggered Persistence](persistence/windows-persistence-1/logon-triggered-persistence.md)
-    * [xp\_cmd\_shell](persistence/windows-persistence-1/xp\_cmd\_shell.md)
+    * [xp\_cmdshell](persistence/windows-persistence-1/xp\_cmdshell.md)
 * [recon-enumeration](recon-enumeration/README.md)
   * [Exploit Research](recon-enumeration/exploit-research.md)
   * [Pentesting DNS](recon-enumeration/passive-enumeration.md)

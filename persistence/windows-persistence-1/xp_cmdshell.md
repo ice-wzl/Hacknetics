@@ -1,4 +1,4 @@
-# xp\_cmd\_shell
+# xp\_cmdshell
 
 ```
 CREATE TRIGGER [sql_backdoor]
