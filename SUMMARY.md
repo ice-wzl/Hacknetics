@@ -48,6 +48,7 @@
     * [Task Scheduler](persistence/windows-persistence-1/task-scheduler.md)
     * [Hijacking File Associations](persistence/windows-persistence-1/hijacking-file-associations.md)
     * [Abusing Services](persistence/windows-persistence-1/abusing-services.md)
+    * [Logon Triggered Persistence](persistence/windows-persistence-1/logon-triggered-persistence.md)
 * [recon-enumeration](recon-enumeration/README.md)
   * [Exploit Research](recon-enumeration/exploit-research.md)
   * [Pentesting DNS](recon-enumeration/passive-enumeration.md)
