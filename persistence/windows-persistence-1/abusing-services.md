@@ -4,7 +4,7 @@
 * A service is basically an executable that runs in the background. When configuring a service, you define which executable will be used and select if the service will automatically run when the machine starts or should be manually started.
 * There are two main ways we can abuse services to establish persistence: either create a new service or modify an existing one to execute our payload.
 
-#### Creating backdoor services
+### Creating backdoor services
 
 * We can create and start a service named "RestartService" using the following commands:
 
