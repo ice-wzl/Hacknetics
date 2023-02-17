@@ -44,6 +44,7 @@
     * [WMI Persist With Event Filters](persistence/windows-persistence-1/wmi-persist-with-event-filters.md)
     * [SAM SYSTEM Exfil / Pass The Hash](persistence/windows-persistence-1/sam-system-exfil-pass-the-hash.md)
     * [Backdoor Executable](persistence/windows-persistence-1/backdoor-executable.md)
+    * [Special Privileges and Security Descriptors](persistence/windows-persistence-1/special-privileges-and-security-descriptors.md)
 * [recon-enumeration](recon-enumeration/README.md)
   * [Exploit Research](recon-enumeration/exploit-research.md)
   * [Pentesting DNS](recon-enumeration/passive-enumeration.md)
