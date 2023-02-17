@@ -46,6 +46,8 @@
     * [Special Privileges and Security Descriptors](persistence/windows-persistence-1/special-privileges-and-security-descriptors.md)
     * [RID Hijacking](persistence/windows-persistence-1/rid-hijacking.md)
     * [Task Scheduler](persistence/windows-persistence-1/task-scheduler.md)
+    * [Hijacking File Associations](persistence/windows-persistence-1/hijacking-file-associations.md)
+    * [Abusing Services](persistence/windows-persistence-1/abusing-services.md)
 * [recon-enumeration](recon-enumeration/README.md)
   * [Exploit Research](recon-enumeration/exploit-research.md)
   * [Pentesting DNS](recon-enumeration/passive-enumeration.md)
