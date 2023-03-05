@@ -28,6 +28,7 @@
   * [Silver Ticket](domain-controllers/silver-ticket.md)
   * [Golden Ticket](domain-controllers/golden-ticket.md)
   * [Abusing GPO Permissions](domain-controllers/abusing-gpo-permissions.md)
+  * [AppLocker Bypasses](domain-controllers/applocker-bypasses.md)
 * [file-transfers](file-transfers/README.md)
   * [Transfering Files](file-transfers/file-transfers.md)
 * [lateral-movement](lateral-movement/README.md)
