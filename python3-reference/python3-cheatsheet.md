@@ -216,3 +216,59 @@ a >= b # evaluates to False
 a <= b # evaluates to True
 a <= a # evaluates to True
 ```
+
+### if Statements&#x20;
+
+```python
+test_value = 100
+
+if test_value > 1:
+  # Expression evaluates to True
+  print("This code is executed!")
+
+if test_value > 1000:
+  # Expression evaluates to False
+  print("This code is NOT executed!")
+
+print("Program continues at this point.")
+```
+
+### else Statements
+
+```python
+test_value = 50
+
+if test_value < 1:
+  print("Value is < 1")
+else:
+  print("Value is >= 1")
+
+test_string = "VALID"
+
+if test_string == "NOT_VALID":
+  print("String equals NOT_VALID")
+else:
+  print("String equals something else!")
+```
+
+### and Operator
+
+```python
+True and True     # Evaluates to True
+True and False    # Evaluates to False
+False and False   # Evaluates to False
+1 == 1 and 1 < 2  # Evaluates to True
+1 < 2 and 3 < 1   # Evaluates to False
+"Yes" and 100     # Evaluates to True
+```
+
+### not Operator&#x20;
+
+```python
+not True     # Evaluates to False
+not False    # Evaluates to True
+1 > 2        # Evaluates to False
+not 1 > 2    # Evaluates to True
+1 == 1       # Evaluates to True
+not 1 == 1   # Evaluates to False
+```
