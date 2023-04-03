@@ -382,17 +382,23 @@ noelles_height = heights[0][1] print(noelles_height)
 
 The `.remove()` method in Python is used to remove an element from a list by passing in the value of the element to be removed as an argument. In the case where two or more elements in the list have the same value, the first occurrence of the element is removed.
 
-```
-# Create a listshopping_line = ["Cole", "Kip", "Chris", "Sylvana", "Chris"] # Removes the first occurance of "Chris"shopping_line.remove("Chris")print(shopping_line)
-# Output# ["Cole", "Kip", "Sylvana", "Chris"]
+```python
+# Create a list
+shopping_line = ["Cole", "Kip", "Chris", "Sylvana", "Chris"] 
+# Removes the first occurance of "Chris"
+shopping_line.remove("Chris")
+print(shopping_line)
+# Output# 
+["Cole", "Kip", "Sylvana", "Chris"]
 ```
 
-#### List Method `.count()` <a href="#heading-list-method-count" id="heading-list-method-count"></a>
+### List Method `.count()` <a href="#heading-list-method-count" id="heading-list-method-count"></a>
 
 The `.count()` Python list method searches a list for whatever search term it receives as an argument, then returns the number of matching entries found.
 
 ```
-backpack = ['pencil', 'pen', 'notebook', 'textbook', 'pen', 'highlighter', 'pen']numPen = backpack.count('pen')
+backpack = ['pencil', 'pen', 'notebook', 'textbook', 'pen', 'highlighter', 'pen']
+numPen = backpack.count('pen')
 print(numPen)# Output: 3
 ```
 
