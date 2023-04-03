@@ -374,8 +374,10 @@ In order to access elements in a 2D list, an index for the sublist and the index
 # 2D list of people's heights
 heights = [["Noelle", 61], ["Ali", 70], ["Sam", 67]]
 # Access the sublist at index 0, and then access the 1st index of that sublist. 
-noelles_height = heights[0][1] print(noelles_height)
-# Output# 61
+noelles_height = heights[0][1] 
+print(noelles_height)
+# Output# 
+61
 ```
 
 ### List Method `.remove()` <a href="#heading-list-method-remove" id="heading-list-method-remove"></a>
@@ -396,29 +398,39 @@ print(shopping_line)
 
 The `.count()` Python list method searches a list for whatever search term it receives as an argument, then returns the number of matching entries found.
 
-```
+```python
 backpack = ['pencil', 'pen', 'notebook', 'textbook', 'pen', 'highlighter', 'pen']
 numPen = backpack.count('pen')
-print(numPen)# Output: 3
+print(numPen)
+# Output: 
+3
 ```
 
-#### Determining List Length with `len()` <a href="#heading-determining-list-length-with-len" id="heading-determining-list-length-with-len"></a>
+### Determining List Length with `len()` <a href="#heading-determining-list-length-with-len" id="heading-determining-list-length-with-len"></a>
 
 The Python `len()` function can be used to determine the number of items found in the list it accepts as an argument.
 
-```
-knapsack = [2, 4, 3, 7, 10]size = len(knapsack)print(size) # Output: 5
+```python
+knapsack = [2, 4, 3, 7, 10]
+size = len(knapsack)
+print(size) 
+# Output: 
+5
 ```
 
-#### List Method `.sort()` <a href="#heading-list-method-sort" id="heading-list-method-sort"></a>
+### List Method `.sort()` <a href="#heading-list-method-sort" id="heading-list-method-sort"></a>
 
 The `.sort()` Python list method will sort the contents of whatever list it is called on. Numerical lists will be sorted in ascending order, and lists of Strings will be sorted into alphabetical order. It modifies the original list, and has no return value.
 
-```
-exampleList = [4, 2, 1, 3]exampleList.sort()print(exampleList)# Output: [1, 2, 3, 4]
+```python
+exampleList = [4, 2, 1, 3]
+exampleList.sort()
+print(exampleList)
+# Output: 
+[1, 2, 3, 4]
 ```
 
-#### List Slicing <a href="#heading-list-slicing" id="heading-list-slicing"></a>
+### List Slicing <a href="#heading-list-slicing" id="heading-list-slicing"></a>
 
 A _slice_, or sub-list of Python list elements can be selected from a list using a colon-separated starting and ending point.
 
@@ -426,20 +438,29 @@ The syntax pattern is `myList[START_NUMBER:END_NUMBER]`. The slice will include 
 
 When slicing a list, a new list is returned, so if the slice is saved and then altered, the original list remains the same.
 
-```
-tools = ['pen', 'hammer', 'lever']tools_slice = tools[1:3] # ['hammer', 'lever']tools_slice[0] = 'nail'
-# Original list is unaltered:print(tools) # ['pen', 'hammer', 'lever']
+```python
+tools = ['pen', 'hammer', 'lever']
+tools_slice = tools[1:3] 
+# ['hammer', 'lever']
+tools_slice[0] = 'nail'
+# Original list is unaltered:
+print(tools) 
+# ['pen', 'hammer', 'lever']
 ```
 
-#### `sorted()` Function <a href="#heading-sorted-function" id="heading-sorted-function"></a>
+### `sorted()` Function <a href="#heading-sorted-function" id="heading-sorted-function"></a>
 
 The Python `sorted()` function accepts a list as an argument, and will return a new, sorted list containing the same elements as the original. Numerical lists will be sorted in ascending order, and lists of Strings will be sorted into alphabetical order. It does not modify the original, unsorted list.
 
-```
-unsortedList = [4, 2, 1, 3]sortedList = sorted(unsortedList)print(sortedList)# Output: [1, 2, 3, 4]
+```python
+unsortedList = [4, 2, 1, 3]
+sortedList = sorted(unsortedList)
+print(sortedList)
+# Output: 
+[1, 2, 3, 4]
 ```
 
-#### List Method `.insert()` <a href="#heading-list-method-insert" id="heading-list-method-insert"></a>
+### List Method `.insert()` <a href="#heading-list-method-insert" id="heading-list-method-insert"></a>
 
 The Python list method `.insert()` allows us to add an element to a specific index in a list.
 
@@ -448,21 +469,32 @@ It takes in two inputs:
 * The index that you want to insert into.
 * The element that you want to insert at the specified index.
 
-```
-# Here is a list representing a line of people at a storestore_line = ["Karla", "Maxium", "Martim", "Isabella"]
-# Here is how to insert "Vikor" after "Maxium" and before "Martim"store_line.insert(2, "Vikor")
-print(store_line) # Output: ['Karla', 'Maxium', 'Vikor', 'Martim', 'Isabella']
+```python
+# Here is a list representing a line of people at a store
+store_line = ["Karla", "Maxium", "Martim", "Isabella"]
+# Here is how to insert "Vikor" after "Maxium" and before "Martim"
+store_line.insert(2, "Vikor")
+print(store_line) 
+# Output: 
+['Karla', 'Maxium', 'Vikor', 'Martim', 'Isabella']
 ```
 
-#### List Method `.pop()` <a href="#heading-list-method-pop" id="heading-list-method-pop"></a>
+### List Method `.pop()` <a href="#heading-list-method-pop" id="heading-list-method-pop"></a>
 
 The `.pop()` method allows us to remove an element from a list while also returning it. It accepts one optional input which is the index of the element to remove. If no index is provided, then the last element in the list will be removed and returned.
 
-```
+```python
 cs_topics = ["Python", "Data Structures", "Balloon Making", "Algorithms", "Clowns 101"]
-# Pop the last elementremoved_element = cs_topics.pop()
-print(cs_topics)print(removed_element)
-# Output:# ['Python', 'Data Structures', 'Balloon Making', 'Algorithms']# 'Clowns 101'
-# Pop the element "Baloon Making"cs_topics.pop(2)print(cs_topics)
-# Output:# ['Python', 'Data Structures', 'Algorithms']
+# Pop the last element
+removed_element = cs_topics.pop()
+print(cs_topics)
+# Output:# 
+['Python', 'Data Structures', 'Balloon Making', 'Algorithms']
+print(removed_element)
+# 'Clowns 101'
+# Pop the element "Baloon Making"
+cs_topics.pop(2)
+print(cs_topics)
+# Output:# 
+['Python', 'Data Structures', 'Algorithms']
 ```
