@@ -7,6 +7,8 @@
 SCHTASKS /create /sc minute /mo 15 /tn "Security Scan" /tr "C:\Windows\System32\spool\drivers\color\patch.exe" 
 #query all 
 SCHTASKS /query
+#delete task 
+schtasks /delete /tn "\Security Scan" /F
 ```
 
 * The most common way to schedule tasks is using the built-in Windows task scheduler.

@@ -270,6 +270,18 @@ load powershell
 powershell_import /path/to/file/created.ps1
 ```
 
+### Empire Internal Host Scanning
+
+```
+usemodule powershell/situational_awareness/network/portscan
+set Hosts 10.10.120.20
+set Ports 22,80,443,445,3389
+set SkipDiscovery True
+set PingOnly False
+set ReadableOut scan.nmap
+execute
+```
+
 ### Empire Registry Persistence
 
 ```
