@@ -31,7 +31,11 @@ run
 * Use proxychains configured for socks4 to route any application's traffic through a Meterpreter session.
 
 ```
-use auxiliary/server/socks4
+#comprimised host has 10.10.120.20 ip want to proxy traffic through meterpreter
+route add 10.10.120.0/24 4
+use auxiliary/server/socks_proxy
+set Version 4a
+set SRVPORT 9050
 run
 ```
 
