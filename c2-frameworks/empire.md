@@ -5,10 +5,10 @@
 * Installing Empire
 
 ```
-cd /opt
-git clone https://github.com/BC-SECURITY/Empire/
-cd /opt/Empire
-./setup/install.sh
+git clone --recursive https://github.com/BC-SECURITY/Empire.git
+cd Empire
+./setup/checkout-latest-tag.sh
+sudo ./setup/install.sh
 ```
 
 * Installing Starkiller
