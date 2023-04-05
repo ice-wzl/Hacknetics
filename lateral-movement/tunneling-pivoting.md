@@ -250,6 +250,23 @@ ssh -D 8000 user@target.thm -fN
 ssh -L 8000:127.0.0.1:80 user@172.16.0.50 -fN
 ```
 
+### Fixing SSH tunnels that only listen on loopback&#x20;
+
+* if you run into a situation where you are attempting to tunnel and instead of `0.0.0.0` the device only listens on `127.0.0.1` you have two choices&#x20;
+* if root&#x20;
+
+```
+echo 'GatewayPorts yes' >> /etc/ssh/sshd_config
+```
+
+* or utilize socat&#x20;
+
+```
+./.socat tcp-listen:80 tcp-connect:127.0.0.1:8080 &
+```
+
+* above command listens on `0.0.0.0:80` and will port bend the connection to `127.0.0.1:8080` when it is assumed you have your reverse tunnel set up back to kali station
+
 ## Plink.exe
 
 * Is a Windows command line version of the PuTTY SSH client
