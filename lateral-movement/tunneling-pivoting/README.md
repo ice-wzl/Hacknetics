@@ -105,6 +105,13 @@ proxychains nc 172.16.0.10 23
 
 * It's extremely easy to configure proxychains for a specific assignment, without altering the master file.
 * Simply execute: `cp /etc/proxychains.conf .`, then make any changes to the config file in a copy stored in your current directory.
+* `proxychains` will use the config file in your local dir first before using the one in `/etc/`
+* Can also use `-f` and specify a file&#x20;
+
+```
+proxychains -f proxy9051.conf #rest of command here
+```
+
 * If you're likely to move directories a lot then you could instead place it in a `.proxychains` directory under your home directory
 * If you mess up the master copy, redownload:
 * https://raw.githubusercontent.com/haad/proxychains/master/src/proxychains.conf
