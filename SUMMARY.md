@@ -39,6 +39,7 @@
     * [Plink.exe](lateral-movement/tunneling-pivoting/plink.exe.md)
     * [socat](lateral-movement/tunneling-pivoting/socat.md)
     * [Chisel](lateral-movement/tunneling-pivoting/chisel.md)
+    * [SShuttle](lateral-movement/tunneling-pivoting/sshuttle.md)
 * [lin-priv-esc](lin-priv-esc/README.md)
   * [Linux Privilege Escalation](lin-priv-esc/lin-priv-esc.md)
 * [Things I have Pwn'd before](recon-enumeration/things-i-have-pwn'd-before.md)
