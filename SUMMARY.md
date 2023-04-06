@@ -33,7 +33,7 @@
 * [file-transfers](file-transfers/README.md)
   * [Transfering Files](file-transfers/file-transfers.md)
 * [lateral-movement](lateral-movement/README.md)
-  * [Pivoting](lateral-movement/tunneling-pivoting/README.md)
+  * [Pivoting Enumeration](lateral-movement/tunneling-pivoting/README.md)
     * [Proxychains and FoxyProxy](lateral-movement/tunneling-pivoting/proxychains-and-foxyproxy.md)
     * [SSH Tunneling and Port Forwarding](lateral-movement/tunneling-pivoting/ssh-tunneling-and-port-forwarding.md)
     * [Plink.exe](lateral-movement/tunneling-pivoting/plink.exe.md)
