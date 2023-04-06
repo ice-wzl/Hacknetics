@@ -75,7 +75,7 @@ Execute your cmd injection
 
 * Press `Poll Now` to see if the request came through&#x20;
 
-<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (3).png" alt=""><figcaption></figcaption></figure>
 
 * If the above worked, move down to Data Exfil section
 
