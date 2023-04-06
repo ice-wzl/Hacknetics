@@ -36,6 +36,8 @@
   * [Pivoting](lateral-movement/tunneling-pivoting/README.md)
     * [Proxychains and FoxyProxy](lateral-movement/tunneling-pivoting/proxychains-and-foxyproxy.md)
     * [SSH Tunneling and Port Forwarding](lateral-movement/tunneling-pivoting/ssh-tunneling-and-port-forwarding.md)
+    * [Plink.exe](lateral-movement/tunneling-pivoting/plink.exe.md)
+    * [socat](lateral-movement/tunneling-pivoting/socat.md)
 * [lin-priv-esc](lin-priv-esc/README.md)
   * [Linux Privilege Escalation](lin-priv-esc/lin-priv-esc.md)
 * [Things I have Pwn'd before](recon-enumeration/things-i-have-pwn'd-before.md)
