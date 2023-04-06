@@ -65,7 +65,7 @@ google.com; ping -c11 127.0.0.1 #server will hang for roughly 10 seconds
 
 * Launch Burp, and choose:
 
-![](<../.gitbook/assets/image (1) (2).png>)
+![](<../.gitbook/assets/image (1) (2) (1).png>)
 
 ```
 Burp --> Burp Collaborator Client
