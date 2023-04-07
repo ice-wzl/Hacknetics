@@ -109,6 +109,7 @@
   * [ssh](tool-guides/ssh.md)
   * [Vim](tool-guides/vim.md)
   * [Wireshark](tool-guides/wireshark.md)
+  * [kwp](tool-guides/kwp.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)

