@@ -111,7 +111,7 @@
   * [Vim](tool-guides/vim.md)
   * [Wireshark](tool-guides/wireshark.md)
   * [kwp](tool-guides/kwp.md)
-  * [LAPS](tool-guides/laps.md)
+  * [LAPS](tool-guides/lapsdumper.md)
   * [KeePass KeeThief](tool-guides/keepass-keethief.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
