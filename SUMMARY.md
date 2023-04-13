@@ -112,6 +112,7 @@
   * [Wireshark](tool-guides/wireshark.md)
   * [kwp](tool-guides/kwp.md)
   * [LAPSDumper](tool-guides/lapsdumper.md)
+  * [KeePass KeeThief](tool-guides/keepass-keethief.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)
