@@ -6,6 +6,8 @@
 
 ### Dir brute force mode&#x20;
 
+* to add more threads add `-t`
+
 ```
 gobuster dir -u http://10.10.10.10 -w /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt 
 ```
