@@ -14,7 +14,7 @@ Git-Book of this Repo:
 
 * Never be unsure of what is in your clipboard buffer again
 
-{% file src=".gitbook/assets/clip.py" %}
+{% file src=".gitbook/assets/clip (1).py" %}
 
 ```
 //create small window and run with
@@ -30,6 +30,14 @@ python3 clip.py
 {% file src=".gitbook/assets/scriptme.py" %}
 
 <figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+### Terminator Config
+
+* These days I find myself using Terminator the most (and tmux), see below for my terminator config.
+* To use it place this file at `~/.config/terminator/config`
+* And make sure terminator is installed `sudo apt install terminator -y`
+
+{% file src=".gitbook/assets/config.txt" %}
 
 ### Big Thanks to our Sponsors
 
