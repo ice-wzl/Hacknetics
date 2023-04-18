@@ -1,81 +1,24 @@
-### gobuster
-- gobuster tries to find valid directories from a wordlist of possible directories. gobuster can also be used to valid subdomains using the same method.
-#### Syntax
-- Directory/File Brute force mode
-````
-dir
-````
-- DNS brute forcing mode
-````
-dns
-````
-- Flag for extentions to be tested against
-````
--x
-````
-- Sets a wordlist to be used
-````
--w
-````
-- Set username for basic authentication (if required by the directory)
-````
--U
-````
-- Set password for basic authentication 
-````
--P
-````
-- Set the status codes gobuster will recognize as valid
-````
--s
-````
-- Skip ssl certificate validation
-````
--k
-````
-- Set a user agent string
-````
--a
-````
-- Specify and HTTP header
-````
--H
-````
-- Set the url to brute force 
-````
--u
-````
-- Location of the wordlists
-````
-/usr/share/wordlists
-````
-### Example full syntax
-````
-dirb http://10.10.10.10:80/secret/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -X .txt 
-````
-- This command tests the /secret/ directory 
-- It specifies to use the wordlist `directory-list-2.3-medium.txt`
-- and with the `-X` flag it sets gobuster to test for `.txt` file extensions i.e. admin.txt, secret.txt
+# gobuster
 
+#### gobuster
 
+* gobuster tries to find valid directories from a wordlist of possible directories. gobuster can also be used to valid subdomains using the same method.
 
+### Dir brute force mode&#x20;
 
+```
+gobuster dir -u http://10.10.10.10 -w /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt 
+```
 
+* If for example bad directories are `302` over to the 404 page&#x20;
+* You will need to add 302 to the bad status codes list, only 404 is there by default&#x20;
 
+```
+gobuster dir -u http://10.10.10.10 -w /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt -b 302,404 
+```
 
+### Vhost enumeration&#x20;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
+gobuster vhost -u http://mailbox.htb -w /usr/share/seclists/Discovery/DNS/subdomains-top-11000.txt
+```
