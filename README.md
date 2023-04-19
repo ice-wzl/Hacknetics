@@ -36,6 +36,7 @@ python3 clip.py
 * These days I find myself using Terminator the most (and tmux), see below for my terminator config.
 * To use it place this file at `~/.config/terminator/config`
 * And make sure terminator is installed `sudo apt install terminator -y`
+* Make sure to remove the .txt part when you pull the file down locally&#x20;
 
 {% file src=".gitbook/assets/config.txt" %}
 
