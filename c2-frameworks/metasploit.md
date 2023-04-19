@@ -287,6 +287,7 @@ msf > use post/multi/recon/local_exploit_suggester
 set SESSION X
 SHOWDESCRIPTION true
 -----------------------------------------------------------------------
+msf > use post/recon/outbound_ports
 ```
 
 ### Winenum Windows Built In enumeration Script
