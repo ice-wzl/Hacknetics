@@ -33,6 +33,13 @@ python3 clip.py
 
 ### Terminator Config
 
+* Note: systems have different fonts installed, if you use this config and the font spacing is wild, use the system default, or choose your own.
+
+```
+open terminal 
+right click --> preferences --> profiles --> check the use system fixed width font
+```
+
 * These days I find myself using Terminator the most (and tmux), see below for my terminator config.
 * To use it place this file at `~/.config/terminator/config`
 * And make sure terminator is installed `sudo apt install terminator -y`
