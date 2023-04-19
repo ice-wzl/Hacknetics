@@ -10,6 +10,7 @@
   * [Powershell Empire](c2-frameworks/empire.md)
   * [Metasploit](c2-frameworks/metasploit.md)
     * [Metasploit Basics](c2-frameworks/metasploit/metasploit-basics.md)
+    * [Custom MSF Resource Scripts](c2-frameworks/metasploit/custom-msf-resource-scripts.md)
   * [Pwncat-cs](c2-frameworks/pwncat-cs.md)
   * [Cobalt Strike](c2-frameworks/cobalt-strike.md)
 * [covering-tracks](covering-tracks/README.md)
