@@ -45,6 +45,8 @@ proxychains firefox & #start firefox in the background with proxychains
 
 * Browse to `http://ifconfig.co` and or `http://ipinfo.io` to check that your IP is properly being obsfucated
 * Browse to `http://dnsleaktest.com` and see that your DNS address has changed
+* if using firefox instead of just the tor browser and have firefox configured to use `127.0.0.1` `9050` as a proxy and have the tor service running open firefox and browse to `about:config`
+* Change `privacy.resist.Fingerprinting` from `false` to `true`
 * IMPORTANT: All other web browser windows should be closed before opening firefox through `proxychains`
 
 ## Tor Browser
