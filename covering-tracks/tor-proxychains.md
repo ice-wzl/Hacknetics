@@ -59,6 +59,12 @@ proxychains firefox & #start firefox in the background with proxychains
 echo 'ExcludeNodes {us},{au},{ca},{ru} StrictNodes 1' >> /etc/tor/torrc 
 ```
 
+### Use specific country exit node&#x20;
+
+```
+echo "ExitNodes {us} StrictNodes 1" >> /etc/tor/torrc 
+```
+
 ### Prevent server to be used as exit node&#x20;
 
 ```
