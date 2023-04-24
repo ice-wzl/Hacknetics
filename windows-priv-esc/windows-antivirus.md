@@ -83,3 +83,20 @@ set stageencoder x64/xor_dynamic
 run -j
 ```
 
+### Nimcrypt and Shellcode / PE
+
+* Generate your shellcode blob&#x20;
+* Select a process to inject into, the default process is `explorer.exe`&#x20;
+* If the process is not started, nimcrypt will spawn it and then inject into it&#x20;
+
+#### Shellcode&#x20;
+
+```
+./nimcrypt2 -f shellcode.bon -t raw -o filename.exe -p process-name
+```
+
+#### PE
+
+```
+./nimcrypt2 -f shellcode.exe -t pe -o filename.exe
+```
