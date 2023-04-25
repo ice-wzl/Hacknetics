@@ -1,6 +1,6 @@
 # Table of contents
 
-* [OSCP-Prep](README.md)
+* [Hacknetics](README.md)
 * [Active Directory Management](active-directory-management/README.md)
   * [How to Join a Windows 11 PC to a Domain](active-directory-management/how-to-join-a-windows-11-pc-to-a-domain.md)
 * [buffer-overflows](buffer-overflows/README.md)

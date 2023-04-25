@@ -2,11 +2,11 @@
 description: Collection of tips and tricks from myself and others!
 ---
 
-# OSCP-Prep
+# Hacknetics
 
 Git-Book of this Repo:
 
-* [<mark style="color:yellow;">https://ice-wzl.gitbook.io/oscp-prep/</mark>](https://ice-wzl.gitbook.io/oscp-prep/)
+* [<mark style="color:yellow;">https://ice-wzl.gitbook.io/hacknetics/</mark>](https://ice-wzl.gitbook.io/oscp-prep/)
 
 ### Red Team Quality of Life Scripts
 
@@ -45,7 +45,7 @@ right click --> preferences --> profiles --> check the use system fixed width fo
 * And make sure terminator is installed `sudo apt install terminator -y`
 * Make sure to remove the .txt part when you pull the file down locally&#x20;
 
-{% file src=".gitbook/assets/config.txt" %}
+{% file src=".gitbook/assets/config (1).txt" %}
 
 ### Big Thanks to our Sponsors
 
