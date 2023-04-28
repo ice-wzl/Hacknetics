@@ -1060,6 +1060,10 @@ docker run -it ubuntu bash
 
 ### lxd Group Priv Esc
 
+* The best example of how to do this&#x20;
+
+[https://0xdf.gitlab.io/2020/11/07/htb-tabby.html](https://0xdf.gitlab.io/2020/11/07/htb-tabby.html)&#x20;
+
 * Exploit without internet connection
 * Change to the root user on attack box
 
