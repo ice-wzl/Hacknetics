@@ -16,6 +16,43 @@
 /etc/tomcat9/tomcat-users.xml
 ```
 
+### Username Enum
+
+In some versions prior to Tomcat6 you could enumerate users:
+
+```bash
+msf> use auxiliary/scanner/http/tomcat_enum
+```
+
+### Default credentials
+
+The most interesting path of Tomcat is _**/manager/html**_, inside that **path you can upload and deploy war files** (execute code). But this path is protected by basic HTTP auth, the most common credentials are:
+
+* admin:admin
+* tomcat:tomcat
+* admin:\<NOTHING>
+* admin:s3cr3t
+* tomcat:s3cr3t
+* admin:tomcat
+
+You could test these and more using:
+
+```bash
+msf> use auxiliary/scanner/http/tomcat_mgr_login
+```
+
+### Password backtrace disclosure
+
+Try to access `/auth.jsp` and if you are very lucky it **might disclose the password in a backtrace**.
+
+### Path Traversal (..;/)
+
+In some [**vulnerable configurations of Tomcat**](https://www.acunetix.com/vulnerabilities/web/tomcat-path-traversal-via-reverse-proxy-mapping/) you can gain access to protected directories in Tomcat using the path: `/..;/`
+
+So, for example, you might be able to **access the Tomcat manager** page by accessing: `www.vulnerable.com/lalala/..;/manager/html`
+
+**Another way** to bypass protected paths using this trick is to access `http://www.vulnerable.com/;param=value/manager/html`
+
 ### Understanding your role once you have credentials&#x20;
 
 > NOTE: For security reasons, using the manager webapp is restricted to users with role “manager-gui”. The host-manager webapp is restricted to users with role “admin-gui”. Users are defined in `/etc/tomcat9/tomcat-users.xml`.
