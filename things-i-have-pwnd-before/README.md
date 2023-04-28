@@ -107,13 +107,6 @@ cat /etc/init.d/james
 sudo /sbin/reboot
 ```
 
-### Apache Tomcat&#x20;
-
-* **Version**: Apache Tomcat/8.0.47
-* **OS**: Microsoft Windows 2008| Vista | 7
-* **exploit**: multi/http/struts2\_rest\_xstream
-* **Targeturi**: /struts2-rest-showcase/orders/
-
 ### Kibana
 
 * 5601 is the elastic search port, 9200 is the api
