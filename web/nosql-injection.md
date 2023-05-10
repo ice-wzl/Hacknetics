@@ -1,6 +1,6 @@
 # NoSQL Injection
 
-* Origional Author: [https://book.hacktricks.xyz/pentesting-web/nosql-injection](https://book.hacktricks.xyz/pentesting-web/nosql-injection)
+* Origional Author for most of content: [https://book.hacktricks.xyz/pentesting-web/nosql-injection](https://book.hacktricks.xyz/pentesting-web/nosql-injection)
 
 In PHP you can send an Array changing the sent parameter from _parameter=foo_ to _parameter\[arrName]=foo._
 
@@ -39,3 +39,14 @@ username[$exists]=true&password[$exists]=true
 Normal sql: ' or 1=1-- -
 Mongo sql: ' || 1==1//    or    ' || 1==1%00
 ```
+
+### NOSQL Through Burp&#x20;
+
+* Burp will convert payload into json format to make our lives easier.
+* **Make sure to change the Content Type**
+
+<figure><img src="https://www.evernote.com/shard/s681/res/c737ae00-e5ce-26c2-319c-7e0ae2d0b00f" alt=""><figcaption></figcaption></figure>
+
+* Note the `Content Type` is now `application/json`&#x20;
+* This has to be manually edited&#x20;
+* If it is not changed the payload will not work even if it would have been successful otherwise.&#x20;
