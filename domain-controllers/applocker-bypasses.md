@@ -2,6 +2,16 @@
 
 * This list contains generic methods of bypassing AppLocker.
 
+### AppLocker Enumeration&#x20;
+
+```
+(Get-AppLockerPolicy -Local).RuleCollections
+
+Get-ChildItem -Path HKLM:Software\Policies\Microsoft\Windows\SrpV2 -Recurse
+
+reg query HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\SrpV2\Exe\
+```
+
 ### Placing files in writeable paths
 
 * The following folders are by default writable by normal users (depends on Windows version - This is from W10 1803)
