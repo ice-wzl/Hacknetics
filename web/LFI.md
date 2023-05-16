@@ -6,7 +6,9 @@
 
 * An attacker can use Local File Inclusion (LFI) to trick the web application into exposing or running files on the web server.
 * LFI occurs when an application uses the path to a file as input. If the application treats this input as trusted, a local file may be used in the include statement.
-* ![lfi](https://user-images.githubusercontent.com/75596877/138767265-ed9d8d7f-38f2-43cf-9622-8d4890f0664e.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/138767265-ed9d8d7f-38f2-43cf-9622-8d4890f0664e.png" alt=""><figcaption></figcaption></figure>
 
 **Example:**
 
@@ -207,7 +209,9 @@ wfuzz -u http://preprod-payroll.trick.htb/index.php?page=FUZZ -b PHPSESSID=lh8uc
 
 ### Requests to look out for
 
-* ![alt text](https://miro.medium.com/max/2400/1\*uMZmYUNcqjh4Rht11nGQDw.png)
+*
+
+    <figure><img src="https://miro.medium.com/max/2400/1*uMZmYUNcqjh4Rht11nGQDw.png" alt=""><figcaption></figcaption></figure>
 * We notice the request with a `?` indicating possible LFI but we are not sure the paramater it wants
 * Attempt to fuzz the parameter for command injection and file inclusion
 * Wordlist to use:
@@ -261,6 +265,18 @@ ffuf -u http://localhost:8888 -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/sec
 
 ```
 ffuf -u http://mentorquotes.htb -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -fc 302
+```
+
+### FFuf API endpoints&#x20;
+
+```
+ffuf -request file.request -request-proto /usr/share/seclists/Discovery/Web-Content/api/actions-lowercase.txt
+```
+
+### Ffuf with burp Request
+
+```
+ffuf -request burp.request --request-proto http -w/ usr/share/seclists/Discovery/Web-Content/raft-small-words.txt
 ```
 
 ### Files to grab if you get LFI
