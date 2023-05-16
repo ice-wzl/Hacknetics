@@ -279,6 +279,10 @@ ffuf -request file.request -request-proto /usr/share/seclists/Discovery/Web-Cont
 ffuf -request burp.request --request-proto http -w/ usr/share/seclists/Discovery/Web-Content/raft-small-words.txt
 ```
 
+`-mc all` to match all status codes if you are getting every page 404 or something like that&#x20;
+
+
+
 ### Files to grab if you get LFI
 
 ```
