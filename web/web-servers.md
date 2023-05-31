@@ -137,6 +137,12 @@ dirsearch -u http://10.10.54.223:80/island/2100 -t 16 -r -e ticket -f -w /usr/sh
 
 ### WpScan
 
+* TLDR; The best one liner&#x20;
+
+```
+wpscan --url http://backdoor.htb --plugins-detection aggressive --detection-mode aggressive -e ap -o loot/wpscan-out
+```
+
 * Ideal for wordpress sites to find their vulnerable plugins, users, and themes.
 * Default scan runs non intrusive checks which means no accounts will be brute forced and themes and plugins will be enumerated passively.
 
