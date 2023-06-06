@@ -44,6 +44,7 @@
     * [SShuttle](lateral-movement/tunneling-pivoting/sshuttle.md)
 * [lin-priv-esc](lin-priv-esc/README.md)
   * [Linux Privilege Escalation](lin-priv-esc/lin-priv-esc.md)
+  * [Bash Jails](lin-priv-esc/bash-jails.md)
 * [Things I have Pwn'd before](things-i-have-pwnd-before/README.md)
   * [Tomcat](things-i-have-pwnd-before/tomcat.md)
 * [persistence](persistence/README.md)
