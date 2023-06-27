@@ -142,6 +142,7 @@
   * [AMSI Bypasses](windows-priv-esc/amsi-bypasses.md)
   * [pktmon Packet Capture Windows](windows-priv-esc/pktmon-packet-capture-windows.md)
   * [Powershell Constrained Language Mode](windows-priv-esc/powershell-constrained-language-mode.md)
+  * [Windows Survey](windows-priv-esc/windows-survey.md)
 * [firewalls](firewalls/README.md)
   * [iptables](firewalls/iptables.md)
   * [ufw](firewalls/ufw.md)
