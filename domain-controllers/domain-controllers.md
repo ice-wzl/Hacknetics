@@ -176,3 +176,23 @@ python3 secretsdump.py -security security.save -system system.save -sam sam.save
 #### Another Cheatsheet
 
 * https://gist.github.com/TarlogicSecurity/2f221924fef8c14a1d8e29f3cb5c5c4a
+
+### Invoke-ShareFinder
+
+```
+Invoke-ShareFinder  -Verbose
+VERBOSE: [*] Running Invoke-ShareFinder with delay of 0
+VERBOSE: [*] Querying domain rastalabs.local for hosts
+VERBOSE: Get-DomainSearcher search string: LDAP://dc01.rastalabs.local/DC=rastalabs,DC=local
+VERBOSE: Get-NetComputer filter : '(&(sAMAccountType=805306369)(dnshostname=*))'
+VERBOSE: [*] Total number of hosts: 12
+VERBOSE: Waiting for scanning threads to finish...
+VERBOSE: All threads completed!
+VERBOSE: [*] Total number of active hosts: 12
+VERBOSE: [*] Enumerating server dc01.rastalabs.local (1 of 12)
+\\dc01.rastalabs.local\ADMIN$   - Remote Admin
+\\dc01.rastalabs.local\C$       - Default share
+\\dc01.rastalabs.local\IPC$     - Remote IPC
+\\dc01.rastalabs.local\NETLOGON         - Logon server share 
+--snip--
+```
