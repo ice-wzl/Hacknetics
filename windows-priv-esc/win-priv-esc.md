@@ -11,30 +11,7 @@
 
 https://lolbas-project.github.io/#
 
-Windows 10 Exploits https://github.com/nu11secur1ty/Windows10Exploits&#x20;
-
-### Command line
-
-```
-systeminfo 
-whoami /priv      
-ipconfig /all  
-route print  
-net users   
-qwinsta  #is anyone else logged in?   
-net localgroup    
-dir /r    
-tree /a /f    
-set   #enviromental variables
-net use  #connected drives  
-net share #shared folders
-tasklist /v /fi "username eq system" #tasks running as SYSTEM  
-[System.Environment]::OSVersion.Version #see the os version/build
-dir env: #enviromental variables
-netstat -ano    
-netsh firewall show state 
-netsh firewall show config   
-```
+Windows 10 Exploits https://github.com/nu11secur1ty/Windows10Exploits &#x20;
 
 ### Console History&#x20;
 

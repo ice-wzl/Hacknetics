@@ -23,4 +23,5 @@ tasklist /svc
 netstat -ano
 netsh firewall show state 
 netsh firewall show config 
+schtasks /query
 ```
