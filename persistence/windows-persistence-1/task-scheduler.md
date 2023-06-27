@@ -9,6 +9,8 @@ SCHTASKS /create /sc minute /mo 15 /tn "Security Scan" /tr "C:\Windows\System32\
 SCHTASKS /query
 #delete task 
 schtasks /delete /tn "\Security Scan" /F
+#Query Specific task by name
+schtasks /query /fo LIST /tn "Daily Reboot"
 ```
 
 * The most common way to schedule tasks is using the built-in Windows task scheduler.
