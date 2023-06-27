@@ -20,6 +20,28 @@ neo4j console
 * Nav to `http://localhost:7474`&#x20;
 * Config a DB user account by changing default passwords from `neo4j:neo4j` to something else
 
+### Fixing Multiple Java version&#x20;
+
+* If you run into an issue in which your system informs you that your java version is wrong and you have more than one openjdk installed you can switch which one is used by default.
+
+```
+sudo update-alternatives --config java
+There are 2 choices for the alternative java (providing /usr/bin/java).
+
+  Selection    Path                                         Priority   Status
+------------------------------------------------------------
+* 0            /usr/lib/jvm/java-17-openjdk-amd64/bin/java   1711      auto mode
+  1            /usr/lib/jvm/java-11-openjdk-amd64/bin/java   1111      manual mode
+  2            /usr/lib/jvm/java-17-openjdk-amd64/bin/java   1711      manual mode
+
+Press <enter> to keep the current choice[*], or type selection number: 1
+update-alternatives: using /usr/lib/jvm/java-11-openjdk-amd64/bin/java to provide /usr/bin/java (java) in manual mode
+                                                                                                                    
+┌──(root㉿savannah)-[/home/kali]
+└─# neo4j console                         
+--works--
+```
+
 ### Running Bloodhound
 
 * Run bloodhound with:
