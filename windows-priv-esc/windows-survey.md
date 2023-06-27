@@ -20,6 +20,8 @@ net use
 net share
 tasklist /v /fi "username eq system"
 tasklist /svc
+--or--
+tasklist /v
 netstat -ano
 netsh firewall show state 
 netsh firewall show config 
