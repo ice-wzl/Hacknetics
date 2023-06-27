@@ -41,4 +41,4 @@ right click --> preferences --> profiles --> check the use system fixed width fo
 
 ### Big Thanks to our Sponsors
 
-<img src=".gitbook/assets/qmaPi6hK_400x400.jpg" alt="" data-size="original"><img src=".gitbook/assets/tp-blog-1864x980-10 (1).png" alt="" data-size="original">
+<img src=".gitbook/assets/qmaPi6hK_400x400.jpg" alt="" data-size="original"><img src=".gitbook/assets/tp-blog-1864x980-10 (2).png" alt="" data-size="original">
