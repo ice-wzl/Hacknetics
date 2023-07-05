@@ -112,6 +112,11 @@ DcRat\Binaries\Debug\ClientsFolder\1427F5A9B444217138E1 #String is client id
 
 * Alert the operator when a specific remote process is launched on the system
 * Defaults to `Uplay,QQ,Chrome,Edge,Word,Excel,PowerPoint,Epic,Steam`
+* Currently changed to:
+
+```
+Chrome,Edge,Firefox,Word,Excel,PowerPoint,Task Manager
+```
 
 <figure><img src="../../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
 
