@@ -15,6 +15,7 @@
   * [Cobalt Strike](c2-frameworks/cobalt-strike.md)
   * [Dcrat](c2-frameworks/dcrat/README.md)
     * [Modules](c2-frameworks/dcrat/modules.md)
+    * [Builder](c2-frameworks/dcrat/builder.md)
 * [covering-tracks](covering-tracks/README.md)
   * [Evading Logging and Monitoring](<covering-tracks/Evading Logging and Monitoring.md>)
   * [Linux Logging](covering-tracks/linux-logging.md)
