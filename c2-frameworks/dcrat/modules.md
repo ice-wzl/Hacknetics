@@ -125,3 +125,62 @@ DcRat\Binaries\Debug\ClientsFolder\1427F5A9B444217138E1 #String is client id
 | Change Wallpaper |          |                   |                     |
 | Keylogger        |          |                   |                     |
 | File Search      |          |                   |                     |
+
+### Send File
+
+
+
+### Run Shellcode
+
+
+
+### MessageBox
+
+
+
+### Chat&#x20;
+
+
+
+### Visit Website
+
+
+
+### Change Wallpaper
+
+
+
+### Keylogger
+
+
+
+### File Search
+
+| Malware           |         |         |
+| ----------------- | ------- | ------- |
+| DDOS              |         |         |
+| Ransomware -->    | Encrypt | Decrypt |
+| Disable WD        |         |         |
+| Password Recovery |         |         |
+| Disable UAC       |         |         |
+
+### DDOS
+
+
+
+### Ransomware
+
+
+
+### Disable WD
+
+
+
+### Password Recovery
+
+
+
+### Disable UAC
+
+
+
