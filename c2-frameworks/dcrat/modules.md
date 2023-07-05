@@ -28,7 +28,7 @@ Microsoft Windows [Version 10.0.20348.1787]
 * This is a `cmd.exe` prompt not a powershell prompt!
 * Use the white bar at the bottom to execute commands&#x20;
 
-<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Remote Screen
 
@@ -57,22 +57,60 @@ Microsoft Windows [Version 10.0.20348.1787]
 
 * Remotely view the registry in addition to creation of new keys or modification of existing keys&#x20;
 
-<figure><img src="../../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (6) (2).png" alt=""><figcaption></figcaption></figure>
+
+* To create a new key click on `Edit` at the top and follow the prompts
+* It is nearly identical to the normal `Regedit` program on Windows
 
 ### File Manager&#x20;
 
+* File manager for remote upload, download, compressing and general file manager options
+* Just point and click
+* To move up a directory after traversing down the file system ensure you `Right Click --> Back`
+  * That took me longer to figure out than I care to admit pubically
 
+<figure><img src="../../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+
+* When you download a file a `ClientsFolder` will get created, you can find your exfil'ed file there
+
+```
+DcRat\Binaries\Debug\ClientsFolder\1427F5A9B444217138E1 #String is client id
+```
 
 ### Process Manager&#x20;
 
+* Exactly like it sounds
+* View running process
+* Right Click to `Refresh` or `Kill` a specific process
+* Refreshes pulls a up to date process list
+* It is better opsec to not constantly upload as that can greatly increate the amount of network traffic
 
+<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
 ### Netstat
 
+* Exactly like it sounds
+* View network connection on the remote host
+* `Right Click` and select `Refresh` or `Kill`&#x20;
+* Selecting `Kill` attempts to kill the process creating that network connection
 
+<figure><img src="../../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
 
 ### Record&#x20;
 
+* Record the audio off the remote systems microphone&#x20;
 
+<figure><img src="../../.gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+
+* If the remote system has no microphone you will get an error in the logs&#x20;
+
+<figure><img src="../../.gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
+
+* Requires the `Audio.dll` file to be automatically loaded onto the remote systems memory&#x20;
 
 ### Program Notification
+
+* Alert the operator when a specific remote process is launched on the system
+* Defaults to `Uplay,QQ,Chrome,Edge,Word,Excel,PowerPoint,Epic,Steam`
+
+<figure><img src="../../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>

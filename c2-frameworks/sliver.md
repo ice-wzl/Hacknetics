@@ -56,7 +56,7 @@ sliver > jobs
 
 ### Transfer Binary to Target&#x20;
 
-<figure><img src="../.gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (9) (2).png" alt=""><figcaption></figcaption></figure>
 
 ### Execute The Binary
 
