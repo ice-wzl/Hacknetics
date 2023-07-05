@@ -12,3 +12,11 @@
 | Sophos                      |                  |        |
 | Malwarebytes                |                  |        |
 
+## Custom Shellcode Loader
+
+* I am currently working on a custom shellcode loader for Dcrat shellcode.
+* This is written in `C#` like the RAT itself.
+
+### Current Detections&#x20;
+
+<figure><img src="../../.gitbook/assets/anti.png" alt=""><figcaption></figcaption></figure>
