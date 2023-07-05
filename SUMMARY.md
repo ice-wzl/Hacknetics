@@ -13,6 +13,7 @@
     * [Custom MSF Resource Scripts](c2-frameworks/metasploit/custom-msf-resource-scripts.md)
   * [Pwncat-cs](c2-frameworks/pwncat-cs.md)
   * [Cobalt Strike](c2-frameworks/cobalt-strike.md)
+  * [Dcrat](c2-frameworks/dcrat.md)
 * [covering-tracks](covering-tracks/README.md)
   * [Evading Logging and Monitoring](<covering-tracks/Evading Logging and Monitoring.md>)
   * [Linux Logging](covering-tracks/linux-logging.md)
