@@ -17,6 +17,7 @@
     * [Modules](c2-frameworks/dcrat/modules.md)
     * [Builder](c2-frameworks/dcrat/builder.md)
     * [Dcrat AV Evasion](c2-frameworks/dcrat/dcrat-av-evasion.md)
+    * [C2 Comms](c2-frameworks/dcrat/c2-comms.md)
 * [covering-tracks](covering-tracks/README.md)
   * [Evading Logging and Monitoring](<covering-tracks/Evading Logging and Monitoring.md>)
   * [Linux Logging](covering-tracks/linux-logging.md)
