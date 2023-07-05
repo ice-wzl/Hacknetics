@@ -114,3 +114,14 @@ DcRat\Binaries\Debug\ClientsFolder\1427F5A9B444217138E1 #String is client id
 * Defaults to `Uplay,QQ,Chrome,Edge,Word,Excel,PowerPoint,Epic,Steam`
 
 <figure><img src="../../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+
+| Control          |          |                   |                     |
+| ---------------- | -------- | ----------------- | ------------------- |
+| Send File -->    | From URL | Send File to Disk | Send File to Memory |
+| Run Shellcode    |          |                   |                     |
+| Message Box      |          |                   |                     |
+| Chat             |          |                   |                     |
+| Visit Website    |          |                   |                     |
+| Change Wallpaper |          |                   |                     |
+| Keylogger        |          |                   |                     |
+| File Search      |          |                   |                     |
