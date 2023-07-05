@@ -30,7 +30,7 @@ Copy [/src/php\_reverse\_shell.php](https://github.com/ivan-sincek/php-reverse-s
 
 Navigate to the file with your preferred web browser.
 
-***
+
 
 Check the [simple PHP web shell](https://github.com/ivan-sincek/php-reverse-shell/blob/master/src/simple\_php\_web\_shell\_post.php) based on HTTP POST request.
 
@@ -40,7 +40,7 @@ Check the [simple PHP web shell v2](https://github.com/ivan-sincek/php-reverse-s
 
 Find out more about PHP obfuscation techniques for older versions of PHP at [lcatro/PHP-WebShell-Bypass-WAF](https://github.com/lcatro/PHP-WebShell-Bypass-WAF). Credits to the author!
 
-***
+
 
 Check the minified scripts in [/src/minified/](https://github.com/ivan-sincek/php-reverse-shell/tree/master/src/minified) directory.
 
