@@ -123,6 +123,7 @@
   * [LAPS](tool-guides/lapsdumper.md)
   * [KeePass KeeThief](tool-guides/keepass-keethief.md)
   * [FileCryptography.psm1](tool-guides/filecryptography.psm1.md)
+  * [Impacket Pastable Commands](tool-guides/impacket-pastable-commands.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)
