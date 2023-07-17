@@ -122,6 +122,7 @@
   * [kwp](tool-guides/kwp.md)
   * [LAPS](tool-guides/lapsdumper.md)
   * [KeePass KeeThief](tool-guides/keepass-keethief.md)
+  * [FileCryptography.psm1](tool-guides/filecryptography.psm1.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)
