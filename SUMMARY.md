@@ -110,7 +110,7 @@
   * [netcat](tool-guides/netcat.md)
   * [Nmap](tool-guides/nmap.md)
   * [nuclei](tool-guides/nuclei.md)
-  * [Post Exploitation](tool-guides/PowerView.md)
+  * [PowerView](tool-guides/PowerView.md)
   * [r2](tool-guides/r2.md)
   * [Resources](tool-guides/resources.md)
   * [tcpdump](tool-guides/tcpdump.md)
