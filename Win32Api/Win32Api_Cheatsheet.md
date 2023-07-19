@@ -8,7 +8,7 @@
   
 # Windows API Function Cheatsheets
 <h3>Contact Us</h3>
-
+## Credit for this page goes to: https://github.com/snowcra5h/windows-api-function-cheatsheets/blob/main/README.md
 🌨️ Snowcrash: [snowcra5h@icloud.com](mailto:snowcra5h@icloud.com)
 🕵️‍♂️ Plackyhacker: [Plackyhacker@proton.me](mailto:Plackyhacker@proton.me)
  </div>
