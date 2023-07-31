@@ -183,3 +183,4 @@
 * [Win32 API](win32-api.md)
 * [Linux](linux/README.md)
   * [awk](linux/awk.md)
+  * [cut](linux/cut.md)
