@@ -185,3 +185,4 @@
   * [awk](linux/awk.md)
   * [cut](linux/cut.md)
   * [grep](linux/grep.md)
+  * [sort](linux/sort.md)
