@@ -118,7 +118,7 @@ This hacking harness provides a few features that are described below. As they a
 
 ### Commands
 
-### Enumeration Commands
+## Enumeration Commands
 
 ### !os
 
@@ -274,7 +274,52 @@ SUID + SGID Binaries:
 --snip--
 ```
 
-### Transfer Commands
+### !sudo-version
+
+* This command will check the sudo version installed and report back if it is likely vulnerable or not to common sudo exploits found in open source / exploit-db&#x20;
+
+```
+!sudo-version
+Sudo Version is likely NOT Vulnerable
+!sudo-version
+Sudo Version is likely Vulnerable!!!
+```
+
+### !strange-dirs
+
+* Provide this module a directory name on the remote host and it will walk down the directory tree (starting at the user given directory) and look for unusual file directories, possibly indicating another actor on the remote device and / or strange files that you might want to look into&#x20;
+
+```
+!strange-dirs /home
+Path exists...continuing
+System is clean of strange dirs
+!strange-dirs /dev/shm
+Path exists...continuing
+HIT: /dev/shm/,,
+Total Hits: 1
+```
+
+### !vm
+
+* This module will conduct three different checks on the remote machine and return back if you are inside a virtual machine or a bare metal host
+
+```
+!vm
+Virtual Machine: Yes
+```
+
+* For understanding these checks are:
+
+```
+test_vm = shell_exec('cat /proc/cpuinfo | grep hypervisor', print_output=False)
+test_vm_1 = shell_exec('cat /proc/mounts | grep -E "docker|overlay|lxc"', print_output=False)
+test_vm_2 = shell_exec('dmesg | grep -i hypervisor', print_output=False)
+```
+
+* This is one of the newest modules, if anyone has additions/a better way to do this, we are always accepting PRs!
+* The output of these commands are not printed to the screen as the determination is done by `ffm` itself.  While these checks should get just about all virtual machines, it does not 100% replace manual enumeration.
+
+## Transfer Commands
 
 * Commands that help you pull and push files, pretty straight forward.
 
@@ -286,7 +331,7 @@ SUID + SGID Binaries:
 
 * `!upload [local file] [remote path]` works exactly the same as the previous command, except that a local file is put on the remote machine.
 
-### Execution Commands
+## Execution Commands
 
 ### !sh
 
@@ -343,7 +388,7 @@ Meterpreter  : x64/linux
 meterpreter >
 ```
 
-#### Stealth Commands
+## Stealth Commands
 
 * I am fully aware these two modules are the opposite of "stealthy" but it is where they are currently placed until an alternative location can be worked out. This stealth category will more than likely contain commands that help you blend in better in addition to those commands that might make you stick out.
 
@@ -360,7 +405,7 @@ meterpreter >
 
 * `!sudo` Invoke sudo without a TTY.
 
-### Configuration File&#x20;
+## Configuration File&#x20;
 
 Plugins can be further configured by editing `ffm.conf`.
 
