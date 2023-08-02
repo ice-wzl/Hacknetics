@@ -292,7 +292,7 @@ SUID + SGID Binaries:
 
 `!sh [local script]` Runs a shell script from the local machine in memory.
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 ### !py
 
@@ -346,6 +346,9 @@ meterpreter >
 #### Stealth Commands
 
 * I am fully aware these two modules are the opposite of "stealthy" but it is where they are currently placed until an alternative location can be worked out. This stealth category will more than likely contain commands that help you blend in better in addition to those commands that might make you stick out.
+
+### !pty
+
 * `!pty` spawns a TTY, which is something you don't want in most cases because it tends to leave forensics evidence. However, some commands (`sudo`) or exploits require a TTY to run in so this is provided as a convenience.&#x20;
 * Commands auto passed into the remote session when a pty is spawned:
 * `unset HISTFILE HISTFILESIZE HISTSIZE PROMPT_COMMAND`
@@ -357,7 +360,22 @@ meterpreter >
 
 * `!sudo` Invoke sudo without a TTY.
 
+### Configuration File&#x20;
+
 Plugins can be further configured by editing `ffm.conf`.
+
+### Config Example
+
+* For example the behavior of `ffm.py` can we tweaked further in the `ffm.conf` file.
+* If you wanted to have another ssh argument get passed to the client without having to manually type it each time:
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+* &#x20;You can easily toggle any of these ssh options on or off
+* Example 2:
+* If you wanted to add/remove a command that should or should not be proxied you can simply add them here:
+
+<figure><img src="../.gitbook/assets/image (14).png" alt=""><figcaption></figcaption></figure>
 
 #### Processors
 

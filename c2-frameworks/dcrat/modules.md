@@ -28,7 +28,7 @@ Microsoft Windows [Version 10.0.20348.1787]
 * This is a `cmd.exe` prompt not a powershell prompt!
 * Use the white bar at the bottom to execute commands&#x20;
 
-<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (3).png" alt=""><figcaption></figcaption></figure>
 
 ### Remote Screen
 
