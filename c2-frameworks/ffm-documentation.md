@@ -116,7 +116,29 @@ List of commands available:
 
 This hacking harness provides a few features that are described below. As they are described, the design philosophy behind the tool will also be introduced. It is not expected that all the commands implemented in FFM will suit you. Everyone has their own way of doing things, and tuning the harness to your specific need is likely to require you to modify some of the code and/or write a few plugins. A lot of effort went into making sure this is a painless task.
 
-### Commands
+### SHIFT + TAB
+
+* `ffm` has local file completion, which is a huge asset to have.
+* If you are ssh'ed to a remote host and want to reference a local file on your docker container (for upload or memory execution) simply start typing your local file path and hit shift tab to attempt file completion!
+* This is equivilent to hitting `tab` on a linux machine as you attempt to `ls` down a file path&#x20;
+
+```
+!upload
+Usage: !upload [local file] [remote destination]
+Received 1 argument(s), expected 3.
+!upload /tmp/
+#hit SHIFT+TAB
+!upload /tmp/file_to_upload.elf 
+```
+
+#### WARNING
+
+* This is still some weirdness with `SHIFT+TAB` in which it will crash `ffm` and disconnect you from the remote host. &#x20;
+* I recommend not using this in a situation where you 100% need to count on it.
+* I am working hard to fix this issue, when it is fixed this warning will be removed.
+* `It works 90% of the time all the time`
+
+## Commands
 
 ## Enumeration Commands
 
