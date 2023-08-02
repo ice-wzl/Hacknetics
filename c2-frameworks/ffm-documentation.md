@@ -228,7 +228,7 @@ exit
 
 ### !mtime
 
-`!mtime` Returns files modified in the last X minutes. For example `!mtime 5` will get all files on the local machine (that you have rights to see) that have been modified in the last 5 minutes
+`!mtime` Returns files modified in the last X minutes. For example `!mtime 5` will get all files on the local machine that have been modified in the last 5 minutes
 
 ```
 !mtime 5
