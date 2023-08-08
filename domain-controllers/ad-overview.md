@@ -120,13 +120,42 @@
 
 <figure><img src="../.gitbook/assets/ad6b6d886c0448d14ce4ec8c62250256.png" alt=""><figcaption></figcaption></figure>
 
+### Delegation
 
+* You can and should give specific users some control over some OUs&#x20;
+* This is known as delegation and it allows specific privileges to perform advanced tasks on OUs without needing a DA to step in&#x20;
+* One common example is granting `IT` Staff the ability to reset other low privilege users passwords&#x20;
 
+#### How to Delegate
 
+* To delegate control over an OU right click and select Delegate Control&#x20;
 
+<figure><img src="../.gitbook/assets/74f8d615658a03aeb1cfdb6767d0a0a3.png" alt=""><figcaption></figcaption></figure>
 
+* This should open a new window where you should input the users name that you want to delegate to&#x20;
+* Use the check names box to avoid a miss type&#x20;
+*
 
+    <figure><img src="../.gitbook/assets/2814715e1dbadaef334973028e02da69.png" alt=""><figcaption></figcaption></figure>
+* Now you can see a new window that allows more granular delegation controls&#x20;
 
+<figure><img src="../.gitbook/assets/3f81df2b38e35ca5729aee7a76c6b220.png" alt=""><figcaption></figcaption></figure>
 
+### AD Password Resets Powershell
 
+```
+PS C:\Users\phillip> Set-ADAccountPassword sophie -Reset -NewPassword (Read-Host -AsSecureString -Prompt 'New Password') -Verbose
+
+New Password: *********
+
+VERBOSE: Performing the operation "Set-ADAccountPassword" on target "CN=Sophie,OU=Sales,OU=THM,DC=thm,DC=local".
+```
+
+* Now make sure to force the user to update their password on next login so they dont keep using a password that we know!
+
+```
+PS C:\Users\phillip> Set-ADUser -ChangePasswordAtLogon $true -Identity sophie -Verbose
+
+VERBOSE: Performing the operation "Set" on target "CN=Sophie,OU=Sales,OU=THM,DC=thm,DC=local".
+```
 
