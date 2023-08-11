@@ -1,5 +1,9 @@
 # Powershell Empire
 
+## Overview
+
+* [https://github.com/BC-SECURITY/Long-Live-The-Empire/blob/main/Long\_Live\_the\_Empire\_A\_C2\_Workshop\_for\_Modern\_Red\_Teaming.pdf](https://github.com/BC-SECURITY/Long-Live-The-Empire/blob/main/Long\_Live\_the\_Empire\_A\_C2\_Workshop\_for\_Modern\_Red\_Teaming.pdf)
+
 ## Install
 
 * Installing Empire
