@@ -159,3 +159,38 @@ PS C:\Users\phillip> Set-ADUser -ChangePasswordAtLogon $true -Identity sophie -V
 VERBOSE: Performing the operation "Set" on target "CN=Sophie,OU=Sales,OU=THM,DC=thm,DC=local".
 ```
 
+### Managing Computers in AD
+
+* All machines that join the domain (minus DC) will be put in a container called `Computers`&#x20;
+* You will want to group the different machine types to be able to apply different policies to them
+* You do not want to have the same policies for your end user workstations as your servers
+* At minimum it pays off to have these three groups&#x20;
+  *   **1. Workstations**
+
+      Workstations are one of the most common devices within an Active Directory domain. Each user in the domain will likely be logging into a workstation. This is the device they will use to do their work or normal browsing activities. These devices should never have a privileged user signed into them.
+  *   **2. Servers**
+
+      Servers are the second most common device within an Active Directory domain. Servers are generally used to provide services to users or other servers.
+  *   **3. Domain Controllers**
+
+      Domain Controllers are the third most common device within an Active Directory domain. Domain Controllers allow you to manage the Active Directory Domain. These devices are often deemed the most sensitive devices within the network as they contain hashed passwords for all user accounts within the environment.
+
+### Group Policies&#x20;
+
+* Windows manages policies to OUs with `Group Policy Objects (GPO)`
+* GPOs are simply a collection of setting that can be applied to OUs&#x20;
+* GPOs can contain policies aimed at either users or computers, allowing you to set a baseline
+*   To configure GPOs, you can use the **Group Policy Management** tool, available from the start menu:
+
+    \
+
+
+    <figure><img src="../.gitbook/assets/b19052c41e27fbbb2651038cede63e11.png" alt=""><figcaption></figcaption></figure>
+
+### GPO Hierarchy&#x20;
+
+* You will notice a GPO hierarchy when you open GPO Management tool
+* To configure GPOs you first create a GPO under `Group Policy Objects` and then link it to the GPO where you want the policies to apply
+
+<figure><img src="../.gitbook/assets/d82cb9440894c831f6f3d58a2b0538ed.png" alt=""><figcaption></figcaption></figure>
+
