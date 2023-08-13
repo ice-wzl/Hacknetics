@@ -104,7 +104,6 @@
   * [evil-winrm](tool-guides/evil-winrm.md)
   * [Git](tool-guides/git.md)
   * [gobuster](tool-guides/gobuster.md)
-  * [Grep and Sed](tool-guides/grep-sed.md)
   * [Hashcat](tool-guides/hashcat.md)
   * [Hydra User Guide](tool-guides/hydra.md)
   * [John](tool-guides/john-the-ripper.md)
