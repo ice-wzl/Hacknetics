@@ -74,4 +74,18 @@
 
 ### Credit:&#x20;
 
-[https://github.com/areyou1or0/Bash-Fu/blob/master/grep](https://github.com/areyou1or0/Bash-Fu/blob/master/grep)
+{% embed url="https://github.com/areyou1or0/Bash-Fu/blob/master/grep" %}
+
+* Useful Regex
+
+### Find mac addresses
+
+```
+cat file1 | sed -e 's/^.*\([a-fA-F0-9]\{12\}\).*$/\1/'
+```
+
+### Find ip addresses
+
+```
+cat file1 | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
+```
