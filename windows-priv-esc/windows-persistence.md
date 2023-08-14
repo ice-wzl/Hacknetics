@@ -1,5 +1,11 @@
 # Windows Persistence
 
+### Start up folder&#x20;
+
+```
+copy C:\Windows\Temp\notmalware.exe "C:\Users\ngodfrey\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\notmalware.exe"
+```
+
 ### Registry Persistence&#x20;
 
 * Just change the `example.exe or example.bat` to your executable or script or whatever you want to run
