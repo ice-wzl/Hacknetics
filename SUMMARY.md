@@ -191,4 +191,5 @@
   * [grep](linux/grep.md)
   * [sort](linux/sort.md)
 * [Windows Malware Development](windows-malware-development/README.md)
-  * [Win32 API](windows-malware-development/win32-api.md)
+  * [Win32 API](win32-api.md)
+  * [Processes Threads Handles](windows-malware-development/processes-threads-handles.md)
