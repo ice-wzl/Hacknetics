@@ -93,6 +93,7 @@
   * [Pentesting Finger](recon-enumeration/pentesting-finger.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
+  * [Youtube / Book List](resources/youtube-book-list.md)
 * [shells](shells/README.md)
   * [Shells](shells/shells.md)
   * [web-shells](shells/web-shells/README.md)
