@@ -57,6 +57,7 @@
 * [lin-priv-esc](lin-priv-esc/README.md)
   * [Linux Privilege Escalation](lin-priv-esc/lin-priv-esc.md)
   * [Bash Jails](lin-priv-esc/bash-jails.md)
+  * [ssh agent](lin-priv-esc/ssh-agent.md)
 * [Things I have Pwn'd before](things-i-have-pwnd-before/README.md)
   * [Tomcat](things-i-have-pwnd-before/tomcat.md)
 * [persistence](persistence/README.md)
