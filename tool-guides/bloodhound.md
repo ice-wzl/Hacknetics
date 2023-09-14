@@ -1,5 +1,11 @@
 # Bloodhound
 
+###
+
+### Docker Install (easiest)
+
+* [https://github.com/ice-wzl/docker-bloodhound](https://github.com/ice-wzl/docker-bloodhound)
+
 ### Installing bloodhound on kali:
 
 ```
