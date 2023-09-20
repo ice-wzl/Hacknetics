@@ -1,0 +1,43 @@
+[global_config]
+  dbus = False
+  extra_styling = False
+  enabled_plugins = Logger,
+[keybindings]
+[profiles]
+  [[default]]
+    background_darkness = 1.0
+    background_type = transparent
+    font = Monospace 9
+    foreground_color = "#ffffff"
+    scrollback_lines = 10000
+    scrollback_infinite = True
+    palette = "#000000:#cc0000:#4e9a06:#c4a000:#3465a4:#75507b:#06989a:#d3d7cf:#555753:#ef2929:#8ae234:#fce94f:#729fcf:#ad7fa8:#34e2e2:#eeeeec"
+    use_system_font = False
+  [[local]]
+    background_color = "#002b36"
+    font = Monospace 9
+    foreground_color = "#839496"
+    use_system_font = False
+  [[local-alt]]
+    background_color = "#241f31"
+    font = Monospace 9
+    foreground_color = "#ffffff"
+    disable_mousewheel_zoom = True
+    use_system_font = False
+    copy_on_selection = True
+  [[tor]]
+    background_color = "#003001"
+    font = Monospace 9
+    foreground_color = "#ffffff"
+    palette = "#000000:#cc0000:#4e9a06:#c4a000:#3465a4:#75507b:#06989a:#d3d7cf:#555753:#ef2929:#8ae234:#fce94f:#729fcf:#ad7fa8:#34e2e2:#eeeeec"
+    use_system_font = False
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+      profile = default
+[plugins]
