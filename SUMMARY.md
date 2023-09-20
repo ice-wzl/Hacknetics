@@ -132,6 +132,7 @@
   * [FileCryptography.psm1](tool-guides/filecryptography.psm1.md)
   * [Impacket Pastable Commands](tool-guides/impacket-pastable-commands.md)
   * [crackmapexec Pastable Commands](tool-guides/crackmapexec-pastable-commands.md)
+  * [feroxbuster](tool-guides/feroxbuster.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)
