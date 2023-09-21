@@ -55,8 +55,6 @@ mkdir -p ~/.config/tmux
 
 {% file src=".gitbook/assets/tmux.conf.local" %}
 
-###
-
 {% file src=".gitbook/assets/tmux.conf" %}
 
 ### Big Thanks to our Sponsors
