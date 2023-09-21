@@ -43,7 +43,7 @@ right click --> preferences --> profiles --> check the use system fixed width fo
 
 ### Tmux Config&#x20;
 
-* tThis is the tmux config I am using these days&#x20;
+* This is the tmux config I am using these days&#x20;
 
 ```
 mkdir -p ~/.config/tmux
