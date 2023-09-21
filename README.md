@@ -37,7 +37,27 @@ right click --> preferences --> profiles --> check the use system fixed width fo
 * And make sure terminator is installed `sudo apt install terminator -y`
 * Make sure to remove the .txt part when you pull the file down locally&#x20;
 
-{% file src=".gitbook/assets/config (1).txt" %}
+
+
+{% file src=".gitbook/assets/config (2).txt" %}
+
+### Tmux Config&#x20;
+
+* tThis is the tmux config I am using these days&#x20;
+
+```
+mkdir -p ~/.config/tmux
+#place both these files in your ~/.config/tmux directory 
+#change the .local file, do not make changes to the .conf file 
+```
+
+
+
+{% file src=".gitbook/assets/tmux.conf.local" %}
+
+###
+
+{% file src=".gitbook/assets/tmux.conf" %}
 
 ### Big Thanks to our Sponsors
 
