@@ -1,8 +1,13 @@
 # Cobalt Strike
 
-## Cobalt-Strike cheatsheet.
+### Great Cobalt-Strike Reading&#x20;
 
-* All credit for this pages goes to:
+* [https://www.trustedsec.com/blog/red-teaming-with-cobalt-strike-not-so-obvious-features](https://www.trustedsec.com/blog/red-teaming-with-cobalt-strike-not-so-obvious-features)
+* [https://www.cobaltstrike.com/blog/cobalt-strike-49-take-me-to-your-loader](https://www.cobaltstrike.com/blog/cobalt-strike-49-take-me-to-your-loader)
+
+## Cobalt-Strike cheat sheet.
+
+* All credit for content below goes to:
   * [https://github.com/0xJs](https://github.com/0xJs)&#x20;
 
 **Start teamserver**
