@@ -57,12 +57,12 @@ reg query "HKLM\Software\Microsoft\Windows Defender\exclusions\paths"
 
 ```
 Set-MpPreference -DisableRealtimeMonitoring 0​​
-PowerShell Set-MpPreference -DisableRealtimeMonitoring $false
+Set-MpPreference -DisableRealtimeMonitoring $false
 ```
 
 * Turn Off Real-time Protection
 
 ```
-PowerShell Set-MpPreference -DisableRealtimeMonitoring 1
-PowerShell Set-MpPreference -DisableRealtimeMonitoring $true
+Set-MpPreference -DisableRealtimeMonitoring 1
+Set-MpPreference -DisableRealtimeMonitoring $true
 ```
