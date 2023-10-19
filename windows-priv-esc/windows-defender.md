@@ -50,3 +50,19 @@ reg query "HKLM\Software\Microsoft\Windows Defender\SpyNet"
 reg query "HKLM\Software\Microsoft\Windows Defender\Windows Defender Exploit Guard"
 reg query "HKLM\Software\Microsoft\Windows Defender\exclusions\paths"
 ```
+
+### Enable Disable RealtimeProtection Powershell
+
+* Turn On Real-time Protection
+
+```
+Set-MpPreference -DisableRealtimeMonitoring 0​​
+PowerShell Set-MpPreference -DisableRealtimeMonitoring $false
+```
+
+* Turn Off Real-time Protection
+
+```
+PowerShell Set-MpPreference -DisableRealtimeMonitoring 1
+PowerShell Set-MpPreference -DisableRealtimeMonitoring $true
+```
