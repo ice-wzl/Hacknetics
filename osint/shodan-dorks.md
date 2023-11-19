@@ -49,3 +49,18 @@ http.title:"Index of /" http.html:".pem" port:80
 ```
 onion-location
 ```
+
+### Cameras
+
+* webcam7 dork
+
+```
+("webcam 7" OR "webcamXP") http.component:"mootools" -401
+```
+
+
+
+### Additional Dorks
+
+* there are many repos out there with Shodan dorks, but this is by far the best one I have found:
+* [https://github.com/lothos612/shodan](https://github.com/lothos612/shodan)
