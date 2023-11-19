@@ -30,3 +30,12 @@ Title:"Directory listing for /" port:8000
 ```
 port:21 "User logged in"
 ```
+
+### Web
+
+* targets port 80, but you can drop that part to find even more results.
+* This dork targets exposed .pem files which can be terrible for websites if there certs are publically exposed
+
+```
+http.title:"Index of /" http.html:".pem" port:80
+```
