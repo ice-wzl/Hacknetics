@@ -187,6 +187,7 @@
   * [AWS](cloud/aws.md)
 * [OSINT](osint/README.md)
   * [Spiderfoot](osint/spiderfoot.md)
+  * [Shodan Dorks](osint/shodan-dorks.md)
 * [Phishing](phishing.md)
 * [Random](random.md)
 * [Linux](linux/README.md)
