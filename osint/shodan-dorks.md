@@ -39,3 +39,13 @@ port:21 "User logged in"
 ```
 http.title:"Index of /" http.html:".pem" port:80
 ```
+
+### Tor
+
+* this searches shodan for headers that have `onion-location` in the headers
+* this is a indication that they are hosting a hidden service
+* this is a security concern for hidden services as the whole idea behind hidden services is to hide its location&#x20;
+
+```
+onion-location
+```
