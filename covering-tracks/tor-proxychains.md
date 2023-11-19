@@ -70,3 +70,91 @@ echo "ExitNodes {us} StrictNodes 1" >> /etc/tor/torrc
 ```
 echo "ExitPolicy reject *:*" >>/etc/tor/torrc
 ```
+
+### Running a Tor Relay
+
+* This content below is assuming Centos8, but it can be adapted to almost any operating system (linux wise)
+* To see more information:
+* [https://community.torproject.org/relay/setup/](https://community.torproject.org/relay/setup/)
+
+```
+yum update
+#OR
+dnf update
+-----------------------
+yum install epel-release
+#OR
+dnf install epel-release
+-----------------------
+```
+
+* create the file `/etc/yum.repos.d/Tor.repo`
+* insert the below content into the file&#x20;
+
+```
+[tor]
+name=Tor for Enterprise Linux $releasever - $basearch
+baseurl=https://rpm.torproject.org/centos/$releasever/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://rpm.torproject.org/centos/public_gpg.key
+cost=100
+```
+
+* now update for the changes to be included&#x20;
+
+```
+yum update
+#OR 
+dnf update
+```
+
+* install tor&#x20;
+
+```
+yum install tor
+#OR
+dnf install tor
+```
+
+* edit your `/etc/tor/torrc`
+* insert the lines below, change the options to your need (top two lines)
+
+```
+Nickname    myNiceRelay  # Change "myNiceRelay" to something you like
+ContactInfo your@e-mail  # Write your e-mail and be aware it will be published
+ORPort      443          # You might use a different port, should you want to
+ExitRelay   0
+SocksPort   0
+```
+
+* enable and start tor&#x20;
+
+```
+systemctl enable --now tor
+systemctl enable tor
+systemctl start tor
+```
+
+#### Optional Monitor Tor useage&#x20;
+
+* to see the stats for your relay live you can install `nyx`
+
+```
+yum install nyx
+#OR
+dnf install nyx
+```
+
+* start a `screen` or `tmux` sessions and run the program&#x20;
+
+```
+tmux
+nyx
+-----------
+#detatch tmux 
+Crtl+B + Shfit + D
+#it will keep running 
+#reattatch tmux to see stats after logging back in 
+tmux attach -t 0
+```
