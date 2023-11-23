@@ -5,7 +5,7 @@
   * [How to Join a Windows 11 PC to a Domain](active-directory-management/how-to-join-a-windows-11-pc-to-a-domain.md)
   * [Allow RDP in the domain](active-directory-management/allow-rdp-in-the-domain.md)
 * [Active Directory AD Attacks](domain-controllers/README.md)
-  * [Bloodhound](domain-controllers/bloodhound/README.md)
+  * [Bloodhound](tool-guides/bloodhound.md)
     * [Bloodhound Cypher Queries](domain-controllers/bloodhound/bloodhound-cypher-queries.md)
   * [Impacket-install](domain-controllers/Impacket-install.md)
   * [Kerberos cheatsheet](domain-controllers/Kerberos-cheatsheet.md)
