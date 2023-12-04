@@ -81,3 +81,9 @@ sudo mount --bind /media/web_files/ /var/www/html/external_files/
     ```
 
     This will concatenate all of your `test.zip.001`, `test.zip.002`, etc files into one larger, test.zip file. Once you have that single file, you may run `unzip test.zip`
+
+## [How to convert .mkv file into .mp4 file losslessly?](https://askubuntu.com/questions/50433/how-to-convert-mkv-file-into-mp4-file-losslessly)
+
+```
+ffmpeg -i input.mkv -codec copy output.mp4
+```
