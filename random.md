@@ -70,3 +70,14 @@ sudo mount --bind /media/web_files/ /var/www/html/external_files/
 ```
 <a href="external_files/file1.mp4">file1</a>
 ```
+
+### Unzip a chunked archive
+
+* you will see files ending in .001, .002 etc etc&#x20;
+*   You will need to join them first. You may use the common linux app, `cat` as in the example below:
+
+    ```
+    cat test.zip* > ~/test.zip
+    ```
+
+    This will concatenate all of your `test.zip.001`, `test.zip.002`, etc files into one larger, test.zip file. Once you have that single file, you may run `unzip test.zip`
