@@ -30,6 +30,7 @@
     * [Metasploit Basics](c2-frameworks/metasploit/metasploit-basics.md)
     * [Custom MSF Resource Scripts](c2-frameworks/metasploit/custom-msf-resource-scripts.md)
     * [Meterpreter Device Survey](c2-frameworks/metasploit/meterpreter-device-survey.md)
+    * [Paranoid Mode](c2-frameworks/metasploit/paranoid-mode.md)
   * [Pwncat-cs](c2-frameworks/pwncat-cs.md)
   * [Cobalt Strike](c2-frameworks/cobalt-strike.md)
   * [Dcrat](c2-frameworks/dcrat/README.md)
