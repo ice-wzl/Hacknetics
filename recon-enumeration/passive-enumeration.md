@@ -165,5 +165,12 @@ theharvester -d cisco.com -b yahoo -l 100
 
 ### crt.sh to Find domains
 
-* Certificate Transparancy site can reveal hosts that are not public yet
+* Certificate Transparency site can reveal hosts that are not public yet
 * https://crt.sh
+
+## Subdomain Takeover
+
+* [https://0xpatrik.com/takeover-proofs/](https://0xpatrik.com/takeover-proofs/)
+* [https://0xpatrik.com/takeover-proofs/](https://0xpatrik.com/takeover-proofs/)
+* Validate with&#x20;
+  * [https://punksecurity.co.uk/dnsreaper/](https://punksecurity.co.uk/dnsreaper/)
