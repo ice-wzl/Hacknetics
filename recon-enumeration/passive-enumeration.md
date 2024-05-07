@@ -174,3 +174,4 @@ theharvester -d cisco.com -b yahoo -l 100
 * [https://0xpatrik.com/takeover-proofs/](https://0xpatrik.com/takeover-proofs/)
 * Validate with&#x20;
   * [https://punksecurity.co.uk/dnsreaper/](https://punksecurity.co.uk/dnsreaper/)
+  * [https://github.com/EdOverflow/can-i-take-over-xyz](https://github.com/EdOverflow/can-i-take-over-xyz)
