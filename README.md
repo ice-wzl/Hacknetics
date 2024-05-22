@@ -4,7 +4,7 @@ description: Collection of tips and tricks from myself and others!
 
 # Hacknetics
 
-Git-Book of this Repo:
+# View the Git-Book Here:
 
 * [<mark style="color:yellow;">https://ice-wzl.gitbook.io/hacknetics/</mark>](https://ice-wzl.gitbook.io/oscp-prep/)
 
