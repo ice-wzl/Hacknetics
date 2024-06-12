@@ -98,3 +98,9 @@ sudo mount --bind /media/web_files/ /var/www/html/external_files/
 ```
 ffmpeg -i input.mkv -codec copy output.mp4
 ```
+
+### Cool Google Dorks&#x20;
+
+```
+inurl:/wp-content/uploads/ ext:txt "username" AND "password" | "pwd" | "pw"
+```
