@@ -162,6 +162,7 @@
   * [Powershell Constrained Language Mode](windows-priv-esc/powershell-constrained-language-mode.md)
   * [Windows Survey](windows-priv-esc/windows-survey.md)
   * [Windows Persistence](windows-priv-esc/windows-persistence.md)
+  * [Windows World Writeable Dirs](windows-priv-esc/windows-world-writeable-dirs.md)
 * [firewalls](firewalls/README.md)
   * [iptables](firewalls/iptables.md)
   * [ufw](firewalls/ufw.md)
