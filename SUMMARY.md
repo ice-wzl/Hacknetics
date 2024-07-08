@@ -136,6 +136,7 @@
   * [crackmapexec Pastable Commands](tool-guides/crackmapexec-pastable-commands.md)
   * [feroxbuster](tool-guides/feroxbuster.md)
   * [NetExec](tool-guides/netexec.md)
+  * [Ligolo-ng](tool-guides/ligolo-ng.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)
