@@ -137,6 +137,12 @@ dirsearch -u http://10.10.54.223:80/island/2100 -t 16 -r -e ticket -f -w /usr/sh
 
 ### WpScan
 
+* if you have a wordpress server check below URI as if it is enabled, you can get alot of information.
+
+```
+http://10.10.110.100:65000/wordpress/index.php/wp-json/
+```
+
 * TLDR; The best one liner&#x20;
 
 ```
