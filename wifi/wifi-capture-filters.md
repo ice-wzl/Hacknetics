@@ -37,3 +37,16 @@ wlan.fc.type == 0
 ```
 wlan.fc.type_subtype == 0x0008 && wlan.rsn.akms == 0x00FAC08
 ```
+
+* above AKMS identifies the most common key type in use GCMP-128
+
+### WPA3 Transition networks
+
+* wireshark filter for WPA3 transition networks. They will have to broadcast two cipher suites at once&#x20;
+
+```
+wlan.fc.type_subtype == 0x0008 && wlan.rsn.akms ==  0x000FAC02 && wlan.rsn.akms == 0x000FAc08
+```
+
+* `0x000FAC02` == WPA2
+* `0x000FAC08` == WPA3
