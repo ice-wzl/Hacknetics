@@ -29,3 +29,11 @@ wlan.fc.type_subtype == 0x0008
 ```
 wlan.fc.type == 0
 ```
+
+### WPA3 PSK networks&#x20;
+
+* We can identify these networks in a wireshark pcap by filtering off the Auth Key Management suite in use&#x20;
+
+```
+wlan.fc.type_subtype == 0x0008 && wlan.rsn.akms == 0x00FAC08
+```
