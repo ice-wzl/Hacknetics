@@ -21,3 +21,11 @@ ether proto 0x888e
 ```
 wlan.fc.type_subtype == 0x0008
 ```
+
+### Management Frames&#x20;
+
+* wireshark filter for management frames&#x20;
+
+```
+wlan.fc.type == 0
+```
