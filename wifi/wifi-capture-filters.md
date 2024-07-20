@@ -1,5 +1,7 @@
 # Wifi Capture Filters
 
+### Handshakes
+
 * To filter for four-way handshake packets in Wireshark&#x20;
 
 ```
@@ -10,4 +12,12 @@ eapol
 
 ```
 ether proto 0x888e
+```
+
+### Beacons
+
+* wireshark filter for beacon frames&#x20;
+
+```
+wlan.fc.type_subtype == 0x0008
 ```
