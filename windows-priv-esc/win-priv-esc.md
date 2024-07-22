@@ -31,6 +31,11 @@ If the machine is >= Windows 10 1809 & Windows Server 2019 - Try Rogue Potato
 If the machine is < Windows 10 1809 < Windows Server 2019 - Try Juicy Potato
 ```
 
+* Check the current tokens you have and any ability to escalate from your tokens&#x20;
+* <pre><code><strong>https://github.com/gtworek/Priv2Admin
+  </strong>https://ppn.snovvcrash.rocks/pentest/infrastructure/post-exploitation
+  </code></pre>
+
 ### Search for files with passwords in them&#x20;
 
 * Perform a basic search
