@@ -48,6 +48,7 @@
 * [Data Exfiltration](readme/data-exfiltration.md)
 * [Exploit Development](exploit-development/README.md)
   * [ROP Finding the vulnerable function](exploit-development/rop-finding-the-vulnerable-function.md)
+  * [Useful Tools for Exploit Dev](exploit-development/useful-tools-for-exploit-dev.md)
 * [file-transfers](file-transfers/README.md)
   * [Transfering Files](file-transfers/file-transfers.md)
 * [lateral-movement](lateral-movement/README.md)
