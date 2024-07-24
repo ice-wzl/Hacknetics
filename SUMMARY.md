@@ -46,6 +46,8 @@
   * [Windows Log Clearing](covering-tracks/windows-log-clearing.md)
   * [Ghost Writing Binaries](covering-tracks/ghost-writing-binaries.md)
 * [Data Exfiltration](readme/data-exfiltration.md)
+* [Exploit Development](exploit-development/README.md)
+  * [ROP Finding the vulnerable function](exploit-development/rop-finding-the-vulnerable-function.md)
 * [file-transfers](file-transfers/README.md)
   * [Transfering Files](file-transfers/file-transfers.md)
 * [lateral-movement](lateral-movement/README.md)

