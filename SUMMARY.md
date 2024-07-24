@@ -49,6 +49,7 @@
 * [Exploit Development](exploit-development/README.md)
   * [ROP Finding the vulnerable function](exploit-development/rop-finding-the-vulnerable-function.md)
   * [Useful Tools for Exploit Dev](exploit-development/useful-tools-for-exploit-dev.md)
+  * [ropeme](exploit-development/ropeme.md)
 * [file-transfers](file-transfers/README.md)
   * [Transfering Files](file-transfers/file-transfers.md)
 * [lateral-movement](lateral-movement/README.md)
