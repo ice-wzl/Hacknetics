@@ -176,3 +176,35 @@ BD Address:	98:2C:BC:0E:06:8B [mode 1, clkoffset 0x717b]
 Device name:	BALTIMORE
 Device class:	Computer, Laptop (0x2a410c)
 ```
+
+* A better example
+
+```
+hcitool -i hci1 scan
+Scanning ...
+	00:1F:FF:7C:8A:F2	PR BT 9747
+	E0:D8:C4:3F:DF:F7	Living Room TV 2
+	E0:D4:64:55:20:61	dev #1
+	E0:03:6B:60:9B:4D	Samsung CU7000 50 1
+	E0:03:6B:5E:34:C4	Samsung CU7000 50
+
+hcitool -i hci1 scan --info --class
+Scanning ...
+
+BD Address:	E0:D4:64:55:20:61 [mode 1, clkoffset 0x16c2]
+Device name:	dev #1
+Device class:	Computer, Laptop (0x7c010c)
+
+BD Address:	E0:03:6B:5E:34:C4 [mode 1, clkoffset 0x6703]
+Device name:	Samsung CU7000 50
+Device class:	Audio/Video, Video Display and Loudspeaker (0x08043c)
+
+BD Address:	E0:D8:C4:3F:DF:F7 [mode 1, clkoffset 0x6245]
+Device name:	Living Room TV 2
+Device class:	Audio/Video, Video Display and Loudspeaker (0x28043c)
+
+BD Address:	E0:03:6B:60:9B:4D [mode 1, clkoffset 0x188f]
+Device name:	Samsung CU7000 50 1
+Device class:	Audio/Video, Video Display and Loudspeaker (0x08043c)
+
+```
