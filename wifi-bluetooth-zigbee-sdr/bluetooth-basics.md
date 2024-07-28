@@ -156,3 +156,23 @@ hciconfig hci0 class
 sudo hciconfig hci0 class 0x050204
 hciconfig hci0 class
 ```
+
+### Scanning for Devices&#x20;
+
+* Basic Scan
+
+```
+hcitool -i hci0 scan
+Scanning ...
+	98:2C:BC:0E:06:8B	BALTIMORE
+```
+
+* Detailed Scan&#x20;
+
+```
+hcitool -i hci0 scan --info --class
+Scanning ...
+BD Address:	98:2C:BC:0E:06:8B [mode 1, clkoffset 0x717b]
+Device name:	BALTIMORE
+Device class:	Computer, Laptop (0x2a410c)
+```
