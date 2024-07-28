@@ -29,6 +29,17 @@ hci0:	Type: Primary  Bus: USB
 * RUNNING - The interface is currently operational.
 * PSCAN - The interface will respond to page scan messages.
 
+### Change the name of Adapter&#x20;
+
+```
+hciconfig hci0 name 
+sudo hciconfig hci0 name SECRET
+hciconfig hci0 name
+```
+
+* Names cannot be blank and names cannot be in excess of 248 bytes in length
+* **BlueZ stack limits devices to 247 byte name length**
+
 ### Bring Adapter Up/Down
 
 ```
@@ -68,4 +79,80 @@ hci0:	Type: Primary  Bus: USB
 	HCI Version: 4.0 (0x6)  Revision: 0x2031
 	LMP Version: 4.0 (0x6)  Subversion: 0x2031
 	Manufacturer: Cambridge Silicon Radio (10)
+```
+
+### Enable Discoverable Mode&#x20;
+
+* configure device to be in discoverable mode and allow connections to the interface&#x20;
+
+```
+sudo hciconfig hci0 piscan
+hciconfig hci0 
+hci0:	Type: Primary  Bus: USB
+	BD Address: 00:01:95:79:EF:89  ACL MTU: 310:10  SCO MTU: 64:8
+	UP RUNNING PSCAN ISCAN 
+	RX bytes:1278 acl:0 sco:0 events:79 errors:0
+	TX bytes:2904 acl:0 sco:0 commands:78 errors:0
+```
+
+* If successful you will see `PSCAN ISCAN`
+
+### Disable Discoverable Mode
+
+```
+sudo hciconfig hci0 noscan 
+hciconfig 
+hci0:	Type: Primary  Bus: USB
+	BD Address: 00:01:95:79:EF:89  ACL MTU: 310:10  SCO MTU: 64:8
+	UP RUNNING 
+	RX bytes:1290 acl:0 sco:0 events:81 errors:0
+	TX bytes:2943 acl:0 sco:0 commands:80 errors:0
+```
+
+### PSCAN V ISCAN
+
+* PSCAN enabled allows connections to the interface&#x20;
+* ISCAN places the device in discoverable mode&#x20;
+
+#### Place device in discoverable mode but dont accept new connections&#x20;
+
+```
+sudo hciconfig hci0 noscan 
+sudo hciconfig hci0 pscan 
+hciconfig hci0 
+sudo hciconfig hci0 noscan 
+sudo hciconfig hci0 iscan 
+hciconfig hci0
+```
+
+* Should see `UP RUNNING ISCAN` in the output of the second `hciconfig hci0` command
+
+#### Restore ability to accept new connections&#x20;
+
+```
+sudo hciconfig hci0 piscan
+hciconfig hci0
+```
+
+* should see `UP RUNNING PSCAN ISCAN`
+
+### Spoofing Device Class
+
+* There are three types of Bluetooth device classes 1-3.&#x20;
+* It is important to have the ability to spoof a device in a different class
+* Some devices might simply ignore your device if it is of the wrong class.
+  * i.e. a headset for phone calls might ignore your device if you are not a phone
+  * case by case basis per manufacturer&#x20;
+* change the class for a device
+* useful site for attaining the codes to act like other devices&#x20;
+* [https://bluetooth-pentest.narod.ru/software/bluetooth\_class\_of\_device-service\_generator.html](https://bluetooth-pentest.narod.ru/software/bluetooth\_class\_of\_device-service\_generator.html)
+
+```
+hciconfig hci0 class
+sudo hciconfig hci0 class 0x3e0100
+hciconfig hci0 class
+sudo hciconfig hci0 class 0x84010c
+hciconfig hci0 class
+sudo hciconfig hci0 class 0x050204
+hciconfig hci0 class
 ```
