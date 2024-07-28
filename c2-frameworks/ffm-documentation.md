@@ -1,6 +1,6 @@
 # FFM Documentation
 
-Created by @JusticeRage, Contributed to by [ice-wzl](http://127.0.0.1:5000/u/PxC7fYzjgRS5tXfXdyRDxJ2C32K2 "mention").
+Created by @JusticeRage, Contributed to by [ice-wzl](https://app.gitbook.com/u/PxC7fYzjgRS5tXfXdyRDxJ2C32K2 "mention").
 
 ### What is FFM?
 
