@@ -21,6 +21,7 @@
   * [DonPapi](domain-controllers/donpapi.md)
   * [AD Overview](domain-controllers/ad-overview.md)
   * [Enumerating Forests](domain-controllers/enumerating-forests.md)
+  * [NOPAC Priv esc](domain-controllers/nopac-priv-esc.md)
 * [buffer-overflows](buffer-overflows/README.md)
   * [Buffer Overflows](buffer-overflows/buffer-overflows.md)
 * [c2-frameworks](c2-frameworks/README.md)
