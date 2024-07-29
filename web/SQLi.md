@@ -655,3 +655,25 @@ sqlmap -r burp.request --cookie="PHPSESSID=lj1gugoprduur56u8lml5q373c; security=
 * Now you can go through your zap history and see the exact requests sqlmap is making (will need to url decode in most cases
 
 <figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+
+### SQL Database Output Trick&#x20;
+
+* When running sql commands from a shell sometimes the output from commands that rely on a table can get messed up. Below the output is normal but if you run the first command and your table is messed up, you can run the second command and get normal output
+
+```
+mysql> select * from admin;
++----+----------+----------------------------------+---------------------+------------------------+
+| id | username | password                         | creationDate        | updationDate           |
++----+----------+----------------------------------+---------------------+------------------------+
+|  1 | admin    | 21232f297a57a5a743894a0e4a801fc3 | 2020-01-24 08:21:18 | 03-06-2020 07:09:07 PM |
++----+----------+----------------------------------+---------------------+------------------------+
+
+mysql> select * from admin\G
+*************************** 1. row ***************************
+          id: 1
+    username: admin
+    password: 21232f297a57a5a743894a0e4a801fc3
+creationDate: 2020-01-24 08:21:18
+updationDate: 03-06-2020 07:09:07 PM
+1 row in set (0.00 sec)
+```
