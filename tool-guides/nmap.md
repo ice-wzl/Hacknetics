@@ -146,3 +146,19 @@ nmap --script "ssh2-enum-algos" 10.10.220.56
 * `-oG` save output in grepable format
 * `-oX` save output in XML format
 * `-oA` save output in normal, XML and Grepable formats
+
+### Searching Through Output&#x20;
+
+* Looking for open port 445 in nmap output and returning ips&#x20;
+
+```
+grep ' 445/open/' /tmp/scan.gnmap | cut -d ' ' -f 2
+10.130.10.4
+10.130.10.5
+10.130.10.6
+10.130.10.21
+10.130.10.25
+10.130.10.33
+10.130.10.44
+10.130.10.45
+```
