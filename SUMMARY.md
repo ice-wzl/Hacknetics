@@ -103,6 +103,7 @@
   * [Pentesting NFS](recon-enumeration/pentesting-nfs.md)
   * [Pentesting LDAP](recon-enumeration/pentesting-ldap.md)
   * [Pentesting Finger](recon-enumeration/pentesting-finger.md)
+  * [User Recon](recon-enumeration/user-recon.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
   * [Youtube / Book List](resources/youtube-book-list.md)
