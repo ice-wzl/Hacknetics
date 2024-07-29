@@ -2,14 +2,13 @@
 
 ## Windows Privlage Escalation
 
-![alt text](https://miro.medium.com/max/2400/0\*I-5KzneqUHfF7bHR.png)
-
 ### Resources&#x20;
 
 [HackTricks](https://book.hacktricks.xyz/windows/checklist-windows-privilege-escalation)\
 [Fuzzy security](http://www.fuzzysecurity.com/tutorials/16.html)
 
-* https://lolbas-project.github.io/#
+* https://lolbas-project.github.io/&#x20;
+* [https://wadcoms.github.io/](https://wadcoms.github.io/)
 
 Windows 10 Exploits:
 
