@@ -44,6 +44,16 @@ Impacket v0.9.24.dev1+20210814.5640.358fc7c6 - Copyright 2021 SecureAuth Corpora
 [*] Valid user => darkstar
 ```
 
+* what a successful tool run looks like where no valid users are found&#x20;
+
+```
+./kerbrute_linux_amd64 userenum --dc COMPANY.local -d COMPANY.local /home/ubuntu/Documents/htb/company/users.txt
+2024/04/14 15:18:42 >  Done! Tested 6 usernames (0 valid) in 0.100 seconds
+
+./kerbrute_linux_amd64 userenum --dc COMPANY.local -d COMPANY.local /usr/share/seclists/Usernames/top-usernames-shortlist.txt
+2024/04/14 15:20:29 >  Done! Tested 17 usernames (0 valid) in 0.227 seconds
+```
+
 ## Impacket
 
 * Location:
