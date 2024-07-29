@@ -56,6 +56,11 @@ dir c:\*.ica /s
 dir c:\*.pwd* /s
 dir c:\*.config* /s
 dir c:\*access* /s
+
+# Powershell finds 
+Get-ChildItem -Path "C:\Users" -Filter *.doc -Recurse
+Get-ChildItem -Path "C:\Users" -Filter *.xlxs -Recurse
+Get-ChildItem -Path "C:\Users" -Filter *.xls -Recurse
 ```
 
 * Find strings in `.config` files
