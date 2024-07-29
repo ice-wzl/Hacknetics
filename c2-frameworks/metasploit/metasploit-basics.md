@@ -30,6 +30,12 @@ msfconsole -q
 search [regex]
 ```
 
+* search for type along with keyword
+
+```
+search type:post -S "firefox"
+```
+
 * Specify exploit
 
 ```
