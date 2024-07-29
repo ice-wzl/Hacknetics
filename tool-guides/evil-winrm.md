@@ -18,3 +18,13 @@ evil-winrm -i 10.10.100.15 -u administrator -H "c2597747aa5e43022a3a3049a3c3b09d
 ```
 evil-winrm -i 10.10.100.15 -u a-whitehat -p "bNdKVkjv3RR9ht"
 ```
+
+### evil-winrm Docker
+
+* I have had issues with `evil-winrm` running properly on non kali Linux distros such as Ubuntu.
+* One simple work around is to pull a Kali Docker image and utilize that&#x20;
+
+```
+sudo docker run --tty --interactive kalilinux/kali-rolling
+evil-winrm -i 172.16.2.5 -u 'DANTE.ADMIN\jbercov' -p mypass123
+```
