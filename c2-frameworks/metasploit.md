@@ -233,6 +233,11 @@ run post/windows/gather/hashdump
 
 * The output of each line is in the following format: `Username:SID:LM hash:NTLM hash:::`
 * Note that the [LM](https://en.wikipedia.org/wiki/LAN\_Manager) hash `aad3b435b51404eeaad3b435b51404ee` corresponds to an empty password as well as the [NTLM](https://en.wikipedia.org/wiki/NT\_LAN\_Manager) hash `31d6cfe0d16ae931b73c59d7e0c089c0`.
+* another method that can yeild more credentials (especially on the domain controller) is:
+
+```
+run post/windows/gather/credentials/credential_collector 
+```
 
 ### Execute a program <a href="#executeaprogram" id="executeaprogram"></a>
 
