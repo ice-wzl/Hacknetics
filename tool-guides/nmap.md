@@ -93,6 +93,14 @@ SENT (0.0520s) ICMP [10.254.252.2 > 10.130.10.4 Echo request (type=8/code=0) id=
 
 * `--packet-trace` will show you the enumeration packets sent out&#x20;
 
+### Top 3000 Packets
+
+* By default nmap will scan the top 1000 ports, if you dont want to scan all 65536 ports but want to scan more than just 1000 you can scan 3000 like seen below&#x20;
+
+```
+sudo nmap -n -sT 10.130.10.33 --top-ports 3000
+```
+
 ### TCP Header
 
 ![tcp-header](https://user-images.githubusercontent.com/75596877/138295680-a20a687e-6898-4b7a-8c6b-d3e496ff6c07.png)
