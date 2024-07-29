@@ -132,6 +132,29 @@ dnsenum [domain name]
 dnsrecon -d google.com
 ```
 
+<pre><code><strong>user@slingshot:~$ dnsrecon -n 8.8.8.8 -d clifbar.com  -w
+</strong>[*] Performing General Enumeration of Domain: clifbar.com
+[-] DNSSEC is not configured for clifbar.com
+[*]      SOA ns-1288.awsdns-33.org 205.251.197.8
+...trimmed for brevity...
+[*]      SRV _sip._tls.clifbar.com pulsip.clifbar.com 87.246.98.42 443 0
+[+] 9 Records Found
+[*] Performing Whois lookup against records found.
+[*] The following IP Ranges where found:
+[*]      0) 205.251.192.0-205.251.255.255 Amazon.com, Inc.
+[*]      1) 205.251.192.0-205.251.199.255 Amazon Data Services NoVa
+[*]      2) 67.231.144.0-67.231.159.255 Proofpoint, Inc.
+[*]      3) 13.200.0.0-13.239.255.255 Amazon Technologies Inc.
+[*]      4) 13.224.0.0-13.227.255.255 Amazon.com, Inc.
+[*]      5) 213.128.224.0-213.128.255.255 UK-SOL-20020703
+[*]      6) 87.246.76.32-87.246.76.63 pulsant15311
+[*]      7) 87.246.98.0-87.246.98.127 pulsant1880
+[*] What Range do you wish to do a Revers Lookup for?
+[*] number, comma separated list, a for all or n for none
+</code></pre>
+
+* `-w` is for a more in depth enumeration.
+
 ### **Sublist3r**
 
 * Sublist3r is a DNS meta-query spider that uses an extensive wordlist to enumerate DNS records and subdomains.
