@@ -104,3 +104,36 @@ ffmpeg -i input.mkv -codec copy output.mp4
 ```
 inurl:/wp-content/uploads/ ext:txt "username" AND "password" | "pwd" | "pw"
 ```
+
+### What is taking up space Linux
+
+* I recently ran out of disk space on my Ubuntu machine, here is a quick way to see what is taking up all that space
+
+```
+root@dev:/opt# du -cha --max-depth=1 / 2>/dev/null | grep -E "M|G" 
+3.9M	/run
+19G	/opt
+18M	/etc
+18G	/home
+18G	/usr
+1.6G	/media
+918M	/root
+517M	/Kismet-20240630-21-57-41-1.kismet
+11G	/snap
+2.1G	/swapfile
+145G	/tmp
+7.3G	/var
+194M	/boot
+221G	/
+221G	total
+root@dev:/opt# cd /var
+root@dev:/var# du -cha --max-depth=1 /var 2>/dev/null | grep -E "M|G" 
+6.5G	/var/lib
+6.5M	/var/backups
+291M	/var/cache
+99M	/var/crash
+5.0M	/var/snap
+427M	/var/log
+7.3G	/var
+7.3G	total
+```
