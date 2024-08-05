@@ -55,3 +55,11 @@ airmon-ng start wlan0
 # delete interfaces
 iw dev wlan0 del
 ```
+
+### Types of WIFI networks&#x20;
+
+* IEEE 802.11b or 802.11g -> 20MHz channels at 2.4 GHz
+* IEEE 802.11a -> 20MHz channels at 5 GHz
+* IEEE 802.11n -> 20MHz or 40MHz channels at 2.4 GHz or 5 GHz
+* IEEE 802.11ac -> 20MHz, 40MHz, 60MHz, 80MHz, 160MHz channels at 5 GHz
+* IEEE 802.11ax -> 20MHz, 40MHz, 60MHz, 80MHz, 160MHz channels at 2.4 GHz or 5GHz
