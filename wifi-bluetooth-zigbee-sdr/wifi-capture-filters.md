@@ -50,3 +50,13 @@ wlan.fc.type_subtype == 0x0008 && wlan.rsn.akms ==  0x000FAC02 && wlan.rsn.akms 
 
 * `0x000FAC02` == WPA2
 * `0x000FAC08` == WPA3
+
+### Tcpdump no Beacons / Control frames
+
+```
+tcpdump -i wlan0mon -s 0 -n -w out.pcap 'not type mgt subtype beacon and not type ctl'
+```
+
+* capture the whole packet with `-s 0`
+* capture everything that are not beacon frames + control frames (loud)
+* Great assessment tcpdump filter for assessments on smaller devices like a Pi
