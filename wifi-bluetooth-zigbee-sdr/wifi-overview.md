@@ -63,3 +63,20 @@ iw dev wlan0 del
 * IEEE 802.11n -> 20MHz or 40MHz channels at 2.4 GHz or 5 GHz
 * IEEE 802.11ac -> 20MHz, 40MHz, 60MHz, 80MHz, 160MHz channels at 5 GHz
 * IEEE 802.11ax -> 20MHz, 40MHz, 60MHz, 80MHz, 160MHz channels at 2.4 GHz or 5GHz
+
+### Controlling Channel and Width
+
+```
+iw dev wlan0mon info | grep type
+    type monitor
+iw dev wlan0mon set channel 1 
+iw dev wlan0mon set channel 132
+iw dev wlan0mon info | grep channel
+    channel 132 (5660 MHz), width: 20 MHz (no HT), center1: 5660 MHz
+    
+iw dev wlan0mon set channel 132 HT40+
+iw dev wlan0mon info | grep channel 
+    channel 132 (5660 MHz), width: 20 MHz (no HT), center1: 5670 MHz
+iw dev wlan0man set channel HT40-
+    channel 132 (5660 MHz), width: 20 MHz (no HT), center1: 5650 MHz
+```
