@@ -59,4 +59,5 @@ tcpdump -i wlan0mon -s 0 -n -w out.pcap 'not type mgt subtype beacon and not typ
 
 * capture the whole packet with `-s 0`
 * capture everything that are not beacon frames + control frames (loud)
+  * generally 10 beacon frames a second from each AP. If you are in range of 20 APs that can get rough quickly on pcap size&#x20;
 * Great assessment tcpdump filter for assessments on smaller devices like a Pi
