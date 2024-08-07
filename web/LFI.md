@@ -241,7 +241,18 @@ ffuf -request burp.request --request-proto http -w/ usr/share/seclists/Discovery
 
 `-mc all` to match all status codes if you are getting every page 404 or something like that&#x20;
 
+### ffuf directory busting with specific extension and status code&#x20;
 
+```
+ffuf -u http://it.stg.htb/FUZZ -e .php -mc 200 -w /usr/share/seclists/Discovery/Web-Content/common.txt -b "PHPSESSID=28330d435522c7f6080f8d63b86c7daa"
+```
+
+### ffuf match status -mc filter status -fc
+
+```
+ffuf -u 'http://it.stg.htb/?page=FUZZ' -mc 200 -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
+ffuf -u 'http://it.stg.htb/?page=FUZZ' -fc 200 -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
+```
 
 ### Files to grab if you get LFI
 
