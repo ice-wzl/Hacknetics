@@ -159,6 +159,7 @@
   * [JWT Tokens](web/jwt-tokens.md)
   * [Adobe Coldfusion](web/adobe-coldfusion.md)
   * [NoSQL Injection](web/nosql-injection.md)
+  * [vhost Enumeration](web/vhost-enumeration.md)
 * [Wifi/Bluetooth/ZigBee/SDR](wifi-bluetooth-zigbee-sdr/README.md)
   * [Wifi Capture Filters](wifi-bluetooth-zigbee-sdr/wifi-capture-filters.md)
   * [Bluetooth Basics](wifi-bluetooth-zigbee-sdr/bluetooth-basics.md)

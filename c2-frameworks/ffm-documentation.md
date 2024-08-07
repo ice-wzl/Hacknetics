@@ -359,7 +359,7 @@ test_vm_2 = shell_exec('dmesg | grep -i hypervisor', print_output=False)
 
 `!sh [local script]` Runs a shell script from the local machine in memory.
 
-<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### !py
 
@@ -436,7 +436,7 @@ Plugins can be further configured by editing `ffm.conf`.
 * For example the behavior of `ffm.py` can we tweaked further in the `ffm.conf` file.
 * If you wanted to have another ssh argument get passed to the client without having to manually type it each time:
 
-<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 * &#x20;You can easily toggle any of these ssh options on or off
 * Example 2:
