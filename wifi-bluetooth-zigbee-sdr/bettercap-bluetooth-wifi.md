@@ -10,3 +10,9 @@
 bettercap -iface wlan0
 >>> wifi.recon on 
 ```
+
+* see captured networks&#x20;
+
+```
+wifi.show
+```
