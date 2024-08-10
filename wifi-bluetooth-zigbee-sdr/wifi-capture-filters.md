@@ -30,6 +30,17 @@ wlan.fc.type_subtype == 0x0008
 wlan.fc.type == 0
 ```
 
+### Probe Requests
+
+* Find clients looking for SSID names. Useful if you are looking to stand up an Evil Twin and would like a specific client to connect to you.
+* Probe requests can have privacy implications. If you capture SSID names and they are unique, you are able to query https://wigle.net to potentially find home locations/work locations
+
+```
+(wlan.fc.subtype == 4) && (wlan.fc.type == 0)
+# filter out probe requests
+!(wlan.fc.subtype == 4) && !(wlan.fc.type == 0)
+```
+
 ### WPA3 PSK networks&#x20;
 
 * We can identify these networks in a wireshark pcap by filtering off the Auth Key Management suite in use&#x20;
