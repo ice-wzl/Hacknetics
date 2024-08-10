@@ -51,6 +51,15 @@ wlan.fc.type_subtype == 0x0008 && wlan.rsn.akms == 0x00FAC08
 
 * above AKMS identifies the most common key type in use GCMP-128
 
+### Find Data packets with no Frame Body Encryption
+
+* Encryption can still be used at the application layer i.e. TLS
+* Can catch protocols that are not encrypted&#x20;
+
+```
+wlan.fc.protected == 0 && wlan.fc.type == 2
+```
+
 ### WPA3 Transition networks
 
 * wireshark filter for WPA3 transition networks. They will have to broadcast two cipher suites at once&#x20;
