@@ -1,5 +1,27 @@
 # Wifi Capture Filters
 
+### WEP Networks
+
+* Per Wigle.net as of 2024, WEP networks make up less than 5% of all wireless networks, however they can still be found!
+* In every WEP packet is an:
+  * initialization vector
+  * key index number
+  * integrity check value.
+* Display only WEP encrypted data packets
+
+```
+wlan.wep.iv
+```
+
+### BSSID
+
+* Filtering on BSSIDs
+
+```
+!wlan.bssid eq 58:6d:8f:07:4e:8d
+wlan.bssid eq 58:6d:8f:07:4e:8d
+```
+
 ### Handshakes
 
 * To filter for four-way handshake packets in Wireshark&#x20;
