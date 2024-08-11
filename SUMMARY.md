@@ -165,6 +165,7 @@
   * [Bluetooth Basics](wifi-bluetooth-zigbee-sdr/bluetooth-basics.md)
   * [Wifi Overview](wifi-bluetooth-zigbee-sdr/wifi-overview.md)
   * [Bettercap Bluetooth / Wifi](wifi-bluetooth-zigbee-sdr/bettercap-bluetooth-wifi.md)
+  * [Aircrack-ng](wifi-bluetooth-zigbee-sdr/aircrack-ng.md)
 * [Windows](windows-priv-esc/README.md)
   * [powershell-cheatsheet](windows-priv-esc/powershell-cheatsheet.md)
   * [Windows Privlage Escalation](windows-priv-esc/win-priv-esc.md)
