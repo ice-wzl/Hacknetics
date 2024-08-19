@@ -1,5 +1,13 @@
 # Wifi Capture Filters
 
+### WPA2 Networks
+
+* identify a network that is using WPA2-PSK
+
+```
+wlan.tag.number == 221 or wlan.tag.number == 48
+```
+
 ### WEP Networks
 
 * Per Wigle.net as of 2024, WEP networks make up less than 5% of all wireless networks, however they can still be found!
