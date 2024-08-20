@@ -21,6 +21,14 @@ wlan.rsn.ie.pmkid
 wlan.tag.number eq 221
 ```
 
+### WPS Detection
+
+* We can see if an AP supports WPS, allowing for WPS attacks
+
+```
+wps.wifi_protected_setup_state eq 0x02
+```
+
 ### WEP Networks
 
 * Per Wigle.net as of 2024, WEP networks make up less than 5% of all wireless networks, however they can still be found!
