@@ -8,6 +8,19 @@
 wlan.tag.number == 221 or wlan.tag.number == 48
 ```
 
+### WPA2 PMKID
+
+* PMKID is a unique, per client key identifier found in the first EAPOL frame
+* Contained in optional RSN IE for AP roaming
+* Assigned at the time of joining a network to track with PMK should be used for the network
+* The PMKID is used to identify to the AP which PMK should be used for the newly roamed client.
+
+```
+wlan.rsn.ie.pmkid
+# OR
+wlan.tag.number eq 221
+```
+
 ### WEP Networks
 
 * Per Wigle.net as of 2024, WEP networks make up less than 5% of all wireless networks, however they can still be found!
