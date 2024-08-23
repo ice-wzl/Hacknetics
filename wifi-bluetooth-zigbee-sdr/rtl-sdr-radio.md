@@ -1,5 +1,9 @@
 # RTL-SDR Radio
 
+### Disclaimer
+
+* Please do not transmit anything on a frequency you are unlicensed or unauthorized to transmit on. I am not responsible for your actions.
+
 ### Find Frequencies&#x20;
 
 [https://www.radioreference.com/db/browse/ctid/1212](https://www.radioreference.com/db/browse/ctid/1212)
@@ -61,4 +65,12 @@ Sampling at 1200000 S/s.
 Output at 200000 Hz.
 Playing raw data 'stdin' : Signed 16 bit Little Endian, Rate 48000 Hz, Mono
 underrun!!! (at least 327.957 ms long)
+```
+
+### Fun Frequencies&#x20;
+
+* Baltimore City Fire Dispatch
+
+```
+./fmradio.sh 46.460M
 ```
