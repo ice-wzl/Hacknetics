@@ -80,3 +80,9 @@ underrun!!! (at least 327.957 ms long)
 ```
 ./fmradio.sh 162.40M
 ```
+
+* The Fan Baltimore Sports Radio
+
+```
+./fmradio.sh 105.7M
+```
