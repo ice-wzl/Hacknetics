@@ -1,5 +1,9 @@
 # RTL-SDR Radio
 
+### Find Frequencies&#x20;
+
+[https://www.radioreference.com/db/browse/ctid/1212](https://www.radioreference.com/db/browse/ctid/1212)
+
 ### Install Dependencies
 
 * I am using an RTL-SDR V3&#x20;
