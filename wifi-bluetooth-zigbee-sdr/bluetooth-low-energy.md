@@ -192,3 +192,125 @@ Basic Device Configuration Read Completed
 
 * at the bottom you will see a large amount of read commands, you can modify to `--char-write` and `--char-write-req` using `-a` to specify the handle and `-n` to specify the value to write.
 * you can now automate any testing you want to perform.
+
+### Reverse Engineering BLE
+
+* many bluetooth le devices have an android and ios application which is utilized to control the device.
+* we should use the target application (android apps are better as they can be downloaded from APK Monk)
+
+{% embed url="https://www.apkmonk.com/" %}
+
+* we can use JadX to reconstruct the Java source code.
+
+{% embed url="https://github.com/skylot/jadx" %}
+
+* with the source code up search for strings&#x20;
+  * `BluetoothGattCallback`
+  * `BluetoothGattDescriptor`
+  * `Bluetooth`
+
+### Reverse Engineering BLE with PCAP
+
+* Android devices can dump all hci commands to a log file and the traffic can be captured in Wireshark
+* Turn on the `HCI capture feature in Android`
+  * It is under the developer options, can exfil the file with ADB or just email it to yourself.
+* after opening pcap, filter on `btatt`
+  * `this will show us the bluetooth attribute protocol`&#x20;
+* it is all the data send and recieved between the ble device and the app&#x20;
+* filter on the read request opcode `btatt.opcode == 0x0a`
+* filter on the write request opcode `btatt.opcode == 0x12`
+* it is simple to derive the valid handles this way&#x20;
+* can also use tshark&#x20;
+
+```
+tshark -r app-hci.log -Y "btatt.opcode == 0x12"
+tshark -r app-hci.log -Y "btatt.opcode == 0x12" -z proto,colinfo,btatt.value,btatt.value
+   4   1.118400 localhost () → remote ()    ATT 13 Sent Write Request, Handle: 0x004d (Unknown)  btatt.value == 08
+   14   5.834189 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:ff:02:00
+   17   6.056926 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0031 (Unknown)  btatt.value == 41:87:20:20
+   20   6.303084 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 41:87:20:20
+# you can now awk on the column you want and count them 
+# count the write requests
+tshark -r app-hci.log -Y "btatt.opcode == 0x12" -z proto,colinfo,btatt.value,btatt.value | awk '{print $14}' | sort | uniq -c
+     23 0x002a
+     46 0x002e
+     23 0x0031
+     23 0x0034
+      1 0x004d
+# filter on a specific handle 
+tshark -r app-hci.log -Y "btatt.opcode == 0x12 and btatt.handle == 0x002a" -z proto,colinfo,btatt.value,btatt.value
+   23   6.557132 localhost () → remote ()    ATT 13 Sent Write Request, Handle: 0x002a (Unknown)  btatt.value == 06
+  110  11.042753 localhost () → remote ()    ATT 13 Sent Write Request, Handle: 0x002a (Unknown)  btatt.value == 06
+  125  17.661276 localhost () → remote ()    ATT 13 Sent Write Request, Handle: 0x002a (Unknown)  btatt.value == 06
+  140  24.145688 localhost () → remote ()    ATT 13 Sent Write Request, Handle: 0x002a (Unknown)  btatt.value == 06
+  155  29.658901 localhost () → remote ()    ATT 13 Sent Write Request, Handle: 0x002a (Unknown)  btatt.value == 06
+  170  34.281215 localhost () → remote ()    ATT 13 Sent Write Request, Handle: 0x002a (Unknown)  btatt.value == 06
+  
+```
+
+* in the last above command we can see the value `btatt.value` always is 06. so we can rule that out as a handle that controls a device setting. find the values that are different as those are likely the setting changes
+* to find these values see which wireshark `btatt.value` changes per packet
+  * if handle `0x0031` has the same `btatt.value` each time, rule it out. look for ones where the data value in `btatt.value` changes each time or frequently
+* awk for your handles and then iterate through the last tshark command seeing the values and if they seem to be different alot
+
+### Reverse Engineering TSHARK HCI Summary&#x20;
+
+* awk for the handles, iterate through them see the changing values
+* `head` was used to save space, dont do this in real life, you might miss stuff...
+
+```
+tshark -r app-hci.log -Y "btatt.opcode == 0x12" -z proto,colinfo,btatt.value,btatt.value | awk '{print $14}' | sort | uniq -c
+     23 0x002a
+     46 0x002e
+     23 0x0031
+     23 0x0034
+      1 0x004d
+tshark -r app-hci.log -Y "btatt.opcode == 0x12 and btatt.handle == 0x002e" -z proto,colinfo,btatt.value,btatt.value | head
+   20   6.303084 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 41:87:20:20
+   26   6.647561 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 82:c3:0f:0f
+  107  10.767957 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 41:87:20:20
+  113  11.119934 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 82:c3:0f:0f
+  122  17.397355 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 41:87:20:20
+  128  17.773057 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 82:c3:0f:0f
+  137  23.879547 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 41:87:20:20
+  143  24.240349 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 82:c3:0f:0f
+  152  29.416673 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 41:87:20:20
+  158  29.771678 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x002e (Unknown)  btatt.value == 82:c3:0f:0f
+tshark -r app-hci.log -Y "btatt.opcode == 0x12 and btatt.handle == 0x0034" -z proto,colinfo,btatt.value,btatt.value | head
+   14   5.834189 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:ff:02:00
+  101  10.299287 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:0a:02:00
+  116  16.936518 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:20:02:00
+  131  23.402051 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:40:02:00
+  146  28.941775 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:55:02:00
+  161  33.497028 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:70:02:00
+  176  44.376252 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:80:02:00
+  191  48.216134 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:90:02:00
+  206  52.516285 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:a0:02:00
+  221  56.205962 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:b0:02:00
+tshark -r app-hci.log -Y "btatt.opcode == 0x12 and btatt.handle == 0x0034" -z proto,colinfo,btatt.value,btatt.value
+   14   5.834189 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:ff:02:00
+  101  10.299287 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:0a:02:00
+  116  16.936518 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:20:02:00
+  131  23.402051 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:40:02:00
+  146  28.941775 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:55:02:00
+  161  33.497028 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:70:02:00
+  176  44.376252 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:80:02:00
+  191  48.216134 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:90:02:00
+  206  52.516285 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:a0:02:00
+  221  56.205962 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:b0:02:00
+  236  59.983711 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:c0:02:00
+  251  62.987032 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:ff:02:00
+  266  68.260189 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:0a:01:00
+  281  72.793182 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:20:01:00
+  296  77.914534 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:40:01:00
+  311  81.261032 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:55:01:00
+  326  89.449411 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:70:01:00
+  341  95.427576 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:80:01:00
+  356  98.125358 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:90:01:00
+  371 103.532286 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:a0:01:00
+  386 107.267313 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:b0:01:00
+  401 110.924918 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:c0:01:00
+  416 114.065336 localhost () → remote ()    ATT 16 Sent Write Request, Handle: 0x0034 (Unknown)  btatt.value == 41:ff:01:00
+```
+
+* `0x0034` is the handle we want!
