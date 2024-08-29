@@ -12,7 +12,7 @@ airodump-ng -r client-probe.pcap -w CUST
 * feel that into Airgraph-ng&#x20;
 
 ```
-airgraph-ng -i CUST-01.csv -o cpb.png -g CPB
+airgraph-ng -i CUST-01.csv -o cpb.png -g CPG
 ```
 
 * open the resulting .png with firefox&#x20;
