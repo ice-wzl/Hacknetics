@@ -32,3 +32,4 @@ Done...
 
 ### Example of Final Product (Small)
 
+<figure><img src="../.gitbook/assets/cpb.png" alt=""><figcaption></figcaption></figure>
