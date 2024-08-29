@@ -24,3 +24,8 @@ firefox cpb.png
 #### If you are using Kismet
 
 Ensure you add a `--old-pcap` switch to convert the kismetdb to old school pcap, not pcap-ng, which is not supported by airodump-ng.
+
+```
+sudo kismetdb_to_pcap --old-pcap -i Kismet-20240829-01-41-41-1.kismet -o out.pcap
+Done...
+```
