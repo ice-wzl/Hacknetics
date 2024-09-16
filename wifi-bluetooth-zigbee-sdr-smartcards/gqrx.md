@@ -31,3 +31,11 @@ gqrx --edit
 <figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
 * can bookmark frequency for easy return finding in the future&#x20;
+
+### Bands around FM
+
+* you might notice two bands around strong radio signals as seen below
+
+<figure><img src="../.gitbook/assets/image (15).png" alt=""><figcaption></figcaption></figure>
+
+* i believe this is to define the stations, however i am unsure. seems to make sense
