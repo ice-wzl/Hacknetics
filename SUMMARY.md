@@ -172,6 +172,7 @@
   * [Bluetooth Low Energy](wifi-bluetooth-zigbee-sdr-smartcards/bluetooth-low-energy.md)
   * [Smart Cards](wifi-bluetooth-zigbee-sdr-smartcards/smart-cards.md)
   * [Airodump-ng Airgraph-ng](wifi-bluetooth-zigbee-sdr-smartcards/airodump-ng-airgraph-ng.md)
+  * [gqrx](wifi-bluetooth-zigbee-sdr-smartcards/gqrx.md)
 * [Windows](windows-priv-esc/README.md)
   * [powershell-cheatsheet](windows-priv-esc/powershell-cheatsheet.md)
   * [Windows Privlage Escalation](windows-priv-esc/win-priv-esc.md)

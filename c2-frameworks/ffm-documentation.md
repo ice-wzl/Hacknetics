@@ -359,7 +359,7 @@ test_vm_2 = shell_exec('dmesg | grep -i hypervisor', print_output=False)
 
 `!sh [local script]` Runs a shell script from the local machine in memory.
 
-<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### !py
 

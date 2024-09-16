@@ -79,7 +79,7 @@ handle: 0x0017, char properties: 0x1a, char value handle: 0x0018, uuid: 00000057
 
 * Good reference page&#x20;
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 ### Interacting with Services
 

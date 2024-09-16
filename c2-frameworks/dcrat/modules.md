@@ -69,7 +69,7 @@ Microsoft Windows [Version 10.0.20348.1787]
 * To move up a directory after traversing down the file system ensure you `Right Click --> Back`
   * That took me longer to figure out than I care to admit pubically
 
-<figure><img src="../../.gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (2) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 * When you download a file a `ClientsFolder` will get created, you can find your exfil'ed file there
 
