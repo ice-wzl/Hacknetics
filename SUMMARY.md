@@ -223,6 +223,7 @@
   * [cut](linux/cut.md)
   * [grep](linux/grep.md)
   * [sort](linux/sort.md)
+  * [Cups CVE2024](linux/cups-cve2024.md)
 * [Windows Malware Development](windows-malware-development/README.md)
   * [Win32 API](win32-api.md)
   * [Processes Threads Handles](windows-malware-development/processes-threads-handles.md)
