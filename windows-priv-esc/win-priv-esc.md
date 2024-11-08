@@ -435,8 +435,12 @@ C:\Users\User\Desktop\Tools\Accesschk\accesschk64.exe -wuvc daclsvc
 
 ### Unquoted Service Path
 
-* Detection
-* Windows VM
+* Find vulnerable services with this command _without PowerUp_
+
+```
+Get-CIMInstance -class Win32_Service -Property Name, DisplayName, PathName, StartMode | Where {$_.StartMode -eq "Auto" -and $_.PathName -notlike "C:\Windows*" -and $_.PathName -notlike '"*'} | select PathName,DisplayName,Name
+```
+
 * Open command prompt and type: `sc qc unquotedsvc`
 * Notice that the `BINARY_PATH_NAME` field displays a path that is not confined between quotes.
 * Exploitation
