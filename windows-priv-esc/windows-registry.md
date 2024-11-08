@@ -80,3 +80,11 @@ reg query "HKLM\Software\wow6432node"
 reg query "HKLM\Software\Microsoft\Windows\CurrentVersion" 
 reg query "HKLM\Software\wow6432node\Microsoft\Windows\CurrentVersion" 
 `````
+
+### Enable multiple RDP sessions per user
+
+```
+reg add HKLM\System\CurrentControlSet\Control\TerminalServer /v fSingleSessionPerUser /d 0 /f
+```
+
+* **Description:** _'Sometimes you want to log in to a host via RDP or similar, but your user has an active session. Enable multiple sessions per user.'_
