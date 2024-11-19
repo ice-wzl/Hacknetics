@@ -137,3 +137,10 @@ root@dev:/var# du -cha --max-depth=1 /var 2>/dev/null | grep -E "M|G"
 7.3G	/var
 7.3G	total
 ```
+
+### Fix x11 graphical error
+
+```
+xhost +SI:localuser:root
+xhost
+```
