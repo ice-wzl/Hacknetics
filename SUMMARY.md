@@ -54,6 +54,7 @@
   * [Useful Tools for Exploit Dev](exploit-development/useful-tools-for-exploit-dev.md)
   * [ropeme](exploit-development/ropeme.md)
   * [Obtaining MSFT Patches for Analysis](exploit-development/obtaining-msft-patches-for-analysis.md)
+  * [Mutiny Fuzzer](exploit-development/mutiny-fuzzer.md)
 * [file-transfers](file-transfers/README.md)
   * [Transfering Files](file-transfers/file-transfers.md)
 * [lateral-movement](lateral-movement/README.md)
