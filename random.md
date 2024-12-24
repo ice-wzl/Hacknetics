@@ -144,3 +144,21 @@ root@dev:/var# du -cha --max-depth=1 /var 2>/dev/null | grep -E "M|G"
 xhost +SI:localuser:root
 xhost
 ```
+
+### Fix Date Issue On Ubuntu
+
+* I recently had severe time drift on a machine that is prevented from reaching the internet
+* Provide the host internet access for a small time window and fix with a one liner
+
+```
+timedatectl
+               Local time: Thu 2024-11-21 03:43:31 EST
+           Universal time: Thu 2024-11-21 08:43:31 UTC
+                 RTC time: Fri 2014-09-05 09:12:41
+                Time zone: America/New_York (EST, -0500)
+System clock synchronized: no
+              NTP service: active
+          RTC in local TZ: no
+sudo date -s "$(wget -qSO- --max-redirect=0 google.com 2>&1 | grep Date: | cut -d' ' -f5-8)Z"
+
+```
