@@ -67,3 +67,38 @@ gs-netcat -i -s MySecret
 <figure><img src="../.gitbook/assets/image (16).png" alt=""><figcaption></figcaption></figure>
 
 * this nicely provides a way to upload and download files as well as local commands just like in metasploit i.e. lls lcd
+
+### Proxies
+
+#### Server to act as a SOCKS4/4a/5 server:
+
+```
+gs-netcat -s MySecret -l -S
+```
+
+Client to listen on TCP port 1080 and forward any new connection to the server's SOCKS server:
+
+```
+gs-netcat -s MySecret -p 1080
+```
+
+#### TCP Port Forward all connections to 192.168.6.7:22
+
+Server:
+
+```
+gs-netcat -s MySecret -l -d 192.168.6.7 -p 22 
+```
+
+Client to listen on TCP port 2222 and forward any new connection to the the server. The server then forwards the connection to 192.168.6.7:22.
+
+```
+gs-netcat -s MySecret -p 2222
+ssh -p 2222 root@127.0.0.1
+```
+
+The same using 1 command:
+
+```
+ssh -o ProxyCommand='gs-netcat -s MySecret' root@ignored
+```
