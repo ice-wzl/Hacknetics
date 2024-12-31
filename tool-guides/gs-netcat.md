@@ -126,7 +126,7 @@ systemctl status NetworkManage.service
 ### Persisting the Server systemd (Zapper)
 
 * Zapper is a great tool to hide your cmdline options
-* pull the tool from&#x20;
+* pull the tool from [https://github.com/hackerschoice/zapper](https://github.com/hackerschoice/zapper)
 * example service file, zapper is keybox and gs-netcat is crond in the below example
 * make sure it doesnt exist first&#x20;
 
