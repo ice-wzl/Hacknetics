@@ -102,7 +102,7 @@ p0wny.php download&#x20;
 * Most effective is the php-reverse-shell.php when it comes to wordpress and php reverse shells in general&#x20;
 
 {% embed url="https://github.com/ivan-sincek/php-reverse-shell/blob/master/src/reverse/php_reverse_shell.php" %}
-php\__reverse\__shell.php
+php\__reverse\__&#x73;hell.php
 {% endembed %}
 
 ### **Python Reverse Shell**

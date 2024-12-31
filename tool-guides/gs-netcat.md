@@ -53,3 +53,17 @@ Last login: Mon Dec 30 19:29:55 2024 from 192.168.15.172
 gs-netcat -s MySecret
 gs-netcat -s -i MySecret
 ```
+
+### Command Console
+
+* If you connect to a listening gs-netcat server with the below options you will have access to the command console
+
+```
+gs-netcat -i -s MySecret 
+```
+
+* access it with CTRL+E c, you will see the below
+
+<figure><img src="../.gitbook/assets/image (16).png" alt=""><figcaption></figcaption></figure>
+
+* this nicely provides a way to upload and download files as well as local commands just like in metasploit i.e. lls lcd

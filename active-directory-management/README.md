@@ -2,7 +2,7 @@
 
 ### **Prerequisite Required** <a href="#viewer-b6rie" id="viewer-b6rie"></a>
 
-* &#x20;VM or Physical Server with Windows Server 2019 installed (w_e are using Server with Desktop Experience installation option_)
+* &#x20;VM or Physical Server with Windows Server 2019 installed (&#x77;_&#x65; are using Server with Desktop Experience installation option_)
 * Assign a static IP address to the server that we promote as Domain Controller.
 * As we'll configure Active Directory-integrated DNS, therefore change the DNS settings in the network interface and set the same server IP address as the primary DNS server.
 
@@ -103,7 +103,7 @@ In the **Prerequisites Check** tab, it will do prerequisite check.
 
 * Once prerequisite checks completed successfully, it will enable/highlight the Install option. Then, click on I**nstall** button to start the installation process.
 
-![](https://static.wixstatic.com/media/115dee\_fe76f0ba8f1e4a538e5662bac7556ded\~mv2.png/v1/fill/w\_740,h\_416,al\_c,q\_85,usm\_0.66\_1.00\_0.01,enc\_auto/115dee\_fe76f0ba8f1e4a538e5662bac7556ded\~mv2.png)
+![](https://static.wixstatic.com/media/115dee_fe76f0ba8f1e4a538e5662bac7556ded~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_fe76f0ba8f1e4a538e5662bac7556ded~mv2.png)
 
 * Once installation completed successfully, you will get the below confirmation message. Close this window and restart the Server.
 

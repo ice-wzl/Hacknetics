@@ -60,7 +60,7 @@ john --wordlist=<passwords_file> <AS_REP_responses_file>
 
 ### SPN Service Principal Name Overview&#x20;
 
-* The structure of an SPN consists of three (3) main parts: **Service Class**: the service type, i.e., _SQL, Web, Exchange, File,_ etc., and the **Host** where the service is usually running in the format of **FQDN** _(Fully Qualified Domain Name)_and **port number**.&#x20;
+* The structure of an SPN consists of three (3) main parts: **Service Class**: the service type, i.e., _SQL, Web, Exchange, File,_ etc., and the **Host** where the service is usually running in the format of **FQDN** _(Fully Qualified Domain Name)_&#x61;nd **port number**.&#x20;
 *   For example, below, the Microsoft SQL service runs on the **`dcorp-mgmt`** host on port 1443.
 
     The SPN is **`MSSQLSvc/dcorp-mgmt.dollarcorp.moneycorp.local:1433`**
@@ -136,7 +136,7 @@ With [Rubeus](https://github.com/GhostPack/Rubeus) in Powershell:
 [IO.File]::WriteAllBytes("ticket.kirbi", [Convert]::FromBase64String("<bas64_ticket>"))
 ```
 
-To convert tickets between Linux/Windows format with [ticket\_converter.py](https://github.com/Zer1t0/ticket\_converter):
+To convert tickets between Linux/Windows format with [ticket\_converter.py](https://github.com/Zer1t0/ticket_converter):
 
 ```
 python ticket_converter.py ticket.kirbi ticket.ccache
@@ -194,4 +194,4 @@ python -c 'import hashlib,binascii; print binascii.hexlify(hashlib.new("md4", "<
 * [PsExec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec)
 * [kerbrute.py](https://github.com/TarlogicSecurity/kerbrute)
 * [tickey](https://github.com/TarlogicSecurity/tickey)
-* [ticket\_converter.py](https://github.com/Zer1t0/ticket\_converter)
+* [ticket\_converter.py](https://github.com/Zer1t0/ticket_converter)
