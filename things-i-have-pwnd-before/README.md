@@ -532,3 +532,25 @@ adding: php-rev.php (deflated 59%)
 ```
 
 * upload the zip
+
+### De-Pixel PDF to find password
+
+* depixel file to get password
+
+```
+https://pdf2png.com/
+// tool
+https://github.com/spipm/Depix
+python3 depix.py \
+    -p ../../image_page_1_1.png \                    
+    -s images/searchimages/debruinseq_notepad_Windows10_closeAndSpaced.png
+2024-07-25 19:31:34,915 - Loading pixelated image from ../../image_page_1_1.png
+2024-07-25 19:31:34,929 - Loading search image from images/searchimages/debruinseq_notepad_Windows10_closeAndSpaced.png
+2024-07-25 19:31:35,788 - Finding color rectangles from pixelated space
+2024-07-25 19:31:35,790 - Found 252 same color rectangles
+2024-07-25 19:31:35,790 - 190 rectangles left after moot filter
+2024-07-25 19:31:35,790 - Found 1 different rectangle sizes
+2024-07-25 19:31:35,790 - Finding matches in search image
+2024-07-25 19:31:35,790 - Scanning 190 blocks with size (5, 5)
+2024-07-25 19:31:35,829 - Scanning in searchImage: 0/1674
+```
