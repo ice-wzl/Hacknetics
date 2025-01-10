@@ -54,6 +54,7 @@ Packet Filter
 #### General Links
 
 * [Codecademy](https://www.codecademy.com/)
+* [CoursesOnline: Programming Courses](https://www.coursesonline.co.uk/courses/programming/)
 * [W3Schools](https://www.w3schools.com/)
 
 #### Python
