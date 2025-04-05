@@ -237,3 +237,4 @@
     * [CreateProcess Example (Basic)](windows-malware-development/processes-threads-handles/createprocess-example-basic.md)
 * [Golang](golang.md)
 * [Mikrotik](mikrotik.md)
+* [Firmware Reversing](firmware-reversing.md)
