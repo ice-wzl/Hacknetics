@@ -6,8 +6,9 @@ description: Collection of tips and tricks from myself and others!
 
 ## Hacknetics
 
-## View the Git-Book Here:
+## If you're at the repo, view the Git-Book Here:
 
+* https://book.ice-wzl.xyz&#x20;
 * [<mark style="color:yellow;">https://ice-wzl.gitbook.io/hacknetics/</mark>](https://ice-wzl.gitbook.io/oscp-prep/)
 
 #### Red Team Quality of Life Scripts
@@ -57,4 +58,4 @@ mkdir -p ~/.config/tmux
 
 #### Big Thanks to our Sponsors
 
-![](.gitbook/assets/qmaPi6hK\_400x400.jpg) ![](<.gitbook/assets/tp-blog-1864x980-10 (2).png>)
+![](.gitbook/assets/qmaPi6hK_400x400.jpg) ![](<.gitbook/assets/tp-blog-1864x980-10 (2).png>)
