@@ -8,7 +8,7 @@ description: Collection of tips and tricks from myself and others!
 
 ## If you're at the repo, view the Git-Book Here:
 
-* https://book.ice-wzl.xyz&#x20;
+* [https://book.ice-wzl.xyz ](https://book.ice-wzl.xyz)
 * [<mark style="color:yellow;">https://ice-wzl.gitbook.io/hacknetics/</mark>](https://ice-wzl.gitbook.io/oscp-prep/)
 
 #### Red Team Quality of Life Scripts
