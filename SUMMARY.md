@@ -110,6 +110,7 @@
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
   * [Youtube / Book List](resources/youtube-book-list.md)
+  * [CS/Software Engineer Resources](resources/cs-software-engineer-resources.md)
 * [shells](shells/README.md)
   * [Shells](shells/shells.md)
   * [web-shells](shells/web-shells/README.md)
