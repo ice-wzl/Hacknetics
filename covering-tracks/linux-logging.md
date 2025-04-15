@@ -8,6 +8,8 @@
 ssh root@10.10.10.10 bash -c /bin/sh
 OR
 ssh root@10.10.10.10 bash -i
+OR 
+ssh root@10.10.10.10 /bin/sh <-- Best option
 ```
 
 ## Finding Writable Directories for your Current User
@@ -16,12 +18,10 @@ ssh root@10.10.10.10 bash -i
 find / -type d -perm -0222 2>/dev/null
 ```
 
-* Good hiding spots:
+* Good hiding spots are `tmpfs` file systems. Run the `mount` command to view `tmpfs` filesystems:
 
 ```
 /dev/shm
-/usr/local/man 
-/usr/src
 ```
 
 ## Unix Logging
@@ -32,7 +32,7 @@ find / -type d -perm -0222 2>/dev/null
 /etc/syslog.conf
 ```
 
-* Majority of the log files
+* Majority of the log files are located in:
 
 ```
 /var/log
@@ -46,18 +46,14 @@ find / -type d -perm -0222 2>/dev/null
 kill -9 $$
 ```
 
-* Dont save history for shell session, run as your first command when you get on the box
+* Dont save history for shell session, run as your first command when you get on a box
 
 ```
-unset HISTFILE
+unset HISTFILE HISTFILESIZE HISTSIZE PROMPT_COMMAND
 ```
 
-* On some distributions adding a leading space will prevent the command from writing
-* This will only work if the eviromental variable `HISTCONTROL` is set to `ignorespace`
-
-```
- ls 
-```
+* On some distributions adding a leading space will prevent the command from writing (old distros)
+* This will only work if the environmental variable `HISTCONTROL` is set to `ignorespace`
 
 ## Accounting Entries in Unix
 
@@ -75,7 +71,7 @@ unset HISTFILE
 ```
 
 * Unsuccessful login attempts
-* Some admins will turn this off so evidence of miss typed password in the username field are not saved
+* Some admins will turn this off, so evidence of miss typed password in the username field are not saved
 
 ```
 /var/log/btmp
