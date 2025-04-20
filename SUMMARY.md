@@ -237,5 +237,6 @@
     * [Message Box Example (Basic)](windows-malware-development/processes-threads-handles/message-box-example-basic.md)
     * [CreateProcess Example (Basic)](windows-malware-development/processes-threads-handles/createprocess-example-basic.md)
 * [Golang](golang.md)
-* [Mikrotik](mikrotik.md)
+* [Mikrotik](mikrotik/README.md)
+  * [Implementing a Password Reset Function for Persistent Access in MikroTik RouterOS](mikrotik/implementing-a-password-reset-function-for-persistent-access-in-mikrotik-routeros.md)
 * [Firmware Reversing](firmware-reversing.md)
