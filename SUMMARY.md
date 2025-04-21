@@ -239,4 +239,5 @@
 * [Golang](golang.md)
 * [Mikrotik](mikrotik/README.md)
   * [Implementing a Password Reset Function for Persistent Access in MikroTik RouterOS](mikrotik/implementing-a-password-reset-function-for-persistent-access-in-mikrotik-routeros.md)
+  * [Cleaner Wrasse](mikrotik/cleaner-wrasse.md)
 * [Firmware Reversing](firmware-reversing.md)
