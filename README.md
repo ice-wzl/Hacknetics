@@ -1,61 +1,78 @@
----
-description: Collection of tips and tricks from myself and others!
----
-
 # Hacknetics
 
-## Hacknetics
+## Hacknetics 🛡️
 
-## If you're at the repo, view the Git-Book Here:
+**Owner:** [ice-wzl](https://github.com/ice-wzl)
 
-* [https://book.ice-wzl.xyz ](https://book.ice-wzl.xyz)
-* [<mark style="color:yellow;">https://ice-wzl.gitbook.io/hacknetics/</mark>](https://ice-wzl.gitbook.io/oscp-prep/)
+**Contributors:** ice-wzl, Jfox32199
 
-#### Red Team Quality of Life Scripts
+**Description:** Your one-stop reference for OSCP and Red Teaming! 🚀 This repository contains a curated collection of code snippets, guides, command syntax, and high-level strategies. Clone it once and gain access to popular pentesting tools and resources.
 
-**Clipboard monitor**
+<p align="center"><a href="https://github.com/ice-wzl/Hacknetics/stargazers"><img src="https://img.shields.io/github/stars/ice-wzl/Hacknetics?style=social" alt="Stars"></a><a href="https://github.com/ice-wzl/Hacknetics/network/members"><img src="https://img.shields.io/github/forks/ice-wzl/Hacknetics?style=social" alt="Forks"></a><a href="https://github.com/ice-wzl/Hacknetics/issues"><img src="https://img.shields.io/github/issues/ice-wzl/Hacknetics" alt="Open Issues"></a><a href="https://github.com/ice-wzl/Hacknetics/commits/main"><img src="https://img.shields.io/github/last-commit/ice-wzl/Hacknetics" alt="Last Updated"></a></p>
 
-* Never be unsure of what is in your clipboard buffer again
+**Topics/Tags:** `bash-script`, `batch-script`, `educational`, `linux`, `linux-shell`, `oscp`, `oscp-guide`, `oscp-journey`, `pentest-scripts`, `pentesting`, `pentesting-networks`, `pentesting-tools`, `pentesting-windows`, `powershell`, `python3`, `redteaming`, `vbscript`
 
-{% file src=".gitbook/assets/clip (1).py" %}
+### 📚 Dive Deeper with the GitBook!
 
-```
-//create small window and run with
-python3 clip.py
-```
+For a more structured and in-depth exploration of the Hacknetics resources, check out the GitBook:
 
-<figure><img src=".gitbook/assets/image (1) (1) (2).png" alt=""><figcaption></figcaption></figure>
+* [**https://book.ice-wzl.xyz**](https://book.ice-wzl.xyz)
+* [**https://ice-wzl.gitbook.io/hacknetics/**](https://ice-wzl.gitbook.io/hacknetics/)
 
-#### Terminator Config
+The GitBook provides a better reading experience, improved navigation, and additional context for the materials in this repository. We highly recommend checking it out!
 
-* Note: systems have different fonts installed, if you use this config and the font spacing is wild, use the system default, or choose your own.
+### 🛠️ Keep a Local Copy
 
-```
-open terminal 
-right click --> preferences --> profiles --> check the use system fixed width font
-```
+#### Prerequisites
 
-* These days I find myself using Terminator the most (and tmux), see below for my terminator config.
-* To use it place this file at `~/.config/terminator/config`
-* And make sure terminator is installed `sudo apt install terminator -y`
-* Make sure to remove the .txt part when you pull the file down locally
+* A Linux environment (Kali Linux, Parrot OS, etc.) is highly recommended.
+*   Ensure you have `git` installed:
 
-{% file src=".gitbook/assets/config (2).txt" %}
+    ```bash
+    sudo apt update
+    sudo apt install git
+    ```
 
-#### Tmux Config
+#### Cloning the Repository
 
-* This is the tmux config I am using these days
+Clone the Hacknetics repository to your local machine:
 
-```
-mkdir -p ~/.config/tmux
-#place both these files in your ~/.config/tmux directory 
-#change the .local file, do not make changes to the .conf file 
+```bash
+git clone https://github.com/ice-wzl/Hacknetics.git
+cd Hacknetics
 ```
 
-{% file src=".gitbook/assets/tmux.conf.local" %}
+### ✨ Key Features
 
-{% file src=".gitbook/assets/tmux.conf" %}
+* **Comprehensive Resource:** A centralized location for all your OSCP and Red Teaming needs.
+* **Code Snippets:** Ready-to-use code in various languages (Shell, Python, PowerShell, VBScript).
+* **Guides & Strategies:** High-level strategies and step-by-step guides for pentesting.
+* **Popular Tools:** Access to commonly used pentesting tools and their syntax.
+* **Regularly Updated:** Maintained with the latest techniques and tools.
 
-#### Big Thanks to our Sponsors
+### 📜 License
 
-![](.gitbook/assets/qmaPi6hK_400x400.jpg) ![](<.gitbook/assets/tp-blog-1864x980-10 (2).png>)
+This project is released under a free and unencumbered software license, dedicating it to the public domain. See the LICENSE file for more details.
+
+### 🤝 Contributing
+
+Contributions are welcome! If you have useful scripts, guides, or improvements, feel free to submit a pull request.
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Commit your changes with descriptive commit messages.
+4. Push your branch to your forked repository.
+5. Submit a pull request.
+
+### 🐛 Troubleshooting
+
+* **Script Execution Issues:** Ensure you have the necessary permissions to execute scripts. Use `chmod +x script.sh` to make a script executable.
+* **Missing Dependencies:** Check the script's documentation or comments for any required dependencies and install them using `apt`, `pip`, or your system's package manager.
+* **Configuration Errors:** Double-check configuration files for typos or incorrect settings.
+
+### 🙏 Acknowledgements
+
+Special thanks to our sponsors:
+
+* Medium Corporation
+* SynAck RedTeam
