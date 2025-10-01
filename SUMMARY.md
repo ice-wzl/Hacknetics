@@ -152,6 +152,7 @@
   * [Ligolo-ng](tool-guides/ligolo-ng.md)
   * [gs-netcat](tool-guides/gs-netcat.md)
   * [Scarecrow](tool-guides/scarecrow.md)
+  * [torsocks](tool-guides/torsocks.md)
 * [Web Path](web/README.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)
