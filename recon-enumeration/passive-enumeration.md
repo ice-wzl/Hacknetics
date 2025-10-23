@@ -253,3 +253,51 @@ puredns bruteforce best-dns-wordlist.txt trilocor.local -r resolvers.txt -w stuf
 * Validate with&#x20;
   * [https://punksecurity.co.uk/dnsreaper/](https://punksecurity.co.uk/dnsreaper/)
   * [https://github.com/EdOverflow/can-i-take-over-xyz](https://github.com/EdOverflow/can-i-take-over-xyz)
+
+## Domain Spoofing
+
+### Ettercap
+
+* https://www.ettercap-project.org/
+* EDIT /etc/ettercap/etter.dns TO MAP TARGET DOMAIN
+
+```
+cat /etc/ettercap/etter.dns inlanefreight.com A 192.168.225.110 *.inlanefreight.com A 192.168.225.110
+```
+
+* Start ettercap and scan for live hosts
+
+```
+Hosts > Scan for Hosts
+```
+
+* Add ips to targets, activate DNS\_SPOOF
+
+```
+Plugins > Manage Plugins
+```
+
+### Spoofy
+
+* https://github.com/MattKeeley/Spoofy.git
+
+```
+python3 -m venv venv / source venv/bin/activate / pip3 install -r requirements
+```
+
+* Tool use
+
+```
+python3 spoofy.py -d cyberbotic.io -o stdout
+```
+
+#### Example output
+
+```
+[*] Domain: cyberbotic.io
+[*] Is subdomain: False
+[*] DNS Server: 1.1.1.1
+[?] No SPF record found.
+[?] No DMARC record found.
+[+] Spoofing possible for fakedomain.io.
+```
