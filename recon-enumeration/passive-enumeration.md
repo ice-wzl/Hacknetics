@@ -79,7 +79,7 @@ host -t axfr -l cisco.com ns1.cisco.com
 
 ### **Dig**
 
-\-Short for Domain Information Groper, is another tool for DNS servers.
+-Short for Domain Information Groper, is another tool for DNS servers.
 
 * To query a specific record type you can use the -t option (just like with Host). The following command retrieves the mx records for the google.com domain:
 
@@ -97,6 +97,12 @@ dig -t any google.com
 
 ```
 dig axfr @nsztm1.digi.ninja zonetransfer.me [@name server domain]
+```
+
+* Using dig to subdomain bruteforce
+
+```
+for sub in $(cat /usr/share/seclists/Discovery/DNS/fierce-hostlist.txt);do dig $sub.trilocor.local @10.129.204.10 | grep -v ';\|SOA' | sed -r '/^\s*$/d' | grep $sub | tee -a subdomains-dig.txt;done
 ```
 
 ### **Fierce**
@@ -122,6 +128,13 @@ fierce -dns google.com -wordlist [path to wordlist]
 
 ```
 dnsenum [domain name]
+```
+
+* subdomain bruteforce
+* https://github.com/fwaeytens/dnsenum&#x20;
+
+```
+dnsenum --dnsserver 10.129.33.40 --enum -p 0 -s 0 -o subdomains.txt -f /usr/share/seclists/Discovery/DNS/fierce-hostlist.txt inlanefreight.htb --threads 64
 ```
 
 ### **DNSrecon**
@@ -177,6 +190,25 @@ sublist3r -d google.com
 sublist3r -d google.com -b -t 100
 ```
 
+### SUBBRUTE
+
+* https://github.com/TheRook/subbrute&#x20;
+
+```
+git clone https://github.com/TheRook/subbrute.git >> /dev/null 2>&1 
+cd subbrute 
+echo "ns1.inlanefreight.htb" > ./resolvers.txt 
+./subbrute.py inlanefreight.htb -s ./names.txt -r ./resolvers.txt ./subbrute.py inlanefreight.htb -s ./newnames.txt -r ./resolvers.txt -c 16 -p
+```
+
+### SUBFINDER
+
+https://github.com/projectdiscovery/subfinder&#x20;
+
+```
+./subfinder -d inlanefreight.com -v
+```
+
 ### **The Harvester**
 
 * Example: we want to find any email address for the cisco.com domain using Yahoo.
@@ -190,6 +222,30 @@ theharvester -d cisco.com -b yahoo -l 100
 
 * Certificate Transparency site can reveal hosts that are not public yet
 * https://crt.sh
+
+### DNSCAN
+
+* https://github.com/rbsec/dnscan
+
+```
+./dnscan.py -d cyberbotic.io -w subdomains-100.txt
+```
+
+### PUREDNS
+
+* https://github.com/d3mondev/puredns#getting-started&#x20;
+* https://sidxparab.gitbook.io/subdomain-enumeration-guide/active-enumeration/dns-bruteforcing&#x20;
+
+```
+puredns bruteforce best-dns-wordlist.txt trilocor.local -r resolvers.txt -w stuff/subdomains-out.txt
+```
+
+## GOTATOR - WORD LIST GENERATOR TOOL
+
+* https://sidxparab.gitbook.io/subdomain-enumeration-guide/active-enumeration/permutation-alterations&#x20;
+* ```
+  gotator -sub subdomains.txt -perm permutations_list.txt -depth 1 -numbers 10 -mindup -adv -md > gotator1.txt puredns resolve permutations.txt -r resolvers.txt
+  ```
 
 ## Subdomain Takeover
 
