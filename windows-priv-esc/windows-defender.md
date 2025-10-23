@@ -1,6 +1,7 @@
 # Windows Defender
 
 * Defender can be a pain, but generally bypasses are abundant. This page is focused on enumeration not bypasses.
+* https://learn.microsoft.com/en-us/powershell/module/defender/
 
 ### Defender Enumeration with Powershell
 
@@ -65,4 +66,25 @@ Set-MpPreference -DisableRealtimeMonitoring $false
 ```
 Set-MpPreference -DisableRealtimeMonitoring 1
 Set-MpPreference -DisableRealtimeMonitoring $true
+Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
+```
+
+### See most recent threat
+
+```
+Get-MpThreatDetection
+Get-MpThreatDetection | sort $_.InitialDecectionTime | select -First 1
+Get-MpThreatDetection -ThreatID 2147894794
+```
+
+### Status Details
+
+```
+Get-MpComputerStatus
+```
+
+### Threat History
+
+```
+Get-MpThreat
 ```
