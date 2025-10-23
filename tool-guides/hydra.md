@@ -1,11 +1,5 @@
 # Hydra User Guide
 
-* All credit goes to: DarkStar7471 for his THM room located here : https://tryhackme.com/room/hydra
-* Hydra is a brute force online password cracking tool, which can be used with a variety of protocols
-* Protocols that hydra can work with: Asterisk, AFP, Cisco AAA, Cisco auth, Cisco enable, CVS, Firebird, FTP, HTTP-FORM-GET, HTTP-FORM-POST, HTTP-GET, HTTP-HEAD, HTTP-POST, HTTP-PROXY, HTTPS-FORM-GET, HTTPS-FORM-POST, HTTPS-GET, HTTPS-HEAD, HTTPS-POST, HTTP-Proxy, ICQ, IMAP, IRC, LDAP, MS-SQL, MYSQL, NCP, NNTP, Oracle Listener, Oracle SID, Oracle, PC-Anywhere, PCNFS, POP3, POSTGRES, RDP, Rexec, Rlogin, Rsh, RTSP, SAP/R3, SIP, SMB, SMTP, SMTP Enum, SNMP v1+v2+v3, SOCKS5, SSH (v1 and v2), SSHKEY, Subversion, Teamspeak (TS2), Telnet, VMware-Auth, VNC and XMPP.
-* Official kali page:
-* https://en.kali.tools/?p=220
-* Download it (default on kali):
 * https://github.com/vanhauser-thc/thc-hydra
 
 ## Hydra Syntax
@@ -15,7 +9,7 @@
 ## FTP
 
 ```
-hydra -l user -P passlist.txt ftp://10.10.10.10
+hydra -l user -P passlist.txt ftp://10.10.10.10 -F
 ```
 
 ## SSH
@@ -28,6 +22,13 @@ hydra -l <username> -P /usr/share/wordlists/rockyou.txt 10.10.10.10. -t 4 ssh
 * `P` is to specify a password list
 * `-t` is to specify the number of threads to run hydra with.
 * Note: Hydra recommends no more than 4 threads, however you can run it faster with `-t 16`.
+* `-F` means stop when you find your first valid password, highly recommend this option
+
+```
+hydra -l root -P /usr/share/wordlists/rockyou.txt ssh://$host -f
+hydra -l admin -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt ssh://$host -f -s 2222
+hydra -L user.txt -P password.txt -f ssh://10.10.15.2:31294 -t 4 -w 15 -F 
+```
 
 ## POST Web Form
 
