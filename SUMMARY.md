@@ -119,6 +119,7 @@
   * [web-shells](shells/web-shells/README.md)
     * [PHP Reverse Shell](shells/web-shells/php-reverse-shell/README.md)
     * [wwwolf's PHP web shell](shells/web-shells/wwwolfs-php-web-shell.md)
+  * [curlshell](shells/curlshell.md)
 * [tool-guides](tool-guides/README.md)
   * [Asymmetric File Encrypt and Decrypt](tool-guides/open-ssl.md)
   * [Aws Buckets](tool-guides/aws-buckets.md)
