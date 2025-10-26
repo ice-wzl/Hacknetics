@@ -121,6 +121,7 @@
     * [wwwolf's PHP web shell](shells/web-shells/wwwolfs-php-web-shell.md)
   * [curlshell](shells/curlshell.md)
   * [Restricted Shell Escapes](shells/restricted-shell-escapes.md)
+  * [OpenSSL Encrypted Shell](shells/openssl-encrypted-shell.md)
 * [tool-guides](tool-guides/README.md)
   * [Asymmetric File Encrypt and Decrypt](tool-guides/open-ssl.md)
   * [Aws Buckets](tool-guides/aws-buckets.md)
