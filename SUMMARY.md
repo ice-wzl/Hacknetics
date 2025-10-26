@@ -109,6 +109,7 @@
   * [Pentesting Finger](recon-enumeration/pentesting-finger.md)
   * [User Recon](recon-enumeration/user-recon.md)
   * [Vulnerability Scanning](recon-enumeration/vulnerability-scanning.md)
+  * [Pentesting RDP](recon-enumeration/pentesting-rdp.md)
 * [resources](resources/README.md)
   * [resources](resources/resources.md)
   * [Youtube / Book List](resources/youtube-book-list.md)
