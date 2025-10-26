@@ -27,6 +27,22 @@ cmd.exe /k "whoami"
 
 * [https://geekyshacklebolt.wordpress.com/2019/03/06/how-to-encrypt-usb-drives-with-luks/](https://geekyshacklebolt.wordpress.com/2019/03/06/how-to-encrypt-usb-drives-with-luks/)
 
+### NTP Randomness&#x20;
+
+* Set ntp based on specific server time.  Required for kerberos auth, match attacker box to the time of the domain controller
+
+```
+sudo timedatectl set-ntp off 
+sudo date -s "28 NOV 2024 07:23:00Z"
+```
+
+* Restore NTP back to default
+
+```
+sudo timedatectl set-ntp on 
+sudo ntpdate 192.168.1.1
+```
+
 ### Bash In memory exec one liner&#x20;
 
 ```
