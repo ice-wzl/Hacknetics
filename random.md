@@ -1,5 +1,10 @@
 # Random
 
+### Stop Windows VMs from shutting down
+
+* Windows enforces its licensing by shutting down Win Servers every hour. We at Hacknetics implore you to always follow the rules.&#x20;
+* [https://digitalitskills.com/how-to-stop-windows-server-auto-shutdown-every-hour-after-license-expire/](https://digitalitskills.com/how-to-stop-windows-server-auto-shutdown-every-hour-after-license-expire/)
+
 ### Cool heredoc&#x20;
 
 * Use when you are on a `/bin/sh` and need to `su` but dont want to go into a full `tty`
