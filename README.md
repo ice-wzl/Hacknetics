@@ -76,3 +76,7 @@ Special thanks to our sponsors:
 
 * Medium Corporation
 * SynAck RedTeam
+
+### Star History
+
+<p align="center"><a href="https://www.star-history.com/#ice-wzl/Hacknetics&#x26;type=date&#x26;legend=top-left"><img src="https://api.star-history.com/svg?repos=ice-wzl/Hacknetics&#x26;type=date&#x26;legend=top-left" alt="Star History Chart"></a></p>
