@@ -1,5 +1,88 @@
 # Random
 
+### .DS\_STORE Files
+
+* If you find a .DS\_STORE file on a webserver you can reconstruct the directory contents without having to fuzz all the directories
+* &#x20;[https://iam0xc4t.medium.com/extract-file-from-ds-store-815a22542da9](https://iam0xc4t.medium.com/extract-file-from-ds-store-815a22542da9)
+* [https://github.com/lijiejie/ds\_store\_exp](https://github.com/lijiejie/ds_store_exp)
+* A better alternative I have used in the past
+* [https://github.com/Keramas/DS\_Walk.git](https://github.com/Keramas/DS_Walk.git)
+
+```
+python3 ds_walk.py --url http://10.13.38.11                                                  ✭master 
+[!] .ds_store file is present on the webserver.
+[+] Enumerating directories based on .ds_server file:
+----------------------------
+[!] http://10.13.38.11/admin
+[!] http://10.13.38.11/dev
+[!] http://10.13.38.11/iisstart.htm
+[!] http://10.13.38.11/Images
+[!] http://10.13.38.11/JS
+[!] http://10.13.38.11/META-INF
+[!] http://10.13.38.11/New folder
+[!] http://10.13.38.11/New folder (2)
+[!] http://10.13.38.11/Plugins
+[!] http://10.13.38.11/Templates
+[!] http://10.13.38.11/Themes
+[!] http://10.13.38.11/Uploads
+[!] http://10.13.38.11/web.config
+[!] http://10.13.38.11/Widgets
+----------------------------
+[!] http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1
+[!] http://10.13.38.11/dev/dca66d38fd916317687e1390a420c3fc
+----------------------------
+[!] http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1/core
+[!] http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1/db
+[!] http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1/include
+[!] http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1/src
+----------------------------
+[!] http://10.13.38.11/dev/dca66d38fd916317687e1390a420c3fc/core
+[!] http://10.13.38.11/dev/dca66d38fd916317687e1390a420c3fc/db
+[!] http://10.13.38.11/dev/dca66d38fd916317687e1390a420c3fc/include
+[!] http://10.13.38.11/dev/dca66d38fd916317687e1390a420c3fc/src
+----------------------------
+[!] http://10.13.38.11/Images/buttons
+[!] http://10.13.38.11/Images/icons
+[!] http://10.13.38.11/Images/iisstart.png
+----------------------------
+[!] http://10.13.38.11/JS/custom
+----------------------------
+[!] http://10.13.38.11/Themes/default
+----------------------------
+[!] http://10.13.38.11/Widgets/CalendarEvents
+[!] http://10.13.38.11/Widgets/Framework
+[!] http://10.13.38.11/Widgets/Menu
+[!] http://10.13.38.11/Widgets/Notifications
+----------------------------
+[!] http://10.13.38.11/Widgets/Framework/Layouts
+----------------------------
+[!] http://10.13.38.11/Widgets/Framework/Layouts/custom
+[!] http://10.13.38.11/Widgets/Framework/Layouts/default
+----------------------------
+[*] Finished traversing. No remaining .ds_store files present.
+[*] Cleaning up .ds_store files saved to disk.
+```
+
+* If you are shortname scanning on IIS you can now create a wordlist based upon the .DS\_STORE output
+
+```
+./shortutil wordlist wordlist.txt > output.txt
+
+cat output.txt                                                                        ✭main 
+#SHORTSCAN#
+AE53A05F6147AC49	NEWFOL		NEW FOLDER	
+CCDBCA81CC7CCE4B	NEWFOL		NEW FOLDER (2)	
+A8D81F6F8636	TEMPLA		TEMPLATES	
+F502F316F71C	WEB	CON	WEB	CONFIG
+12A9A774	304C0C		304C0C90FBC6520610ABBF378E2339D1	
+3871D39DC9C1	DCA66D		DCA66D38FD916317687E1390A420C3FC	
+CDE9C1DAD193	CALEND		CALENDAREVENTS	
+001BB4092F53	FRAMEW		FRAMEWORK	
+0C8AE4157ED7	NOTIFI		NOTIFICATIONS
+```
+
+
+
 ### Stop Windows VMs from shutting down
 
 * Windows enforces its licensing by shutting down Win Servers every hour. We at Hacknetics implore you to always follow the rules.&#x20;
