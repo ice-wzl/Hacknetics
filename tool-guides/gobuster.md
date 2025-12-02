@@ -22,5 +22,5 @@ gobuster dir -u http://10.10.10.10 -w /usr/share/seclists/Discovery/Web-Content/
 ### Vhost enumeration&#x20;
 
 ```
-gobuster vhost -u http://mailbox.htb -w /usr/share/seclists/Discovery/DNS/subdomains-top-11000.txt
+gobuster vhost --url http://intranet.poo -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt --append-domain 
 ```
