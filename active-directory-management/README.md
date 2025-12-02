@@ -25,8 +25,7 @@
 <figure><img src="https://static.wixstatic.com/media/115dee_a939b030e9314cacb4435bcac32ac394~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_a939b030e9314cacb4435bcac32ac394~mv2.png" alt=""><figcaption></figcaption></figure>
 
 * In the **Server Roles** tab, put a tickmark for **"Active Directory Domain Services"** _(you can select the **DNS Server** role as well, as we will configure AD integrated DNS server. If not selected, during installation it will automatically select and install the DNS Role)_.
-* Then, it will prompt to show you the associated features for the role. Click on **Add Features** to add those. Then click **Next** to continue.\
-
+* Then, it will prompt to show you the associated features for the role. Click on **Add Features** to add those. Then click **Next** to continue.<br>
 
 <figure><img src="https://static.wixstatic.com/media/115dee_b7046ff12a2547ee84be8bea533ffb2f~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_b7046ff12a2547ee84be8bea533ffb2f~mv2.png" alt=""><figcaption></figcaption></figure>
 
@@ -112,8 +111,7 @@ In the **Prerequisites Check** tab, it will do prerequisite check.
 * Once server rebooted, you have to login with your domain Admin credentials. By default, the local admin account will promoted as a Domain Admin account. Login and verify the health of the Domain controller. You can run **DCDIAG** command to check the health.
 * You can also verify the settings/configurations from the Active Directory tools like _**Active Directory Users and Computers or Active Directory Domains and Trusts**_ etc. You will get all the Active Directory tools in the folder named _**Administrative Tools**_ on the Start menu. Go and explore the tools.
 
-\
-
+<br>
 
 <figure><img src="https://static.wixstatic.com/media/115dee_d802a7f674d24fcb8fccc4832b66933f~mv2.png/v1/fill/w_740,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/115dee_d802a7f674d24fcb8fccc4832b66933f~mv2.png" alt=""><figcaption></figcaption></figure>
 

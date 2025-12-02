@@ -39,8 +39,7 @@ Get-NetOU -GUID "{3EE4BE4E-7397-4433-A9F1-3A5AE2F56EA2}" | %{Get-NetComputer -AD
 
 ### Weaponizing GPO Edit Rights
 
-* My preference for immediate code execution would be to push out an [‘Immediate’ Scheduled task](https://technet.microsoft.com/en-us/library/dd851779.aspx), which instantly runs and then removes itself, every time group policy refreshes. \
-
+* My preference for immediate code execution would be to push out an [‘Immediate’ Scheduled task](https://technet.microsoft.com/en-us/library/dd851779.aspx), which instantly runs and then removes itself, every time group policy refreshes. <br>
 * need to build a schtask .XML template to substitute in our appropriate configuration/commands and then copy it to \<GPO\_PATH>\Machine\Preferences\ScheduledTasks\ScheduledTasks.xml of the GPO we can edit.
 * After waiting 1-2 hours for the group policy refresh cycle, we can remove the .xml to minimize our footprint.
 * PowerView’s new [**New-GPOImmediateTask**](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1#L5907-L6122) function should take care of all this for you. The **-TaskName** argument is required, **-Command** specified the command to run (which defaults to powershell.exe), and **-CommandArguments** specifies the arguments for the given binary.

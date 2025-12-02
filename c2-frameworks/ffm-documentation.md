@@ -5,7 +5,7 @@ Created by @JusticeRage, Contributed to by [ice-wzl](https://app.gitbook.com/u/P
 ### What is FFM?
 
 * FFM is a hacking harness that you can use during the post-exploitation phase of a red-teaming engagement. The idea of the tool was derived from a [2007 conference](https://conference.hitb.org/hitbsecconf2007kl/materials/D1T1%20-%20The%20Grugq%20-%20Meta%20Antiforensics%20-%20The%20HASH%20Hacking%20Harness.pdf) from @thegrugq.
-* It was presented at [SSTIC 2018](https://www.sstic.org/2018/) ([video](https://www.sstic.org/2018/presentation/hacking\_harness\_ffm/)) and the accompanying slide deck is available at [this url](http://manalyzer.org/static/talks/SSTIC2018.pptx). If you're not familiar with this class of tools, it is strongly advised to have a look at them to understand what a hacking harness' purpose is. All the comments are included in the slides.
+* It was presented at [SSTIC 2018](https://www.sstic.org/2018/) ([video](https://www.sstic.org/2018/presentation/hacking_harness_ffm/)) and the accompanying slide deck is available at [this url](http://manalyzer.org/static/talks/SSTIC2018.pptx). If you're not familiar with this class of tools, it is strongly advised to have a look at them to understand what a hacking harness' purpose is. All the comments are included in the slides.
 * This project is distributed under the terms of the [GPL v3 License](https://www.gnu.org/licenses/gpl.html).
 * FFM is designed to be a middle ground between a bare SSH shell and a C2
 * FFM Speeds up common tasks found on engagements and simplifies workflow to avoid opsec errors and or mistakes.
@@ -464,4 +464,4 @@ More problematic is the fact that the framework hangs from time to time. In 99% 
 
 I think I've covered everything about this tool. Again, it's a little different from what I usually release as most people will probably need to modify it before it can be valuable to them.
 
-Many plugins have yet to be written, so be sure to share back any improvements you make to FFM. Feel free to open issues not only for bugs, but also if you're trying to do something and can't figure out how; this way I'll be able to improve the documentation for everyone.\
+Many plugins have yet to be written, so be sure to share back any improvements you make to FFM. Feel free to open issues not only for bugs, but also if you're trying to do something and can't figure out how; this way I'll be able to improve the documentation for everyone.<br>

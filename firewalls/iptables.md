@@ -8,7 +8,7 @@ sudo iptables -L -v
 
 ### Appending Rules to the Chain&#x20;
 
-\-A stands for append and it is how you will add rules to the bottom of the chain.
+-A stands for append and it is how you will add rules to the bottom of the chain.
 
 ```
 sudo iptables -A
@@ -68,4 +68,4 @@ sudo iptables -A INPUT -m iprange --src-range 192.168.1.100-192.168.1.200 -j DRO
 
 
 
-\
+<br>

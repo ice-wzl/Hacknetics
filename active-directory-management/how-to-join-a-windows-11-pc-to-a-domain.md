@@ -46,4 +46,4 @@ If you think you’re ready to join your Windows 11 PC to a domain, and you’re
 
 Credit: [https://www.groovypost.com/howto/join-a-windows-11-pc-to-a-domain/](https://www.groovypost.com/howto/join-a-windows-11-pc-to-a-domain/)
 
-\
+<br>

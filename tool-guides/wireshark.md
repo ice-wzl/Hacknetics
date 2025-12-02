@@ -6,7 +6,7 @@
 
 <figure><img src="../.gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
-* Source: [https://packetlife.net/media/library/13/Wireshark\_Display\_Filters.pdf](https://packetlife.net/media/library/13/Wireshark\_Display\_Filters.pdf)
+* Source: [https://packetlife.net/media/library/13/Wireshark\_Display\_Filters.pdf](https://packetlife.net/media/library/13/Wireshark_Display_Filters.pdf)
 
 ## [Identifying and retrieving TLS/SSL Certificates from a PCAP file using Wireshark.](https://richardatkin.com/post/2022/01/15/Identifying-and-retrieving-certificates-from-a-PCAP-file-using-Wireshark.html) <a href="#page-title" id="page-title"></a>
 
@@ -99,7 +99,6 @@ Now you’ve found the Certificate, you can extract it by right clicking on the 
 
 Once you’ve got the file save, you can then open it in Windows like any normal Certificate.
 
-\
-
+<br>
 
 <figure><img src="../.gitbook/assets/tlsCiscoCert.png" alt=""><figcaption></figcaption></figure>

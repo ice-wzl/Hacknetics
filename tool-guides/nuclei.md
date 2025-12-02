@@ -63,4 +63,4 @@ These options allow restricting the number of requests being sent (150 per secon
 nuclei -l list-of-targets.txt -timeout 1
 ```
 
-\
+<br>

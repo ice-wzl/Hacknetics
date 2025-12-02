@@ -182,8 +182,7 @@ VERBOSE: Performing the operation "Set" on target "CN=Sophie,OU=Sales,OU=THM,DC=
 * GPOs can contain policies aimed at either users or computers, allowing you to set a baseline
 *   To configure GPOs, you can use the **Group Policy Management** tool, available from the start menu:
 
-    \
-
+    <br>
 
     <figure><img src="../.gitbook/assets/b19052c41e27fbbb2651038cede63e11.png" alt=""><figcaption></figcaption></figure>
 
