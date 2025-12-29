@@ -132,6 +132,7 @@
   * [Restricted Shell Escapes](shells/restricted-shell-escapes.md)
   * [OpenSSL Encrypted Shell](shells/openssl-encrypted-shell.md)
   * [Stabilizing Shells](shells/stabilizing-shells.md)
+  * [PowerShell Shells](shells/powershell-shells.md)
 * [tool-guides](tool-guides/README.md)
   * [Asymmetric File Encrypt and Decrypt](tool-guides/open-ssl.md)
   * [Aws Buckets](tool-guides/aws-buckets.md)
