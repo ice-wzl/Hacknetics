@@ -88,9 +88,7 @@ SMB         10.10.11.35     445    CICADA-DC        [+] CICADA\michael.wrightson
 
 ```
 nxc mssql $ip -u external_user -p 'password123' -M mssql_priv                     
-
-MSSQL       10.13.38.11     1433   COMPATIBILITY    [*] Windows 10 / Server 2019 Build 17763 (name:COMPATIBILITY) (domain:intranet.poo)
-MSSQL       10.13.38.11     1433   COMPATIBILITY    [-] intranet.poo\external_user:password123
+nxc mssql $ip -u external_user -p 'password123' -M mssql_priv --local-auth
 ```
 
 * Attempt to enumerate user impersonation
