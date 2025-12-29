@@ -127,6 +127,7 @@
     * [wwwolf's PHP web shell](shells/web-shells/wwwolfs-php-web-shell.md)
     * [Node.js Webshell](shells/web-shells/node.js-webshell.md)
     * [Aspx Webshell](shells/web-shells/aspx-webshell.md)
+    * [Neo-reGeorg Webshell](shells/web-shells/neo-regeorg-webshell.md)
   * [curlshell](shells/curlshell.md)
   * [Restricted Shell Escapes](shells/restricted-shell-escapes.md)
   * [OpenSSL Encrypted Shell](shells/openssl-encrypted-shell.md)
