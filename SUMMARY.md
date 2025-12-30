@@ -41,6 +41,7 @@
   * [Pwncat-cs](c2-frameworks/pwncat-cs.md)
   * [Cobalt Strike](c2-frameworks/cobalt-strike/README.md)
     * [Persistence with CS](c2-frameworks/cobalt-strike/persistence-with-cs.md)
+    * [Privilege Escalation with CS](c2-frameworks/cobalt-strike/privilege-escalation-with-cs.md)
   * [Dcrat](c2-frameworks/dcrat/README.md)
     * [Modules](c2-frameworks/dcrat/modules.md)
     * [Builder](c2-frameworks/dcrat/builder.md)
