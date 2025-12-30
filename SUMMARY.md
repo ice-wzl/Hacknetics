@@ -43,6 +43,7 @@
     * [Persistence with CS](c2-frameworks/cobalt-strike/persistence-with-cs.md)
     * [Privilege Escalation with CS](c2-frameworks/cobalt-strike/privilege-escalation-with-cs.md)
     * [PowerShell Loader](c2-frameworks/cobalt-strike/powershell-loader.md)
+    * [SQL Server attacks with CS](c2-frameworks/cobalt-strike/sql-server-attacks-with-cs.md)
   * [Dcrat](c2-frameworks/dcrat/README.md)
     * [Modules](c2-frameworks/dcrat/modules.md)
     * [Builder](c2-frameworks/dcrat/builder.md)
