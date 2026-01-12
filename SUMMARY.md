@@ -82,6 +82,7 @@
     * [SocksOverRDP](lateral-movement/tunneling-pivoting/socksoverrdp.md)
   * [DNScat](lateral-movement/dnscat.md)
   * [IpTables bending traffic](lateral-movement/iptables-bending-traffic.md)
+  * [netsh bending traffic](lateral-movement/netsh-bending-traffic.md)
 * [lin-priv-esc](lin-priv-esc/README.md)
   * [Linux Privilege Escalation](lin-priv-esc/lin-priv-esc.md)
   * [Bash Jails](lin-priv-esc/bash-jails.md)
