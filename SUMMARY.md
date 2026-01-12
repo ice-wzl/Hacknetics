@@ -39,6 +39,7 @@
     * [Meterpreter Device Survey](c2-frameworks/metasploit/meterpreter-device-survey.md)
     * [Paranoid Mode](c2-frameworks/metasploit/paranoid-mode.md)
     * [MSF Tunneling](c2-frameworks/metasploit/msf-tunneling.md)
+    * [Proxifier](c2-frameworks/metasploit/proxifier.md)
   * [Pwncat-cs](c2-frameworks/pwncat-cs.md)
   * [Cobalt Strike](c2-frameworks/cobalt-strike/README.md)
     * [Persistence with CS](c2-frameworks/cobalt-strike/persistence-with-cs.md)
