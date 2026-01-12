@@ -79,6 +79,7 @@
     * [Chisel](lateral-movement/tunneling-pivoting/chisel.md)
     * [SShuttle](lateral-movement/tunneling-pivoting/sshuttle.md)
     * [Ligolo-ng](lateral-movement/tunneling-pivoting/ligolo-ng.md)
+    * [SocksOverRDP](lateral-movement/tunneling-pivoting/socksoverrdp.md)
   * [DNScat](lateral-movement/dnscat.md)
 * [lin-priv-esc](lin-priv-esc/README.md)
   * [Linux Privilege Escalation](lin-priv-esc/lin-priv-esc.md)
