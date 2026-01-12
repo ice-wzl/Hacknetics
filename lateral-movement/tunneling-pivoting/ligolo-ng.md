@@ -1,5 +1,8 @@
 # Ligolo-ng
 
+* https://github.com/nicocha30/ligolo-ng
+* https://www.hackingarticles.in/a-detailed-guide-on-ligolo-ng/
+
 ### Quick Copy Paste&#x20;
 
 ```
@@ -38,8 +41,7 @@ cmd.exe /c start /b .\agent.exe -connect 172.16.1.100:7777 -ignore-cert
 * add ligalo-ng listener listen on 172.16.2.5:8888 on connect forward to 10.10.14.3:8080 via tcp
 
 ```
-   listener_add --addr 172.16.2.5:8888 --to 10.10.14.3:8080 --tcp
-
+listener_add --addr 172.16.2.5:8888 --to 10.10.14.3:8080 --tcp
 ```
 
 ### Add Additional route
@@ -52,4 +54,69 @@ cmd.exe /c start /b .\agent.exe -connect 172.16.1.100:7777 -ignore-cert
 tunnel_list
 # get the name of your active interface 
 route_add --name adeptsunshine --route 172.16.0.1/24
+```
+
+#### Build Interface
+
+```
+sudo ip tuntap add user root mode tun ligolo
+sudo ip link set ligolo up
+```
+
+#### Proxy
+
+```
+sudo ./proxy -selfcert -laddr https://0.0.0.0:7443
+```
+
+#### Agent
+
+```
+./a -connect 10.10.14.49:8443 -ignore-cert
+./.agent -connect https://172.16.10.62:7443 -ignore-cert
+```
+
+#### Build Tunnel - From Proxy
+
+```
+session
+# Select #
+```
+
+#### Create New Interface
+
+```
+interface_create --name internal1
+```
+
+#### Start Tunnel
+
+```
+tunnel_start --tun internal1
+```
+
+#### Set Route
+
+```
+sudo ip route add 172.50.0.0/24 dev internal1
+```
+
+#### Show Available Subnets
+
+```
+ifconfig
+```
+
+#### Single Pivot
+
+```
+sudo ip r a 192.168.210.0/24 dev ligolo
+start
+```
+
+#### Port Forwarding
+
+```
+listener_add --addr 0.0.0.0:1234 --to 127.0.0.1:4321 --tcp
+listener_add --addr 0.0.0.0:7443 --to 127.0.0.1:7443 --tcp
 ```
