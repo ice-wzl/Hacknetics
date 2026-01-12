@@ -76,6 +76,7 @@
     * [socat](lateral-movement/tunneling-pivoting/socat.md)
     * [Chisel](lateral-movement/tunneling-pivoting/chisel.md)
     * [SShuttle](lateral-movement/tunneling-pivoting/sshuttle.md)
+  * [DNScat](lateral-movement/dnscat.md)
 * [lin-priv-esc](lin-priv-esc/README.md)
   * [Linux Privilege Escalation](lin-priv-esc/lin-priv-esc.md)
   * [Bash Jails](lin-priv-esc/bash-jails.md)
