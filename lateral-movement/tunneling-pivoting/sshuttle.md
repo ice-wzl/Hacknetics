@@ -1,10 +1,5 @@
 # SShuttle
 
-* It doesn't perform a port forward, and the proxy it creates is nothing like the ones we have already seen.
-* Instead it uses an SSH connection to create a tunnelled proxy that acts like a new interface.
-* It simulates a VPN, allowing us to route our traffic through the proxy without the use of proxychains (or an equivalent).
-* We can just directly connect to devices in the target network as we would normally connect to networked devices. As it creates a tunnel through SSH (the secure shell), anything we send through the tunnel is also encrypted.
-
 ### Limitations
 
 * sshuttle only works on Linux targets.
@@ -41,15 +36,7 @@ sshuttle -r username@address -N
 c : Connected to server.
 ```
 
-* sshuttle doesn't currently seem to have a shorthand for specifying a private key to authenticate to the server with. That said, we can easily bypass this limitation using
-
-```
---ssh-cmd 
-```
-
-* With the `--ssh-cmd switch`, we can pick a different command to execute for authentication: say, `ssh -i keyfile`
-
-#### Final Command
+#### Key Authentication
 
 * So, when using key-based authentication, the final command looks something like this:
 
@@ -57,15 +44,13 @@ c : Connected to server.
 sshuttle -r user@address --ssh-cmd "ssh -i KEYFILE" SUBNET
 ```
 
-* To use our example from before, the command would be:
-
 ```
 sshuttle -r user@172.16.0.5 --ssh-cmd "ssh -i private_key" 172.16.0.0/24
 ```
 
 #### Errors
 
-* Please Note: When using sshuttle, you may encounter an error that looks like this:
+* When using sshuttle, you may encounter an error that looks like this:
 
 ```
 client: Connected.
@@ -80,4 +65,14 @@ client: fatal: server died with error code 255
 
 ```
 sshuttle -r user@172.16.0.5 172.16.0.0/24 -x 172.16.0.5
+```
+
+#### Connect to Target Network Through Pivot Host
+
+```
+sudo sshuttle -r megan@10.11.1.31 10.1.1.0/24 -v
+
+sudo sshuttle -r hacker@10.1.1.1 10.3.3.0/24 -v -e 'ssh -oHostKeyAlgorithms=+ssh-rsa'
+
+sudo sshuttle -r j0hn@10.11.1.252:22000 10.2.2.0/24 -v -e 'ssh -oKexAlgorithms=+diffie-hellman-group-exchange-sha1 -oHostKeyAlgorithms=+ssh-rsa'
 ```
