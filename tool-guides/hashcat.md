@@ -21,10 +21,12 @@ hash-identifier
 |------|-----------|-------------|
 | 0 | MD5 | Web apps, databases |
 | 100 | SHA1 | Web apps |
-| 1400 | SHA256 | Modern apps |
+| 1400 | SHA256 | Modern apps, CrushFTP |
+| 1700 | SHA512 | Modern apps, CrushFTP |
 | 1800 | sha512crypt ($6$) | Linux /etc/shadow |
 | 500 | md5crypt ($1$) | Older Linux |
 | 3200 | bcrypt ($2*$) | Modern web apps |
+| 10900 | PBKDF2-HMAC-SHA256 | Flask/Werkzeug, Superset |
 | 1000 | NTLM | Windows SAM/NTDS |
 | 5600 | NetNTLMv2 | Windows network auth |
 | 13100 | Kerberos TGS-REP (etype 23) | Kerberoasting |
@@ -33,6 +35,7 @@ hash-identifier
 | 5400 | IKE-PSK SHA1 | IPsec VPN |
 | 2500 | WPA/WPA2 | WiFi |
 | 22000 | WPA-PBKDF2-PMKID+EAPOL | WiFi (modern) |
+| 13400 | KeePass 1/2 (.kdbx) | Password managers |
 
 ---
 

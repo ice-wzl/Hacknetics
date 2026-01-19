@@ -115,6 +115,25 @@ cmd.exe /k "whoami"
 
 * [https://geekyshacklebolt.wordpress.com/2019/03/06/how-to-encrypt-usb-drives-with-luks/](https://geekyshacklebolt.wordpress.com/2019/03/06/how-to-encrypt-usb-drives-with-luks/)
 
+### SSH Key Format Conversions
+
+**Install putty-tools:**
+```bash
+sudo apt install putty-tools
+```
+
+**PPK to OpenSSH (Linux):**
+```bash
+puttygen key.ppk -O private-openssh -o id_rsa
+chmod 600 id_rsa
+ssh -i id_rsa user@target
+```
+
+**OpenSSH to PPK (Windows/Plink):**
+```bash
+puttygen id_rsa -o key.ppk
+```
+
 ### NTP Randomness&#x20;
 
 * Set ntp based on specific server time.  Required for kerberos auth, match attacker box to the time of the domain controller

