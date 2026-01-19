@@ -40,3 +40,19 @@ host: netcat
 openssl s_client -connect domain.com:443 
 GET / HTTP/1.0
 ```
+
+## HTTP Header Grabbing (curl)
+
+```bash
+# HTTP headers only (no body)
+curl -I http://TARGET
+curl -I https://TARGET
+
+# Follow redirects
+curl -IL http://TARGET
+```
+
+Look for:
+- `Server:` - Web server software/version
+- `X-Powered-By:` - Backend technology (PHP, Express, etc.)
+- `X-Redirect-By:` - CMS (e.g., WordPress)

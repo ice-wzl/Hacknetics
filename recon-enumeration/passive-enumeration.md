@@ -218,10 +218,18 @@ https://github.com/projectdiscovery/subfinder&#x20;
 theharvester -d cisco.com -b yahoo -l 100
 ```
 
-### crt.sh to Find domains
+### crt.sh (Certificate Transparency)
 
-* Certificate Transparency site can reveal hosts that are not public yet
+* Certificate Transparency site can reveal subdomains via SSL certificates
 * https://crt.sh
+
+```bash
+# Find all subdomains via crt.sh API
+curl -s "https://crt.sh/?q=TARGET.com&output=json" | jq -r '.[].name_value' | sort -u
+
+# Filter for specific subdomain pattern (e.g., "dev")
+curl -s "https://crt.sh/?q=TARGET.com&output=json" | jq -r '.[] | select(.name_value | contains("dev")) | .name_value' | sort -u
+```
 
 ### DNSCAN
 
