@@ -184,6 +184,7 @@
   * [Scarecrow](tool-guides/scarecrow.md)
   * [torsocks](tool-guides/torsocks.md)
 * [Web Path](web/README.md)
+  * [API Attacks](web/api-attacks.md)
   * [Testing for LFI](web/LFI.md)
   * [Testing for RFI](web/RFI.md)
   * [Testing for SQL](web/SQLi.md)
