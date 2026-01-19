@@ -130,6 +130,8 @@
   * [Pentesting MsSql](recon-enumeration/pentesting-mssql.md)
   * [Scanning](recon-enumeration/scanning.md)
   * [Pentesting SNMP](recon-enumeration/pentesting-snmp.md)
+  * [Pentesting TFTP](recon-enumeration/pentesting-tftp.md)
+  * [Pentesting IPsec/IKE](recon-enumeration/pentesting-ipsec-ike.md)
   * [Pentesting NFS](recon-enumeration/pentesting-nfs.md)
   * [Pentesting LDAP](recon-enumeration/pentesting-ldap.md)
   * [Pentesting Finger](recon-enumeration/pentesting-finger.md)

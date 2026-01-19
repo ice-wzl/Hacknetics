@@ -1,7 +1,55 @@
 # Hashcat
 
-* To identify the type of hash, we could a tool such as `hashid` or `hash-identifier`
-* Or we can utilize hashcat to identify the hash type like below&#x20;
+## Hash Identification
+
+```bash
+# Identify hash type
+hashcat --identify hash.txt
+
+# Using hashid
+hashid hash.txt
+
+# Using hash-identifier
+hash-identifier
+```
+
+---
+
+## Common Hash Modes
+
+| Mode | Hash Type | Example Use |
+|------|-----------|-------------|
+| 0 | MD5 | Web apps, databases |
+| 100 | SHA1 | Web apps |
+| 1400 | SHA256 | Modern apps |
+| 1800 | sha512crypt ($6$) | Linux /etc/shadow |
+| 500 | md5crypt ($1$) | Older Linux |
+| 3200 | bcrypt ($2*$) | Modern web apps |
+| 1000 | NTLM | Windows SAM/NTDS |
+| 5600 | NetNTLMv2 | Windows network auth |
+| 13100 | Kerberos TGS-REP (etype 23) | Kerberoasting |
+| 18200 | Kerberos AS-REP (etype 23) | AS-REP Roasting |
+| 5300 | IKE-PSK MD5 | IPsec VPN |
+| 5400 | IKE-PSK SHA1 | IPsec VPN |
+| 2500 | WPA/WPA2 | WiFi |
+| 22000 | WPA-PBKDF2-PMKID+EAPOL | WiFi (modern) |
+
+---
+
+## Basic Usage
+
+```bash
+# Dictionary attack
+hashcat -a 0 -m MODE hash.txt /usr/share/wordlists/rockyou.txt
+
+# With rules
+hashcat -a 0 -m MODE hash.txt wordlist.txt -r /usr/share/hashcat/rules/best64.rule
+
+# Show cracked
+hashcat -m MODE hash.txt --show
+```
+
+## Example
 
 ```
 hashcat --identify jbercov.hash
