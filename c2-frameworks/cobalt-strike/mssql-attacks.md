@@ -17,6 +17,12 @@ Load the SQL-BOF Aggressor script:
 
 ```
 ldapsearch (&(samAccountType=805306368)(servicePrincipalName=MSSQLSvc*)) --attributes name,samAccountName,servicePrincipalName
+
+# Example output:
+name: MSSQL Service
+sAMAccountName: mssql_svc
+servicePrincipalName: MSSQLSvc/ilf-db-1.inlanefreight.local:1433, MSSQLSvc/ilf-db-1.inlanefreight.local
+retrieved 1 results total
 ```
 
 ### Server Information

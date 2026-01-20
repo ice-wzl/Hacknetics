@@ -6,7 +6,7 @@
 
 After lateral movement via WinRM/PsExec, the new Beacon may fail to authenticate to other domain resources.
 
-**Reason:** Network logon type doesn't cache credentials in LSASS on the remote target.
+**Reason:** Network logon type doesn't cache credentials in LSASS on the remote target. Both WinRM and PsExec use Network logon type.
 
 ```
 # After WinRM lateral movement
@@ -14,6 +14,15 @@ powershell-import C:\Tools\PowerSploit\Recon\PowerView.ps1
 powerpick Get-DomainTrust
 
 ERROR: Exception calling "FindOne" with "0" argument(s): "An operations error occurred."
+```
+
+After moving laterally, you only have the service ticket that allowed the connection:
+```
+Cached Tickets: (1)
+
+#0>	Client: tmorgan @ INLANEFREIGHT.LOCAL
+	Server: HTTP/ilf-ws-1 @ INLANEFREIGHT.LOCAL
+	KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
 ```
 
 **Solution:** Use impersonation technique (`make_token` or `ptt`) to populate the session with credentials.
@@ -127,7 +136,7 @@ Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value '10.10.120.1 ilf-
 
 1. **Profile > Proxy Servers** - Add team server IP and SOCKS port
 2. **Profile > Proxification Rules** - Target internal IP range only
-3. Run tools through proxy (e.g., AD Explorer)
+3. Run tools through proxy (e.g., AD Explorer: `C:\Tools\SysinternalsSuite\ADExplorer64.exe`)
 
 ### AD Enumeration via SOCKS
 
