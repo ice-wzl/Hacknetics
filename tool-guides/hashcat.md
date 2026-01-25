@@ -26,7 +26,7 @@ hash-identifier
 | 1800 | sha512crypt ($6$) | Linux /etc/shadow |
 | 500 | md5crypt ($1$) | Older Linux |
 | 3200 | bcrypt ($2*$) | Modern web apps |
-| 10900 | PBKDF2-HMAC-SHA256 | Flask/Werkzeug, Superset |
+| 10900 | PBKDF2-HMAC-SHA256 | Flask/Werkzeug, Superset, Grafana |
 | 1000 | NTLM | Windows SAM/NTDS |
 | 5600 | NetNTLMv2 | Windows network auth |
 | 13100 | Kerberos TGS-REP (etype 23) | Kerberoasting |

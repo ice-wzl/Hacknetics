@@ -112,6 +112,7 @@
   * [Request Tracker (RT)](things-i-have-pwnd-before/request-tracker.md)
   * [CrushFTP](things-i-have-pwnd-before/crushftp.md)
   * [Erlang OTP SSH](things-i-have-pwnd-before/erlang-otp-ssh.md)
+  * [Grafana](things-i-have-pwnd-before/grafana.md)
   * [Apache Superset](things-i-have-pwnd-before/apache-superset.md)
   * [Webmin](things-i-have-pwnd-before/webmin.md)
   * [Spring Boot Actuators](things-i-have-pwnd-before/spring-boot-actuators.md)
