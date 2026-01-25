@@ -118,6 +118,8 @@
   * [js2py](things-i-have-pwnd-before/js2py.md)
   * [Pymatgen CIF Parser](things-i-have-pwnd-before/pymatgen.md)
   * [aiohttp](things-i-have-pwnd-before/aiohttp.md)
+  * [Netdata](things-i-have-pwnd-before/netdata.md)
+  * [XWiki](things-i-have-pwnd-before/xwiki.md)
 * [persistence](persistence/README.md)
   * [Linux Persistence](persistence/persistence.md)
   * [Windows Persistence](persistence/windows-persistence-1.md)
