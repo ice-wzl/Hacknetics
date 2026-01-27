@@ -203,6 +203,79 @@ https://web.archive.org/web/TIMESTAMP/http://TARGET/
 
 ---
 
+## Parameter Discovery & Fuzzing
+
+### GET Parameter Fuzzing
+
+```bash
+# Fuzz for hidden GET parameters
+ffuf -u "http://TARGET/index.php?FUZZ=test" \
+     -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt \
+     -fs 1234  # Filter by response size
+
+# Common hidden parameters
+?debug=true
+?test=1
+?admin=1
+?source=1
+?mode=admin
+?expertmode=tcp
+```
+
+### POST Parameter Fuzzing
+
+```bash
+# Fuzz POST parameters
+ffuf -u "http://TARGET/index.php" \
+     -X POST \
+     -H "Content-Type: application/x-www-form-urlencoded" \
+     -d "FUZZ=test" \
+     -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt \
+     -fs 1234
+```
+
+### Parameter Value Fuzzing
+
+```bash
+# Fuzz parameter values (e.g., find valid modes)
+ffuf -u "http://TARGET/index.php?mode=FUZZ" \
+     -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt \
+     -fs 1234
+```
+
+### Using Burp Intruder
+
+1. Capture request in Proxy
+2. Send to Intruder (Ctrl+I)
+3. Add § markers around parameter name or value
+4. Load wordlist in Payloads tab
+5. Look for different response lengths/status codes
+
+### Source Code Analysis
+
+When you obtain source code (via LFI/SSRF), look for:
+
+```php
+// Hidden parameters in conditionals
+if (isset($_GET['expertmode']) && $_GET['expertmode'] === 'tcp') {
+    // Hidden functionality
+}
+
+if (isset($_GET['debug'])) {
+    error_reporting(E_ALL);
+}
+```
+
+### Useful Wordlists for Parameter Discovery
+
+```bash
+/usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt
+/usr/share/seclists/Discovery/Web-Content/api/api-endpoints.txt
+/usr/share/seclists/Discovery/Web-Content/common.txt
+```
+
+---
+
 ## Web Crawling
 
 ### Burp Suite Spider
