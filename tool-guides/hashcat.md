@@ -20,6 +20,8 @@ hash-identifier
 | Mode | Hash Type | Example Use |
 |------|-----------|-------------|
 | 0 | MD5 | Web apps, databases |
+| 10 | md5($pass.$salt) | Salted MD5 (pass first) |
+| 20 | md5($salt.$pass) | Salted MD5 (salt first), CMS Made Simple |
 | 100 | SHA1 | Web apps |
 | 1400 | SHA256 | Modern apps, CrushFTP |
 | 1700 | SHA512 | Modern apps, CrushFTP |

