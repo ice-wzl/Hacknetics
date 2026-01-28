@@ -156,6 +156,7 @@
   * [Pentesting SNMP](recon-enumeration/pentesting-snmp.md)
   * [Pentesting TFTP](recon-enumeration/pentesting-tftp.md)
   * [Pentesting IPsec/IKE](recon-enumeration/pentesting-ipsec-ike.md)
+  * [Pentesting Java RMI/JMX](recon-enumeration/pentesting-java-rmi-jmx.md)
   * [Pentesting NFS](recon-enumeration/pentesting-nfs.md)
   * [Pentesting LDAP](recon-enumeration/pentesting-ldap.md)
   * [Pentesting Finger](recon-enumeration/pentesting-finger.md)

