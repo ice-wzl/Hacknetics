@@ -27,6 +27,7 @@ hash-identifier
 | 1700 | SHA512 | Modern apps, CrushFTP |
 | 1800 | sha512crypt ($6$) | Linux /etc/shadow |
 | 500 | md5crypt ($1$) | Older Linux |
+| 1600 | Apache $apr1$ MD5 | .htpasswd files |
 | 3200 | bcrypt ($2*$) | Modern web apps |
 | 10900 | PBKDF2-HMAC-SHA256 | Flask/Werkzeug, Superset, Grafana |
 | 1000 | NTLM | Windows SAM/NTDS |

