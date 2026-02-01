@@ -142,6 +142,23 @@ feroxbuster -u http://TARGET -q
 
 ---
 
+## File Extensions & Word Extraction
+
+```bash
+# Auto adds extensions found when directory searching. If the web app is written in php feroxbuster will automatically start scanning for .php extensions
+feroxbuster -u http://TARGET -E
+
+# Collect words from responses (builds custom wordlist)
+feroxbuster -u http://TARGET -g
+
+# Both together - comprehensive discovery
+feroxbuster -u http://TARGET -Eg -t 15
+```
+
+**Use case:** `-Eg` is great for initial recon - file extensions AND builds a wordlist from page content for further fuzzing.
+
+---
+
 ## Advanced Options
 
 ```bash

