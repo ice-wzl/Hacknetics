@@ -2,16 +2,34 @@
 
 ## AutoRecon
 
-```
+```bash
 autorecon -ct 2 -cs 2 -vv -o outputdir 192.168.1.100 192.168.1.1/30 localhost
 autorecon 10.200.97.200
-autorecon -t targets.txt — only-scans-dir
+autorecon -t targets.txt --only-scans-dir
+
+# With vhost enumeration for known hostname
+autorecon TARGET_IP --vhost-enum.hostname TARGET.htb -v
+
+# Specify directory busting tool
+autorecon TARGET_IP --dirbuster.tool feroxbuster -v
+
+# Combined example
+autorecon 10.129.237.241 --vhost-enum.hostname planning.htb --dirbuster.tool feroxbuster -v
 ```
 
-* `-ct` (concurrent targets)
-* `-o` custom output directory location.
-* `-cs` limits the number of concurent scans per target
-* Auto recon will create and store the results in the `/results` directory.
+**Common Flags:**
+
+| Flag | Description |
+|------|-------------|
+| `-ct` | Concurrent targets |
+| `-cs` | Concurrent scans per target |
+| `-o` | Custom output directory |
+| `-v` / `-vv` | Verbose output |
+| `--vhost-enum.hostname` | Hostname for vhost enumeration |
+| `--dirbuster.tool` | Tool for directory busting (gobuster, feroxbuster, ffuf) |
+| `--only-scans-dir` | Only output scans directory |
+
+AutoRecon will create and store results in the `/results` directory.
 
 ## General Enumeration Figure out the Hosts and Services Running
 

