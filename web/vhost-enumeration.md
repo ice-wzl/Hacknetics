@@ -57,3 +57,70 @@ ffuf -u http://mentorquotes.htb -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/s
 ```
 ffuf -u http://machine.htb -H "Host: FUZZ.machine.htb" -mc 200 -w /usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt -b "PHPSESSID=28330d435522c7f6080f8d63b86c7daa"
 ```
+
+---
+
+### WARNING: Avoid ffuf -ac (Auto-Calibrate) for vhost Enumeration
+
+**IMPORTANT:** Do NOT blindly use `-ac` (auto-calibrate) for vhost enumeration. It can filter out important results like 421 status codes that indicate valid subdomains with different configurations.
+
+**Example of a miss due to -ac:**
+
+```bash
+# BAD - May filter out valid subdomains
+ffuf -w /usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt \
+  -u https://target.htb -H "Host: FUZZ.target.htb" -k -ac
+
+# GOOD - Manually inspect results first, then filter
+ffuf -w /usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt \
+  -u https://target.htb -H "Host: FUZZ.target.htb" -k
+
+# Then filter based on observed baseline (e.g., filter 400 responses)
+ffuf -w wordlist.txt -u https://target.htb -H "Host: FUZZ.target.htb" -k --fc 400
+```
+
+**Why this matters:** A 421 Misdirected Request often indicates a valid vhost that requires SNI or a different SSL certificate. Auto-calibrate may mark these as "baseline" and filter them out.
+
+---
+
+### wfuzz for vhost Enumeration
+
+Alternative to ffuf with cleaner output for manual inspection.
+
+```bash
+# Basic vhost enumeration
+wfuzz -c -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt \
+  -u https://target.htb -H "Host: FUZZ.target.htb" --hw 28 --hc 400
+
+# Hide specific word count and status codes
+wfuzz -c -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt \
+  -u https://target.htb -H "Host: FUZZ.target.htb" --hc 400,404 --hw 28
+```
+
+**Key flags:**
+- `-c` - Color output
+- `--hw` - Hide responses with specific word count
+- `--hc` - Hide responses with specific status codes
+- `--hh` - Hide responses with specific character count
+
+**Example output showing valid subdomains:**
+
+```
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+000000024:   421        12 L     49 W       407 Ch      "admin"
+000000373:   302        0 L      26 W       463 Ch      "intra"
+```
+
+**Tip:** Look for different status codes (421, 302) or varying response sizes to identify valid subdomains.
+
+---
+
+### Common Mistakes in vhost Enumeration
+
+1. **Fuzzing the wrong domain:** If `intra.target.htb` exists, don't fuzz `FUZZ.intra.target.htb` - fuzz `FUZZ.target.htb` instead.
+
+2. **Missing hosts file entry:** Ensure the base domain is in `/etc/hosts` before scanning.
+
+3. **HTTPS without -k:** Use `-k` to skip SSL certificate verification for self-signed certs.

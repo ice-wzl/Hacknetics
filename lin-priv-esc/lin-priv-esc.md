@@ -270,6 +270,31 @@ find / -name authorized_keys 2> /dev/null
 find / -name id_rsa 2> /dev/null
 ```
 
+#### Web Application Database Credentials
+
+Search web application files for hardcoded database credentials. Different database users often have different privileges.
+
+```bash
+# Search for MySQL/MariaDB connections in PHP
+grep -r mysqli_connect /var/www/html/
+grep -r mysql_connect /var/www/html/
+
+# Search for PostgreSQL connections in PHP
+grep -r pg_connect /var/www/html/
+
+# Example output:
+# ./admin/pages/firewall.php:  $dbconn = pg_connect("host=127.0.0.1 dbname=redcross user=www password=aXwrtUO9_aa&");
+# ./admin/pages/users.php:     $dbconn = pg_connect("host=127.0.0.1 dbname=unix user=unixnss password=fios@ew023xnw");
+# ./admin/pages/actions.php:   $dbconn = pg_connect("host=127.0.0.1 dbname=unix user=unixusrmgr password=dheu%7wjx8B&");
+
+# Search for generic database connection strings
+grep -r "password" /var/www/html/*.php 2>/dev/null
+grep -r "dbpass" /var/www/html/ 2>/dev/null
+grep -r "db_pass" /var/www/html/ 2>/dev/null
+```
+
+**Tip:** Different database users may have different privileges. Test each discovered credential for privilege escalation paths (e.g., PostgreSQL NSS user injection).
+
 ### Old sudo version
 
 * CVE-2019-14287

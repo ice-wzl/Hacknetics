@@ -308,3 +308,56 @@ echo -n 'user=htb-stdnt;role=admin' | xxd -p
 # Google dork
 site:github.com "default credentials" <app_name>
 ```
+
+---
+
+## Cookie/Session Reuse Across Subdomains
+
+### Identify
+
+Sometimes session cookies from one subdomain work on another subdomain of the same application, even if login on the second subdomain fails.
+
+### Scenario
+
+- You login to `intra.target.htb` with user credentials
+- You discover `admin.target.htb` subdomain
+- Direct login to `admin.target.htb` fails ("not enough permissions")
+- But the session cookie from `intra.target.htb` works on `admin.target.htb`
+
+### Exploit
+
+1. Login to the accessible subdomain:
+   ```
+   POST /login HTTP/1.1
+   Host: intra.target.htb
+   
+   username=user&password=pass
+   ```
+
+2. Note the session cookies set:
+   ```
+   Set-Cookie: PHPSESSID=abc123; LANG=EN_US; DOMAIN=intra
+   ```
+
+3. Copy cookies to browser for the admin subdomain:
+   - Open `admin.target.htb` in browser
+   - Open Developer Tools → Application → Cookies
+   - Add/modify cookies from the working session:
+     - `PHPSESSID=abc123`
+     - Change `DOMAIN` cookie from `intra` to `admin`
+
+4. Refresh the page - you may now have access to the admin panel with the same user's elevated privileges.
+
+### Why This Works
+
+- Session is stored server-side and tied to PHPSESSID, not to the subdomain
+- Role/permission checks may only happen at login, not on every request
+- Cookies with `domain=.target.htb` are shared across all subdomains
+
+### Tool-Assisted
+
+```bash
+# Use curl to test cookie reuse
+curl -k "https://admin.target.htb/" \
+  -b "PHPSESSID=abc123; LANG=EN_US; DOMAIN=admin"
+```
