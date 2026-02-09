@@ -40,6 +40,34 @@ hash-identifier
 | 22000 | WPA-PBKDF2-PMKID+EAPOL | WiFi (modern) |
 | 13400 | KeePass 1/2 (.kdbx) | Password managers |
 
+### Network Device Hashes (Cisco)
+
+| Mode | Hash Type | Example |
+|------|-----------|---------|
+| 500 | Cisco-IOS Type 5 ($1$) | `enable secret 5 $1$salt$hash` |
+| 5700 | Cisco-IOS Type 4 (SHA256) | `enable secret 4 hash` |
+| 9200 | Cisco-IOS Type 8 (PBKDF2-SHA256) | `$8$salt$hash` |
+| 9300 | Cisco-IOS Type 9 (scrypt) | `$9$salt$hash` |
+
+**Cisco Type 5 (MD5) Example:**
+
+```bash
+# From router config: enable secret 5 $1$pdQG$o8nrSzsGXeaduXrjlvKc91
+hashcat -a 0 -m 500 '$1$pdQG$o8nrSzsGXeaduXrjlvKc91' /usr/share/wordlists/rockyou.txt
+
+# Output: $1$pdQG$o8nrSzsGXeaduXrjlvKc91:stealth1agent
+```
+
+**Cisco Type 7 - NOT for hashcat!** Type 7 is reversible obfuscation, not encryption:
+
+```bash
+# Online: https://www.firewall.cx/cisco-technical-knowledgebase/cisco-routers/358-cisco-type7-password-crack.html
+
+# Python
+pip install cisco-type7
+cisco-type7 decrypt "0242114B0E143F015F5D1E161713"
+```
+
 ---
 
 ## Basic Usage

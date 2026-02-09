@@ -77,6 +77,22 @@ Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
 DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
 ```
 
+### Credentials in Process Command Lines
+
+Processes may have credentials passed as command line arguments. Always check running processes.
+
+```powershell
+# PowerShell - Get full command lines
+Get-CimInstance Win32_Process | Select-Object ProcessId,Name,CommandLine | Format-List
+
+# WMIC - Full command line
+wmic process get processid,name,commandline
+```
+
+**Note:** For Sliver C2 process enumeration with `ps -c -f`, see the [Sliver guide](../c2-frameworks/sliver.md).
+
+---
+
 ### Search for files with passwords in them&#x20;
 
 * Perform a basic search
