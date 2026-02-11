@@ -49,6 +49,19 @@ ffuf -u http://localhost:8888 -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/sec
 ffuf -u http://mentorquotes.htb -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/seclists/Disc
 ```
 
+#### ffuf subdomain over HTTPS
+
+* For HTTPS, use `-k` to skip certificate verification. Filter by status or size:
+* `-fc 200` — exclude 200 (default vhost often returns 200)
+* `-fs SIZE` — exclude responses with this size (baseline from invalid subdomains)
+
+```bash
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt \
+  -u https://target.htb -H "Host: FUZZ.target.htb" -k -fc 200
+ffuf -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt \
+  -u https://target.htb -H "Host: FUZZ.target.htb" -k -fc 200
+```
+
 #### ffuf with Cookie and Matching a status code&#x20;
 
 * \-b Cookie data `"NAME1=VALUE1; NAME2=VALUE2"` for copy as curl functionality.

@@ -169,4 +169,6 @@ curl -H "Cookie: logged_in=true; admin=true" http://MACHINE_IP/cookie-test
 
 * `username[]=0&password[]=0`
 
+* **Variant:** Sending only the password as an array can be enough: `username=admin&password[]=` — `strcmp(array(), "password")` returns `NULL` in PHP; if the code compares that to `0` (e.g. `== 0`), it evaluates true and bypasses the check.
+
 <figure><img src="../.gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>

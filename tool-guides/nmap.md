@@ -17,6 +17,7 @@
 * `-n` no DNS lookup
 * `-R` reverse-DNS lookup for all hosts
 * `-sn` host discovery only
+* `-Pn` skip host discovery (treat all hosts as up; use when target blocks ping or for reliable HTB/VPN scans)
 
 ## Port Scan Type Example Command
 
@@ -146,6 +147,16 @@ nmap --script "ssh2-enum-algos" 10.10.220.56
 * `-oG` save output in grepable format
 * `-oX` save output in XML format
 * `-oA` save output in normal, XML and Grepable formats
+
+### Quick / full scan pattern
+
+```bash
+# Quick: default ports, scripts, version
+nmap -sC -sV -Pn TARGET_IP -oA nmap/nmap.quick
+
+# Full: all ports
+nmap -sC -sV -Pn TARGET_IP -p- -oA nmap/nmap.full
+```
 
 ### Searching Through Output&#x20;
 

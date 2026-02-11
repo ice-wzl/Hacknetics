@@ -45,7 +45,7 @@ gobuster dir -u http://TARGET -w wordlist.txt --exclude-length 0,404
 | `-s` | Include only these status codes |
 | `-b` | Exclude these status codes |
 | `--exclude-length` | Exclude responses by size |
-| `-k` | Skip TLS certificate verification |
+| `-k` | Skip TLS certificate verification (use with `-u https://`) |
 | `-a` | Custom User-Agent |
 | `-c` | Cookies to use |
 | `-H` | Custom headers |
@@ -106,6 +106,7 @@ gobuster dir -u http://TARGET -w wordlist.txt -H "Authorization: Bearer TOKEN"
 ```
 /usr/share/seclists/Discovery/Web-Content/common.txt
 /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt
+/usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt
 /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt
 /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt
 /usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt
@@ -124,4 +125,7 @@ gobuster vhost -u http://target.htb -w /usr/share/seclists/Discovery/DNS/subdoma
 
 # DNS subdomain enum
 gobuster dns -d target.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -i
+
+# HTTPS directory scan (skip cert verify, lowercase wordlist, more threads)
+gobuster dir -k -u https://target.htb -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -t 20
 ```

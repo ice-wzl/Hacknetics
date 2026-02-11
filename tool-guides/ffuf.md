@@ -108,6 +108,14 @@ ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
 
 # Filter by response size (find unique responses)
 ffuf -w subdomains.txt -u http://target.com -H "Host: FUZZ.target.com" -fs 1234
+
+# HTTPS subdomain enum: -k skip TLS verify; -fc 200 to exclude 200 (default vhost)
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt \
+  -u https://target.htb -H "Host: FUZZ.target.htb" -k -fc 200
+
+# HTTP subdomain enum: filter by fixed size of default response
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt \
+  -u http://target.htb -H "Host: FUZZ.target.htb" -fs 178
 ```
 
 ---
@@ -133,6 +141,7 @@ ffuf -w subdomains.txt -u http://target.com -H "Host: FUZZ.target.com" -fs 1234
 | `-fw` | Filter word count |
 | `-fl` | Filter line count |
 | `-fr` | Filter by regex |
+| `-fw` | Filter word count (exclude responses with this many words) |
 
 ### Examples
 
@@ -242,7 +251,9 @@ ffuf -w wordlist.txt -u http://TARGET/FUZZ -replay-proxy http://127.0.0.1:8080
 /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt
 /usr/share/seclists/Discovery/Web-Content/big.txt
 /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt
+/usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt
 /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt
+/usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
 ```
 
 ---
@@ -270,4 +281,12 @@ ffuf -w wordlist.txt -u http://TARGET/api/FUZZ -mc 200,401,403
 
 # LFI fuzz
 ffuf -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -u "http://TARGET/page.php?file=FUZZ" -fs 0
+
+# LFI fuzz with auth (cookie + Referer), filter by word count
+ffuf -X GET -H "Host: target.htb" -H "Referer: http://target.htb/manage.php" -b "PHPSESSID=abc" \
+  -u "http://target.htb/manage.php?notes=files/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -fw 280
+
+# LFI fuzz param name (FUZZ=value)
+ffuf -X GET -H "Host: target.htb" -b "PHPSESSID=abc" \
+  -u "http://target.htb/manage.php?notes=FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -fw 280
 ```

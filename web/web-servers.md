@@ -10,8 +10,9 @@
 
 ```
 nikto -h [target ip/hostname]
+nikto -h [target ip/hostname]:443
 nikto -h [target ip/hostname] -p 80,88,443
-nikto -h [target ip/hostname -p 80-88
+nikto -h [target ip/hostname] -p 80-88
 nikto -h [target] -C all
 ```
 

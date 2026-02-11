@@ -149,6 +149,9 @@ sqlmap -u "http://target.com/page?id=1*"
 ```bash
 # Save request to file from Burp (Right-click > Copy to file)
 sqlmap -r request.txt --batch
+
+# Specify DBMS when known (faster, fewer false positives)
+sqlmap -r login.req --batch --dbms mysql
 ```
 
 Example request file:
