@@ -76,6 +76,9 @@ cisco-type7 decrypt "0242114B0E143F015F5D1E161713"
 # Dictionary attack
 hashcat -a 0 -m MODE hash.txt /usr/share/wordlists/rockyou.txt
 
+# bcrypt (e.g. from CMS DB)
+hashcat -a 0 -m 3200 admin.hash /usr/share/wordlists/rockyou.txt
+
 # With rules
 hashcat -a 0 -m MODE hash.txt wordlist.txt -r /usr/share/hashcat/rules/best64.rule
 

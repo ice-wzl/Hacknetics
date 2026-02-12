@@ -117,6 +117,15 @@ curl -A "Mozilla/5.0" http://TARGET
 curl -e "http://google.com" http://TARGET
 ```
 
+### Extract CSRF / authenticity token
+
+```bash
+# Get login page and extract token (GNU grep -oP)
+curl -k -s 'http://TARGET/admin/login' | grep -oP 'name="authenticity_token" value="\K[^"]+'
+```
+
+Use the token in subsequent POST requests (e.g. `authenticity_token=TOKEN` or `X-CSRF-Token` header).
+
 ---
 
 ## Authentication

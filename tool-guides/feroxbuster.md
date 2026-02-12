@@ -94,6 +94,23 @@ feroxbuster -u http://TARGET -X "not found|error"
 
 # Don't scan specific paths
 feroxbuster -u http://TARGET --dont-scan /uploads --dont-scan /static
+
+# Exclude only 404 (e.g. when 404 is noisy)
+feroxbuster -u http://TARGET -Eg -C 404 -w wordlist.txt
+```
+
+### CMS and non-standard ports
+
+```bash
+# CMS config files wordlist
+feroxbuster -u http://TARGET -w /usr/share/seclists/Discovery/Web-Content/CMS/cms-configuration-files.txt
+
+# CMS vanilla wordlist, exclude 404, auto extensions + word extraction
+feroxbuster -Eg -C 404 -u http://TARGET -w /usr/share/seclists/Discovery/Web-Content/CMS/trickest-cms-wordlist/vanilla.txt
+
+# Scan service on non-standard port (e.g. MinIO, API)
+feroxbuster -u http://TARGET:54321 -Eg -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt
+feroxbuster -u http://TARGET:54321 -w /usr/share/seclists/Discovery/Web-Content/common.txt
 ```
 
 ---

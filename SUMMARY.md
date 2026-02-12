@@ -127,6 +127,7 @@
   * [Gitea](things-i-have-pwnd-before/gitea.md)
   * [Haraka SMTP](things-i-have-pwnd-before/haraka.md)
   * [phpLiteAdmin](things-i-have-pwnd-before/phpliteadmin.md)
+  * [Camaleon CMS](things-i-have-pwnd-before/camaleon-cms.md)
 * [persistence](persistence/README.md)
   * [Linux Persistence](persistence/persistence.md)
   * [Windows Persistence](persistence/windows-persistence-1.md)

