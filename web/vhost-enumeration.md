@@ -49,6 +49,17 @@ ffuf -u http://localhost:8888 -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/sec
 ffuf -u http://mentorquotes.htb -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/seclists/Disc
 ```
 
+#### ffuf vhost filter by fixed size
+
+When the default vhost returns a consistent response size, filter by that size so only different (valid) vhosts show:
+
+```bash
+ffuf -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt \
+  -u http://target.htb -H "Host: FUZZ.target.htb" -fs 230
+ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt \
+  -u http://target.htb -H "Host: FUZZ.target.htb" -fs 230
+```
+
 #### ffuf subdomain over HTTPS
 
 * For HTTPS, use `-k` to skip certificate verification. Filter by status or size:

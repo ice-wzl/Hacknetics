@@ -36,6 +36,15 @@ gobuster dir -u http://TARGET -w wordlist.txt -s 200,301
 gobuster dir -u http://TARGET -w wordlist.txt --exclude-length 0,404
 ```
 
+### Wildcard / dynamic 301 responses
+
+When the server returns the same status (e.g. 301) for every path (wildcard), gobuster may prompt to exclude a status or length. Use a status-code whitelist so only interesting codes are reported:
+
+```bash
+# Only show 204, 302, 307, 401, 403 (avoid 301 wildcard)
+gobuster dir -u http://TARGET -w wordlist.txt --status-codes-blacklist "" -s "204,302,307,401,403"
+```
+
 ### Options
 
 | Flag | Description |

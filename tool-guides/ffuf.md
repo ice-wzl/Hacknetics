@@ -183,6 +183,22 @@ ffuf -w list1.txt:W1 -w list2.txt:W2 -u http://TARGET/W1/W2 -mode clusterbomb
 
 ---
 
+## Request from file (Burp / raw HTTP)
+
+Use a saved HTTP request so headers and body match exactly (e.g. for API user enum, JSON POST):
+
+```bash
+# FUZZ in the request file is replaced by wordlist; --request-proto http or https
+ffuf -request users.req --request-proto http -w /usr/share/seclists/Usernames/Names/names.txt
+
+# Filter status code
+ffuf -request users.req --request-proto http -w wordlist.txt -fc 403
+```
+
+Save the request from Burp (e.g. Paste from file) with `FUZZ` where the payload goes.
+
+---
+
 ## Authentication
 
 ```bash

@@ -134,6 +134,14 @@ git clone https://github.com/internetwache/GitTools.git
 ./GitTools/Extractor/extractor.sh ./git-dump ./extracted
 ```
 
+**Alternative: arthaud/git-dumper (Python)** — Dumps and extracts in one step; often works when GitTools fails (e.g. incomplete packs):
+
+```bash
+git clone https://github.com/arthaud/git-dumper.git
+python3 git_dumper.py http://TARGET/.git /tmp/out
+# Files appear in /tmp/out; then check git diff --cached for staged secrets
+```
+
 ### Manual Enumeration
 
 ```bash
@@ -149,6 +157,10 @@ grep -r "password" .
 grep -r "secret" .
 grep -r "api_key" .
 grep -r "@" . | grep -i mail  # Find email addresses
+
+# Staged but uncommitted changes (passwords in test fixtures, config)
+git diff --cached
+# Without --cached only unstaged changes are shown
 ```
 
 ### Common Findings
