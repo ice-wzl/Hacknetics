@@ -355,6 +355,32 @@ uid=0(root) gid=0(root) groups=0(root)
 
 **Reference:** https://github.com/pr0v3rbs/CVE-2025-32463_chwoot
 
+### CVE-2025-4517 - Python tarfile extract filter bypass (symlink/hardlink)
+
+Python 3.8.0–3.13.1: `tarfile.extractall(path=..., filter="data")` (and `extract(..., filter="data")`) can be bypassed when entries use symlinks whose resolved path length exceeds `PATH_MAX`; later symlinks are not fully expanded, allowing path traversal. Combined with hardlinks, an attacker can write arbitrary files (e.g. `/etc/sudoers`, `/root/.ssh/authorized_keys`) during extraction.
+
+**Typical scenario:** A script runs as root and extracts a user-supplied tar with `filter="data"` (e.g. `tar.extractall(path=staging_dir, filter="data")`). User can upload a malicious tar (e.g. to a backup/restore feature) and trigger extraction via something like:
+
+```bash
+sudo /usr/local/bin/python3 /opt/backup_clients/restore_backup_clients.py -b backup_9999.tar -r restore_pwn_9999
+```
+
+**Detection:** `grep -r "tarfile\|extractall\|filter="` in the script; look for `filter="data"` or `filter='data'`.
+
+**Exploit:** Build a tar that uses a long symlink chain so resolved path exceeds PATH_MAX, then a symlink escaping to e.g. `/etc`, a hardlink to `sudoers`, and a regular file entry that writes the new sudoers line. PoC scripts exist for adding a sudoers entry or overwriting `authorized_keys`.
+
+```bash
+# Example PoC (WingData HTB style)
+python3 CVE-2025-4517-POC.py
+# Then: cp /tmp/cve_2025_4517_exploit.tar /opt/backup_clients/backups/backup_9999.tar
+#       sudo /usr/local/bin/python3 /opt/backup_clients/restore_backup_clients.py -b backup_9999.tar -r restore_pwn_9999
+#       sudo /bin/bash
+```
+
+**References:**
+* https://github.com/google/security-research/security/advisories/GHSA-hgqp-3mmf-7h8f  
+* https://github.com/AzureADTrent/CVE-2025-4517-POC-HTB-WingData  
+
 ### CVE-2023-2640 / CVE-2023-32629 - GameOver(lay) Ubuntu Kernel PrivEsc
 
 OverlayFS vulnerability in Ubuntu kernels allowing local privilege escalation.

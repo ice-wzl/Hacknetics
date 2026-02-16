@@ -1,5 +1,29 @@
 # Hashcat
 
+## Generating hashes (printf vs echo)
+
+When you need to **generate a hash** for comparison, overwriting a stored hash, or building a hash:password pair (e.g. for salted formats), use **`printf`**, not **`echo`**. `echo` is inconsistent and easy to get wrong:
+
+| Command | What gets hashed | SHA256 result |
+|--------|------------------|---------------|
+| `echo "hello"` | `hello` + newline (6 bytes) | `5891b5b5...` |
+| `echo -n "hello"` | `hello` (5 bytes) ✓ | `2cf24dba...` |
+| `echo -n 0 "hello"` | `0hello` (no newline) | `d0023e67...` |
+| **`echo -n0 "hello"`** | **`0hello`** — `-n0` is parsed as flag `-n` then arg `0` | **`ec094cf2...`** (wrong) |
+| **`printf "hello"`** | **`hello`** (5 bytes) ✓ | **`2cf24dba...`** |
+
+**Pitfall:** Typing `echo -n0 "hello"` (thinking “no newline” + “hello”) actually hashes **`0hello`**, so your generated hash never matches the app’s hash of `"hello"` and overwrite/login fails. Use **`printf "password"`** so the exact bytes are under your control.
+
+```bash
+# Correct: exact string, no newline
+printf "hello" | sha256sum
+# 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824  -
+
+# For salted formats, use the tool’s expected input (e.g. pass then salt) or hashcat to generate.
+```
+
+---
+
 ## Hash Identification
 
 ```bash

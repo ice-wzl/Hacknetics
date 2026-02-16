@@ -287,6 +287,22 @@ https://web.archive.org/web/TIMESTAMP/http://TARGET/
 
 ---
 
+## VHost / subdomain fuzzing
+
+When the main site uses a single vhost or redirects, enumerate subdomains by fuzzing the `Host` header. Filter by word count (`-fw`) or size (`-fs`) to drop the default response.
+
+```bash
+# Subdomains: FUZZ.TARGET.htb (add TARGET.htb and discovered hosts to /etc/hosts)
+ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt \
+     -u http://TARGET \
+     -H "Host: FUZZ.TARGET" \
+     -fw 21
+```
+
+Use `-fs 230` (or similar) to filter by response size if that better separates valid vhosts. Combine with nuclei as needed: `nuclei -u http://vhost.TARGET -rl 13 -c 12 -as`.
+
+---
+
 ## Parameter Discovery & Fuzzing
 
 ### GET Parameter Fuzzing

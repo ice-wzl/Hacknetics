@@ -74,13 +74,8 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 ### Wing FTP Server
 
-* `21/tcp open wingftp`
-* Gain access to the admin panel
-
-```
-search lua
-exploit(windows/ftp/wing_ftp_admin_exec)
-```
+* **Windows (admin panel):** `21/tcp open wingftp` — gain access to admin panel; `search lua` then `exploit(windows/ftp/wing_ftp_admin_exec)`.
+* **Linux web client:** Exposed on HTTP (often subdomain e.g. `ftp.target.htb`). RCE via command injection (EDB 52347). See [Wing FTP Server (Linux web client)](wing-ftp.md) for subdomain discovery, exploit usage, config/salted hashes, world-writable user XML overwrite, and CVE-2025-4517 priv esc.
 
 ### Mantis Bug Tracker
 
