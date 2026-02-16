@@ -324,6 +324,33 @@ Payload stored in database, executed later in different query.
 
 Example: Register with username `admin'-- -`, later displayed/used in vulnerable query.
 
+**Pattern:** First query uses prepared statements (safe); a second query uses the *result* of the first in plain concatenation. Example: first query fetches `username, country` by cookie (parameterized); second query does `SELECT ... WHERE country = '" . $row['country'] . "'` with no prepared statement — so stored payload in `country` is executed in the second query.
+
+Vulnerable PHP example (from HTB Validation):
+
+```php
+<?php
+  include('config.php');
+  $user = $_COOKIE['user'];
+  $sql = "SELECT username, country FROM registration WHERE userhash = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("s", $user);
+  $stmt->execute();
+
+  $result = $stmt->get_result();
+  $row = $result->fetch_assoc();
+  echo '<h1 class="text-white">Welcome ' . $row['username'] . '</h1>';
+  echo '<h3 class="text-white">Other Players In ' . $row['country'] . '</h3>';
+  $sql = "SELECT username FROM registration WHERE country = '" . $row['country'] . "'";  // no prepared statement — stored payload in country runs here
+  $result = $conn->query($sql);
+  while ($row = $result->fetch_assoc()) {
+    echo "<li class='text-white'>" . $row['username'] . "</li>";
+  }
+?>
+```
+
+Attack: register with `country=Brazil' UNION ALL SELECT ... -- -` (or time-based payload); when account page loads, second query executes the stored payload.
+
 ---
 
 ## WAF Bypass Techniques
@@ -611,6 +638,8 @@ sqlmap -u "URL" -D dbname -T users --dump
 # OS shell
 sqlmap -u "URL" --os-shell --technique=E
 ```
+
+**After SQLi (file-write, no interactive shell):** If you get DB creds (e.g. from `config.php` via LFI or file-read) and a webshell on the same host, run **MySQL one-shot** from the shell: `mysql -u USER -p'PASS' -e "show tables;" dbname`. No need for a stabilized reverse shell. Prefer the **wright.php** webshell (`/usr/share/webshells/php/wright.php`) over a minimal `?cmd=` shell—see [Shells / web-shells](Shells/web-shells/README.md) and sqlmap `--file-write`.
 
 ---
 

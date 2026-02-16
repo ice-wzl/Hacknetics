@@ -43,6 +43,18 @@ ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
 
 **Tip:** Try both login and password reset endpoints - they may have different rate limiting or lockout policies.
 
+### Cookie as hash of username
+
+If the session cookie looks like a hash (e.g. 32 hex chars = MD5), it may be `MD5(username)` or similar. Crack it to get the username:
+
+```bash
+hashcat --identify cookie_hash.txt
+# If MD5 (mode 0):
+hashcat -a 0 -m 0 cookie_hash.txt /usr/share/wordlists/rockyou.txt
+```
+
+Useful when the app identifies users by a cookie value and you need a valid username for SQLi or further attacks.
+
 ---
 
 ## Password Brute Force

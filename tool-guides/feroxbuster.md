@@ -111,6 +111,9 @@ feroxbuster -Eg -C 404 -u http://TARGET -w /usr/share/seclists/Discovery/Web-Con
 # Scan service on non-standard port (e.g. MinIO, API)
 feroxbuster -u http://TARGET:54321 -Eg -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt
 feroxbuster -u http://TARGET:54321 -w /usr/share/seclists/Discovery/Web-Content/common.txt
+
+# Scan a subpath (e.g. /js) for specific extensions
+feroxbuster -u http://TARGET/js -E -g -t 10 -x js -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
 ```
 
 ---
