@@ -6,6 +6,8 @@
 
 **Contributors:** ice-wzl, Jfox32199
 
+**Please consider donating:** [**https://buymeacoffee.com/icewzl**](https://buymeacoffee.com/icewzl)
+
 **Description:** Your one-stop reference for OSCP and Red Teaming! 🚀 This repository contains a curated collection of code snippets, guides, command syntax, and high-level strategies. Clone it once and gain access to popular pentesting tools and resources.
 
 <p align="center"><a href="https://github.com/ice-wzl/Hacknetics/stargazers"><img src="https://img.shields.io/github/stars/ice-wzl/Hacknetics?style=social" alt="Stars"></a><a href="https://github.com/ice-wzl/Hacknetics/network/members"><img src="https://img.shields.io/github/forks/ice-wzl/Hacknetics?style=social" alt="Forks"></a><a href="https://github.com/ice-wzl/Hacknetics/issues"><img src="https://img.shields.io/github/issues/ice-wzl/Hacknetics" alt="Open Issues"></a><a href="https://github.com/ice-wzl/Hacknetics/commits/main"><img src="https://img.shields.io/github/last-commit/ice-wzl/Hacknetics" alt="Last Updated"></a></p>
@@ -63,12 +65,6 @@ Contributions are welcome! If you have useful scripts, guides, or improvements, 
 3. Commit your changes with descriptive commit messages.
 4. Push your branch to your forked repository.
 5. Submit a pull request.
-
-### 🐛 Troubleshooting
-
-* **Script Execution Issues:** Ensure you have the necessary permissions to execute scripts. Use `chmod +x script.sh` to make a script executable.
-* **Missing Dependencies:** Check the script's documentation or comments for any required dependencies and install them using `apt`, `pip`, or your system's package manager.
-* **Configuration Errors:** Double-check configuration files for typos or incorrect settings.
 
 ### 🙏 Acknowledgements
 

