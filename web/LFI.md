@@ -269,6 +269,16 @@ When the vulnerable parameter is used with a fixed prefix (e.g. `?notes=files/ni
 
 Start with fewer `../` and add more until you hit the root; too many can trigger “File name too long”. Use `view-source:` or curl to confirm you’re reading the real file content.
 
+### High-value LFI targets: SSH keys and /proc/self/fd/*
+
+**SSH keys:** Try both key types per user (from `/etc/passwd`): `/home/USER/.ssh/id_rsa`, `/home/USER/.ssh/id_ed25519`, and `.../authorized_keys`. Example path that yielded a usable key: `/home/trivia/.ssh/id_ed25519`. Passphrase-protected keys: `ssh2john keyfile > key.hash` then `john --wordlist=/usr/share/wordlists/rockyou.txt key.hash`.
+
+**Open file descriptors:** **`/proc/self/fd/N`** (e.g. 7, 9) — the current process’s open files. Often one fd is the application’s **SQLite DB**; reading it via LFI can expose `cama_users` and other tables. Try `/proc/self/fd/7`, `/proc/self/fd/9`, etc.
+
+### Reading binary files (e.g. SQLite DB) via LFI
+
+When the LFI returns the **raw file content** (not wrapped in HTML), binary files must be fetched as **bytes**, not as text. Some exploits (e.g. Camaleon CMS CVE-2024-46987) print `r.text` by default — for SQLite or other binaries you must save `r.content` to a file. Save the response to disk and open with `sqlite3 out.bytes`; then query tables (e.g. `cama_users` for bcrypt hashes). See [Camaleon CMS](../things-i-have-pwnd-before/camaleon-cms.md) for the full flow.
+
 ### RCE via Apache logs
 
 * Poison the User-Agent in access logs:
@@ -401,8 +411,10 @@ http://example.com/index.php?page=../../../../../../etc/shadow
 ```
 
 * Then crack the hashes inside in order to login via SSH on the machine.
-* Another way to gain SSH access to a Linux machine through LFI is by reading the private key file, id\_rsa.
-* If SSH is active check which user is being used `/proc/self/status` and `/etc/passwd` and try to access `/<HOME>/.ssh/id_rsa`.
+* **SSH keys via LFI:** Target private keys and authorized keys for users from `/etc/passwd`:
+  * `/<HOME>/.ssh/id_rsa` — RSA private key
+  * `/<HOME>/.ssh/id_ed25519` — Ed25519 private key (e.g. `/home/USER/.ssh/id_ed25519`)
+  * `/<HOME>/.ssh/authorized_keys` — authorized keys for passwordless login
 
 ---
 
@@ -453,7 +465,16 @@ ffuf -w /path/to/LFI-WordList-Windows:FUZZ \
      -u 'http://TARGET/index.php?page=..\..\..\..\FUZZ' -fs 2287
 ```
 
-**Wordlists:** `default-web-root-directory-linux.txt`; [LFI-WordList-Linux](https://github.com/DragonJAR/Security-Wordlist/blob/main/LFI-WordList-Linux).
+### Wordlists and references
+
+| Purpose | Wordlist / link |
+|--------|------------------|
+| LFI path fuzzing | `/usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt` |
+| Web root / server paths (Linux) | `/usr/share/seclists/Discovery/Web-Content/default-web-root-directory-linux.txt` |
+| LFI paths (Linux) | [LFI-WordList-Linux](https://github.com/DragonJAR/Security-Wordlist/blob/main/LFI-WordList-Linux) |
+| Parameter names | `/usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt` |
+
+**Seclists:** https://github.com/danielmiessler/SecLists (Fuzzing/LFI, Discovery/Web-Content).
 
 ### Reading binary files and /proc/self/fd
 
