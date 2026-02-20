@@ -834,6 +834,22 @@ sudo CHECK_CONTENT=/bin/bash /usr/bin/bash /opt/ghost/clean_symlink.sh /tmp/x.pn
 
 The script must take a path that gets moved to quarantine and then hit the `if $CHECK_CONTENT;then` branch. The symlink target must not match any blocklist (e.g. `etc|root`) in the script so the link is moved rather than unlinked.
 
+#### Sudo script: bash `[[ == ]]` pattern matching (password bypass)
+
+When a script prompts for a password with `read -s` and then checks it with **`[[ $STORED_PASS == $USER_PASS ]]`**, the `==` operator inside `[[ ... ]]` performs **pattern matching** (glob), not literal string comparison. So if the user enters **`*`**, it matches any value of `$STORED_PASS`, bypassing the check.
+
+**Example pattern:** Script reads root's password from a file, prompts "Enter MySQL password for root:", and does:
+
+```bash
+read -s -p "Enter MySQL password for $DB_USER: " USER_PASS
+if [[ $DB_PASS == $USER_PASS ]]; then
+  echo "Password confirmed!"
+  # ... runs mysqldump etc. as root
+fi
+```
+
+**Exploitation:** When prompted, enter **`*`** as the password. The script will treat it as a match and continue running as root (e.g. dumping DBs, changing permissions). You may see the real password in process listings (e.g. `pspy`) if the script passes it to `mysql`/`mysqldump` on the command line.
+
 #### Sudo -l LD\_PRELOAD Method 2
 
 1. In command prompt type: sudo -l
