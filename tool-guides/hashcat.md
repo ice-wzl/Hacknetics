@@ -53,7 +53,7 @@ hash-identifier
 | 500 | md5crypt ($1$) | Older Linux |
 | 1600 | Apache $apr1$ MD5 | .htpasswd files |
 | 3200 | bcrypt ($2*$) | Modern web apps |
-| 10900 | PBKDF2-HMAC-SHA256 | Flask/Werkzeug, Superset, Grafana |
+| 10900 | PBKDF2-HMAC-SHA256 | Flask/Werkzeug, Superset, Grafana, Mirth Connect 4.4.0+ |
 | 1000 | NTLM | Windows SAM/NTDS |
 | 5600 | NetNTLMv2 | Windows network auth |
 | 13100 | Kerberos TGS-REP (etype 23) | Kerberoasting |
@@ -81,6 +81,8 @@ hashcat -a 0 -m 500 '$1$pdQG$o8nrSzsGXeaduXrjlvKc91' /usr/share/wordlists/rockyo
 
 # Output: $1$pdQG$o8nrSzsGXeaduXrjlvKc91:stealth1agent
 ```
+
+**Mirth Connect 4.4.0+ (PBKDF2, mode 10900):** Stored hash is Base64; first 8 bytes = salt, rest = PBKDF2 output. Convert to `sha256:600000:SALT_B64:HASH_B64` (salt and hash Base64-encoded, strip trailing `=`). See [Mirth Connect](things-i-have-pwnd-before/mirth-connect.md) for Python conversion and DB extraction.
 
 **Cisco Type 7 - NOT for hashcat!** Type 7 is reversible obfuscation, not encryption:
 
