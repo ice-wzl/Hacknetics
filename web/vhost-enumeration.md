@@ -9,7 +9,7 @@ gobuster vhost -u http://machine.htb -w /usr/share/seclists/Discovery/DNS/bitqua
 ### FFuf Fuzzing for subdomains
 
 ```
-ffuf -u http://vulnnet.thm -H "Host: FUZZ.vulnnet.thm" -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -fs 5829
+ffuf -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -u http://vulnnet.thm -H "Host: FUZZ.vulnnet.thm" -fs 5829
 ```
 
 * Notice that you will get back responses with a similar character count, these are often the ones that will fail, to make the output more readable, filter on the bad character count and look for one with a unique character count.
@@ -32,7 +32,7 @@ ffuf -w /mnt/home/dasor/wordlist/directory-list-2.3-big.txt:FUZZ -u http://trick
 Now you can use the below command and throw all the requests through the burp proxy to view the requests
 
 ```
-ffuf -u http://localhost:8888 -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -fc 302
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt:FUZZ -u http://localhost:8888 -H "Host: FUZZ.mentorquotes.htb" -fc 302
 ```
 
 * Browsing to burp, we can see all the requests and the 302 redirects.  Try and figure out what stands out, if most requests are 302's look for 404's or other status codes
@@ -46,7 +46,7 @@ ffuf -u http://localhost:8888 -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/sec
 * Below is a command to filter the status code without using a burp proxy
 
 ```
-ffuf -u http://mentorquotes.htb -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/seclists/Disc
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt:FUZZ -u http://mentorquotes.htb -H "Host: FUZZ.mentorquotes.htb" -fc 302
 ```
 
 #### ffuf vhost filter by fixed size
@@ -54,9 +54,9 @@ ffuf -u http://mentorquotes.htb -H "Host: FUZZ.mentorquotes.htb" -w /usr/share/s
 When the default vhost returns a consistent response size, filter by that size so only different (valid) vhosts show:
 
 ```bash
-ffuf -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt \
+ffuf -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt:FUZZ \
   -u http://target.htb -H "Host: FUZZ.target.htb" -fs 230
-ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt \
+ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt:FUZZ \
   -u http://target.htb -H "Host: FUZZ.target.htb" -fs 230
 ```
 
@@ -67,9 +67,9 @@ ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt \
 * `-fs SIZE` — exclude responses with this size (baseline from invalid subdomains)
 
 ```bash
-ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt \
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt:FUZZ \
   -u https://target.htb -H "Host: FUZZ.target.htb" -k -fc 200
-ffuf -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt \
+ffuf -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt:FUZZ \
   -u https://target.htb -H "Host: FUZZ.target.htb" -k -fc 200
 ```
 
@@ -79,7 +79,7 @@ ffuf -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt \
 * \-mc Match HTTP status codes, or "all" for everything. (default: 200,204,301,302,307,401,403)
 
 ```
-ffuf -u http://machine.htb -H "Host: FUZZ.machine.htb" -mc 200 -w /usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt -b "PHPSESSID=28330d435522c7f6080f8d63b86c7daa"
+ffuf -w /usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt:FUZZ -u http://machine.htb -H "Host: FUZZ.machine.htb" -mc 200 -b "PHPSESSID=28330d435522c7f6080f8d63b86c7daa"
 ```
 
 ---
@@ -92,15 +92,15 @@ ffuf -u http://machine.htb -H "Host: FUZZ.machine.htb" -mc 200 -w /usr/share/sec
 
 ```bash
 # BAD - May filter out valid subdomains
-ffuf -w /usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt \
+ffuf -w /usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt:FUZZ \
   -u https://target.htb -H "Host: FUZZ.target.htb" -k -ac
 
 # GOOD - Manually inspect results first, then filter
-ffuf -w /usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt \
+ffuf -w /usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt:FUZZ \
   -u https://target.htb -H "Host: FUZZ.target.htb" -k
 
 # Then filter based on observed baseline (e.g., filter 400 responses)
-ffuf -w wordlist.txt -u https://target.htb -H "Host: FUZZ.target.htb" -k --fc 400
+ffuf -w wordlist.txt:FUZZ -u https://target.htb -H "Host: FUZZ.target.htb" -k -fc 400
 ```
 
 **Why this matters:** A 421 Misdirected Request often indicates a valid vhost that requires SNI or a different SSL certificate. Auto-calibrate may mark these as "baseline" and filter them out.

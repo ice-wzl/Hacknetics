@@ -26,7 +26,7 @@ Affects Ghost admin API session endpoint. Use **Content-Type: application/json**
 User enumeration (e.g. with ffuf) can be done by fuzzing the username/email and filtering on response (e.g. `-fr "Authorization failed"` or `-fc 403`). Using a request file is often easier: save the POST request from Burp with `FUZZ` in the email, then:
 
 ```bash
-ffuf -request users.req --request-proto http -w /usr/share/seclists/Usernames/Names/names.txt -fc 403
+ffuf -request users.req --request-proto http -w /usr/share/seclists/Usernames/Names/names.txt:FUZZ -fc 403
 ```
 
 ---

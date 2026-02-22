@@ -293,7 +293,7 @@ When the main site uses a single vhost or redirects, enumerate subdomains by fuz
 
 ```bash
 # Subdomains: FUZZ.TARGET.htb (add TARGET.htb and discovered hosts to /etc/hosts)
-ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt \
+ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt:FUZZ \
      -u http://TARGET \
      -H "Host: FUZZ.TARGET" \
      -fw 21
@@ -309,8 +309,8 @@ Use `-fs 230` (or similar) to filter by response size if that better separates v
 
 ```bash
 # Fuzz for hidden GET parameters
-ffuf -u "http://TARGET/index.php?FUZZ=test" \
-     -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt \
+ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ \
+     -u "http://TARGET/index.php?FUZZ=test" \
      -fs 1234  # Filter by response size
 
 # Common hidden parameters
@@ -326,11 +326,11 @@ ffuf -u "http://TARGET/index.php?FUZZ=test" \
 
 ```bash
 # Fuzz POST parameters
-ffuf -u "http://TARGET/index.php" \
+ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ \
+     -u "http://TARGET/index.php" \
      -X POST \
      -H "Content-Type: application/x-www-form-urlencoded" \
      -d "FUZZ=test" \
-     -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt \
      -fs 1234
 ```
 
@@ -338,8 +338,8 @@ ffuf -u "http://TARGET/index.php" \
 
 ```bash
 # Fuzz parameter values (e.g., find valid modes)
-ffuf -u "http://TARGET/index.php?mode=FUZZ" \
-     -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt \
+ffuf -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt:FUZZ \
+     -u "http://TARGET/index.php?mode=FUZZ" \
      -fs 1234
 ```
 

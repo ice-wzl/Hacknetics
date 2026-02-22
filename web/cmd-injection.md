@@ -179,7 +179,7 @@ name=FUZZ
 * Save the burp request to your local machine in a file&#x20;
 
 ```
-ffuf -request search.request --request-proto http -w /opt/Seclists/Fuzzing/special-chars.txt
+ffuf -request search.request --request-proto http -w /opt/Seclists/Fuzzing/special-chars.txt:FUZZ
 ```
 
 * You usually will have to ignore the `&` character as many webservers will think you are going to pass in another parameter

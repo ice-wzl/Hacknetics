@@ -52,7 +52,7 @@ ffuf -X POST \
     -H "Content-Type: application/x-www-form-urlencoded" \
     -d "name=FUZZ&pass=invalid&form_build_id=form-xxx&form_id=user_login&op=Log+in" \
     -u "http://TARGET/?q=user/login" \
-    -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
+    -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt:FUZZ \
     -fr "Sorry, unrecognized username."
 ```
 
@@ -64,7 +64,7 @@ ffuf -X POST \
     -H "Content-Type: application/x-www-form-urlencoded" \
     -d "name=FUZZ&form_build_id=form-xxx&form_id=user_pass&op=Reset+password" \
     -u "http://TARGET/?q=user/password" \
-    -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
+    -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt:FUZZ \
     -fr "is not recognized as a user name or an email address."
 ```
 

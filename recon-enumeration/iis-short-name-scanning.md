@@ -82,7 +82,7 @@ File: /dev/dca66d38fd916317687e1390a420c3fc/db/poo_co~1.txt*
 * Keep in mind shortname scanning will only give you the first 6 letters and the file extension, you will need to fuzz the remaining words in order to ascertain the full file name
 
 ```
-ffuf -w wordlist.txt -u http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1/db/FUZZ.txt -t 1 
+ffuf -w wordlist.txt:FUZZ -u http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1/db/FUZZ.txt -t 1 
 ```
 
 ### Shortscan (Github)

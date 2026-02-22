@@ -10,24 +10,24 @@ go install github.com/ffuf/ffuf/v2@latest
 
 ---
 
-## Basic Usage
+## Wordlist and keyword
+
+Assign a wordlist to a keyword with `-w PATH:KEYWORD`. Default keyword is `FUZZ`; use `:FUZZ` explicitly for clarity.
 
 ```bash
-ffuf -w WORDLIST -u http://TARGET/FUZZ
+ffuf -w /path/to/wordlist.txt:FUZZ -u http://TARGET/FUZZ
 ```
-
-The `FUZZ` keyword is replaced with each word from the wordlist.
 
 ---
 
 ## Directory Fuzzing
 
 ```bash
-ffuf -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt \
+ffuf -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt:FUZZ \
   -u http://TARGET/FUZZ
 
 # With status code filtering
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -mc 200,301,302
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -mc 200,301,302
 ```
 
 ---
@@ -36,50 +36,54 @@ ffuf -w wordlist.txt -u http://TARGET/FUZZ -mc 200,301,302
 
 ```bash
 # Single extension
-ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt \
+ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt:FUZZ \
   -u http://TARGET/FUZZ.php
 
 # Multiple extensions
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -e .php,.html,.txt,.bak,.js
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -e .php,.html,.txt,.bak,.js
+
+# Extension fuzzing (wordlist contains the dot, e.g. .php, .html)
+ffuf -w /usr/share/seclists/Discovery/Web-Content/web-extensions.txt:FUZZ \
+  -u http://TARGET/blog/indexFUZZ
 ```
 
 ---
 
 ## Recursive Fuzzing
 
-Automatically fuzz discovered directories:
+URL must end with `FUZZ` for recursion. Automatically fuzz discovered directories:
 
 ```bash
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -recursion
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -recursion
 
 # Limit recursion depth
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -recursion -recursion-depth 2
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -recursion -recursion-depth 2
 
-# With extensions
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -e .html -recursion -ic
+# With extensions; -ic = ignore wordlist lines starting with #
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -e .php -recursion -ic
 ```
-
-`-ic` = Ignore comments (lines starting with #)
 
 ---
 
 ## Parameter Fuzzing
 
+POST form data needs `-H "Content-Type: application/x-www-form-urlencoded"`. JSON body needs `-H "Content-Type: application/json"`.
+
 ### GET Parameters
 
 ```bash
-# Fuzz parameter name
-ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt \
-  -u "http://TARGET/page.php?FUZZ=value"
+# Fuzz parameter name (filter by size to drop default response)
+ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ \
+  -u "http://TARGET/page.php?FUZZ=key" -fs 1234
 
-# Fuzz parameter value
-ffuf -w wordlist.txt -u "http://TARGET/page.php?id=FUZZ"
+# Fuzz parameter value (e.g. id=FUZZ with ids/values wordlist)
+ffuf -w wordlist.txt:FUZZ -u "http://TARGET/page.php?id=FUZZ" -fs 1234
 ```
 
 ### POST Parameters
 
 ```bash
-ffuf -w wordlist.txt \
+ffuf -w wordlist.txt:FUZZ \
   -u http://TARGET/login.php \
   -X POST \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -89,7 +93,7 @@ ffuf -w wordlist.txt \
 ### JSON Body
 
 ```bash
-ffuf -w wordlist.txt \
+ffuf -w wordlist.txt:FUZZ \
   -u http://TARGET/api/login \
   -X POST \
   -H "Content-Type: application/json" \
@@ -100,21 +104,22 @@ ffuf -w wordlist.txt \
 
 ## VHost / Subdomain Fuzzing
 
+VHost = same IP, fuzz `Host` header; filter by default response size (`-fs`) to see only different vhosts.
+
 ```bash
 # VHost fuzzing via Host header
-ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
-  -u http://TARGET \
-  -H "Host: FUZZ.target.com"
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ \
+  -u http://TARGET -H "Host: FUZZ.target.com"
 
-# Filter by response size (find unique responses)
-ffuf -w subdomains.txt -u http://target.com -H "Host: FUZZ.target.com" -fs 1234
+# Filter by response size (default vhost returns fixed size; -fs drops it)
+ffuf -w subdomains.txt:FUZZ -u http://target.com -H "Host: FUZZ.target.com" -fs 1234
 
-# HTTPS subdomain enum: -k skip TLS verify; -fc 200 to exclude 200 (default vhost)
-ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt \
+# HTTPS: -k skip TLS verify; -fc 200 to exclude 200 (default vhost)
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt:FUZZ \
   -u https://target.htb -H "Host: FUZZ.target.htb" -k -fc 200
 
-# HTTP subdomain enum: filter by fixed size of default response
-ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt \
+# HTTP: filter by fixed size of default response
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt:FUZZ \
   -u http://target.htb -H "Host: FUZZ.target.htb" -fs 178
 ```
 
@@ -141,28 +146,27 @@ ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt \
 | `-fw` | Filter word count |
 | `-fl` | Filter line count |
 | `-fr` | Filter by regex |
-| `-fw` | Filter word count (exclude responses with this many words) |
 
 ### Examples
 
 ```bash
 # Match only 200 responses
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -mc 200
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -mc 200
 
 # Filter out 404 and 403
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -fc 404,403
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -fc 404,403
 
 # Filter by response size (remove false positives)
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -fs 0
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -fs 0
 
 # Filter by word count
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -fw 12
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -fw 12
 
 # Match all, then filter
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -mc all -fc 404
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -mc all -fc 404
 
 # Filter by regex
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -fr "not found"
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -fr "not found"
 ```
 
 ---
@@ -189,10 +193,10 @@ Use a saved HTTP request so headers and body match exactly (e.g. for API user en
 
 ```bash
 # FUZZ in the request file is replaced by wordlist; --request-proto http or https
-ffuf -request users.req --request-proto http -w /usr/share/seclists/Usernames/Names/names.txt
+ffuf -request users.req --request-proto http -w /usr/share/seclists/Usernames/Names/names.txt:FUZZ
 
 # Filter status code
-ffuf -request users.req --request-proto http -w wordlist.txt -fc 403
+ffuf -request users.req --request-proto http -w wordlist.txt:FUZZ -fc 403
 ```
 
 Save the request from Burp (e.g. Paste from file) with `FUZZ` where the payload goes.
@@ -203,13 +207,13 @@ Save the request from Burp (e.g. Paste from file) with `FUZZ` where the payload 
 
 ```bash
 # Cookie
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -b "session=abc123"
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -b "session=abc123"
 
 # Header
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -H "Authorization: Bearer TOKEN"
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -H "Authorization: Bearer TOKEN"
 
 # Basic Auth
-ffuf -w wordlist.txt -u http://admin:password@TARGET/FUZZ
+ffuf -w wordlist.txt:FUZZ -u http://admin:password@TARGET/FUZZ
 ```
 
 ---
@@ -218,13 +222,13 @@ ffuf -w wordlist.txt -u http://admin:password@TARGET/FUZZ
 
 ```bash
 # Threads (default 40)
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -t 100
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -t 100
 
 # Rate limit (requests per second)
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -rate 50
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -rate 50
 
 # Timeout
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -timeout 5
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -timeout 5
 ```
 
 ---
@@ -233,16 +237,16 @@ ffuf -w wordlist.txt -u http://TARGET/FUZZ -timeout 5
 
 ```bash
 # JSON output
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -o results.json -of json
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -o results.json -of json
 
 # CSV output
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -o results.csv -of csv
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -o results.csv -of csv
 
 # HTML output
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -o results.html -of html
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -o results.html -of html
 
 # Verbose mode
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -v
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -v
 ```
 
 ---
@@ -251,10 +255,10 @@ ffuf -w wordlist.txt -u http://TARGET/FUZZ -v
 
 ```bash
 # Through Burp
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -x http://127.0.0.1:8080
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -x http://127.0.0.1:8080
 
 # Replay proxy (for matched results only)
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -replay-proxy http://127.0.0.1:8080
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -replay-proxy http://127.0.0.1:8080
 ```
 
 ---
@@ -269,6 +273,7 @@ ffuf -w wordlist.txt -u http://TARGET/FUZZ -replay-proxy http://127.0.0.1:8080
 /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt
 /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt
 /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt
+/usr/share/seclists/Discovery/Web-Content/web-extensions.txt
 /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
 ```
 
@@ -278,31 +283,32 @@ ffuf -w wordlist.txt -u http://TARGET/FUZZ -replay-proxy http://127.0.0.1:8080
 
 ```bash
 # Directory brute
-ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://TARGET/FUZZ
+ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt:FUZZ -u http://TARGET/FUZZ
 
 # File brute with extensions
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -e .php,.html,.txt,.bak
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -e .php,.html,.txt,.bak
 
-# Recursive directory scan
-ffuf -w wordlist.txt -u http://TARGET/FUZZ -recursion -recursion-depth 2 -e .php -ic
+# Recursive directory scan (URL must end with FUZZ)
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -recursion -recursion-depth 2 -e .php -ic
 
-# Subdomain enum
-ffuf -w subdomains.txt -u http://target.com -H "Host: FUZZ.target.com" -fs 1234
+# Subdomain/VHost enum (filter default response size)
+ffuf -w subdomains.txt:FUZZ -u http://target.com -H "Host: FUZZ.target.com" -fs 1234
 
-# POST parameter fuzz
-ffuf -w wordlist.txt -u http://TARGET/login -X POST -d "user=admin&pass=FUZZ" -fc 401
+# POST form fuzz (include Content-Type)
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/login -X POST \
+  -H "Content-Type: application/x-www-form-urlencoded" -d "user=admin&pass=FUZZ" -fc 401
 
 # API endpoint discovery
-ffuf -w wordlist.txt -u http://TARGET/api/FUZZ -mc 200,401,403
+ffuf -w wordlist.txt:FUZZ -u http://TARGET/api/FUZZ -mc 200,401,403
 
 # LFI fuzz
-ffuf -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -u "http://TARGET/page.php?file=FUZZ" -fs 0
+ffuf -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt:FUZZ -u "http://TARGET/page.php?file=FUZZ" -fs 0
 
 # LFI fuzz with auth (cookie + Referer), filter by word count
 ffuf -X GET -H "Host: target.htb" -H "Referer: http://target.htb/manage.php" -b "PHPSESSID=abc" \
-  -u "http://target.htb/manage.php?notes=files/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -fw 280
+  -u "http://target.htb/manage.php?notes=files/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt:FUZZ -fw 280
 
 # LFI fuzz param name (FUZZ=value)
 ffuf -X GET -H "Host: target.htb" -b "PHPSESSID=abc" \
-  -u "http://target.htb/manage.php?notes=FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -fw 280
+  -u "http://target.htb/manage.php?notes=FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt:FUZZ -fw 280
 ```

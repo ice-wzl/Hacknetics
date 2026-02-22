@@ -377,7 +377,7 @@ HAC~1.TXT      # References hackthebox.txt
 ### Fuzzing
 
 ```bash
-ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt \
+ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt:FUZZ \
      -u http://TARGET/FUZZ -e .php,.asp,.aspx
 
 # Common upload directories

