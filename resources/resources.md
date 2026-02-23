@@ -98,6 +98,21 @@ Packet Filter
 * [OverTheWire](https://overthewire.org/wargames/bandit/)
 * [https://offlinemark.com/2021/05/12/an-obscure-quirk-of-proc/](https://offlinemark.com/2021/05/12/an-obscure-quirk-of-proc/)
 
+### Vulnerable labs & practice apps
+
+* [OWASP Juice Shop](https://owasp.org/www-project-juice-shop/) — vulnerable web app (Node/Express/Angular), OWASP Top 10 and more.
+* [Metasploitable 2](https://docs.rapid7.com/metasploit/metasploitable-2-exploitability-guide/) — purpose-built vulnerable Ubuntu VM for enumeration/exploitation practice.
+* [Metasploitable 3](https://github.com/rapid7/metasploitable3) — template for building vulnerable Windows VMs.
+* [DVWA](https://github.com/digininja/DVWA) — PHP/MySQL vulnerable web app with multiple difficulty levels.
+
+### Walkthroughs & video
+
+* [IppSec](https://www.youtube.com/channel/UCa6eh7gCkpPo5XXUDfygQQA) — HTB box walkthroughs and technique videos.
+* [0xdf hacks stuff](https://0xdf.gitlab.io/) — HTB writeups with “Beyond root” sections.
+* [VbScrub](https://www.youtube.com/channel/UCpoyhjwNIWZmsiKNKpsMAQQ) — HTB and AD-focused videos.
+* [STÖK](https://www.youtube.com/channel/UCQN2DsjnYH60SFBIA6IkNwg) — bug bounty and web app testing.
+* [LiveOverflow](https://www.youtube.com/channel/UClcE-kVhqyiHCcjYwcpfj9w) — wide range of technical infosec topics.
+
 ### Web App
 
 #### HTTP/2

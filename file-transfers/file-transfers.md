@@ -377,3 +377,17 @@ cat filetoupload | base64 -w 0; echo
 ```
 echo <copiedContent> | base64 -d > filetoupload
 ```
+
+## Validating file transfers
+
+After transferring a file (e.g. via base64 or HTTP), confirm type and integrity:
+
+```bash
+# Check file type on target
+file shell
+# e.g. shell: ELF 64-bit LSB executable, x86_64 ...
+
+# Compare hashes (run on both attacker and target)
+md5sum shell
+# Hashes must match; if not, re-transfer.
+```

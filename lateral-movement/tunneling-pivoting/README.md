@@ -2,6 +2,17 @@
 
 ![alt text](https://assets.tryhackme.com/additional/wreath-network/6904b85a9b93.png)
 
+## Lab VPN (OpenVPN)
+
+For HTB and similar labs that provide a `.ovpn` key:
+
+```bash
+sudo openvpn user.ovpn
+# Wait for "Initialization Sequence Completed"
+```
+
+Confirm connectivity: `ifconfig` or `ip a` for a `tun0` interface; `netstat -rn` to see routes (e.g. lab network via tun0). Use the VPN IP (e.g. on tun0) as LHOST for callbacks. Run the VPN from a dedicated VM, not a box used for client work.
+
 ## Manual Techniques
 
 * There are two main methods encompassed in this area of pentesting:

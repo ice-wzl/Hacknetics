@@ -150,6 +150,8 @@
     * [Sticky Keys](persistence/windows-persistence-1/sticky-keys.md)
     * [Using Web Shells](persistence/windows-persistence-1/using-web-shells.md)
 * [recon-enumeration](recon-enumeration/README.md)
+  * [Assessment organization](recon-enumeration/assessment-organization.md)
+  * [Engagement types (black / grey / white box)](recon-enumeration/engagement-types.md)
   * [Exploit Research](recon-enumeration/exploit-research.md)
   * [Pentesting DNS](recon-enumeration/passive-enumeration.md)
   * [Pentesting Kerberos](domain-controllers/Kerberos.md)
