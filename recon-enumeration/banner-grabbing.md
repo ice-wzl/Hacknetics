@@ -23,6 +23,18 @@ GET / HTTP/1.1
 host: netcat
 ```
 
+**When Nmap -sV truncates or omits banner detail:** Connect manually with `nc` and capture with `tcpdump`. The full banner often arrives in a **PSH-ACK** segment (`Flags [P.]`) that Nmap may not display.
+
+```bash
+# Terminal 1: capture traffic between you and target
+sudo tcpdump -i eth0 host 10.10.14.2 and 10.129.2.28
+
+# Terminal 2: connect to the service
+nc -nv 10.129.2.28 25
+```
+
+In the tcpdump output, look for the `Flags [P.]` (PSH-ACK) line — it contains the full banner, e.g. `220 inlane ESMTP Postfix (Ubuntu)`.
+
 ```
 GET / HTTP/1.0
 host: netcat
