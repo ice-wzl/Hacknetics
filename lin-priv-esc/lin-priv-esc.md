@@ -297,6 +297,52 @@ cat /home/user/myvpn.ovpn
 su root
 ```
 
+#### User Mail
+
+Check `/var/mail/` and `/var/spool/mail/` for messages addressed to compromised users. Mail often contains password hints, password format specifications, or migration instructions from other users/admins.
+
+```bash
+cat /var/mail/$(whoami)
+ls -la /var/mail/
+ls -la /var/spool/mail/
+```
+
+LinPEAS flags mail files under "Readable files belonging to root and readable by me but not world readable" — do not skip this output.
+
+#### SQLite Credential Databases
+
+Search for `.db` and `.sqlite` files that may contain credentials. Use `strings` for a quick look, but always pull the database properly for accurate data — `strings` can produce incomplete or mangled hashes.
+
+```bash
+find / -name "*.db" -o -name "*.sqlite" 2>/dev/null
+strings /path/to/credentials.db
+```
+
+For accurate extraction, use `sqlite3`:
+
+```bash
+sqlite3 /path/to/credentials.db
+sqlite> .tables
+sqlite> SELECT * FROM users;
+sqlite> .quit
+```
+
+If `sqlite3` is not on the target, exfiltrate the file using base64:
+
+```bash
+cat /path/to/credentials.db | base64
+```
+
+Then decode on your attacker box:
+
+```bash
+echo 'BASE64_STRING' | base64 -d > creds.db
+file creds.db
+sqlite3 creds.db "SELECT * FROM users;"
+```
+
+This base64 exfiltration technique works for any binary file when your only output channel is text (e.g., SSTI output, webshell, limited command injection).
+
 #### SSH Keys
 
 * Sometimes users make backups of important files but fail to secure them with the correct permissions.

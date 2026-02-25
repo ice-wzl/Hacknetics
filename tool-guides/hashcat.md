@@ -161,52 +161,82 @@ hashcat -a 0 -m 0 F806FC5A2A0D5BA2471600758452799C /usr/share/wordlists/rockyou.
 f806fc5a2a0d5ba2471600758452799c:rockyou
 ```
 
-## Brute-Force attack
+## Mask Character Sets
 
-* Brute force a 4 digit pin
+| Charset | Characters |
+|---------|-----------|
+| `?l` | `abcdefghijklmnopqrstuvwxyz` |
+| `?u` | `ABCDEFGHIJKLMNOPQRSTUVWXYZ` |
+| `?d` | `0123456789` |
+| `?h` | `0123456789abcdef` |
+| `?H` | `0123456789ABCDEF` |
+| `?s` | `` !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ `` |
+| `?a` | `?l?u?d?s` (all printable) |
+| `?b` | `0x00 – 0xff` (all bytes) |
 
+---
+
+## Brute-Force / Mask Attack (-a 3)
+
+```bash
+# Brute force a 4 digit pin
+hashcat -a 3 -m 0 hash.txt ?d?d?d?d
+
+# Known prefix with unknown digits (e.g. password format: susan_nasus_<digits>)
+hashcat -m 1400 -a 3 hash.txt 'susan_nasus_?d?d?d?d?d?d?d?d?d'
 ```
-hashcat -a 3 ?d?d?d?d --stdout
-1234
-0234
-2234
-3234
-9234
-4234
-5234
-8234
-7234
-6234
-..
-..
+
+When the password length is unknown, run incrementally — start short and increase:
+
+```bash
+hashcat -m 1400 -a 3 hashes.txt 'prefix_?d'
+hashcat -m 1400 -a 3 hashes.txt 'prefix_?d?d'
+hashcat -m 1400 -a 3 hashes.txt 'prefix_?d?d?d'
+hashcat -m 1400 -a 3 hashes.txt 'prefix_?d?d?d?d'
+hashcat -m 1400 -a 3 hashes.txt 'prefix_?d?d?d?d?d'
+hashcat -m 1400 -a 3 hashes.txt 'prefix_?d?d?d?d?d?d'
+hashcat -m 1400 -a 3 hashes.txt 'prefix_?d?d?d?d?d?d?d'
+hashcat -m 1400 -a 3 hashes.txt 'prefix_?d?d?d?d?d?d?d?d'
+hashcat -m 1400 -a 3 hashes.txt 'prefix_?d?d?d?d?d?d?d?d?d'
 ```
 
-* \-a 3 sets the attacking mode as a brute-force attack
-* ?d?d?d?d the ?d tells hashcat to use a digit. In our case, ?d?d?d?d for four digits starting with 0000 and ending at 9999
-* \--stdout print the result to the terminal
+Or use `--increment` to auto-increase length:
 
-## Example of 4 digit pin hash
+```bash
+hashcat -m 1400 -a 3 hashes.txt 'prefix_?d?d?d?d?d?d?d?d?d' --increment --increment-min 1 --increment-max 9
+```
+
+---
+
+## Hybrid Attack (-a 6 / -a 7)
+
+Combine a wordlist with a mask. `-a 6` appends the mask to each word, `-a 7` prepends it.
+
+```bash
+# Wordlist + mask: each word from rockyou followed by 1 digit + 1 special char
+hashcat -m 1400 -a 6 hashes.txt /usr/share/wordlists/rockyou.txt '?d?s'
+
+# Mask + wordlist: 2 digits prepended to each word
+hashcat -m 1400 -a 7 hashes.txt '?d?d' /usr/share/wordlists/rockyou.txt
+```
+
+---
+
+## Generating Massive Wordlists with Rules
+
+Combine rockyou with rule files to produce mutation-expanded lists:
+
+```bash
+hashcat --force --stdout /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule -r /usr/share/hashcat/rules/toggles1.rule > expanded.txt
+```
+
+**Reference:** [BlackHills Hashcat Cheatsheet](https://www.blackhillsinfosec.com/hashcat-cheatsheet/)
+
+---
+
+## Brute-Force 4-digit PIN Example
 
 ```
 hashcat -a 3 -m 0 05A5CF06982BA7892ED2A6D38FE832D6 ?d?d?d?d
 05a5cf06982ba7892ed2a6d38fe832d6:2021
-
-Session..........: hashcat
-Status...........: Cracked
-Hash.Name........: MD5
-Hash.Target......: 05a5cf06982ba7892ed2a6d38fe832d6
-Time.Started.....: Mon Oct 11 10:54:06 2021 (0 secs)
-Time.Estimated...: Mon Oct 11 10:54:06 2021 (0 secs)
-Guess.Mask.......: ?d?d?d?d [4]
-Guess.Queue......: 1/1 (100.00%)
-Speed.#1.........: 16253.6 kH/s (0.10ms) @ Accel:1024 Loops:10 Thr:1 Vec:8
-Recovered........: 1/1 (100.00%) Digests
-Progress.........: 10000/10000 (100.00%)
-Rejected.........: 0/10000 (0.00%)
-Restore.Point....: 0/1000 (0.00%)
-Restore.Sub.#1...: Salt:0 Amplifier:0-10 Iteration:0-10
-Candidates.#1....: 1234 -> 6764
-
-Started: Mon Oct 11 10:54:05 2021
-Stopped: Mon Oct 11 10:54:08 2021
 ```
