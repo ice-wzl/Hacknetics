@@ -63,6 +63,29 @@ hash-identifier
 | 2500 | WPA/WPA2 | WiFi |
 | 22000 | WPA-PBKDF2-PMKID+EAPOL | WiFi (modern) |
 | 13400 | KeePass 1/2 (.kdbx) | Password managers |
+| 5200 | Password Safe v3 (.psafe3) | Password managers |
+
+### Password Safe v3 Cracking
+
+Crack `.psafe3` files directly (no extraction needed):
+
+```bash
+hashcat -m 5200 Employee-Passwords_OLD.psafe3 /usr/share/wordlists/rockyou.txt
+```
+
+After cracking, open the database with `passwordsafe`:
+
+```bash
+sudo apt install passwordsafe
+# Open the .psafe3 file, enter the master password, double-click entries to copy passwords
+```
+
+`.ibak` files associated with Password Safe databases are also `Password Safe V3 database` format — check with `file`:
+
+```bash
+file Employee-Passwords_OLD_011.ibak
+Employee-Passwords_OLD_011.ibak: Password Safe V3 database
+```
 
 ### Network Device Hashes (Cisco)
 

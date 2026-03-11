@@ -98,12 +98,12 @@ wmic process get processid,name,commandline
 * Perform a basic search
 
 ```
-#in one shot, may take a while
-findstr /SI /M "password" *.xml *.ini *.txt  
-#seperate commands
-findstr /si password *.txt
-findstr /si password *.xml
-findstr /si password *.ini
+findstr /SIM /C:"password" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
+findstr /SIM /C:"pass" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
+findstr /SIM /C:"config" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
+findstr /SIM /C:"git" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
+findstr /SIM /C:"router" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
+findstr /SIM /C:"ansible" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
 
 dir c:\*password* /s
 dir c:\*pass* /s
@@ -114,8 +114,31 @@ dir c:\*.ica /s
 dir c:\*.pwd* /s
 dir c:\*.config* /s
 dir c:\*access* /s
+```
 
-# Powershell finds 
+* List all files of interest recursively (great for triage)
+
+```
+dir /S /B *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
+```
+
+* PowerShell recursive file discovery and keyword search
+
+```powershell
+Get-ChildItem -Recurse -Path "C:\" -Include @("*.txt", "*.ini", "*.cfg", "*.config", "*.xml", "*.git", "*.ps1", "*.yml", "*.bat", "*.vbs", "*.py", "*.yaml")
+
+Get-ChildItem -Recurse -Path "C:\Company" -Include @("*.txt", "*.ini", "*.cfg", "*.config", "*.xml", "*.git", "*.ps1", "*.yml", "*.bat", "*.vbs", "*.py", "*.yaml") | Select-String "password"
+```
+
+* Search for directories named Confidential
+
+```powershell
+Get-ChildItem -Recurse -Directory -Filter "Confidential" -ErrorAction SilentlyContinue
+```
+
+* PowerShell finds by file type
+
+```powershell
 Get-ChildItem -Path "C:\Users" -Filter *.doc -Recurse
 Get-ChildItem -Path "C:\Users" -Filter *.xlxs -Recurse
 Get-ChildItem -Path "C:\Users" -Filter *.xls -Recurse

