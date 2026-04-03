@@ -309,3 +309,57 @@ python3 spoofy.py -d cyberbotic.io -o stdout
 [?] No DMARC record found.
 [+] Spoofing possible for fakedomain.io.
 ```
+
+## DNS Server Configuration (Bind9)
+
+### Config Files
+* `/etc/bind/named.conf.local`
+* `/etc/bind/named.conf.options`
+* `/etc/bind/named.conf.log`
+
+### Local DNS Configuration
+
+```
+root@bind9:~# cat /etc/bind/named.conf.local
+zone "domain.com" {
+    type master;
+    file "/etc/bind/db.domain.com";
+    allow-update { key rndc-key; };
+};
+```
+
+### Dangerous Settings
+
+| Option | Description |
+|---|---|
+| allow-query | Defines which hosts can send requests to the DNS server |
+| allow-recursion | Defines which hosts can send recursive requests |
+| allow-transfer | Defines which hosts can receive zone transfers |
+| zone-statistics | Collects statistical data of zones |
+
+### DIG Queries
+
+```
+dig ns inlanefreight.htb @10.129.14.128
+dig CH TXT version.bind 10.129.120.85
+dig any inlanefreight.htb @10.129.14.128
+```
+
+### DIG Zone Transfer (AXFR)
+
+```
+dig axfr inlanefreight.htb @10.129.14.128
+dig axfr internal.inlanefreight.htb @10.129.14.128
+```
+
+### Subdomain Brute Forcing (Bash)
+
+```bash
+for sub in $(cat /opt/useful/seclists/Discovery/DNS/subdomains-top1million-110000.txt);do dig $sub.inlanefreight.htb @10.129.14.128 | grep -v ';\|SOA' | sed -r '/^\s*$/d' | grep $sub | tee -a subdomains.txt;done
+```
+
+### DNSenum
+
+```
+dnsenum --dnsserver 10.129.14.128 --enum -p 0 -s 0 -o subdomains.txt -f /opt/useful/seclists/Discovery/DNS/subdomains-top1million-110000.txt inlanefreight.htb
+```
