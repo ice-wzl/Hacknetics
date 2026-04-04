@@ -33,6 +33,9 @@ hashcat --identify hash.txt
 # Using hashid
 hashid hash.txt
 
+# Identify hash type and suggest hashcat mode
+hashid -m '$1$FNr44XZC$wQxY6HHLrgrGX0e1195k.1'
+
 # Using hash-identifier
 hash-identifier
 ```
@@ -262,4 +265,69 @@ hashcat --force --stdout /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/
 ```
 hashcat -a 3 -m 0 05A5CF06982BA7892ED2A6D38FE832D6 ?d?d?d?d
 05a5cf06982ba7892ed2a6d38fe832d6:2021
+```
+
+---
+
+## Linux Shadow Hash Algorithm IDs
+
+The `$id$` prefix in `/etc/shadow` identifies the hashing algorithm:
+
+| ID | Algorithm |
+|---|---|
+| `1` | MD5 |
+| `2a` | Blowfish |
+| `5` | SHA-256 |
+| `6` | SHA-512 |
+| `sha1` | SHA1crypt |
+| `y` | Yescrypt |
+| `gy` | Gost-yescrypt |
+| `7` | Scrypt |
+
+---
+
+## Cracking DCC2 (MS Cache 2)
+
+```bash
+hashcat -m 2100 '$DCC2$10240#administrator#23d97555681813db79b2ade4b4a6ff25' /usr/share/wordlists/rockyou.txt
+```
+
+---
+
+## Cracking BitLocker (mode 22100)
+
+```bash
+bitlocker2john -i Backup.vhd > backup.hashes
+grep "bitlocker\$0" backup.hashes > backup.hash
+hashcat -a 0 -m 22100 backup.hash /usr/share/wordlists/rockyou.txt
+```
+
+---
+
+## Generating Mutated Wordlist
+
+```bash
+hashcat --force password.list -r custom.rule --stdout | sort -u > mut_password.list
+```
+
+---
+
+## Hashcat Rule Functions
+
+| Function | Description |
+|---|---|
+| `:` | Do nothing |
+| `l` | Lowercase all |
+| `u` | Uppercase all |
+| `c` | Capitalize first letter |
+| `sXY` | Replace X with Y |
+| `$!` | Append `!` |
+
+---
+
+## Cracking Linux Shadow Hashes
+
+```bash
+unshadow /tmp/passwd.bak /tmp/shadow.bak > /tmp/unshadowed.hashes
+hashcat -m 1800 -a 0 /tmp/unshadowed.hashes rockyou.txt -o /tmp/unshadowed.cracked
 ```

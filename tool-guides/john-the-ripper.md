@@ -320,3 +320,123 @@ Az"[0-9]" ^[!@#$]
 
 * All credit goes to the creator(s) of the John the Ripper Tool on THM.
 * www.tryhackme.com/room/johntheripper0
+
+---
+
+## hashID for John Format
+
+```bash
+hashid -j 193069ceb0461e1d40d216e32c79c704
+```
+
+---
+
+## Single Crack Mode
+
+```bash
+john --single passwd
+```
+
+---
+
+## Incremental Mode
+
+```bash
+john --incremental <hash_file>
+```
+
+### View Incremental Modes in Config
+
+```bash
+grep '# Incremental modes' -A 100 /etc/john/john.conf
+```
+
+---
+
+## 2john Conversion Tools
+
+* Use `locate *2john*` to find all available converters
+
+| Tool | Use |
+|---|---|
+| `ssh2john.py` | SSH private keys |
+| `office2john.py` | MS Office documents |
+| `pdf2john.py` | PDF files |
+| `zip2john` | ZIP archives |
+| `rar2john` | RAR archives |
+| `7z2john.pl` | 7z archives |
+| `bitlocker2john` | BitLocker volumes |
+| `keepass2john` | KeePass databases |
+| `putty2john` | PuTTY keys |
+| `pfx2john` | PFX/PKCS12 certificates |
+| `gpg2john` | GPG keys |
+| `wpa2john` | WPA handshakes |
+| `vncpcap2john` | VNC pcap files |
+| `mscash2john` | MS Cache hashes |
+| `DPAPImk2john.py` | DPAPI master keys |
+
+---
+
+## Cracking Office Documents
+
+```bash
+office2john.py Protected.docx > protected-docx.hash
+john --wordlist=rockyou.txt protected-docx.hash
+john protected-docx.hash --show
+```
+
+---
+
+## Cracking PDFs
+
+```bash
+pdf2john.py PDF.pdf > pdf.hash
+john --wordlist=rockyou.txt pdf.hash
+john pdf.hash --show
+```
+
+---
+
+## Cracking OpenSSL-Encrypted Archives
+
+```bash
+file GZIP.gzip
+for i in $(cat rockyou.txt);do openssl enc -aes-256-cbc -d -in GZIP.gzip -k $i 2>/dev/null| tar xz;done
+```
+
+---
+
+## Hunting for Encrypted Files
+
+```bash
+for ext in $(echo ".xls .xls* .xltx .od* .doc .doc* .pdf .pot .pot* .pp*");do echo -e "\nFile extension: " $ext; find / -name *$ext 2>/dev/null | grep -v "lib\|fonts\|share\|core" ;done
+```
+
+---
+
+## Hunting for SSH Keys
+
+```bash
+grep -rnE '^\-{5}BEGIN [A-Z0-9]+ PRIVATE KEY\-{5}$' /* 2>/dev/null
+```
+
+---
+
+## Check if SSH Key is Encrypted
+
+```bash
+ssh-keygen -yf ~/.ssh/id_ed25519
+ssh-keygen -yf ~/.ssh/id_rsa
+```
+
+---
+
+## Mounting BitLocker in Linux
+
+```bash
+sudo apt-get install dislocker
+sudo mkdir -p /media/bitlocker /media/bitlockermount
+sudo losetup -f -P Backup.vhd
+sudo dislocker /dev/loop0p2 -u1234qwer -- /media/bitlocker
+sudo mount -o loop /media/bitlocker/dislocker-file /media/bitlockermount
+```

