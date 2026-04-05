@@ -39,3 +39,13 @@ netstat -antb | findstr 1080
 Profile > Proxy Server > Add
 127.0.0.1 1080 Socks5
 ```
+
+---
+
+### Multi-Hop RDP
+
+After Proxifier is configured, use `mstsc.exe` to RDP to deeper internal targets through the SOCKS tunnel chain.
+
+### Performance Tip
+
+Set mstsc.exe Experience tab Performance to **Modem** for slow tunneled connections to reduce bandwidth overhead.

@@ -46,6 +46,27 @@ run
 proxychains xfreerdp /v:172.16.5.19 /u:victor /p:pass@123
 ```
 
+### SSH Local Port Forwarding (-L)
+
+Forward remote MySQL (port 3306) on pivot host to local port 1234:
+
+```bash
+ssh -L 1234:localhost:3306 ubuntu@10.129.202.64
+```
+
+Forward multiple ports simultaneously:
+
+```bash
+ssh -L 1234:localhost:3306 -L 8080:localhost:80 ubuntu@10.129.202.64
+```
+
+Confirm the forward is working:
+
+```bash
+nmap -v -sV -p1234 localhost
+netstat -antp | grep 1234
+```
+
 ### Forward Connections
 
 * Creating a forward (or "local") SSH tunnel can be done from our attacking box when we have SSH access to the target.
@@ -71,6 +92,18 @@ ssh -D 1337 user@172.16.0.5 -fN
 ```
 
 This again uses the `-fN` switches to background the shell. The choice of port `1337` is completely arbitrary -- all that matters is that the port is available and correctly set up in your proxychains (or equivalent) configuration file. Having this proxy set up would allow us to route all of our traffic through into the target network.
+
+### SSH Reverse Port Forwarding (-R)
+
+Forward connections from the pivot host back to the attack host:
+
+```bash
+ssh -R <InternalIPofPivotHost>:8080:0.0.0.0:8000 ubuntu@<ipAddressofTarget> -vN
+```
+
+- `-R` — tells the remote server to listen on `<InternalIPofPivotHost>:8080` and forward to `0.0.0.0:8000` on the SSH client (attack host)
+- `-v` — verbose output for debugging
+- `-N` — no login shell, only set up the connection
 
 ### Reverse Connections
 

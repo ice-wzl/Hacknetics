@@ -90,6 +90,8 @@
     * [SShuttle](lateral-movement/tunneling-pivoting/sshuttle.md)
     * [Ligolo-ng](lateral-movement/tunneling-pivoting/ligolo-ng.md)
     * [SocksOverRDP](lateral-movement/tunneling-pivoting/socksoverrdp.md)
+    * [Ptunnel-ng](lateral-movement/tunneling-pivoting/ptunnel-ng.md)
+    * [Rpivot](lateral-movement/tunneling-pivoting/rpivot.md)
   * [DNScat](lateral-movement/dnscat.md)
   * [IpTables bending traffic](lateral-movement/iptables-bending-traffic.md)
   * [netsh bending traffic](lateral-movement/netsh-bending-traffic.md)

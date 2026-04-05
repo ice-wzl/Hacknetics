@@ -77,23 +77,46 @@ nmcli dev show
 
 ## LOL Techniques
 
-* The following Bash one-liner would perform a full ping sweep of the `192.168.1.x` network:
+### Ping Sweeps
+
+Linux bash:
+
+```bash
+for i in {1..254} ;do (ping -c 1 172.16.5.$i | grep "bytes from" &) ;done
+```
+
+Windows CMD:
 
 ```
-for i in {1..255}; do (ping -c 1 192.168.1.${i} | grep "bytes from" &); done
+for /L %i in (1 1 254) do ping 172.16.5.%i -n 1 -w 100 | find "Reply"
 ```
 
-* The equivalent of this command in Powershell is unbearably slow, so it's better to find an alternative option where possible.
-* If you suspect that a host is active but is blocking ICMP ping requests, you could also check some common ports using a tool like netcat.
+Windows PowerShell:
 
-### Port scanning in bash can be done:
+```powershell
+1..254 | % {"172.16.5.$($_): $(Test-Connection -count 1 -comp 172.16.5.$($_) -quiet)"}
+```
+
+Meterpreter:
 
 ```
+meterpreter > run post/multi/gather/ping_sweep RHOSTS=172.16.5.0/23
+```
+
+### Routing Table
+
+```bash
+netstat -r
+```
+
+### View Established Sessions
+
+```bash
+netstat -antp
+```
+
+### Port Scanning in Bash
+
+```bash
 for i in {1..65535}; do (echo > /dev/tcp/192.168.1.1/$i) >/dev/null 2>&1 && echo $i is open; done
 ```
-
-#### Sources
-
-* All credit for this guide goes to:
-* https://tryhackme.com/room/wreath
-* The THM Room was created by MuirlandOracle, who puts out amazing content. The contents of this .md come from that room. Check it out!

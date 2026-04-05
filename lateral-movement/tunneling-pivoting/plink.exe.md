@@ -26,3 +26,18 @@ puttygen KEYFILE -o OUTPUT_KEY.ppk
 * Plink is notorious for going out of date quickly, which often results in failing to connect back. Always make sure you have an up to date version of the .exe. Whilst there is a copy pre-installed on Kali at `/usr/share/windows-resources/binaries/plink.exe`
 * Download the latest
 * https://www.chiark.greenend.org.uk/\~sgtatham/putty/latest.html
+
+---
+
+## Dynamic Port Forwarding with Plink
+
+```
+plink -ssh -D 9050 ubuntu@10.129.15.50
+```
+
+Creates a SOCKS proxy on local port 9050 via SSH. Use with **Proxifier** on Windows to route all desktop application traffic through the tunnel.
+
+### Proxifier Configuration
+
+1. Set proxy server to `127.0.0.1`, port `9050`, type `SOCKS4`
+2. Use `mstsc.exe` to RDP through the tunnel to internal hosts
