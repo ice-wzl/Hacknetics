@@ -115,6 +115,12 @@ fierce -h
 fierce -dns google.com
 ```
 
+Updated syntax (newer versions):
+
+```bash
+fierce --domain zonetransfer.me
+```
+
 * Fierce will first list DNS Servers, attempt a zone transfer on every name server, checks for wildcard DNS record and attempts to brute force subdomains using an internal wordlist.
 * By default fierce has its own wordlist but you can also use your own word list:
 
@@ -270,7 +276,10 @@ puredns bruteforce best-dns-wordlist.txt trilocor.local -r resolvers.txt -w stuf
 * EDIT /etc/ettercap/etter.dns TO MAP TARGET DOMAIN
 
 ```
-cat /etc/ettercap/etter.dns inlanefreight.com A 192.168.225.110 *.inlanefreight.com A 192.168.225.110
+cat /etc/ettercap/etter.dns
+
+inlanefreight.com      A   192.168.225.110
+*.inlanefreight.com    A   192.168.225.110
 ```
 
 * Start ettercap and scan for live hosts
@@ -308,6 +317,19 @@ python3 spoofy.py -d cyberbotic.io -o stdout
 [?] No SPF record found.
 [?] No DMARC record found.
 [+] Spoofing possible for fakedomain.io.
+```
+
+## DNS Cache Poisoning
+
+Locally performed via MITM tools (Ettercap, Bettercap). The attacker intercepts DNS queries on the local network and responds with a forged IP. Not the same as classic remote cache poisoning (Kaminsky-style).
+
+Verify from victim perspective:
+
+```
+C:\>ping inlanefreight.com
+
+Pinging inlanefreight.com [192.168.225.110] with 32 bytes of data:
+Reply from 192.168.225.110: bytes=32 time<1ms TTL=64
 ```
 
 ## DNS Server Configuration (Bind9)
@@ -362,4 +384,21 @@ for sub in $(cat /opt/useful/seclists/Discovery/DNS/subdomains-top1million-11000
 
 ```
 dnsenum --dnsserver 10.129.14.128 --enum -p 0 -s 0 -o subdomains.txt -f /opt/useful/seclists/Discovery/DNS/subdomains-top1million-110000.txt inlanefreight.htb
+```
+
+---
+
+## MX Record Enumeration
+
+```bash
+host -t MX hackthebox.eu
+host -t MX microsoft.com
+dig mx plaintext.do | grep "MX" | grep -v ";"
+dig mx inlanefreight.com | grep "MX" | grep -v ";"
+```
+
+Resolve the mail server:
+
+```bash
+host -t A mail1.inlanefreight.htb.
 ```
