@@ -147,3 +147,32 @@ DC.ACME.COM
 COMPUTER.ACME.COM
 GUEST@ACME.COM
 ```
+
+### BloodHound.py (Python Ingestor)
+
+* Remote collection from Linux — no need to run SharpHound on a Windows box
+* Talks LDAP/SMB to the DC and produces the same JSON files BloodHound expects
+
+```bash
+sudo bloodhound-python -u 'forend' -p 'Klmcargo2' -ns 172.16.5.5 -d inlanefreight.local -c all
+```
+
+* `-c all` grabs every collection method (users, groups, sessions, ACLs, trusts, etc.)
+* `-ns` points at the DC for DNS resolution
+* Upload the resulting JSON files into BloodHound GUI the same way you would with SharpHound output
+
+### Custom Cypher Queries
+
+#### WinRM users with dangerous rights
+
+```
+MATCH p1=shortestPath((u1:User)-[r1:MemberOf*1..]->(g1:Group)) MATCH p2=(u1)-[:CanPSRemote*1..]->(c:Computer) RETURN p2
+```
+
+#### SQL Admin users
+
+```
+MATCH p1=shortestPath((u1:User)-[r1:MemberOf*1..]->(g1:Group)) MATCH p2=(u1)-[:SQLAdmin*1..]->(c:Computer) RETURN p2
+```
+
+* Paste these into the **Raw Query** bar at the bottom of the BloodHound GUI

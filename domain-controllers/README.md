@@ -2,110 +2,52 @@
 
 {% embed url="https://casvancooten.com/posts/2020/11/windows-active-directory-exploitation-cheat-sheet-and-command-reference/" %}
 
-* Some great tools to help you pillage Windows environments&#x20;
+## Attack Methodology
 
-### AD Enumeration
+| Phase | Page |
+|---|---|
+| AD Fundamentals | [AD Overview](ad-overview.md) |
+| Initial Enumeration (LotL) | [AD Enumeration Commands](ad-enumeration-commands.md) |
+| LLMNR/NBT-NS Poisoning | [LLMNR/NBT-NS Poisoning](llmnr-nbt-ns-poisoning.md) |
+| Password Spraying | [Password Spraying](password-spraying.md) |
+| Credentialed Enumeration | [Credentialed AD Enumeration](credentialed-enumeration.md) |
+| Kerberos Attacks | [Pentesting Kerberos](Kerberos.md) |
+| ACL Abuse | [ACL Abuse](acl-abuse.md) |
+| DCSync | [DCSync](dcsync.md) |
+| Domain Trust Abuse | [Domain Trust Abuse](domain-trust-abuse.md) |
+| Misc Misconfigurations | [Miscellaneous AD Misconfigurations](miscellaneous-ad-misconfigurations.md) |
 
-#### SharpView - .NET port of PowerView.ps1
+## AD Enumeration Tools
 
-* https://github.com/dmchell/SharpView
+- [SharpView](https://github.com/dmchell/SharpView) - .NET port of PowerView.ps1
+- [Windapsearch](https://github.com/ropnop/windapsearch) - LDAP Enumeration
+- [ldapsearch-ad](https://github.com/yaap7/ldapsearch-ad) - LDAP Enumeration
+- [Get-ADGroupMemberDate](https://raw.githubusercontent.com/proxb/PowerShell_Scripts/master/Get-ADGroupMemberDate.ps1) - Retrieve date a user was added
 
-#### Get-ADGroupMemberDate - Retireves date a user was added
+## Active Directory GPO Tools
 
-* https://raw.githubusercontent.com/proxb/PowerShell\_Scripts/master/Get-ADGroupMemberDate.ps1
+- [SharpGPOAbuse](https://github.com/FSecureLABS/SharpGPOAbuse) - Abuse GPO edit rights
+- [Group3r](https://github.com/Group3r/Group3r) - Enumerate and identify exploitable GPO misconfigurations
+- [GPOwned](https://github.com/X-C3LL/GPOwned)
+- [pyGPOAbuse](https://github.com/Hackndo/pyGPOAbuse) - Python partial implementation of SharpGPOAbuse
 
-#### Windapsearch - LDAP Enumeration
+## AD Misc Tools
 
-* https://github.com/ropnop/windapsearch
+- [GoldenGMSA](https://github.com/Semperis/GoldenGMSA) - C# tool for abusing Group Managed Service Accounts (gMSA)
 
-#### ldapsearch-ad - LDAP Enumeration
+## AD Lateral Movement Tools
 
-* https://github.com/yaap7/ldapsearch-ad
+- [SharpRDP](https://github.com/0xthirteen/SharpRDP) - .NET non-graphical RCE via RDP
+- [SharpNoPSExec](https://github.com/juliourena/SharpNoPSExec) - Leverages existing services without creating new ones
+- [NimExec](https://github.com/frkngksl/NimExec) - Fileless remote command execution via MS-SCMR
+- [EvilWinRM](https://github.com/Hackplayers/evil-winrm)
+- [SharpWSUS](https://github.com/nettitude/SharpWSUS) - Lateral movement through WSUS
+- [KrbRelayUp](https://github.com/Dec0ne/KrbRelayUp) - Wrapper around Rubeus and KrbRelay
+- [KrbRelay](https://github.com/cube0x0/KrbRelay) - Kerberos Relaying
+- [SharpSystemTriggers](https://github.com/cube0x0/SharpSystemTriggers) - Remote authentication triggers
+- [SpoolSample](https://github.com/leechristensen/SpoolSample) - PrinterBug Attack (Unconstrained Delegation)
 
-### Active Directory GPO
+## Windows Attack Boxes
 
-#### SharpGPOAbuse
-
-* .NET application written in C# that can be used to take advantage of a user's edit rights on a Group Policy Object (GPO)
-* https://github.com/FSecureLABS/SharpGPOAbuse
-
-#### Group3r
-
-* Enumerate relevant settings in AD Group Policy, and to identify exploitable misconfigurations
-* https://github.com/Group3r/Group3r
-
-#### GPOwned
-
-* https://github.com/X-C3LL/GPOwned
-
-#### pyGPOAbuse
-
-* Python partial implementation of SharpGPOAbuse
-* https://github.com/Hackndo/pyGPOAbuse
-
-### AD Misc
-
-#### GoldenGMSA
-
-* C# tool for abusing Group Managed Service Accounts (gMSA) in Active Directory
-* https://github.com/Semperis/GoldenGMSA
-
-### AD Lateral Movement
-
-#### SharpRDP
-
-* .NET tool allows for non-graphical RCE via RDP
-* https://github.com/0xthirteen/SharpRDP
-
-### SharpNoPSExec
-
-* Leverages existing services on a target system without creating new ones or writing to disk
-* https://github.com/juliourena/SharpNoPSExec
-
-### NimExec
-
-* Fileless remote command execution tool. Operates by exploiting the Service Control Manager Remote Protocol (MS-SCMR)
-* https://github.com/frkngksl/NimExec
-
-#### EvilWinRM
-
-* https://github.com/Hackplayers/evil-winrm
-
-#### SharpWSUS
-
-* CSharp tool for lateral movement through WSUS
-* https://github.com/nettitude/SharpWSUS
-
-### AD Lateral Movement
-
-#### KrbRelayUp
-
-* Simple wrapper around some of the features of Rubeus and KrbRelay in order to streamline
-* https://github.com/Dec0ne/KrbRelayUp
-
-#### KrbRelay
-
-* Kerberos Relaying
-* https://github.com/cube0x0/KrbRelay
-
-#### SharpSystemTriggers
-
-* Collection of remote authentication triggers coded in C#
-* https://github.com/cube0x0/SharpSystemTriggers
-
-#### SpoolSample
-
-* PrinterBug Attack (Unconstrained Delegation)
-* https://github.com/leechristensen/SpoolSample
-
-### Windows Attack Boxes
-
-#### Commando VM
-
-* Mandiant - Comprehensive and customizable, Windows-based security distribution for penetration testing and red teaming
-* https://github.com/mandiant/commando-vm
-
-#### Flare VM
-
-* Mandiant - Reverse engineering environment on a virtual machine
-* https://github.com/mandiant/flare-vm
+- [Commando VM](https://github.com/mandiant/commando-vm) - Mandiant Windows security distribution
+- [Flare VM](https://github.com/mandiant/flare-vm) - Mandiant reverse engineering environment

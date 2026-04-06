@@ -400,3 +400,27 @@ Get-ObjectACL "DC=testlab,DC=local" -ResolveGUIDs | ? {
 ```
 $FormatEnumerationLimit=-1;Get-DomainUser -LDAPFilter '(userPassword=*)' -Properties samaccountname,memberof,userPassword | % {Add-Member -InputObject $_ NoteProperty 'Password' "$([System.Text.Encoding]::ASCII.GetString($_.userPassword))" -PassThru} | fl
 ```
+
+### Map all domain trusts
+
+```
+Get-DomainTrustMapping
+```
+
+### Test local admin access on a remote host
+
+```
+Test-AdminAccess -ComputerName ACADEMY-EA-MS01
+```
+
+### Find interesting ACLs in the domain
+
+```
+Find-InterestingDomainAcl
+```
+
+### Find machines where the current user has local admin access
+
+```
+Find-LocalAdminAccess
+```
