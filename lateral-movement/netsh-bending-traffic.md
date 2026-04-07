@@ -33,6 +33,14 @@ netsh.exe interface portproxy show v4tov4
 netsh advfirewall firewall add rule name="forwarded_Port" protocol=TCP dir=in localip=0.0.0.0 localport=43389 action=allow
 ```
 
+#### Delete Single Rule
+
+Must specify both `listenport` AND `listenaddress`:
+
+```cmd
+netsh interface portproxy delete v4tov4 listenport=8080 listenaddress=<listen_ip>
+```
+
 #### Cleanup
 
 ```

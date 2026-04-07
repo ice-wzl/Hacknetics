@@ -67,6 +67,10 @@ client: fatal: server died with error code 255
 sshuttle -r user@172.16.0.5 172.16.0.0/24 -x 172.16.0.5
 ```
 
+#### Notes
+
+* Auto cleans up iptables rules on Ctrl+C — no manual cleanup needed
+
 #### Connect to Target Network Through Pivot Host
 
 ```

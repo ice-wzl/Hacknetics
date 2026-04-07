@@ -73,3 +73,5 @@ dnscat2> window -i 1
 ```
 
 * Ctrl+Z to go back
+
+**Note:** Very slow connection since all traffic tunnels over DNS queries.

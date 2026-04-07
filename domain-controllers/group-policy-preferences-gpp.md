@@ -7,8 +7,17 @@
 gpp-decrypt VPe/o9YRyz2cksnYRbNeQj35w9KxQ5ttbvtRaAVqxaE
 ```
 
-* Find GPP Passwords
-* https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-GPPPassword.ps1
+### Find GPP Passwords
+```powershell
+# PowerSploit module
+Get-GPPPassword.ps1
+```
+- https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-GPPPassword.ps1
+
+### Check SYSVOL Scripts
+```powershell
+ls \\<dc>\SYSVOL\<DOMAIN>\scripts
+```
 
 ### CRACKMAPEXEC
 

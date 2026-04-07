@@ -197,6 +197,27 @@ adidnsdump -u inlanefreight\\forend ldap://172.16.5.5 -r
 head records.csv
 ```
 
+## Kerberos Double Hop Problem
+- When authenticating via WinRM/PSRemoting, your TGT isn't forwarded to the remote session
+- You can't run AD commands (e.g. PowerView, ADWS) from the remote host without workarounds
+
+### Workaround 1: PSCredential Object
+```powershell
+$SecPassword = ConvertTo-SecureString '<pass>' -AsPlainText -Force
+$Cred = New-Object System.Management.Automation.PSCredential('DOMAIN\user', $SecPassword)
+Get-DomainUser -SPN -Credential $Cred | Select samaccountname
+```
+
+### Workaround 2: Register PSSession Configuration
+```powershell
+Enter-PSSession -ComputerName <host> -Credential <domain\user>
+Register-PSSessionConfiguration -Name <sessname> -RunAsCredential <domain\user>
+Restart-Service WinRM
+
+# Re-authenticate with registered session
+Enter-PSSession -ComputerName <host> -Credential <domain\user> -ConfigurationName <sessname>
+```
+
 ## Sniffing LDAP Credentials
 - Many devices (printers, apps) store LDAP creds in their web admin console
 - Change the LDAP server IP to your attack host + set up listener on port 389

