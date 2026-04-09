@@ -450,6 +450,25 @@ pip3 install -r requirements.txt
 python3 finalrecon.py --full http://TARGET
 ```
 
+### EyeWitness
+
+Screenshot web applications at scale to quickly identify what's running on discovered hosts/ports:
+
+```bash
+# Screenshot a list of URLs
+eyewitness --web -f urls.txt -d output_dir
+
+# Use with Nmap XML output
+eyewitness --web -x nmap_output.xml -d output_dir
+
+# Single URL
+eyewitness --web --single http://TARGET
+```
+
+Useful for quickly triaging a large number of web services during internal network assessments to identify login portals, default installs, and interesting applications.
+
+---
+
 ### Recon-ng
 
 ```bash

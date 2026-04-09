@@ -177,6 +177,24 @@ PORT     STATE SERVICE VERSION
 
 <figure><img src="../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
 
+### Nmap Output Parsing
+
+Extract open ports and services from greppable output:
+
+```bash
+nmap -A -T4 TARGET -oA nmap_output
+
+# Extract open TCP services from .gnmap output
+egrep -v "^#|Status: Up" nmap_output.gnmap | cut -d' ' -f2,4- | \
+  sed -n -e 's/Ignored.*//p' | \
+  awk '{print "Host: " $1 " Ports: " NF-1; for(i=2;i<=NF;i++){print "\t"$i}}' | \
+  sed -e 's/\/open\//\t/g' -e 's/\/\///g' -e 's/|/\t/g'
+```
+
+This extracts a clean list of hosts with their open ports, services, and versions from the `.gnmap` file.
+
+---
+
 ## Vulnerability Scanning
 
 * Good nmap command

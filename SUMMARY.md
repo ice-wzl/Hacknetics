@@ -146,6 +146,7 @@
   * [Ghost CMS](things-i-have-pwnd-before/ghost-cms.md)
   * [Wing FTP Server (Linux web client)](things-i-have-pwnd-before/wing-ftp.md)
   * [vm2 (Node.js sandbox)](things-i-have-pwnd-before/vm2.md)
+  * [DotNetNuke (DNN)](things-i-have-pwnd-before/dotnetnuke.md)
 * [persistence](persistence/README.md)
   * [Linux Persistence](persistence/persistence.md)
   * [Windows Persistence](persistence/windows-persistence-1.md)

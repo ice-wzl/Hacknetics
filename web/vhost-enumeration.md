@@ -1,5 +1,17 @@
 # vhost Enumeration
 
+### Determine Baseline Response Size
+
+Before fuzzing, determine the `Content-Length` of an invalid vhost to use as a filter value:
+
+```bash
+curl -s -I http://TARGET -H "Host: randomnotexist.TARGET" | grep Content-Length
+```
+
+Use the returned size with `ffuf -fs` to filter out default responses.
+
+---
+
 ### Gobuster
 
 ```

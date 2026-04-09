@@ -222,3 +222,28 @@ Enter-PSSession -ComputerName <host> -Credential <domain\user> -ConfigurationNam
 - Many devices (printers, apps) store LDAP creds in their web admin console
 - Change the LDAP server IP to your attack host + set up listener on port 389
 - May receive cleartext credentials when device tests the connection
+
+## Post-Compromise AD Auditing
+
+### DPAT (Domain Password Audit Tool)
+
+Analyze dumped NTDS hashes against cracked passwords for reporting:
+
+```bash
+python3 dpat.py -n ntds.dit -c cracked_hashes.txt -g groups.json
+```
+
+- Generates HTML report showing password reuse, weak passwords, admin accounts with cracked passwords
+- [DPAT GitHub](https://github.com/clr2of8/DPAT)
+
+### PingCastle
+
+Automated AD security assessment tool:
+
+```cmd
+PingCastle.exe --healthcheck --server dc01.domain.local
+```
+
+- Produces a risk-scored HTML report covering trusts, GPO issues, Kerberos misconfigurations, privileged group membership, and stale objects
+- Run from a domain-joined machine or supply credentials
+- [PingCastle](https://www.pingcastle.com/)

