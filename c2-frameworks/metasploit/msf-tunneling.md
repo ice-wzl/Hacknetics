@@ -45,7 +45,7 @@ run autoroute -p
 #### Setup Auto Route
 
 ```
-use multi/manage/autoroute
+use post/multi/manage/autoroute
 set session 1
 exploit
 ```

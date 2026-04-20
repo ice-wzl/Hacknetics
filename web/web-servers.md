@@ -113,7 +113,7 @@ gobuster dir -u http://magic.uploadvulns.thm -w /usr/share/wordlists/dirb/big.tx
 #### Example full syntax
 
 ```
-dirb http://10.10.10.10:80/secret/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -X .txt 
+gobuster dir http://10.10.10.10:80/secret/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -X .txt 
 ```
 
 * This command tests the /secret/ directory

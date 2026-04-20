@@ -24,8 +24,8 @@ cd /opt
 git clone https://github.com/projectdiscovery/nuclei.git
 cd nuclei/v2/cmd/nuclei/
 sudo go build .
-export $PATH=$PATH:/opt/nuclei/v2/cmd/nuclei #temp solution  
-echo "$PATH=$PATH:/opt/nuclei/v2/cmd/nuclei" > ~/.bashrc #perm solution
+export PATH=$PATH:/opt/nuclei/v2/cmd/nuclei #temp solution  
+echo "PATH=$PATH:/opt/nuclei/v2/cmd/nuclei" >> ~/.bashrc #perm solution
 source ~/.bashrc
 ```
 
@@ -44,7 +44,7 @@ nuclei -l /path/to/list-of-targets.txt
 ### **Automatic Selection (-as)**
 
 ```
-nuclei -u https:// my.target.site -as
+nuclei -u https://my.target.site -as
 ```
 
 This option will attempt to fingerprint the technology stack and components used on the target, then select templates that have been tagged with those tech stack keywords.

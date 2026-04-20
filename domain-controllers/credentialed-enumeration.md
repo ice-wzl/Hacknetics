@@ -2,25 +2,25 @@
 
 ## From Linux
 
-### CrackMapExec / NetExec
+### NetExec
 ```bash
 # Domain user enumeration (with badpwdcount)
-crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --users
+nxc smb 172.16.5.5 -u forend -p Klmcargo2 --users
 
 # Domain group enumeration
-crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --groups
+nxc smb 172.16.5.5 -u forend -p Klmcargo2 --groups
 
 # Get members of a specific group
 netexec ldap <ip> -u <user> -p <pass> --groups "Domain Admins"
 
 # Logged on users
-crackmapexec smb 172.16.5.130 -u forend -p Klmcargo2 --loggedon-users
+nxc smb 172.16.5.130 -u forend -p Klmcargo2 --loggedon-users
 
 # Share enumeration
-crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --shares
+nxc smb 172.16.5.5 -u forend -p Klmcargo2 --shares
 
 # Spider shares for files
-crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 -M spider_plus --share 'Department Shares'
+nxc smb 172.16.5.5 -u forend -p Klmcargo2 -M spider_plus --share 'Department Shares'
 
 # Search share content for keywords
 netexec smb <ip> -u <user> -p <pass> --spider <share> --content --pattern "passw"

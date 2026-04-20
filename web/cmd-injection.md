@@ -20,7 +20,7 @@
 
 ```
 cat vs type 
-ping -c vs ping -n #ping -n causes an infinte ping loop in linux
+ping -c vs ping -n #ping -n windows syntax
 ls vs dir
 ```
 

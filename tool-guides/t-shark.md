@@ -50,11 +50,11 @@ tshark -r dns.cap -Y "dns.qry.type == 1" -T fields -e dns.qry.name
 #### Queries
 - See who queried for a particular domain:
 ````
-tshark -r [file-name.pcap] -T fields -e ip.src -e
+tshark -r [file-name.pcap] -T fields -e ip.src 
 ````
 - List all queries
 ````
-tshark -r [file-name.pcap] -T fields -e ip.src -e
+tshark -r [file-name.pcap] -T fields -e ip.src 
 ````
 
 

