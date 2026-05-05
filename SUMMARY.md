@@ -253,7 +253,6 @@
   * [KeePass KeeThief](tool-guides/keepass-keethief.md)
   * [FileCryptography.psm1](tool-guides/filecryptography.psm1.md)
   * [Impacket Pastable Commands](tool-guides/impacket-pastable-commands.md)
-  * [NetExec Pastable Commands](tool-guides/netexec-pastable-commands.md)
   * [feroxbuster](tool-guides/feroxbuster.md)
   * [ffuf](tool-guides/ffuf.md)
   * [NetExec](tool-guides/netexec.md)
