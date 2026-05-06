@@ -128,6 +128,7 @@
   * [GitLab](things-i-have-pwnd-before/gitlab.md)
   * [osTicket](things-i-have-pwnd-before/osticket.md)
   * [Shellshock CGI](things-i-have-pwnd-before/shellshock-cgi.md)
+  * [htmLawed](things-i-have-pwnd-before/htmlawed.md)
   * [Tiny File Manager](things-i-have-pwnd-before/tiny-file-manager.md)
   * [eXtplorer](things-i-have-pwnd-before/extplorer.md)
   * [Apache ActiveMQ](things-i-have-pwnd-before/activemq.md)
