@@ -128,6 +128,7 @@
   * [osTicket](things-i-have-pwnd-before/osticket.md)
   * [Shellshock CGI](things-i-have-pwnd-before/shellshock-cgi.md)
   * [Tiny File Manager](things-i-have-pwnd-before/tiny-file-manager.md)
+  * [eXtplorer](things-i-have-pwnd-before/extplorer.md)
   * [Apache ActiveMQ](things-i-have-pwnd-before/activemq.md)
   * [Request Tracker (RT)](things-i-have-pwnd-before/request-tracker.md)
   * [CMS Made Simple](things-i-have-pwnd-before/cms-made-simple.md)

