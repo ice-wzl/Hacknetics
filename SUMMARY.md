@@ -141,6 +141,8 @@
   * [Webmin](things-i-have-pwnd-before/webmin.md)
   * [Cockpit](things-i-have-pwnd-before/cockpit.md)
   * [Spring Boot Actuators](things-i-have-pwnd-before/spring-boot-actuators.md)
+  * [ttyd](things-i-have-pwnd-before/ttyd.md)
+  * [rpc.py](things-i-have-pwnd-before/rpcpy.md)
   * [js2py](things-i-have-pwnd-before/js2py.md)
   * [Metabase](things-i-have-pwnd-before/metabase.md)
   * [Mirth Connect](things-i-have-pwnd-before/mirth-connect.md)
