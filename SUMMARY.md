@@ -140,6 +140,7 @@
   * [Apache Superset](things-i-have-pwnd-before/apache-superset.md)
   * [Webmin](things-i-have-pwnd-before/webmin.md)
   * [Cockpit](things-i-have-pwnd-before/cockpit.md)
+  * [RaspAP](things-i-have-pwnd-before/raspap.md)
   * [Exhibitor / ZooKeeper](things-i-have-pwnd-before/exhibitor-zookeeper.md)
   * [Spring Boot Actuators](things-i-have-pwnd-before/spring-boot-actuators.md)
   * [ttyd](things-i-have-pwnd-before/ttyd.md)

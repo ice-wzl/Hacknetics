@@ -73,6 +73,7 @@ hydra [login_options] [password_options] [attack_options] [service_options]
 | `pop3` | POP3 Mail | `hydra -l user -P pass.txt pop3://mail.server.com` |
 | `imap` | IMAP Mail | `hydra -l user -P pass.txt imap://mail.server.com` |
 | `smtp` | SMTP Mail | `hydra -l user -P pass.txt smtp://mail.server.com` |
+| `telnet` | Telnet | `hydra -L users.txt -P pass.txt telnet://192.168.1.100` |
 | `ldap2` | LDAP | `hydra -L users.txt -P pass.txt 192.168.1.100 ldap2` |
 | `snmp` | SNMP | `hydra -P pass.txt 192.168.1.100 snmp` |
 
@@ -87,6 +88,14 @@ hydra [login_options] [password_options] [attack_options] [service_options]
 ```
 hydra -l user -P passlist.txt ftp://10.10.10.10 -F
 ```
+
+## Telnet
+
+```bash
+hydra -L users.txt -P /usr/share/wordlists/rockyou.txt -t 3 telnet://TARGET -F -vV
+```
+
+Telnet can be unreliable for Hydra to analyze. Manually validate any hit with `telnet TARGET 23` before trusting the result.
 
 ## SSH
 
