@@ -118,6 +118,7 @@
   * [ssh agent](linux-privilege-escalation/ssh-agent.md)
 * [Things I have Pwn'd before](things-i-have-pwnd-before/README.md)
   * [Tomcat](things-i-have-pwnd-before/tomcat.md)
+  * [Atlassian Confluence](things-i-have-pwnd-before/confluence.md)
   * [Jenkins](things-i-have-pwnd-before/jenkins.md)
   * [WordPress](things-i-have-pwnd-before/wordpress.md)
   * [Joomla](things-i-have-pwnd-before/joomla.md)

