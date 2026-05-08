@@ -9,3 +9,11 @@ netsh advfirewall set allprofiles state off
 #turn on 
 netsh advfirewall set allprofiles state on 
 ```
+
+### Turn Firewall on or off
+
+```powershell
+Get-NetFirewallProfile | Select Name, Enabled
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+```

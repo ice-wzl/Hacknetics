@@ -183,6 +183,55 @@ ssh2john id_rsa > id_rsa_hash.txt
 john --wordlist=/usr/share/wordlists/rockyou.txt id_rsa_hash.txt
 ```
 
+## Cracking Ansible Vault
+
+Keep the vault blob in its original format. `ansible2john` expects the `$ANSIBLE_VAULT` header and ciphertext lines exactly as Ansible writes them.
+
+```text
+$ANSIBLE_VAULT;1.1;AES256
+HEX_LINE_1
+HEX_LINE_2
+HEX_LINE_3
+HEX_LINE_4
+HEX_LINE_5
+```
+
+If the vault content came from a Windows host or a copied YAML block, normalize it before cracking:
+
+```bash
+cat -A vault.yml
+dos2unix vault.yml
+```
+
+For YAML files containing multiple vaulted variables, extract one vault blob per file:
+
+```bash
+# username.raw and password.raw each start with $ANSIBLE_VAULT;...
+ansible2john password.raw > password.hash
+john --wordlist=/usr/share/wordlists/rockyou.txt password.hash
+john password.hash --show
+```
+
+After cracking the vault password, decrypt variables with Ansible:
+
+```bash
+echo 'VAULT_PASSWORD' > vault.pass
+
+ansible localhost \
+  -m ansible.builtin.debug \
+  -a var=ansible_password \
+  -e @vault.yml \
+  --vault-password-file vault.pass
+
+ansible localhost \
+  -m ansible.builtin.debug \
+  -a var=ansible_username \
+  -e @vault.yml \
+  --vault-password-file vault.pass
+```
+
+If decryption fails after a successful crack, check for trailing spaces, missing indentation under `!vault |`, and Windows CRLF characters.
+
 ## PGP Keys
 
 * Have a file `tryhackme.adc` (the PGP Private Key block) and `credential.pgp` (the encrypted file)
@@ -369,6 +418,7 @@ grep '# Incremental modes' -A 100 /etc/john/john.conf
 | `keepass2john` | KeePass databases |
 | `putty2john` | PuTTY keys |
 | `pfx2john` | PFX/PKCS12 certificates |
+| `ansible2john` | Ansible Vault blobs |
 | `gpg2john` | GPG keys |
 | `wpa2john` | WPA handshakes |
 | `vncpcap2john` | VNC pcap files |

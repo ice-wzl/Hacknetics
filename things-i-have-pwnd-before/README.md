@@ -81,6 +81,34 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Windows FileZilla Server 0.9.60 beta exposes a local admin port on `127.0.0.1:14147`; forward it over SSH and abuse the public 0.9.60 admin-port tooling to create `system:wyywyy` with FTP access to `C:\`. See [FileZilla Server 0.9.60 beta](filezilla-server.md).
 
+### Remote Mouse
+
+* Remote Mouse 3.008 can expose TCP/UDP ports `1978-1980`; if network access is filtered, check the local GUI from RDP. The image-transfer folder picker can be abused to spawn an elevated command prompt. See [Remote Mouse](remote-mouse.md).
+
+### Liferay
+
+* Liferay Portal admin access can lead to command execution through the Server Administration Groovy script console. Deployment files and NFS shares may leak `jdbc.default.*`, default admin email settings, and Tomcat config. See [Liferay](liferay.md).
+
+### Gogs
+
+* Gogs access can expose users, repositories, source history, and config secrets. CVE-2025-8110 uses an authenticated symlink workflow; URL-encode special characters in credentials before cloning through exploit tooling. See [Gogs](gogs.md).
+
+### OpenNMS
+
+* OpenNMS Horizon / Meridian admin access can lead to RCE through notification configuration and filesystem editor features. The Metasploit module may require `ROLE_FILESYSTEM_EDITOR` and `ROLE_REST`, plus module/payload tuning. See [OpenNMS](opennms.md).
+
+### Sonatype Nexus Repository Manager
+
+* Nexus Repository Manager leaks useful version and REST data before auth. Admin access can lead to Windows command execution through Groovy scripts or custom tasks, and automation backups may reveal the rotated admin password. See [Sonatype Nexus Repository Manager](sonatype-nexus.md).
+
+### SonarQube
+
+* SonarQube exposes useful API/version checks. Admin access can upload a malicious plugin and restart the service; if the service runs as LocalSystem, the plugin executes as SYSTEM. Check `sonar.properties` backups and local H2 databases for credentials. See [SonarQube](sonarqube.md).
+
+### uftpd
+
+* `uftpd` 2.8 can be abused with directory traversal / chroot bypass tooling to retrieve sensitive files such as SSH private keys from local-only FTP services. See [uftpd](uftpd.md).
+
 ### Mantis Bug Tracker
 
 * `80/tcp open http mantisbt-2.3.0`

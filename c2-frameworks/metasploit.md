@@ -299,6 +299,8 @@ Output format: `Username:SID:LM hash:NTLM hash:::`
 LM hash `aad3b435b51404eeaad3b435b51404ee` = empty password.
 NTLM hash `31d6cfe0d16ae931b73c59d7e0c089c0` = empty password.
 
+If `hashdump` prints hashes and then errors with a Ruby stack trace around `priv/passwd.rb` / `report_creds`, the collection may have succeeded but failed while storing creds in the Metasploit database. Copy the printed hashes and rerun with a post module or dump SAM/SYSTEM/SECURITY manually if needed.
+
 ### Credential Collector
 
 ```

