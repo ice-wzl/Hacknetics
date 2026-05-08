@@ -56,6 +56,7 @@ hash-identifier
 | 500 | md5crypt ($1$) | Older Linux |
 | 1600 | Apache $apr1$ MD5 | .htpasswd files |
 | 3200 | bcrypt ($2*$) | Modern web apps |
+| 400 | phpass (`$P$`) | WordPress / Drupal portable PHP hashes |
 | 10900 | PBKDF2-HMAC-SHA256 | Flask/Werkzeug, Superset, Grafana, Mirth Connect 4.4.0+ |
 | 1000 | NTLM | Windows SAM/NTDS |
 | 5600 | NetNTLMv2 | Windows network auth |

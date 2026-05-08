@@ -60,6 +60,13 @@ Forward multiple ports simultaneously:
 ssh -L 1234:localhost:3306 -L 8080:localhost:80 ubuntu@10.129.202.64
 ```
 
+Forward a local-only VNC server exposed on the target:
+
+```bash
+ssh USER@TARGET -L 5900:127.0.0.1:5901
+vncviewer 127.0.0.1:5900
+```
+
 Confirm the forward is working:
 
 ```bash

