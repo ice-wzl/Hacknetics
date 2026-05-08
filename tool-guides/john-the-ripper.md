@@ -395,6 +395,14 @@ john --wordlist=rockyou.txt pdf.hash
 john pdf.hash --show
 ```
 
+Example with an infrastructure note or other protected PDF:
+
+```bash
+pdf2john.py Infrastructure.pdf > infrastructure.hash
+john --wordlist=/usr/share/wordlists/rockyou.txt infrastructure.hash
+john infrastructure.hash --show
+```
+
 ---
 
 ## Cracking OpenSSL-Encrypted Archives

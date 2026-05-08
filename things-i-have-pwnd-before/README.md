@@ -77,6 +77,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 * **Windows (admin panel):** `21/tcp open wingftp` — gain access to admin panel; `search lua` then `exploit(windows/ftp/wing_ftp_admin_exec)`.
 * **Linux web client:** Exposed on HTTP (often subdomain e.g. `ftp.target.htb`). RCE via command injection (EDB 52347). See [Wing FTP Server (Linux web client)](wing-ftp.md) for subdomain discovery, exploit usage, config/salted hashes, world-writable user XML overwrite, and CVE-2025-4517 priv esc.
 
+### FileZilla Server 0.9.60 beta
+
+* Windows FileZilla Server 0.9.60 beta exposes a local admin port on `127.0.0.1:14147`; forward it over SSH and abuse the public 0.9.60 admin-port tooling to create `system:wyywyy` with FTP access to `C:\`. See [FileZilla Server 0.9.60 beta](filezilla-server.md).
+
 ### Mantis Bug Tracker
 
 * `80/tcp open http mantisbt-2.3.0`

@@ -24,6 +24,21 @@ gc (Get-PSReadLineOption).HistorySavePath
 foreach($user in ((ls C:\users).fullname)){cat "$user\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt" -ErrorAction SilentlyContinue}
 ```
 
+## Process Command Lines
+```cmd
+wmic process get name,commandline
+```
+```powershell
+Get-WmiObject win32_process | Select-Object name,commandline | Format-List
+Get-CimInstance Win32_Process | Select-Object Name,CommandLine
+```
+- Look for deployment scripts, backup jobs, and service wrappers passing `--user`, `--password`, `-p`, tokens, or base64-looking strings.
+- Web dashboards that list running processes can leak the same data remotely if they expose command lines.
+- Always decode obvious encoded arguments:
+```bash
+echo 'Tm93aXNlU2xvb3BUaGVvcnkxMzkK' | base64 -d
+```
+
 ## PowerShell Credentials (DPAPI)
 ```powershell
 $credential = Import-Clixml -Path 'C:\scripts\pass.xml'

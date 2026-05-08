@@ -160,6 +160,7 @@
   * [Camaleon CMS](things-i-have-pwnd-before/camaleon-cms.md)
   * [Ghost CMS](things-i-have-pwnd-before/ghost-cms.md)
   * [Wing FTP Server (Linux web client)](things-i-have-pwnd-before/wing-ftp.md)
+  * [FileZilla Server 0.9.60 beta](things-i-have-pwnd-before/filezilla-server.md)
   * [vm2 (Node.js sandbox)](things-i-have-pwnd-before/vm2.md)
   * [DotNetNuke (DNN)](things-i-have-pwnd-before/dotnetnuke.md)
 * [Persistence](persistence/README.md)

