@@ -69,6 +69,25 @@ whatweb --no-errors 10.10.10.0/24
 
 Reports server, CMS, frameworks, PHP/version, cookies, redirects. Useful to confirm tech and redirect chains (e.g. to installer or login).
 
+### Rails Debug/Error Pages
+
+Rails apps in development/debug mode may expose detailed exception pages. Force errors with missing records, unexpected IDs, or bad routes and review the response for routes, controller names, source snippets, framework paths, and usernames in app paths.
+
+```bash
+curl -i http://TARGET:18000/users/999999
+```
+
+Useful clues include:
+
+```text
+ActiveRecord::RecordNotFound in UsersController#show
+Couldn't find User with 'id'=999999
+Rails.root: /home/cmeeks/register_hetemit
+Showing /home/cmeeks/register_hetemit/app/views/users/show.html.erb where line 12 raised
+```
+
+If an app exposes `/404` or `/500`, check those too. They may confirm the framework and whether verbose exception pages are enabled.
+
 ---
 
 ### WAF Detection (wafw00f)

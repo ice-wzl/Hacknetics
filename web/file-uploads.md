@@ -64,6 +64,16 @@ nc -lvnp 4444
 # Upload and visit shell
 ```
 
+### Rails Active Storage
+
+Rails Active Storage upload links often appear under `/rails/active_storage/blobs/.../filename.ext`. If the app renders an uploaded profile image or attachment, view the page source and follow the blob URL.
+
+```text
+/rails/active_storage/blobs/SIGNED_ID--SIGNATURE/poc.rb
+```
+
+If code files are accepted but downloaded instead of executed, treat the upload as a read/storage primitive rather than immediate RCE. Still test whether the uploaded file is rendered in an unsafe context, whether metadata is processed, and whether the blob URL leaks in debug pages or user profile HTML.
+
 ### Generate with msfvenom
 
 ```bash

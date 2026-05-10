@@ -39,6 +39,24 @@
 /api/v0/   # legacy versions often unprotected
 ```
 
+### Content-Type and Body Format Probing
+
+Do not assume JSON just because an endpoint returns JSON-like hints. Small Flask/Rails helper endpoints may return examples such as `{'email@domain'}` or `{'code'}` on `GET`, but only accept `application/x-www-form-urlencoded` on `POST`.
+
+```bash
+# JSON may 400
+curl -i -X POST http://TARGET:50000/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"user@example.com"}'
+
+# Form encoding may work
+curl -i -X POST http://TARGET:50000/generate \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'email=user@example.com'
+```
+
+If the response changes from `400 Bad Request` to a token/code, use the accepted body format for follow-on fuzzing and injection tests.
+
 ### Enumerate Your User Info
 
 ```bash

