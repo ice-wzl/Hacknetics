@@ -85,9 +85,24 @@ File: /dev/dca66d38fd916317687e1390a420c3fc/db/poo_co~1.txt*
 ffuf -w wordlist.txt:FUZZ -u http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1/db/FUZZ.txt -t 1 
 ```
 
+### iis_shortname_scan.py
+* This shortname scanner is recursive, no wordlist needed, it will recursively scan and find files for you, easiest to use and setup
+On IIS-hosted .NET apps, short-name output can leak application assemblies and dependency names even when directory brute forcing is otherwise noisy:
+
+```bash
+python3 iis_shortname_scan.py http://TARGET
+```
+
+```text
+File: /bagetd~1.dll*
+File: /bagetc~1.pdb*
+File: /nugetf~1.dll*
+File: /newton~1.dll*
+File: /sqlite~1.dll*
+```
+
 ### Shortscan (Github)
 
-* The best shortname scanner I have found so far
 * [https://github.com/bitquark/shortscan](https://github.com/bitquark/shortscan)
 * Build both binaries&#x20;
 

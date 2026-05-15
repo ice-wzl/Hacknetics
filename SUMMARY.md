@@ -153,6 +153,7 @@
   * [Netdata](things-i-have-pwnd-before/netdata.md)
   * [XWiki](things-i-have-pwnd-before/xwiki.md)
   * [Backdrop CMS](things-i-have-pwnd-before/backdrop.md)
+  * [BaGet](things-i-have-pwnd-before/baget.md)
   * [Gitea](things-i-have-pwnd-before/gitea.md)
   * [Gogs](things-i-have-pwnd-before/gogs.md)
   * [Haraka SMTP](things-i-have-pwnd-before/haraka.md)

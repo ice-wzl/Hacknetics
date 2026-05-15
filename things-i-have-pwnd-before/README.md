@@ -85,6 +85,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Remote Mouse 3.008 can expose TCP/UDP ports `1978-1980`; if network access is filtered, check the local GUI from RDP. The image-transfer folder picker can be abused to spawn an elevated command prompt. See [Remote Mouse](remote-mouse.md).
 
+### BaGet
+
+* BaGet exposes NuGet service-index and package upload endpoints on IIS/.NET targets. Check `/upload`, `/v3/index.json`, the BaGet exposure nuclei template, and IIS short-name disclosure for `baget*`/`nuget*` assemblies. See [BaGet](baget.md).
+
 ### Liferay
 
 * Liferay Portal admin access can lead to command execution through the Server Administration Groovy script console. Deployment files and NFS shares may leak `jdbc.default.*`, default admin email settings, and Tomcat config. See [Liferay](liferay.md).

