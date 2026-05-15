@@ -8,7 +8,7 @@ Fast web fuzzer written in Go. Excellent for directories, files, parameters, vho
 go install github.com/ffuf/ffuf/v2@latest
 ```
 
----
+***
 
 ## Wordlist and keyword
 
@@ -18,7 +18,7 @@ Assign a wordlist to a keyword with `-w PATH:KEYWORD`. Default keyword is `FUZZ`
 ffuf -w /path/to/wordlist.txt:FUZZ -u http://TARGET/FUZZ
 ```
 
----
+***
 
 ## Directory Fuzzing
 
@@ -30,7 +30,7 @@ ffuf -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt:
 ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -mc 200,301,302
 ```
 
----
+***
 
 ## File Fuzzing
 
@@ -47,7 +47,7 @@ ffuf -w /usr/share/seclists/Discovery/Web-Content/web-extensions.txt:FUZZ \
   -u http://TARGET/blog/indexFUZZ
 ```
 
----
+***
 
 ## Recursive Fuzzing
 
@@ -63,7 +63,7 @@ ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -recursion -recursion-depth 2
 ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -e .php -recursion -ic
 ```
 
----
+***
 
 ## Parameter Fuzzing
 
@@ -100,7 +100,7 @@ ffuf -w wordlist.txt:FUZZ \
   -d '{"user":"admin","pass":"FUZZ"}'
 ```
 
----
+***
 
 ## VHost / Subdomain Fuzzing
 
@@ -123,29 +123,29 @@ ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt:FUZZ
   -u http://target.htb -H "Host: FUZZ.target.htb" -fs 178
 ```
 
----
+***
 
 ## Filtering Output
 
 ### Match Filters (include results)
 
-| Flag | Description |
-|------|-------------|
+| Flag  | Description                                                       |
+| ----- | ----------------------------------------------------------------- |
 | `-mc` | Match status codes (default: 200,204,301,302,307,401,403,405,500) |
-| `-ms` | Match response size |
-| `-mw` | Match word count |
-| `-ml` | Match line count |
-| `-mt` | Match response time (e.g., `>500` for > 500ms) |
+| `-ms` | Match response size                                               |
+| `-mw` | Match word count                                                  |
+| `-ml` | Match line count                                                  |
+| `-mt` | Match response time (e.g., `>500` for > 500ms)                    |
 
 ### Filter Filters (exclude results)
 
-| Flag | Description |
-|------|-------------|
+| Flag  | Description                   |
+| ----- | ----------------------------- |
 | `-fc` | Filter (exclude) status codes |
-| `-fs` | Filter response size |
-| `-fw` | Filter word count |
-| `-fl` | Filter line count |
-| `-fr` | Filter by regex |
+| `-fs` | Filter response size          |
+| `-fw` | Filter word count             |
+| `-fl` | Filter line count             |
+| `-fr` | Filter by regex               |
 
 ### Examples
 
@@ -169,7 +169,7 @@ ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -mc all -fc 404
 ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -fr "not found"
 ```
 
----
+***
 
 ## Multiple Wordlists
 
@@ -185,7 +185,7 @@ ffuf -w users.txt:USER -w passwords.txt:PASS \
 ffuf -w list1.txt:W1 -w list2.txt:W2 -u http://TARGET/W1/W2 -mode clusterbomb
 ```
 
----
+***
 
 ## Request from file (Burp / raw HTTP)
 
@@ -201,7 +201,7 @@ ffuf -request users.req --request-proto http -w wordlist.txt:FUZZ -fc 403
 
 Save the request from Burp (e.g. Paste from file) with `FUZZ` where the payload goes.
 
----
+***
 
 ## Authentication
 
@@ -211,12 +211,9 @@ ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -b "session=abc123"
 
 # Header
 ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -H "Authorization: Bearer TOKEN"
-
-# Basic Auth
-ffuf -w wordlist.txt:FUZZ -u http://admin:password@TARGET/FUZZ
 ```
 
----
+***
 
 ## Performance Options
 
@@ -231,7 +228,7 @@ ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -rate 50
 ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -timeout 5
 ```
 
----
+***
 
 ## Output
 
@@ -249,7 +246,7 @@ ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -o results.html -of html
 ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -v
 ```
 
----
+***
 
 ## Proxy
 
@@ -261,14 +258,13 @@ ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -x http://127.0.0.1:8080
 ffuf -w wordlist.txt:FUZZ -u http://TARGET/FUZZ -replay-proxy http://127.0.0.1:8080
 ```
 
----
+***
 
 ## HTTP Brute Force (Login Forms)
 
 > **WARNING:** Do NOT use `ffuf -request login.req -request-proto http` for brute force attacks. It will not find the password. You MUST build the request manually with `-u`, `-d`, and `-H` flags.
 
-> **`-ac` (auto-calibrate) is OK for brute force** — it filters by response differences.
-> **`-ac` is NOT OK for vhost enumeration** — use `-fs` with the default response size instead.
+> **`-ac` (auto-calibrate) is OK for brute force** — it filters by response differences. **`-ac` is NOT OK for vhost enumeration** — use `-fs` with the default response size instead.
 
 ### Manual Build (Correct Way)
 
@@ -295,7 +291,7 @@ ffuf -u http://monitoring.inlanefreight.local/login.php \
 
 Prefer ffuf over hydra for HTTP brute force — it is faster and more flexible.
 
----
+***
 
 ## SQLi Discovery with ffuf
 
@@ -307,7 +303,7 @@ ffuf -request search.req -request-proto http -w /path/to/sqli-basic.txt -fs 878
 
 Filter by response size (`-fs`) to remove baseline responses. Look for responses with different sizes indicating SQL errors or successful injection.
 
----
+***
 
 ## Password Wordlists
 
@@ -321,7 +317,7 @@ Filter by response size (`-fs`) to remove baseline responses. Look for responses
 /usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt
 ```
 
----
+***
 
 ## Common Wordlists
 
@@ -337,7 +333,7 @@ Filter by response size (`-fs`) to remove baseline responses. Look for responses
 /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
 ```
 
----
+***
 
 ## Quick Reference Commands
 
