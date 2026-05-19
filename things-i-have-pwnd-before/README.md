@@ -89,6 +89,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * BaGet exposes NuGet service-index and package upload endpoints on IIS/.NET targets. Check `/upload`, `/v3/index.json`, the BaGet exposure nuclei template, and IIS short-name disclosure for `baget*`/`nuget*` assemblies. See [BaGet](baget.md).
 
+### HP Power Manager
+
+* HP Power Manager 4.2 Build 7 exposes a GoAhead web UI with default `admin:admin`; the Metasploit `hp_power_manager_filename` module can yield SYSTEM. See [HP Power Manager](hp-power-manager.md).
+
 ### Liferay
 
 * Liferay Portal admin access can lead to command execution through the Server Administration Groovy script console. Deployment files and NFS shares may leak `jdbc.default.*`, default admin email settings, and Tomcat config. See [Liferay](liferay.md).
