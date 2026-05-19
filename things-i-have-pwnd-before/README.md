@@ -97,6 +97,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Grav CMS exposed at `/grav-admin/` can be vulnerable to CVE-2021-21425 unauthenticated RCE. Check account YAML files after gaining web access. See [Grav CMS](grav-cms.md).
 
+### Codoforum
+
+* Codoforum admin access can permit PHP uploads through global settings and forum logo upload. Check `sites/default/config.php` for database credentials and possible local credential reuse. See [Codoforum](codoforum.md).
+
 ### Subrion CMS
 
 * Subrion CMS 4.2.1 admin access can lead to authenticated file upload RCE. Check Subrion config for DB credentials and member data. See [Subrion CMS](subrion-cms.md).
