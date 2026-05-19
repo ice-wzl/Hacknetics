@@ -93,6 +93,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Liferay Portal admin access can lead to command execution through the Server Administration Groovy script console. Deployment files and NFS shares may leak `jdbc.default.*`, default admin email settings, and Tomcat config. See [Liferay](liferay.md).
 
+### Grav CMS
+
+* Grav CMS exposed at `/grav-admin/` can be vulnerable to CVE-2021-21425 unauthenticated RCE. Check account YAML files after gaining web access. See [Grav CMS](grav-cms.md).
+
 ### Subrion CMS
 
 * Subrion CMS 4.2.1 admin access can lead to authenticated file upload RCE. Check Subrion config for DB credentials and member data. See [Subrion CMS](subrion-cms.md).

