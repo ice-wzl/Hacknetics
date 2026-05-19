@@ -64,6 +64,7 @@ Get-ChildItem | Sort-Object
 ```
 Get-Childitem –Path C:\ -Recurse -Force -ErrorAction SilentlyContinue | findstr /i "interesting-file.txt"
 Get-ChildItem -Path C:\ -Include *.doc,*.docx -File -Recurse -ErrorAction SilentlyContinue
+Get-ChildItem -Path C:\ -Recurse -Force -ErrorAction SilentlyContinue -Filter "local.txt"
 ```
 
 * ![image](https://user-images.githubusercontent.com/75596877/150693932-501b2d5c-3695-4a41-8662-27b121d7f5ac.png)
