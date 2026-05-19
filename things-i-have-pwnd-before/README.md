@@ -101,6 +101,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Codoforum admin access can permit PHP uploads through global settings and forum logo upload. Check `sites/default/config.php` for database credentials and possible local credential reuse. See [Codoforum](codoforum.md).
 
+### SaltStack
+
+* SaltStack Salt API on `/run` can expose unauthenticated command injection through the SSH client path. Confirm with ICMP, then use `ssh_priv` injection to fetch and execute a reverse shell. See [SaltStack](saltstack.md).
+
 ### Subrion CMS
 
 * Subrion CMS 4.2.1 admin access can lead to authenticated file upload RCE. Check Subrion config for DB credentials and member data. See [Subrion CMS](subrion-cms.md).
