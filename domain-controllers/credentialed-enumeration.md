@@ -120,6 +120,34 @@ sudo bloodhound-python -u 'forend' -p 'Klmcargo2' -ns 172.16.5.5 -d inlanefreigh
 - Start neo4j: `sudo neo4j start`
 - Default creds: `neo4j:neo4j`
 
+### BloodHound CE Python
+
+Use `bloodhound-ce-python` for BloodHound Community Edition collections:
+
+```bash
+sudo bloodhound-ce-python \
+  -u user@domain.local \
+  -p 'PASSWORD' \
+  -ns DC_IP \
+  --dns-tcp \
+  --zip \
+  -d domain.local \
+  -c All
+```
+
+Expected output includes domain, computer, user, group, GPO, OU, and container collection before compressing a zip for upload:
+
+```text
+INFO: Found AD domain: domain.local
+INFO: Found 1 computers
+INFO: Found 18 users
+INFO: Found 52 groups
+INFO: Found 2 gpos
+INFO: Compressing output into YYYYMMDDHHMMSS_bloodhound.zip
+```
+
+Use BloodHound to check for edges such as `ReadLAPSPassword` from the compromised user to a computer.
+
 ## From Windows
 
 ### PowerView
