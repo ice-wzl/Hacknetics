@@ -93,6 +93,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Liferay Portal admin access can lead to command execution through the Server Administration Groovy script console. Deployment files and NFS shares may leak `jdbc.default.*`, default admin email settings, and Tomcat config. See [Liferay](liferay.md).
 
+### Subrion CMS
+
+* Subrion CMS 4.2.1 admin access can lead to authenticated file upload RCE. Check Subrion config for DB credentials and member data. See [Subrion CMS](subrion-cms.md).
+
 ### Gogs
 
 * Gogs access can expose users, repositories, source history, and config secrets. CVE-2025-8110 uses an authenticated symlink workflow; URL-encode special characters in credentials before cloning through exploit tooling. See [Gogs](gogs.md).

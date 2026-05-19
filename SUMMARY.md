@@ -159,6 +159,7 @@
   * [Haraka SMTP](things-i-have-pwnd-before/haraka.md)
   * [LimeSurvey](things-i-have-pwnd-before/limesurvey.md)
   * [Liferay](things-i-have-pwnd-before/liferay.md)
+  * [Subrion CMS](things-i-have-pwnd-before/subrion-cms.md)
   * [OpenNMS](things-i-have-pwnd-before/opennms.md)
   * [Sonatype Nexus Repository Manager](things-i-have-pwnd-before/sonatype-nexus.md)
   * [SonarQube](things-i-have-pwnd-before/sonarqube.md)

