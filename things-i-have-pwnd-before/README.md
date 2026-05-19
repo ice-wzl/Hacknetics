@@ -93,6 +93,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * HP Power Manager 4.2 Build 7 exposes a GoAhead web UI with default `admin:admin`; the Metasploit `hp_power_manager_filename` module can yield SYSTEM. See [HP Power Manager](hp-power-manager.md).
 
+### H2 Database
+
+* H2 Database `1.4.199` can expose a web console on `8082`; with console access, JNI code execution can run commands and stage a Meterpreter payload. See [H2 Database](h2-database.md).
+
 ### Liferay
 
 * Liferay Portal admin access can lead to command execution through the Server Administration Groovy script console. Deployment files and NFS shares may leak `jdbc.default.*`, default admin email settings, and Tomcat config. See [Liferay](liferay.md).

