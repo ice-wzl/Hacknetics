@@ -110,6 +110,28 @@ Invoke-SessionGopher -Target WINLPE-SRV01
 ```
 - Extracts saved PuTTY, WinSCP, FileZilla, SuperPuTTY, RDP credentials
 
+## FileZilla Saved Credentials
+
+FileZilla client can store recent FTP credentials in the user's roaming profile:
+
+```powershell
+type "$env:APPDATA\FileZilla\recentservers.xml"
+```
+
+Look for base64-encoded passwords:
+
+```xml
+<Host>ftp.pg</Host>
+<User>divine</User>
+<Pass encoding="base64">Q29udHJvbEZyZWFrMTE=</Pass>
+```
+
+Decode the password:
+
+```bash
+echo 'Q29udHJvbEZyZWFrMTE=' | base64 -d
+```
+
 ## File System Credential Search
 ```cmd
 cd c:\Users\htb-student\Documents & findstr /SI /M "password" *.xml *.ini *.txt
