@@ -159,6 +159,7 @@
   * [Gitea](things-i-have-pwnd-before/gitea.md)
   * [Gogs](things-i-have-pwnd-before/gogs.md)
   * [Haraka SMTP](things-i-have-pwnd-before/haraka.md)
+  * [OpenSMTPD](things-i-have-pwnd-before/opensmtpd.md)
   * [LimeSurvey](things-i-have-pwnd-before/limesurvey.md)
   * [Liferay](things-i-have-pwnd-before/liferay.md)
   * [Grav CMS](things-i-have-pwnd-before/grav-cms.md)

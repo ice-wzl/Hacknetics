@@ -137,6 +137,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * `uftpd` 2.8 can be abused with directory traversal / chroot bypass tooling to retrieve sensitive files such as SSH private keys from local-only FTP services. See [uftpd](uftpd.md).
 
+### OpenSMTPD
+
+* OpenSMTPD on TCP/25 can be vulnerable to CVE-2020-7247 unauthenticated RCE. Confirm with an ICMP callback, then use a valid local recipient such as `root@HOSTNAME` for the reverse-shell exploit path. See [OpenSMTPD](opensmtpd.md).
+
 ### Mantis Bug Tracker
 
 * `80/tcp open http mantisbt-2.3.0`
