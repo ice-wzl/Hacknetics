@@ -89,6 +89,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * BaGet exposes NuGet service-index and package upload endpoints on IIS/.NET targets. Check `/upload`, `/v3/index.json`, the BaGet exposure nuclei template, and IIS short-name disclosure for `baget*`/`nuget*` assemblies. See [BaGet](baget.md).
 
+### Gerapy
+
+* Gerapy on TCP/8000 can expose a default `admin:admin` login and CVE-2021-43857 authenticated RCE. Create a project first if the project list is empty, then use the exploit to get a shell as `app`; check Linux capabilities for `cap_setuid=ep` on Python. See [Gerapy](gerapy.md).
+
 ### HP Power Manager
 
 * HP Power Manager 4.2 Build 7 exposes a GoAhead web UI with default `admin:admin`; the Metasploit `hp_power_manager_filename` module can yield SYSTEM. See [HP Power Manager](hp-power-manager.md).

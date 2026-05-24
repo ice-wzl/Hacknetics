@@ -151,6 +151,7 @@
   * [Pymatgen CIF Parser](things-i-have-pwnd-before/pymatgen.md)
   * [aiohttp](things-i-have-pwnd-before/aiohttp.md)
   * [Netdata](things-i-have-pwnd-before/netdata.md)
+  * [Gerapy](things-i-have-pwnd-before/gerapy.md)
   * [XWiki](things-i-have-pwnd-before/xwiki.md)
   * [Backdrop CMS](things-i-have-pwnd-before/backdrop.md)
   * [HP Power Manager](things-i-have-pwnd-before/hp-power-manager.md)
