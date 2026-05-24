@@ -97,6 +97,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * H2 Database `1.4.199` can expose a web console on `8082`; with console access, JNI code execution can run commands and stage a Meterpreter payload. See [H2 Database](h2-database.md).
 
+### Argus Surveillance DVR
+
+* Argus Surveillance DVR 4.0.0.0 can expose unauthenticated directory traversal through `WEBACCOUNT.CGI`. Use it to read Windows files, steal user SSH keys, and recover Argus credentials from `C:\ProgramData\PY_Software\Argus Surveillance DVR\DVRParams.ini`. See [Argus Surveillance DVR](argus-surveillance-dvr.md).
+
 ### Liferay
 
 * Liferay Portal admin access can lead to command execution through the Server Administration Groovy script console. Deployment files and NFS shares may leak `jdbc.default.*`, default admin email settings, and Tomcat config. See [Liferay](liferay.md).

