@@ -145,6 +145,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * `uftpd` 2.8 can be abused with directory traversal / chroot bypass tooling to retrieve sensitive files such as SSH private keys from local-only FTP services. See [uftpd](uftpd.md).
 
+### Simple PHP Photo Gallery
+
+* Simple PHP Photo Gallery `v0.8` can allow RFI through `image.php?img=`. Use it to include a hosted PHP webshell, read `db.php`, decode double-base64 gallery user passwords, and reuse a local user's password. See [Simple PHP Photo Gallery](simple-php-photo-gallery.md).
+
 ### OpenSMTPD
 
 * OpenSMTPD on TCP/25 can be vulnerable to CVE-2020-7247 unauthenticated RCE. Confirm with an ICMP callback, then use a valid local recipient such as `root@HOSTNAME` for the reverse-shell exploit path. See [OpenSMTPD](opensmtpd.md).

