@@ -53,3 +53,25 @@ HostKeyAlgorithms +ssh-rsa,ssh-dss
 ```
 
 - If the error references a different algorithm, substitute accordingly
+
+## Forced Command Keys and Legacy SCP
+
+If a recovered private key authenticates but the server closes the shell with a forced command, inspect the matching `authorized_keys` entry. A restricted key may look like:
+
+```text
+no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty,command="/home/USER/scp_wrapper.sh" ssh-rsa ...
+```
+scp error message too long
+```text
+scp: Received message too long
+scp: Ensure the remote shell produces no output for non-interactive sessions.
+```
+Fix this error with scp legacy mode `-O`
+```bash
+scp -O -i id_rsa ~/.ssh/id_rsa.pub USER@TARGET:/home/USER/.ssh/authorized_keys
+ssh USER@TARGET -i ~/.ssh/id_rsa
+```
+
+The `-O` flag forces the legacy SCP protocol instead of SFTP, which can be needed when the remote wrapper expects `scp` and otherwise returns:
+
+

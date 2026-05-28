@@ -135,6 +135,37 @@ curl http://TARGET/robots.txt
 
 ---
 
+## Exposed Backup Directories
+
+Directory listings can expose user or application backups even when the main site is empty or returns a fake `404`.
+
+Useful indicators:
+
+```text
+http-enum:
+  /zipfiles/: Potentially interesting folder w/ directory listing
+```
+
+Download and inspect the files:
+
+```bash
+wget -r http://TARGET:PORT/zipfiles/
+unzip USER.zip
+```
+
+High-value backup contents:
+
+```text
+home/USER/.ssh/id_rsa
+home/USER/.ssh/authorized_keys
+home/USER/scp_wrapper.sh
+home/USER/tomcat-users.xml.bak
+```
+
+If `authorized_keys` forces a wrapper with options such as `no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty,command="/home/USER/scp_wrapper.sh"`, check whether the wrapper still allows `scp` operations.
+
+---
+
 ## Exposed .git Directory
 
 If a `.git` directory is accessible, dump and extract for source code, credentials, and history.

