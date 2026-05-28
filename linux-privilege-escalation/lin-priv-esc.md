@@ -448,6 +448,18 @@ python3 firefox_decrypt.py mozilla/firefox/
 * **VNC:** Check `~/.vnc/config`, `~/.vnc/passwd`, and `~/.vnc/*.log`. Config options like `localhost` mean VNC is bound locally; forward it over SSH and try known user passwords before cracking.
 * **Build/provisioning scripts:** Check `/build*.sh`, `/setup*.sh`, kickstart/cloud-init leftovers, and app install scripts for `chpasswd`, `passwd`, user creation, or hardcoded service passwords.
 * **Credential reuse:** If a config user looks like a real Linux account, try the config password over SSH or `su USER`.
+* **Username as password:** For local users discovered during enumeration, try `su USER` with the password set to the same username. If successful, immediately check `sudo -l`.
+
+```bash
+ls -la /home
+su patrick
+# password: patrick
+
+sudo -l
+# User patrick may run the following commands on this host:
+#     (ALL) ALL
+```
+
 * List the contents of the user's home directory:
 
 ```

@@ -117,6 +117,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Codoforum admin access can permit PHP uploads through global settings and forum logo upload. Check `sites/default/config.php` for database credentials and possible local credential reuse. See [Codoforum](codoforum.md).
 
+### CS-Cart
+
+* CS-Cart can expose an old PHP shopping cart on Apache. Try default `admin:admin`, use authenticated CS-Cart RCE tooling for a `www-data` shell, then check `config.php` for local MySQL credentials. See [CS-Cart](cs-cart.md).
+
 ### SaltStack
 
 * SaltStack Salt API on `/run` can expose unauthenticated command injection through the SSH client path. Confirm with ICMP, then use `ssh_priv` injection to fetch and execute a reverse shell. See [SaltStack](saltstack.md).

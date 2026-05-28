@@ -167,6 +167,7 @@
   * [Liferay](things-i-have-pwnd-before/liferay.md)
   * [Grav CMS](things-i-have-pwnd-before/grav-cms.md)
   * [Codoforum](things-i-have-pwnd-before/codoforum.md)
+  * [CS-Cart](things-i-have-pwnd-before/cs-cart.md)
   * [SaltStack](things-i-have-pwnd-before/saltstack.md)
   * [Subrion CMS](things-i-have-pwnd-before/subrion-cms.md)
   * [OpenNMS](things-i-have-pwnd-before/opennms.md)
