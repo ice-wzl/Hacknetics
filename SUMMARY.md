@@ -163,6 +163,7 @@
   * [Apache James Server](things-i-have-pwnd-before/apache-james.md)
   * [Haraka SMTP](things-i-have-pwnd-before/haraka.md)
   * [OpenSMTPD](things-i-have-pwnd-before/opensmtpd.md)
+  * [Openfire](things-i-have-pwnd-before/openfire.md)
   * [LimeSurvey](things-i-have-pwnd-before/limesurvey.md)
   * [Liferay](things-i-have-pwnd-before/liferay.md)
   * [Grav CMS](things-i-have-pwnd-before/grav-cms.md)

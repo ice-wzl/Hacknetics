@@ -161,6 +161,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * OpenSMTPD on TCP/25 can be vulnerable to CVE-2020-7247 unauthenticated RCE. Confirm with an ICMP callback, then use a valid local recipient such as `root@HOSTNAME` for the reverse-shell exploit path. See [OpenSMTPD](opensmtpd.md).
 
+### Openfire
+
+* Openfire `4.7.3` admin console exposure on TCP/9090 can be abused with CVE-2023-32315 to create an admin user, upload a command-execution plugin, and recover embedded database properties such as `mail.smtp.password`. See [Openfire](openfire.md).
+
 ### Mantis Bug Tracker
 
 * `80/tcp open http mantisbt-2.3.0`
