@@ -182,12 +182,6 @@ With administrator access, go to the AdRotate media manager:
 http://loly.lc/wordpress/wp-admin/admin.php?page=adrotate-media&status=510
 ```
 
-A raw `shell.php.jpg` may upload but land as a non-executing image under:
-
-```text
-http://loly.lc/wordpress/wp-content/banners/shell.php.jpg
-```
-
 A zipped PHP shell was accepted and extracted to an executable PHP file:
 
 ```bash
@@ -219,13 +213,6 @@ Observed values:
 ```php
 define('DB_USER', 'wordpress');
 define('DB_PASSWORD', 'lolyisabeautifulgirl');
-```
-
-The database password was reused by the local `loly` user:
-
-```bash
-su loly
-# password: lolyisabeautifulgirl
 ```
 
 References:

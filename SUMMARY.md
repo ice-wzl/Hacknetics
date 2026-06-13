@@ -167,6 +167,7 @@
   * [Openfire](things-i-have-pwnd-before/openfire.md)
   * [LimeSurvey](things-i-have-pwnd-before/limesurvey.md)
   * [Liferay](things-i-have-pwnd-before/liferay.md)
+  * [Laravel](things-i-have-pwnd-before/laravel.md)
   * [Grav CMS](things-i-have-pwnd-before/grav-cms.md)
   * [Codoforum](things-i-have-pwnd-before/codoforum.md)
   * [CS-Cart](things-i-have-pwnd-before/cs-cart.md)

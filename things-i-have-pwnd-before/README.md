@@ -117,6 +117,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Liferay Portal admin access can lead to command execution through the Server Administration Groovy script console. Deployment files and NFS shares may leak `jdbc.default.*`, default admin email settings, and Tomcat config. See [Liferay](liferay.md).
 
+### Laravel
+
+* Laravel `8.4.0` with an exposed registration flow and dashboard-controlled `APP_DEBUG` can be exploited with `CVE-2021-3129` once debug is enabled. Use the Ignition exploit for command execution as `www-data`, then read `.env` for `APP_KEY` and database credentials. See [Laravel](laravel.md).
+
 ### Grav CMS
 
 * Grav CMS exposed at `/grav-admin/` can be vulnerable to CVE-2021-21425 unauthenticated RCE. Check account YAML files after gaining web access. See [Grav CMS](grav-cms.md).
