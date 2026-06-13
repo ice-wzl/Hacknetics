@@ -93,6 +93,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Gerapy on TCP/8000 can expose a default `admin:admin` login and CVE-2021-43857 authenticated RCE. Create a project first if the project list is empty, then use the exploit to get a shell as `app`; check Linux capabilities for `cap_setuid=ep` on Python. See [Gerapy](gerapy.md).
 
+### pyLoad
+
+* pyLoad on TCP/9666 can expose a Cheroot login page and unauthenticated `/flash/addcrypted2` endpoint. For vulnerable versions prior to `0.5.0b3.dev31`, use `CVE-2023-0297` `jk=pyimport os;os.system(...)` injection to confirm command execution and stage a shell. See [pyLoad](pyload.md).
+
 ### HP Power Manager
 
 * HP Power Manager 4.2 Build 7 exposes a GoAhead web UI with default `admin:admin`; the Metasploit `hp_power_manager_filename` module can yield SYSTEM. See [HP Power Manager](hp-power-manager.md).
@@ -159,7 +163,7 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 ### Zenphoto
 
-* Zenphoto `1.4.1.4` can expose its version in an HTML source comment under the gallery path. Use Exploit-DB `18083.php` against `/test/` for TinyMCE ajax file manager RCE, read `zp-data/zp-config.php` for local MySQL credentials, and check old Ubuntu kernels for the RDS `CVE-2010-3904` root path. See [Zenphoto](zenphoto.md).
+* Zenphoto `1.4.1.4` can expose its version in an HTML source comment under the gallery path. Use Exploit-DB `18083.php` against `/test/` for TinyMCE ajax file manager RCE, then read `zp-data/zp-config.php` for local MySQL credentials. See [Zenphoto](zenphoto.md).
 
 ### OpenSMTPD
 
