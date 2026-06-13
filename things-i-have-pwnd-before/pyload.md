@@ -120,12 +120,6 @@ id
 uid=0(root) gid=0(root) groups=0(root)
 ```
 
-Confirm:
-
-```bash
-cat proof.txt
-```
-
 ## References
 
 - https://github.com/advisories/GHSA-pf38-5p22-x6h6

