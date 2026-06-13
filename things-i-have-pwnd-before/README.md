@@ -97,6 +97,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * pyLoad on TCP/9666 can expose a Cheroot login page and unauthenticated `/flash/addcrypted2` endpoint. For vulnerable versions prior to `0.5.0b3.dev31`, use `CVE-2023-0297` `jk=pyimport os;os.system(...)` injection to confirm command execution and stage a shell. See [pyLoad](pyload.md).
 
+### WordPress AdRotate Banner Manager
+
+* WordPress with AdRotate Banner Manager `5.8.6.2` can allow authenticated admin upload through the AdRotate media manager. Upload a ZIP containing `shell.php`, trigger it from `/wp-content/banners/shell.php`, then check `wp-config.php` for reusable local credentials. See [WordPress](wordpress.md).
+
 ### HP Power Manager
 
 * HP Power Manager 4.2 Build 7 exposes a GoAhead web UI with default `admin:admin`; the Metasploit `hp_power_manager_filename` module can yield SYSTEM. See [HP Power Manager](hp-power-manager.md).

