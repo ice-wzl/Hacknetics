@@ -6,25 +6,11 @@ Laravel apps may expose framework-specific cookies such as `XSRF-TOKEN` and an a
 
 Useful HTTP indicators:
 
-```text
-80/tcp open  http  Apache httpd 2.4.56 ((Debian))
-|_http-title: W3.CSS Template
-|_http-server-header: Apache/2.4.56 (Debian)
-```
-
 WhatWeb may show Laravel-style cookies:
 
 ```text
 Cookies[XSRF-TOKEN,lavita_session]
 HttpOnly[lavita_session]
-```
-
-Nmap HTTP enum may reveal `robots.txt`, and normal browsing may show application routes:
-
-```text
-http://TARGET/login
-http://TARGET/register
-http://TARGET/password/reset
 ```
 
 Directory enumeration can also find compiled frontend assets and Laravel auth routes:
@@ -46,7 +32,7 @@ Useful hits:
 The Laravel version may be exposed on error pages:
 
 ```text
-http://TARGET/password
+http://TARGET/pagenothere
 Laravel 8.4.0
 ```
 
