@@ -62,6 +62,9 @@ netexec smb <ip> -u <user> -p <pass> -t 1 -M gpp_autologin
 
 # SYSVOL password hunting (Can miss things) double check with snaffler
 netexec smb <dc-ip> -d <domain> -u <user> -p <pass> -t 1 -M gpp_password
+
+# machine account quota (RBCD)
+nxc ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
 ```
 
 ### ldapsearch
