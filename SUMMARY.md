@@ -5,7 +5,6 @@
   * [How to Join a Windows 11 PC to a Domain](active-directory-management/how-to-join-a-windows-11-pc-to-a-domain.md)
   * [Allow RDP in the domain](active-directory-management/allow-rdp-in-the-domain.md)
 * [Active Directory AD Attacks](domain-controllers/README.md)
-  * [AD Overview](domain-controllers/ad-overview.md)
   * [AD Enumeration Commands (LotL)](domain-controllers/ad-enumeration-commands.md)
   * [Credentialed AD Enumeration](domain-controllers/credentialed-enumeration.md)
   * [AppLocker Bypasses](domain-controllers/applocker-bypasses.md)
