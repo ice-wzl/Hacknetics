@@ -6,6 +6,12 @@ SharpView is a replacement for powerview due to alot of increased awareness and 
 
 Cannot use `| select` with SharpView due to it returning strings instead of power shell objects&#x20;
 
+Getting help with `SharpView.exe`  is easy
+
+```
+.\SharpView.exe Get-DomainUser -Help
+```
+
 ### PowerView and Opsec
 
 PowerView can leverage token impersonation. Instead of creating a new process, you can run commands as another user by using the `-Credential` flag. This will generate a logon event on the host.
@@ -19,7 +25,7 @@ Convert-ADName -ObjectName S-1-5-21-2974783224-3764228556-2640795941-1724
 .\SharpView.exe Convert-ADName -ObjectName S-1-5-21-2974783224-3764228556-2640795941-1724
 ```
 
-### Domain Policy
+## Domain Policy
 
 Get general domain information&#x20;
 
@@ -38,7 +44,7 @@ Get-DomainOU | select name
 .\SharpView.exe Get-DomainOU | findstr /b "name"
 ```
 
-### GPO Enumeration
+## GPO Enumeration
 
 ```
 .\SharpView.exe Get-DomainGPO | findstr displayname
@@ -52,9 +58,10 @@ Its helpful to figure out which GPO applies to which host&#x20;
 Get-DomainGPO -ComputerIdentity WS01 | select displayname
 ```
 
-### Enumerate Users
+## Enumerate Users
 
 ```
+(Get-DomainUser).count
 # all users
 Get-DomainUser
 .\SharpView.exe Get-DomainUser
@@ -62,8 +69,14 @@ Get-DomainUser
 Get-DomainUser harry.jones
 .\SharpView.exe Get-DomainUser harry.jones
 
-Get-DomainUser | select cn
-.\SharpView.exe Get-DomainUser | findstr /b "cn"
+Get-DomainUser -Identity harry.jones -Domain inlanefreight.local | Select-Object -Property name,samaccountname,description,memberof,whencreated,pwdlastset,lastlogontimestamp,accountexpires,admincount,userprincipalname,serviceprincipalname,mail,useraccountcontrol
+.\SharpView.exe Get-DomainUser -Identity harry.jones -Domain inlanefreight.local | findstr /b "cn"
+```
+
+Get important values for all users, export to csv for offline processing
+
+```
+Get-DomainUser * -Domain inlanefreight.local | Select-Object -Property name,samaccountname,description,memberof,whencreated,pwdlastset,lastlogontimestamp,accountexpires,admincount,userprincipalname,serviceprincipalname,mail,useraccountcontrol | Export-Csv .\inlanefreight_users.csv -NoTypeInformation
 ```
 
 When enumerating UAC values, they are displayed as non human-readable. Convert them with powerview, ones that apply to the user have `+` after them&#x20;
@@ -79,11 +92,39 @@ PASSWD_NOTREQD                 32+
 --snip--
 ```
 
-#### AS-REPRoast
+### Kerberoasting
 
 ```
-Get-DomainUser -KerberosPreauthNotRequired
-.\SharpView.exe Get-DomainUser -KerberosPreauthNotRequired
+.\SharpView.exe Get-DomainUser -SPN -Properties samaccountname,memberof,serviceprincipalname
+Get-DomainUser -SPN -Properties samaccountname,memberof,serviceprincipalname
+```
+
+### AS-REPRoast
+
+```
+.\SharpView.exe Get-DomainUser -KerberosPreauthNotRequired -Properties samaccountname,useraccountcontrol,memberof
+Get-DomainUser -KerberosPreauthNotRequired -Properties samaccountname,useraccountcontrol,memberof
+```
+
+### Constrained Delegation
+
+```
+.\SharpView.exe Get-DomainUser -TrustedToAuth -Properties samaccountname,useraccountcontrol,memberof
+Get-DomainUser -TrustedToAuth -Properties samaccountname,useraccountcontrol,memberof
+```
+
+### Unconstrained Delegation
+
+```
+.\SharpView.exe Get-DomainUser -LDAPFilter "(userAccountControl:1.2.840.113556.1.4.803:=524288)"
+Get-DomainUser -LDAPFilter "(userAccountControl:1.2.840.113556.1.4.803:=524288)"
+```
+
+### Passwords in the Description
+
+```
+Get-DomainUser -Properties samaccountname,description | Where {$_.description -ne $null}
+.\SharpView.exe Get-DomainUser -Properties samaccountname,description
 ```
 
 ### Active Sessions
@@ -102,14 +143,14 @@ Find-DomainUserEvent
 .\SharpView.exe
 ```
 
-### Enumerate Computers
+## Enumerate Computers
 
 ```
 Get-DomainComputer | select dnshostname,useraccountcontrol
 .\SharpView.exe Get-DomainComputer | findstr /b /c:"dnshostname" /c:"useraccountcontrol"
 ```
 
-#### Test Local Admin Access
+### Test Local Admin Access
 
 ```
 Test-AdminAccess -ComputerName WS01
@@ -118,7 +159,7 @@ Find-LocalAdminAccess
 .\SharpView.exe Find-LocalAdminAccess
 ```
 
-#### Enumerate Shares
+### Enumerate Shares
 
 ```
 # (S/P)
