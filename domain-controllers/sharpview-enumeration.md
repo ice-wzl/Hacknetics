@@ -99,6 +99,12 @@ PASSWD_NOTREQD                 32+
 Get-DomainUser -SPN -Properties samaccountname,memberof,serviceprincipalname
 ```
 
+Check for users with SPNs in another domain allowing kerberoasting across trusts
+
+```
+Get-DomainUser -SPN -Domain freightlogistics.local | select samaccountname,memberof,serviceprincipalname | fl
+```
+
 ### AS-REPRoast
 
 ```
@@ -206,4 +212,11 @@ Enumerate all trusts for the current domain and then enumerate all trusts for ea
 ```
 Get-DomainTrustMapping
 .\SharpView.exe Get-DomainTrustMapping
+```
+
+Find any user from foreign domain with group membership with any groups in our current domain. You will get back `MemberName` use `Convert-SidToName` to turn it into username
+
+```
+Find-ForeignGroup
+.\SharpView.exe Find-ForeignGroup
 ```
