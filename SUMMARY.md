@@ -29,7 +29,7 @@
   * [Golden Ticket](domain-controllers/golden-ticket.md)
   * [Abusing GPO Permissions](domain-controllers/abusing-gpo-permissions.md)
   * [SharpGPOAbuse](domain-controllers/sharpgpoabuse.md)
-  * [SharpView Enumeration](domain-controllers/sharpview-enumeration.md)
+  * [SharpView PowerView](domain-controllers/sharpview-enumeration.md)
   * [DonPapi](domain-controllers/donpapi.md)
   * [Enumerating Forests](domain-controllers/enumerating-forests.md)
   * [NOPAC Priv esc](domain-controllers/nopac-priv-esc.md)
