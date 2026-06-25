@@ -220,3 +220,27 @@ Find any user from foreign domain with group membership with any groups in our c
 Find-ForeignGroup
 .\SharpView.exe Find-ForeignGroup
 ```
+
+### Password Set Times
+
+Likely to get caught if you spray across an entire domain. Get the password set time, look for clusters of passwords being reset close to eachother. They were likely reset by the help desk to the default password of the organization.
+
+For the ones that are the same you can do selective guessing. i.e. for one account spray `Password2026` for another spray `Freight2024!` etc. This allows you to effectively try many more than just four passwords if the lockout policy is in effect.&#x20;
+
+Pay attention to set times. If a password was set in August 2025, attempting `Winter2026` likely makes no sense.&#x20;
+
+If you see old passwords set > 2 years ago, likely weak passwords. Try to guess those first.
+
+Admins typically have sperate Admin accounts from their user accounts. If you see that their normal and admin account passwords were set at the same time, they are likely using the same password for both!
+
+```
+Get-DomainUser -Properties samaccountname,pwdlastset,lastlogon -Domain InlaneFreight.local | select samaccountname, pwdlastset, lastlogon | Sort-Object -Property pwdlastset
+.\SharpView.exe Get-DomainUser -Properties samaccountname,pwdlastset,lastlogon -Domain InlaneFreight.local | select samaccountname, pwdlastset, lastlogon | Sort-Object -Property pwdlastset
+```
+
+Passwords set longer than 90 days ago&#x20;
+
+```
+Get-DomainUser -Properties samaccountname,pwdlastset,lastlogon -Domain InlaneFreight.local | select samaccountname, pwdlastset, lastlogon | where { $_.pwdlastset -lt (Get-Date).addDays(-90) }
+.\SharpView.exe Get-DomainUser -Properties samaccountname,pwdlastset,lastlogon -Domain InlaneFreight.local | select samaccountname, pwdlastset, lastlogon | where { $_.pwdlastset -lt (Get-Date).addDays(-90) }
+```
