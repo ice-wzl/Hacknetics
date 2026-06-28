@@ -193,6 +193,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Zenphoto `1.4.1.4` can expose its version in an HTML source comment under the gallery path. Use Exploit-DB `18083.php` against `/test/` for TinyMCE ajax file manager RCE, then read `zp-data/zp-config.php` for local MySQL credentials. See [Zenphoto](zenphoto.md).
 
+### ZoneMinder
+
+* ZoneMinder `1.29.0` under `/zm/` can expose blind stacked SQLi in the log query path. Use `INTO OUTFILE` to write a PHP webshell into `/var/www/html`, trigger it from the Apache service on TCP/3305, and continue from the `www-data` shell. See [ZoneMinder](zoneminder.md).
+
 ### OpenSMTPD
 
 * OpenSMTPD on TCP/25 can be vulnerable to CVE-2020-7247 unauthenticated RCE. Confirm with an ICMP callback, then use a valid local recipient such as `root@HOSTNAME` for the reverse-shell exploit path. See [OpenSMTPD](opensmtpd.md).
