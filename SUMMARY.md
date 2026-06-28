@@ -154,6 +154,7 @@
   * [Gerapy](things-i-have-pwnd-before/gerapy.md)
   * [XWiki](things-i-have-pwnd-before/xwiki.md)
   * [Backdrop CMS](things-i-have-pwnd-before/backdrop.md)
+  * [Booked Scheduler](things-i-have-pwnd-before/booked-scheduler.md)
   * [HP Power Manager](things-i-have-pwnd-before/hp-power-manager.md)
   * [H2 Database](things-i-have-pwnd-before/h2-database.md)
   * [BaGet](things-i-have-pwnd-before/baget.md)

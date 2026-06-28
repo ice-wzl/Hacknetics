@@ -89,6 +89,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * BaGet exposes NuGet service-index and package upload endpoints on IIS/.NET targets. Check `/upload`, `/v3/index.json`, the BaGet exposure nuclei template, and IIS short-name disclosure for `baget*`/`nuget*` assemblies. See [BaGet](baget.md).
 
+### Booked Scheduler
+
+* Booked Scheduler `2.7.5` can expose authenticated RCE. Check anonymous SMB log shares for leaked setup credentials such as `admin:adminadmin`, exploit the authenticated RCE, and inspect cron for writable cleanup scripts run as root. See [Booked Scheduler](booked-scheduler.md).
+
 ### Gerapy
 
 * Gerapy on TCP/8000 can expose a default `admin:admin` login and CVE-2021-43857 authenticated RCE. Create a project first if the project list is empty, then use the exploit to get a shell as `app`; check Linux capabilities for `cap_setuid=ep` on Python. See [Gerapy](gerapy.md).

