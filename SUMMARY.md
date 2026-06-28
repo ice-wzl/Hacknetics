@@ -183,6 +183,7 @@
   * [Ghost CMS](things-i-have-pwnd-before/ghost-cms.md)
   * [Simple PHP Photo Gallery](things-i-have-pwnd-before/simple-php-photo-gallery.md)
   * [Zenphoto](things-i-have-pwnd-before/zenphoto.md)
+  * [XAMPP](things-i-have-pwnd-before/xampp.md)
   * [Wing FTP Server (Linux web client)](things-i-have-pwnd-before/wing-ftp.md)
   * [uftpd](things-i-have-pwnd-before/uftpd.md)
   * [FileZilla Server 0.9.60 beta](things-i-have-pwnd-before/filezilla-server.md)

