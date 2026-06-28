@@ -81,6 +81,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Windows FileZilla Server 0.9.60 beta exposes a local admin port on `127.0.0.1:14147`; forward it over SSH and abuse the public 0.9.60 admin-port tooling to create `system:wyywyy` with FTP access to `C:\`. See [FileZilla Server 0.9.60 beta](filezilla-server.md).
 
+### Jenkins
+
+* Jenkins `2.401.2` running only on localhost can be reached with an SSH local port forward. If CLI access allows CVE-2024-23897 arbitrary file read, use it to read `/root/.jenkins/secrets/initialAdminPassword`. See [Jenkins](jenkins.md).
+
 ### Remote Mouse
 
 * Remote Mouse 3.008 can expose TCP/UDP ports `1978-1980`; if network access is filtered, check the local GUI from RDP. WiFi Mouse `1.7.8.5` can also expose TCP `1978` with a `luminateOK` banner and support payload download RCE. See [Remote Mouse](remote-mouse.md).
@@ -91,7 +95,7 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 ### Booked Scheduler
 
-* Booked Scheduler `2.7.5` can expose authenticated RCE. Check anonymous SMB log shares for leaked setup credentials such as `admin:adminadmin`, exploit the authenticated RCE, and inspect cron for writable cleanup scripts run as root. See [Booked Scheduler](booked-scheduler.md).
+* Booked Scheduler `2.7.5` can expose authenticated RCE. Check anonymous SMB log shares for leaked setup credentials such as `admin:adminadmin`, then exploit the authenticated RCE. See [Booked Scheduler](booked-scheduler.md).
 
 ### Gerapy
 
@@ -104,6 +108,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 ### WordPress AdRotate Banner Manager
 
 * WordPress with AdRotate Banner Manager `5.8.6.2` can allow authenticated admin upload through the AdRotate media manager. Upload a ZIP containing `shell.php`, trigger it from `/wp-content/banners/shell.php`, then check `wp-config.php` for reusable local credentials. See [WordPress](wordpress.md).
+
+### Prison Management System
+
+* Prison Management System can allow admin login with `admin:admin123` or SQL injection, then authenticated avatar upload RCE by changing an intercepted image filename to `shell.php`. Check `database/connect2.php` and application tables for reusable credentials. See [Prison Management System](prison-management-system.md).
 
 ### HP Power Manager
 
