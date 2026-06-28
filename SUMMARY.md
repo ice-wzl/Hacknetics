@@ -153,6 +153,7 @@
   * [aiohttp](things-i-have-pwnd-before/aiohttp.md)
   * [Netdata](things-i-have-pwnd-before/netdata.md)
   * [Gerapy](things-i-have-pwnd-before/gerapy.md)
+  * [rConfig](things-i-have-pwnd-before/rconfig.md)
   * [XWiki](things-i-have-pwnd-before/xwiki.md)
   * [Backdrop CMS](things-i-have-pwnd-before/backdrop.md)
   * [Booked Scheduler](things-i-have-pwnd-before/booked-scheduler.md)

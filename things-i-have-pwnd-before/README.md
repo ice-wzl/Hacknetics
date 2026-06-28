@@ -101,6 +101,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Gerapy on TCP/8000 can expose a default `admin:admin` login and CVE-2021-43857 authenticated RCE. Create a project first if the project list is empty, then use the exploit to get a shell as `app`; check Linux capabilities for `cap_setuid=ep` on Python. See [Gerapy](gerapy.md).
 
+### rConfig
+
+* rConfig `3.9.4` over HTTPS on TCP/8081 can be chained from temporary admin creation to authenticated `search.crud.php` command injection. Use the resulting `apache` shell to check `config.inc.php` and local privilege escalation such as SUID `find`. See [rConfig](rconfig.md).
+
 ### pyLoad
 
 * pyLoad on TCP/9666 can expose a Cheroot login page and unauthenticated `/flash/addcrypted2` endpoint. For vulnerable versions prior to `0.5.0b3.dev31`, use `CVE-2023-0297` `jk=pyimport os;os.system(...)` injection to confirm command execution and stage a shell. See [pyLoad](pyload.md).
