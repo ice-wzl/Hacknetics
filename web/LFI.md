@@ -293,6 +293,8 @@ Start with fewer `../` and add more until you hit the root; too many can trigger
 
 **Open file descriptors:** **`/proc/self/fd/N`** (e.g. 7, 9) — the current process’s open files. Often one fd is the application’s **SQLite DB**; reading it via LFI can expose `cama_users` and other tables. Try `/proc/self/fd/7`, `/proc/self/fd/9`, etc.
 
+**Process and service config targets:** `/proc/sched_debug` can expose a process list when normal process visibility is limited. `/proc/mounts` shows mounted filesystems and options. Service configs such as `/etc/redis/redis.conf` may expose credentials like `requirepass`.
+
 ### Reading binary files (e.g. SQLite DB) via LFI
 
 When the LFI returns the **raw file content** (not wrapped in HTML), binary files must be fetched as **bytes**, not as text. Some exploits (e.g. Camaleon CMS CVE-2024-46987) print `r.text` by default — for SQLite or other binaries you must save `r.content` to a file. Save the response to disk and open with `sqlite3 out.bytes`; then query tables (e.g. `cama_users` for bcrypt hashes). See [Camaleon CMS](../things-i-have-pwnd-before/camaleon-cms.md) for the full flow.

