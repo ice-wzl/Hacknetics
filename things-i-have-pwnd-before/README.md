@@ -197,6 +197,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Zenphoto `1.4.1.4` can expose its version in an HTML source comment under the gallery path. Use Exploit-DB `18083.php` against `/test/` for TinyMCE ajax file manager RCE, then read `zp-data/zp-config.php` for local MySQL credentials. See [Zenphoto](zenphoto.md).
 
+### ImageMagick Identifier
+
+* ImageMagick Identifier upload forms that run `magick identify` through a shell can be abused with a crafted PNG filename for command execution. On ImageMagick `6.9.6-4`, CVE-2023-34152 tooling produced a reverse shell as `www-data`; SUID `strace` gave root. See [ImageMagick Identifier](imagemagick-identifier.md).
+
 ### ZoneMinder
 
 * ZoneMinder `1.29.0` under `/zm/` can expose blind stacked SQLi in the log query path. Use `INTO OUTFILE` to write a PHP webshell into `/var/www/html`, trigger it from the Apache service on TCP/3305, and continue from the `www-data` shell. See [ZoneMinder](zoneminder.md).

