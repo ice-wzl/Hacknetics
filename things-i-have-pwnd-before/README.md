@@ -101,6 +101,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Booked Scheduler `2.7.5` can expose authenticated RCE. Check anonymous SMB log shares for leaked setup credentials such as `admin:adminadmin`, then exploit the authenticated RCE. See [Booked Scheduler](booked-scheduler.md).
 
+### BoxBilling
+
+* BoxBilling `4.22.1.5` can expose `/.git/HEAD`; dump the repository, recover `bb-config.php`, reuse the leaked password for admin login, then abuse `CVE-2022-3552` Filemanager file write for command execution as `yuki`. See [BoxBilling](boxbilling.md).
+
 ### Gerapy
 
 * Gerapy on TCP/8000 can expose a default `admin:admin` login and CVE-2021-43857 authenticated RCE. Create a project first if the project list is empty, then use the exploit to get a shell as `app`; check Linux capabilities for `cap_setuid=ep` on Python. See [Gerapy](gerapy.md).
