@@ -160,6 +160,7 @@
   * [HP Power Manager](things-i-have-pwnd-before/hp-power-manager.md)
   * [H2 Database](things-i-have-pwnd-before/h2-database.md)
   * [BaGet](things-i-have-pwnd-before/baget.md)
+  * [FuguHub](things-i-have-pwnd-before/fuguhub.md)
   * [Argus Surveillance DVR](things-i-have-pwnd-before/argus-surveillance-dvr.md)
   * [Gitea](things-i-have-pwnd-before/gitea.md)
   * [Gogs](things-i-have-pwnd-before/gogs.md)

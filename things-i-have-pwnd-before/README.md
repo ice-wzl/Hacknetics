@@ -133,6 +133,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * H2 Database `1.4.199` can expose a web console on `8082`; with console access, JNI code execution can run commands and stage a Meterpreter payload. See [H2 Database](h2-database.md).
 
+### FuguHub
+
+* FuguHub `8.4` on Barracuda Embedded Web Server can expose an uninitialized setup wizard on TCP/8082. Set the admin account, confirm WFS access, then use the authenticated customization page to execute Lua Server Pages as root. See [FuguHub](fuguhub.md).
+
 ### Argus Surveillance DVR
 
 * Argus Surveillance DVR 4.0.0.0 can expose unauthenticated directory traversal through `WEBACCOUNT.CGI`. Use it to read Windows files, steal user SSH keys, and recover Argus credentials from `C:\ProgramData\PY_Software\Argus Surveillance DVR\DVRParams.ini`. See [Argus Surveillance DVR](argus-surveillance-dvr.md).
