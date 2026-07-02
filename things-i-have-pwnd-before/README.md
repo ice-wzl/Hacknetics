@@ -81,6 +81,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Windows FileZilla Server 0.9.60 beta exposes a local admin port on `127.0.0.1:14147`; forward it over SSH and abuse the public 0.9.60 admin-port tooling to create `system:wyywyy` with FTP access to `C:\`. See [FileZilla Server 0.9.60 beta](filezilla-server.md).
 
+### MS09-050 SMB
+
+* Windows Server 2008 SP1 with SMBv2 can expose `CVE-2009-3103` / MS09-050. Confirm with nmap's SMB vuln scripts, replace the public PoC shell buffer with a generated Meterpreter payload, and run it against TCP/445 for SYSTEM. See [MS09-050 SMB](ms09-050-smb.md).
+
 ### Jenkins
 
 * Jenkins `2.401.2` running only on localhost can be reached with an SSH local port forward. If CLI access allows CVE-2024-23897 arbitrary file read, use it to read `/root/.jenkins/secrets/initialAdminPassword`. See [Jenkins](jenkins.md).

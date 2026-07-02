@@ -189,6 +189,7 @@
   * [Wing FTP Server (Linux web client)](things-i-have-pwnd-before/wing-ftp.md)
   * [uftpd](things-i-have-pwnd-before/uftpd.md)
   * [FileZilla Server 0.9.60 beta](things-i-have-pwnd-before/filezilla-server.md)
+  * [MS09-050 SMB](things-i-have-pwnd-before/ms09-050-smb.md)
   * [Remote Mouse](things-i-have-pwnd-before/remote-mouse.md)
   * [vm2 (Node.js sandbox)](things-i-have-pwnd-before/vm2.md)
   * [DotNetNuke (DNN)](things-i-have-pwnd-before/dotnetnuke.md)
