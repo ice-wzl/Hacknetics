@@ -173,6 +173,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Subrion CMS 4.2.1 admin access can lead to authenticated file upload RCE. Check Subrion config for DB credentials and member data. See [Subrion CMS](subrion-cms.md).
 
+### SuiteCRM
+
+* SuiteCRM `7.12.3` can expose default `admin:admin` access and authenticated RCE through `CVE-2022-23940`. Use the scheduled reports exploit for a `www-data` shell, then check `config.php` and `sudo -l` for `NOPASSWD: /usr/sbin/service`. See [SuiteCRM](suitecrm.md).
+
 ### Gogs
 
 * Gogs access can expose users, repositories, source history, and config secrets. CVE-2025-8110 uses an authenticated symlink workflow; URL-encode special characters in credentials before cloning through exploit tooling. See [Gogs](gogs.md).

