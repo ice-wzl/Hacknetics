@@ -169,6 +169,7 @@
   * [Haraka SMTP](things-i-have-pwnd-before/haraka.md)
   * [OpenSMTPD](things-i-have-pwnd-before/opensmtpd.md)
   * [Openfire](things-i-have-pwnd-before/openfire.md)
+  * [OpenEMR](things-i-have-pwnd-before/openemr.md)
   * [LimeSurvey](things-i-have-pwnd-before/limesurvey.md)
   * [Liferay](things-i-have-pwnd-before/liferay.md)
   * [Laravel](things-i-have-pwnd-before/laravel.md)
