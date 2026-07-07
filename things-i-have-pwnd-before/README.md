@@ -153,6 +153,14 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Laravel `8.4.0` with an exposed registration flow and dashboard-controlled `APP_DEBUG` can be exploited with `CVE-2021-3129` once debug is enabled. Use the Ignition exploit for command execution as `www-data`, then read `.env` for `APP_KEY` and database credentials. See [Laravel](laravel.md).
 
+### Mage AI
+
+* Mage AI `v0.9.75` exposed on Tornado can provide terminal access as `www-data`. See [Mage AI](mage-ai.md).
+
+### Zabbix
+
+* Zabbix `7.2.4` local configs can expose MySQL credentials. Use the Zabbix database to recover GUI hashes, crack `Admin:dinosaur`, reverse-forward the localhost-only GUI, and execute cloned scripts as `zabbix`. See [Zabbix](zabbix.md).
+
 ### Grav CMS
 
 * Grav CMS exposed at `/grav-admin/` can be vulnerable to CVE-2021-21425 unauthenticated RCE. Check account YAML files after gaining web access. See [Grav CMS](grav-cms.md).

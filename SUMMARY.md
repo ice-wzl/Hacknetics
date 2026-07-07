@@ -173,6 +173,8 @@
   * [LimeSurvey](things-i-have-pwnd-before/limesurvey.md)
   * [Liferay](things-i-have-pwnd-before/liferay.md)
   * [Laravel](things-i-have-pwnd-before/laravel.md)
+  * [Mage AI](things-i-have-pwnd-before/mage-ai.md)
+  * [Zabbix](things-i-have-pwnd-before/zabbix.md)
   * [Grav CMS](things-i-have-pwnd-before/grav-cms.md)
   * [Codoforum](things-i-have-pwnd-before/codoforum.md)
   * [CS-Cart](things-i-have-pwnd-before/cs-cart.md)

