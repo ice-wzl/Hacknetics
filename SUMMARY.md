@@ -158,6 +158,7 @@
   * [Backdrop CMS](things-i-have-pwnd-before/backdrop.md)
   * [Booked Scheduler](things-i-have-pwnd-before/booked-scheduler.md)
   * [BoxBilling](things-i-have-pwnd-before/boxbilling.md)
+  * [SOPlanning](things-i-have-pwnd-before/soplanning.md)
   * [HP Power Manager](things-i-have-pwnd-before/hp-power-manager.md)
   * [H2 Database](things-i-have-pwnd-before/h2-database.md)
   * [BaGet](things-i-have-pwnd-before/baget.md)

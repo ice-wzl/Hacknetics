@@ -105,6 +105,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * BoxBilling `4.22.1.5` can expose `/.git/HEAD`; dump the repository, recover `bb-config.php`, reuse the leaked password for admin login, then abuse `CVE-2022-3552` Filemanager file write for command execution as `yuki`. See [BoxBilling](boxbilling.md).
 
+### SOPlanning
+
+* SOPlanning `1.52.01` can be chained from exposed Git database credentials to the `soplanning` database, login as `admin` with the stored `cle|password` value, and authenticated `.phtml` upload RCE as `www-data`. See [SOPlanning](soplanning.md).
+
 ### Gerapy
 
 * Gerapy on TCP/8000 can expose a default `admin:admin` login and CVE-2021-43857 authenticated RCE. Create a project first if the project list is empty, then use the exploit to get a shell as `app`; check Linux capabilities for `cap_setuid=ep` on Python. See [Gerapy](gerapy.md).
