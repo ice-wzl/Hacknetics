@@ -167,6 +167,7 @@
   * [Gogs](things-i-have-pwnd-before/gogs.md)
   * [Apache James Server](things-i-have-pwnd-before/apache-james.md)
   * [Haraka SMTP](things-i-have-pwnd-before/haraka.md)
+  * [SmarterMail](things-i-have-pwnd-before/smartermail.md)
   * [OpenSMTPD](things-i-have-pwnd-before/opensmtpd.md)
   * [Openfire](things-i-have-pwnd-before/openfire.md)
   * [OpenEMR](things-i-have-pwnd-before/openemr.md)

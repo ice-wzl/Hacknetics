@@ -225,6 +225,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * ZoneMinder `1.29.0` under `/zm/` can expose blind stacked SQLi in the log query path. Use `INTO OUTFILE` to write a PHP webshell into `/var/www/html`, trigger it from the Apache service on TCP/3305, and continue from the `www-data` shell. See [ZoneMinder](zoneminder.md).
 
+### SmarterMail
+
+* SmarterMail on IIS web UI on TCP/9998. If TCP/17001 `.NET Remoting` is open, `CVE-2019-7214` deserialization can yield `NT AUTHORITY\SYSTEM`. See [SmarterMail](smartermail.md).
+
 ### OpenSMTPD
 
 * OpenSMTPD on TCP/25 can be vulnerable to CVE-2020-7247 unauthenticated RCE. Confirm with an ICMP callback, then use a valid local recipient such as `root@HOSTNAME` for the reverse-shell exploit path. See [OpenSMTPD](opensmtpd.md).
