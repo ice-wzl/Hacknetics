@@ -223,6 +223,20 @@ Snaffler.exe -s -d inlanefreight.local -o snaffler.log -v data
 * Hunts for credentials, keys, config files
 * Color-coded output (Red = high value, Green = shares found)
 
+Pay attention to SYSVOL script folders, including binaries and adjacent `.config` files, not just `.ps1`/`.vbs` scripts:
+
+```text
+\\DOMAIN\SYSVOL\DOMAIN\scripts\ResetPassword\
+  ResetPassword.exe
+  ResetPassword.exe.config
+```
+
+If a SYSVOL binary looks custom, download it and inspect strings or decompile it. Hardcoded service credentials in helper tools can expose accounts such as `svc_helpdesk`:
+
+```bash
+strings ResetPassword.exe
+```
+
 ### SharpHound (BloodHound Collector)
 
 ```powershell
