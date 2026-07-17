@@ -89,6 +89,10 @@ exploit(windows/smb/ms17_010_eternalblue)
 
 * Jenkins `2.401.2` running only on localhost can be reached with an SSH local port forward. If CLI access allows CVE-2024-23897 arbitrary file read, use it to read `/root/.jenkins/secrets/initialAdminPassword`. See [Jenkins](jenkins.md).
 
+### ClamAV Milter with Sendmail
+
+* Legacy Sendmail `8.13.4` using clamav-milter can expose unauthenticated remote root command execution over SMTP. Exploit-DB 4761 adds a root shell service to inetd and exposes it on TCP/31337. See [ClamAV Milter with Sendmail](clamav-milter.md).
+
 ### Remote Mouse
 
 * Remote Mouse 3.008 can expose TCP/UDP ports `1978-1980`; if network access is filtered, check the local GUI from RDP. WiFi Mouse `1.7.8.5` can also expose TCP `1978` with a `luminateOK` banner and support payload download RCE. See [Remote Mouse](remote-mouse.md).
