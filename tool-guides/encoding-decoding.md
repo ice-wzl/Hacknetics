@@ -80,6 +80,12 @@ echo 'uggcf://jjj.unpxgurobk.rh/' | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 
 ---
 
+## ROT47
+
+In CyberChef, apply `ROT47`; if the result is Base64, decode the Base64 layer repeatedly until plaintext is recovered.
+
+---
+
 ## URL Encoding
 
 ### Encode (Python)

