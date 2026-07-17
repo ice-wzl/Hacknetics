@@ -14,6 +14,15 @@ curl -s http://TARGET/readme.html
 /wp-admin/
 ```
 
+If the web root only exposes a default server dashboard but another service reveals WordPress credentials, test the host name or SMB share name as a web subdirectory:
+
+```text
+http://TARGET/SHARE-NAME/
+http://TARGET/SHARE-NAME/wp-login.php
+```
+
+This can uncover a WordPress installation that ordinary root-level content discovery missed. Use the recovered credentials at the discovered login page.
+
 ---
 
 ## WPScan Enumeration

