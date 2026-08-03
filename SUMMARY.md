@@ -179,6 +179,7 @@
   * [Mage AI](things-i-have-pwnd-before/mage-ai.md)
   * [Zabbix](things-i-have-pwnd-before/zabbix.md)
   * [Grav CMS](things-i-have-pwnd-before/grav-cms.md)
+  * [PluXml](things-i-have-pwnd-before/pluxml.md)
   * [Codoforum](things-i-have-pwnd-before/codoforum.md)
   * [CS-Cart](things-i-have-pwnd-before/cs-cart.md)
   * [Monstra CMS](things-i-have-pwnd-before/monstra-cms.md)
