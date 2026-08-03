@@ -203,6 +203,7 @@
   * [Remote Mouse](things-i-have-pwnd-before/remote-mouse.md)
   * [vm2 (Node.js sandbox)](things-i-have-pwnd-before/vm2.md)
   * [DotNetNuke (DNN)](things-i-have-pwnd-before/dotnetnuke.md)
+  * [Maltrail](things-i-have-pwnd-before/maltrail.md)
 * [Persistence](persistence/README.md)
   * [Linux Persistence](persistence/persistence.md)
   * [Windows Persistence](persistence/windows-persistence-1.md)
