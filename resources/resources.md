@@ -165,6 +165,11 @@ Packet Filter
 
 * [https://application.security/free/owasp-top-10](https://application.security/free/owasp-top-10)
 * [https://application.security/free/owasp-top-10-API](https://application.security/free/owasp-top-10-API)
+* [https://ransomleak.com/catalogue/application-security/](https://ransomleak.com/catalogue/application-security/)
+* [https://ransomleak.com/catalogue/ai-security/](https://ransomleak.com/catalogue/ai-security/)
+* [https://ransomleak.com/catalogue/api-security/](https://ransomleak.com/catalogue/api-security/)
+* [https://ransomleak.com/catalogue/git-security/](https://ransomleak.com/catalogue/git-security/)
+* [https://ransomleak.com/catalogue/cloud-security/](https://ransomleak.com/catalogue/cloud-security/)
 * [https://portswigger.net/web-security](https://portswigger.net/web-security)
 
 ### Active Directory
