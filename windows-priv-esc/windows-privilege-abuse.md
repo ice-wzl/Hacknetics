@@ -113,6 +113,20 @@ whoami
 nt authority\system
 ```
 
+### Writable IIS web root to app pool token
+
+After the Job ODT shell opened as `JOB\jack.black`, `whoami /all` showed membership in the local `developers` group. Check whether that group controls the IIS web root:
+
+```powershell
+whoami /all
+Get-LocalGroupMember developers
+icacls C:\inetpub\wwwroot
+```
+
+The observed ACL was `JOB\developers:(OI)(CI)(F)`. An ASPX command shell placed at `C:\inetpub\wwwroot\cmdasp.aspx` ran when opened at `http://job.local/cmdasp.aspx`. Run `whoami /all` from that web shell to identify the new execution context; Job returned `iis apppool\defaultapppool` with `SeImpersonatePrivilege` enabled.
+
+That token provided the [GodPotato service payload](#godpotato-service-payload) path already documented below. In Job, GodPotato found a SYSTEM token and successfully created and started `apollo_svc`.
+
 ### GodPotato
 
 ```cmd
