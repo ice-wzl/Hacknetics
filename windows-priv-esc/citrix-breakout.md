@@ -5,6 +5,22 @@
 2. Exploit the Dialog Box for **command execution**
 3. **Escalate privileges** to gain higher access
 
+## Scanner Error to Browser and Command Prompt
+
+Touch's device dashboard supplied `KioskUser:K!0sk2026#`. The account opened a restricted RDP kiosk:
+
+```bash
+xfreerdp3 /u:KioskUser /p:'K!0sk2026#' /v:10.129.70.239 /dynamic-resolution /drive:/tmp/share,tools /bpp:8 /compression /clipboard /audio-mode:0 /auto-reconnect /cert:ignore
+```
+
+1. Enter the provided passenger name `Jenny Crawford` and booking code `KS7X2M` in the kiosk.
+2. At the document scan prompt, return to the device portal and turn off the scanner.
+3. Press **Scan** in the kiosk. The scanner error exposes a URL; open it to launch the browser.
+4. In the browser, use **three dots > Downloads** to open File Explorer.
+5. Enter `C:\Windows\System32\cmd.exe` in Explorer to open a command prompt.
+
+The command prompt ran as `KIOSK-042\KioskUser`. From that shell, inspect local scripts and services for credentials; the [Touch MySQL batch-script example](windows-credential-hunting.md#mysql-password-in-a-batch-script) is one observed follow-on.
+
 ## Bypassing Path Restrictions via Dialog Boxes
 - Many desktop apps have File > Open, Save As, Import, Export, Help, Print that open Windows dialog boxes
 - These dialog boxes can browse the filesystem even when File Explorer is restricted

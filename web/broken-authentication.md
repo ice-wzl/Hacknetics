@@ -57,6 +57,22 @@ Useful when the app identifies users by a cookie value and you need a valid user
 
 ---
 
+## Public Device Identifier Accepted at Login
+
+Enumerate unauthenticated API paths on a device management portal and inspect status metadata before testing the login. In Touch, the portal on port `8443` exposed `/api/status`:
+
+```bash
+ffuf -u http://10.129.70.239:8443/api/FUZZ -w /md/wl/common.txt -fc 302
+```
+
+The scan found `status` with HTTP `200`. Its response disclosed the device serial:
+
+```json
+{"device":"Nexion DeviceHub DH-100","serial":"NX-DH-2024-B7042","firmware":"1.4.2","status":"online","uptime":11615}
+```
+
+`NX-DH-2024-B7042` was accepted at `http://10.129.70.239:8443/login`. The dashboard then exposed `KioskUser` and `K!0sk2026#`, which worked for RDP.
+
 ## Password Brute Force
 
 ### Filter Wordlist by Password Policy
